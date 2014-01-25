@@ -14,12 +14,6 @@ public class Main extends JavaPlugin{
 
 	AnimalSelector animSel = getAnimalSelector();
 	
-	private String Hostname;
-	private String port;
-	private String user;
-	private String password;
-	private String database;
-	
 	boolean isEnabled = false;
 	
 	private MySQL sql;
@@ -37,7 +31,7 @@ public class Main extends JavaPlugin{
 			
 			initializeTable();
 			
-			Commands commands = new Commands(this, c, animSel);
+			Commands commands = new Commands(c, animSel);
 			pm.registerEvents(commands, this);
 			this.getCommand("lockanimal").setExecutor(commands);
 			
@@ -66,7 +60,8 @@ public class Main extends JavaPlugin{
 			try {
 				statement.executeUpdate("CREATE TABLE IF NOT EXISTS animalprotect ("
 						+ "id INT AUTO_INCREMENT PRIMARY KEY, "
-						+ "entityid INT, owner TEXT, "
+						+ "entityid DOUBLE, "
+						+ "owner TEXT, "
 						+ "last_x INT,"
 						+ "last_y INT,"
 						+ "last_z INT,"

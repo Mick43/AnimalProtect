@@ -16,18 +16,13 @@ import org.bukkit.event.Listener;
 import com.volcanicplaza.BukkitDev.AnimalSelector.AnimalSelector;
 
 public class Commands implements CommandExecutor, Listener {
-
-	private Main plugin;
 	
 	private Connection c;
 	
-	private String reason = "rieson";
-	
 	private AnimalSelector animSel;
 	
-	public Commands(Main plugin, Connection c, AnimalSelector animSel)
+	public Commands(Connection c, AnimalSelector animSel)
 	{
-		this.plugin = plugin;
 		this.c = c;
 		this.animSel = animSel;
 	}
@@ -80,10 +75,17 @@ public class Commands implements CommandExecutor, Listener {
 			ResultSet res;
 			try {
 				res = statement.executeQuery("SELECT * FROM animalprotect WHERE entityid = '" + uuid + "';");
-				res.next();
-				
-				if(res.getString("owner") != null) {
-					return res.getString("owner");
+				try {
+					res.next();
+					
+					if(res.getString("owner") != null) {
+						String ownerName = res.getString("owner");
+						res.close();
+						statement.close();
+						return ownerName;
+						
+					}
+				} catch (Exception e) {
 				}
 			} catch (SQLException e) { e.printStackTrace(); }
 		} catch (SQLException e1) { e1.printStackTrace(); }
@@ -96,9 +98,9 @@ public class Commands implements CommandExecutor, Listener {
 		Statement statement = null;
 		try {
 			statement = c.createStatement();
-			
 			try {
-				statement.executeUpdate("INSERT INTO animalprotect (`entityid`, `owner`) VALUES ('" + entityid + "', '" + Owner + "', '" + x + "', '" + y + "', '" + z + "');");
+				System.out.println("[AnimalProtect] Inserting: INSERT INTO animalprotect (`entityid`, `owner`, 'last_x', 'last_y', 'last_z') VALUES ('" + entityid + "', '" + Owner + "', '" + x + "', '" + y + "', '" + z + "');");
+				statement.executeUpdate("INSERT INTO animalprotect (`entityid`, `owner`, 'last_x', 'last_y', 'last_z') VALUES ('" + entityid + "', '" + Owner + "', '" + x + "', '" + y + "', '" + z + "');");
 			} catch (SQLException e) { e.printStackTrace(); }
 			System.out.println("Inserted info");
 		} catch (SQLException e1) { e1.printStackTrace(); }

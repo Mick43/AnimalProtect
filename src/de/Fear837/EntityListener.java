@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.UUID;
 
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
@@ -31,20 +32,37 @@ public final class EntityListener implements Listener{
 	@EventHandler
 	public void onEntityDamage(EntityDamageByEntityEvent event)
 	{
-		if (sql != null)
+		if (sql != null && !event.isCancelled())
 		{
 			EntityType entityType = event.getEntityType();
 			if (entityType == EntityType.COW || entityType == EntityType.PIG || entityType == EntityType.SHEEP || entityType == EntityType.CHICKEN || entityType == EntityType.HORSE || entityType == EntityType.WOLF)
 			{
-				if (!event.isCancelled() && event.getDamager() instanceof Player){
+				if (event.getDamager() instanceof Player){
 					Entity entity = event.getEntity();
+					Player damager = (Player) event.getDamager();
 					
+					String entityOwner = null;
+					try {
+						entityOwner = getEntityOwner(entity.getUniqueId());
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+					
+					if (entityOwner != null)
+					{
+						if (damager.getName() != entityOwner)
+						{ 
+							event.setDamage(0);
+							event.setCancelled(true);
+							damager.sendMessage("Das Tier ist von " + entityOwner + " gesichert!");
+						}
+					}
 				}
 			}
 		}
 	}
 	
-	public String getEntityOwner(int entityID)
+	public String getEntityOwner(UUID uuid)
 	{
 		Statement statement = null;
 		try {
@@ -52,7 +70,7 @@ public final class EntityListener implements Listener{
 			
 			ResultSet res;
 			try {
-				res = statement.executeQuery("SELECT * FROM tokens WHERE entityid = '" + entityID + "';");
+				res = statement.executeQuery("SELECT * FROM animalprotect WHERE entityid = '" + uuid + "';");
 				res.next();
 				
 				if(res.getString("owner") != null) {
