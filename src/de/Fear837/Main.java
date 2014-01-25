@@ -60,7 +60,7 @@ public class Main extends JavaPlugin{
 			try {
 				statement.executeUpdate("CREATE TABLE IF NOT EXISTS animalprotect ("
 						+ "id INT AUTO_INCREMENT PRIMARY KEY, "
-						+ "entityid DOUBLE, "
+						+ "entityid TEXT, "
 						+ "owner TEXT, "
 						+ "last_x INT,"
 						+ "last_y INT,"

@@ -83,10 +83,8 @@ public class Commands implements CommandExecutor, Listener {
 						res.close();
 						statement.close();
 						return ownerName;
-						
 					}
-				} catch (Exception e) {
-				}
+				} catch (Exception e) { e.printStackTrace(); }
 			} catch (SQLException e) { e.printStackTrace(); }
 		} catch (SQLException e1) { e1.printStackTrace(); }
 
@@ -100,7 +98,7 @@ public class Commands implements CommandExecutor, Listener {
 			statement = c.createStatement();
 			try {
 				System.out.println("[AnimalProtect] Inserting: INSERT INTO animalprotect (`entityid`, `owner`, 'last_x', 'last_y', 'last_z') VALUES ('" + entityid + "', '" + Owner + "', '" + x + "', '" + y + "', '" + z + "');");
-				statement.executeUpdate("INSERT INTO animalprotect (`entityid`, `owner`, 'last_x', 'last_y', 'last_z') VALUES ('" + entityid + "', '" + Owner + "', '" + x + "', '" + y + "', '" + z + "');");
+				statement.executeUpdate("INSERT INTO animalprotect (`entityid`, `owner`, 'last_x', 'last_y', 'last_z') VALUES ('" + entityid + "', '" + Owner + "', " + x + ", " + y + ", " + z + ");");
 			} catch (SQLException e) { e.printStackTrace(); }
 			System.out.println("Inserted info");
 		} catch (SQLException e1) { e1.printStackTrace(); }
