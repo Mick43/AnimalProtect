@@ -1,0 +1,16 @@
+name: AnimalProtect
+main: de.Fear837.Main
+version: 0.1
+author: fear837
+website: www.youtube.com/fear837
+commands:
+   lockanimal:
+      description: desc.
+      usage: Write /<command>
+      permission: animalprotect.protect
+      permission-message: You don't have permission.
+   get:
+      description: desc.
+      usage: Write /<command>
+      permission: animalprotect.protect
+      permission-message: You don't have permission.
