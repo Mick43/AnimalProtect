@@ -5,12 +5,12 @@ author: fear837
 website: www.youtube.com/fear837
 commands:
    lockanimal:
-      description: desc.
+      description: Sichert ein Entity in die Datenbank.
       usage: Write /<command>
       permission: animalprotect.protect
       permission-message: You don't have permission.
-   get:
-      description: desc.
-      usage: Write /<command>
-      permission: animalprotect.protect
-      permission-message: You don't have permission.
+      
+permissions:
+  animalprotect.protect:
+    default: true
+    description: desc.
