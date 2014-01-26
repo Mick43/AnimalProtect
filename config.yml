@@ -4,3 +4,6 @@ database:
   password: 'password'
   dbname: 'localhost'
   port: '3306'
+settings:
+  max_entities_for_player: 25
+  debug-messages: true
