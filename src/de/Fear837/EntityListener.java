@@ -1,33 +1,27 @@
 package de.Fear837;
 
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
-import java.util.UUID;
-
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
-import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 
 public final class EntityListener implements Listener {
 
-	private Main plugin; // TODO wird spaeter benutzt
+	private Main plugin;
 	private MySQL sql;
-	private Connection c;
-	// TODO Still unused variables
-	private DamageCause entityAttack = DamageCause.ENTITY_ATTACK;
-	private DamageCause entityProjectile = DamageCause.PROJECTILE;
+
+	/*
+	 * // Still unused variables private DamageCause entityAttack =
+	 * DamageCause.ENTITY_ATTACK; private DamageCause entityProjectile =
+	 * DamageCause.PROJECTILE;
+	 */
 
 	/* Der Entity-Listener */
-	public EntityListener(MySQL sql, Connection c, Main plugin) {
+	public EntityListener(MySQL sql, Main plugin) {
 		this.plugin = plugin;
 		this.sql = sql;
-		this.c = c;
 	}
 
 	@EventHandler
@@ -41,10 +35,12 @@ public final class EntityListener implements Listener {
 				|| entityType == EntityType.CHICKEN
 				|| entityType == EntityType.HORSE
 				|| entityType == EntityType.WOLF) {
-			if (event.getDamager() instanceof Player) {
-				Entity entity = event.getEntity();
-				Player damager = (Player) event.getDamager();
 
+			Entity entity = event.getEntity();
+			Entity damager = (Player) event.getDamager();
+
+			switch (event.getDamager().getType()) {
+			case PLAYER:
 				String entityOwner = null;
 				try {
 					entityOwner = Commands.getEntityOwner(entity.getUniqueId());
@@ -57,13 +53,24 @@ public final class EntityListener implements Listener {
 							+ entityOwner);
 				}
 
-				if (entityOwner != null && !entityOwner.isEmpty()
-						&& !damager.getName().equalsIgnoreCase(entityOwner)) {
-					event.setDamage(0); // TODO anders: deprecated
-					damager.sendMessage("Das Tier ist von " + entityOwner
-							+ " gesichert!");
+				if ((entityOwner != null && !entityOwner.isEmpty() && !((Player) damager)
+						.getName().equalsIgnoreCase(entityOwner))) {
+					((Player) damager).sendMessage("Das Tier ist von "
+							+ entityOwner + " gesichert!");
 					event.setCancelled(true);
+					return;
 				}
+				break;
+			case ARROW:
+				plugin.getServer().broadcastMessage("Arrow detected...");
+				break;
+			case EGG:
+				plugin.getServer().broadcastMessage("Egg detected...");
+				break;
+			default:
+				plugin.getServer().broadcastMessage(
+						"Damager detected: " + event.getDamager().getType());
+				break;
 			}
 		}
 	}
