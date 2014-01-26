@@ -14,72 +14,53 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 
-public final class EntityListener implements Listener{
-	
-	MySQL sql;
-	
-	Connection c;
-	
+public final class EntityListener implements Listener {
+
+	private Main plugin; // TODO wird spaeter benutzt
+	private MySQL sql;
+	private Connection c;
+	// TODO Still unused variables
+	private DamageCause entityAttack = DamageCause.ENTITY_ATTACK;
+	private DamageCause entityProjectile = DamageCause.PROJECTILE;
+
 	/* Der Entity-Listener */
-	public EntityListener(MySQL sql, Connection c)
-	{
+	public EntityListener(MySQL sql, Connection c, Main plugin) {
+		this.plugin = plugin;
 		this.sql = sql;
 		this.c = c;
 	}
-	
-	DamageCause entityAttack = DamageCause.ENTITY_ATTACK;
-	DamageCause entityProjectile = DamageCause.PROJECTILE;
-	
+
 	@EventHandler
-	public void onEntityDamage(EntityDamageByEntityEvent event)
-	{
-		if (sql != null && !event.isCancelled())
-		{
-			EntityType entityType = event.getEntityType();
-			if (entityType == EntityType.COW || entityType == EntityType.PIG || entityType == EntityType.SHEEP || entityType == EntityType.CHICKEN || entityType == EntityType.HORSE || entityType == EntityType.WOLF)
-			{
-				if (event.getDamager() instanceof Player){
-					Entity entity = event.getEntity();
-					Player damager = (Player) event.getDamager();
-					
-					String entityOwner = null;
-					try {
-						entityOwner = getEntityOwner(entity.getUniqueId());
-					} catch (Exception e) {
-						e.printStackTrace();
-					}
-					
-					if (entityOwner != null)
-					{
-						if (damager.getName() != entityOwner)
-						{ 
-							event.setDamage(0);
-							event.setCancelled(true);
-							damager.sendMessage("Das Tier ist von " + entityOwner + " gesichert!");
-						}
-					}
+	public void onEntityDamage(EntityDamageByEntityEvent event) {
+		if (sql == null && event.isCancelled()) {
+			return;
+		}
+		EntityType entityType = event.getEntityType();
+		if (entityType == EntityType.COW || entityType == EntityType.PIG
+				|| entityType == EntityType.SHEEP
+				|| entityType == EntityType.CHICKEN
+				|| entityType == EntityType.HORSE
+				|| entityType == EntityType.WOLF) {
+			if (event.getDamager() instanceof Player) {
+				Entity entity = event.getEntity();
+				Player damager = (Player) event.getDamager();
+
+				String entityOwner = null;
+				try {
+					entityOwner = Commands.getEntityOwner(entity.getUniqueId());
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+
+				if (entityOwner != null && !entityOwner.isEmpty()
+						&& damager.getName().equalsIgnoreCase(entityOwner)) {
+					event.setDamage(0); // TODO anders: deprecated
+					event.setCancelled(true);
+					damager.sendMessage("Das Tier ist von " + entityOwner
+							+ " gesichert!");
 				}
 			}
 		}
 	}
 	
-	public String getEntityOwner(UUID uuid) // TODO: Aktualisieren - Die Tabelle 'animalprotect' existiert nicht mehr
-	{
-		Statement statement = null;
-		try {
-			statement = c.createStatement();
-			
-			ResultSet res;
-			try {
-				res = statement.executeQuery("SELECT * FROM animalprotect WHERE entityid = '" + uuid + "';");
-				res.next();
-				
-				if(res.getString("owner") != null) {
-					return res.getString("owner");
-				}
-			} catch (SQLException e) { e.printStackTrace(); }
-		} catch (SQLException e1) { e1.printStackTrace(); }
-
-		return null;
-	}
 }

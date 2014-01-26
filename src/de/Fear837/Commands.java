@@ -15,18 +15,16 @@ import com.volcanicplaza.BukkitDev.AnimalSelector.AnimalSelector;
 
 public class Commands implements CommandExecutor {
 
-	private MySQL sql;
-
+	private static MySQL sql;
 	private AnimalSelector animSel;
-
-	private Server server; // TODO use this!
+	private Server server;
 
 	public Commands(Server server, MySQL sql) {
 		if (animSel == null) {
 			animSel = getAnimalSelector();
 		}
 		this.server = server;
-		this.sql = sql;
+		Commands.sql = sql;
 	}
 
 	public static AnimalSelector getAnimalSelector() {
@@ -79,7 +77,7 @@ public class Commands implements CommandExecutor {
 	// res =
 	// statement.executeQuery("SELECT * FROM animalprotect WHERE entityid = '" +
 	// uuid + "';");
-	public String getEntityOwner(UUID uuid) {
+	public static String getEntityOwner(UUID uuid) {
 		ResultSet result = null;
 		try {
 			result = sql
