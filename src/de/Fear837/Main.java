@@ -31,7 +31,7 @@ public class Main extends JavaPlugin {
 			this.getCommand("lockanimal").setExecutor(commands);
 
 			/* Den Listener registrieren */
-			pm.registerEvents(new EntityListener(sql, c, this), this);
+			pm.registerEvents(new EntityListener(sql, this), this);
 
 			getLogger().info("[AnimalLock] Loading finished!");
 		} catch (Exception e) {
