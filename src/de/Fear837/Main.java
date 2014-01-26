@@ -12,6 +12,12 @@ public class Main extends JavaPlugin {
 
 	private MySQL sql;
 	Connection c = null;
+	
+	private String hostname;
+	private String username;
+	private String dbname;
+	private String password;
+	private String port;
 
 	public void onEnable() {
 		getLogger().info("[AnimalLock] Loading Plugin...");
@@ -19,9 +25,11 @@ public class Main extends JavaPlugin {
 		PluginManager pm = getServer().getPluginManager();
 
 		try {
+			/* Config initialisieren */
+			initializeConfig();
+			
 			/* MySQL-Datenbank initialisieren */
-			this.sql = new MySQL(this, "localhost", "3306", "ni2923_5_DB",
-					"ni2923_5_DB", "je7gjA5E");
+			this.sql = new MySQL(this, hostname, port, username, dbname, password);
 			c = sql.openConnection();
 
 			initializeTables();
@@ -45,6 +53,10 @@ public class Main extends JavaPlugin {
 			sql.closeConnection();
 		}
 		isEnabled = false;
+	}
+	
+	public void initializeConfig() {
+		
 	}
 
 	public void initializeTables() {
