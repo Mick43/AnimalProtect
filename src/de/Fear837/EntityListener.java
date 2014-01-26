@@ -63,7 +63,7 @@ public final class EntityListener implements Listener{
 		}
 	}
 	
-	public String getEntityOwner(UUID uuid)
+	public String getEntityOwner(UUID uuid) // TODO: Aktualisieren - Die Tabelle 'animalprotect' existiert nicht mehr
 	{
 		Statement statement = null;
 		try {
