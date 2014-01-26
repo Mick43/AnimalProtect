@@ -58,7 +58,7 @@ public final class EntityListener implements Listener {
 				}
 
 				if (entityOwner != null && !entityOwner.isEmpty()
-						&& damager.getName().equalsIgnoreCase(entityOwner)) {
+						&& !damager.getName().equalsIgnoreCase(entityOwner)) {
 					event.setDamage(0); // TODO anders: deprecated
 					damager.sendMessage("Das Tier ist von " + entityOwner
 							+ " gesichert!");
