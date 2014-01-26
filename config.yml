@@ -2,5 +2,5 @@ database:
   hostname: 'localhost'
   username: 'username'
   password: 'password'
-  database: 'localhost'
+  dbname: 'localhost'
   port: '3306'
