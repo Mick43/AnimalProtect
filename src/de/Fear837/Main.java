@@ -38,6 +38,7 @@ public class Main extends JavaPlugin {
 			/* Commands intialisieren */
 			Commands commands = new Commands(getServer(), sql);
 			this.getCommand("lockanimal").setExecutor(commands);
+			this.getCommand("lockinfo").setExecutor(commands);
 
 			/* Den Listener registrieren */
 			pm.registerEvents(new EntityListener(sql, this), this);
