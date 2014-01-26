@@ -56,7 +56,14 @@ public class Main extends JavaPlugin {
 	}
 	
 	public void initializeConfig() {
+		getConfig().options().copyDefaults(true);
+		saveConfig();
 		
+		hostname = getConfig().getString("database.hostname");
+		username = getConfig().getString("database.username");
+		dbname = getConfig().getString("database.dbname");
+		password = getConfig().getString("database.password");
+		port = getConfig().getString("database.port");
 	}
 
 	public void initializeTables() {
