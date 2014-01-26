@@ -121,39 +121,48 @@ public class Commands implements CommandExecutor {
 	public void addEntity(UUID uuid, String Owner, int x, int y, int z) {
 		ResultSet canFindEntity = null;
 		try {
-			canFindEntity = sql.get("SELECT * FROM ap_entities WHERE uuid = '"
+			canFindEntity = sql.get("SELECT id FROM ap_entities WHERE uuid = '"
 					+ uuid + "';");
 		} catch (Exception e1) {
 		}
+
 		ResultSet canFindPlayer = null;
 		try {
-			canFindPlayer = sql.get("SELECT * FROM ap_owners WHERE name = '"
+			canFindPlayer = sql.get("SELECT id FROM ap_owners WHERE name = '"
 					+ Owner + "';");
 		} catch (Exception e2) {
 		}
 
-		if (canFindEntity == null) {
-			sql.write("INSERT INTO ap_entities (`uuid`, `last_x`, `last_y`, `last_z`) VALUES ("
-					+ uuid + ", " + y + ", " + z + ");");
-			canFindEntity = sql.get("SELECT * FROM ap_entities WHERE uuid = '"
-					+ uuid + "' LIMIT 1;");
-		}
-		if (canFindPlayer == null) {
-			sql.write("INSERT INTO ap_owners (`name`) VALUES (" + Owner + ");");
-			canFindPlayer = sql.get("SELECT * FROM ap_owners WHERE name = '"
-					+ Owner + "';");
-		}
-
 		try {
-			canFindEntity.next();
-			canFindPlayer.next();
+			if (!canFindEntity.next()) {
+				sql.write("INSERT INTO ap_entities (`uuid`, `last_x`, `last_y`, `last_z`) VALUES ("
+						+ uuid + ", " + x + ", " + y + ", " + z + ");");
+				canFindEntity = sql
+						.get("SELECT id FROM ap_entities WHERE uuid = '" + uuid
+								+ "' LIMIT 1;");
+				if (!canFindEntity.next())
+					throw new SQLException("Inserting new entity failed.");
+			}
+			if (!canFindPlayer.next()) {
+				sql.write("INSERT INTO ap_owners (`name`) VALUES (" + Owner
+						+ ");");
+				canFindPlayer = sql
+						.get("SELECT id FROM ap_owners WHERE name = '" + Owner
+								+ "';");
+				if (!canFindPlayer.next())
+					throw new SQLException("Inserting new entity-owner failed.");
+			}
 
 			sql.write("INSERT INTO ap_locks (`owner_id`, `entity_id`) VALUES ("
 					+ canFindPlayer.getInt("id") + ", "
 					+ canFindEntity.getInt("id") + ");");
+			server.getLogger().info(
+					"Inserting new entity-owner-lock at " + uuid + " for "
+							+ Owner + ".");
 			canFindEntity.close();
 			canFindPlayer.close();
 		} catch (SQLException e) {
+			server.getLogger().info(e.getMessage());
 		}
 
 		// sql.write("INSERT INTO animalprotect (`entityid`, `owner`, `last_x`, `last_y`, `last_z`) VALUES ('"
