@@ -19,7 +19,7 @@ public class Commands implements CommandExecutor {
 	
 	private AnimalSelector animSel;
 	
-	private Server server;
+	private Server server; // TODO use this!
 	
 	public Commands(Server server, MySQL sql)
 	{
