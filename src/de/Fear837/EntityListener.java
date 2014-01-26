@@ -20,6 +20,7 @@ public final class EntityListener implements Listener{
 	
 	Connection c;
 	
+	/* Der Entity-Listener */
 	public EntityListener(MySQL sql, Connection c)
 	{
 		this.sql = sql;
