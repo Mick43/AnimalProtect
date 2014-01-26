@@ -70,9 +70,9 @@ public class Main extends JavaPlugin{
 				statement.executeUpdate("CREATE TABLE IF NOT EXISTS ap_entities ("
 						+ "id INT AUTO_INCREMENT PRIMARY KEY, "
 						+ "uuid VARCHAR(40), "
-						+ "last_x UNSIGNED SMALLINT(5),"
-						+ "last_y UNSIGNED SMALLINT(3),"
-						+ "last_z UNSIGNED SMALLINT(5)");
+						+ "last_x SMALLINT(5) UNSIGNED NOT NULL, "
+						+ "last_y SMALLINT(3) UNSIGNED NOT NULL, "
+						+ "last_z SMALLINT(5) UNSIGNED NOT NULL)");
 			} catch (SQLException e) { e.printStackTrace(); }
 		} catch (SQLException e1) { e1.printStackTrace(); }
 		
@@ -84,7 +84,7 @@ public class Main extends JavaPlugin{
 				statement.executeUpdate("CREATE TABLE IF NOT EXISTS ap_locks ("
 						+ "id INT AUTO_INCREMENT PRIMARY KEY, "
 						+ "owner_id INT, "
-						+ "entity_id INT,"
+						+ "entity_id INT, "
 						+ "created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP);");
 			} catch (SQLException e) { e.printStackTrace(); }
 		} catch (SQLException e1) { e1.printStackTrace(); }
