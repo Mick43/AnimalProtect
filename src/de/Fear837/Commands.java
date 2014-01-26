@@ -5,6 +5,7 @@ import java.sql.SQLException;
 import java.util.UUID;
 
 import org.bukkit.Bukkit;
+import org.bukkit.Server;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -18,9 +19,13 @@ public class Commands implements CommandExecutor {
 	
 	private AnimalSelector animSel;
 	
-	public Commands(MySQL sql)
+	private Server server;
+	
+	public Commands(Server server, MySQL sql)
 	{
 		if (animSel == null) { animSel = getAnimalSelector(); }
+		this.server = server;
+		this.sql = sql;
 	}
 	
 	public static AnimalSelector getAnimalSelector() {
@@ -62,8 +67,10 @@ public class Commands implements CommandExecutor {
 	//res = statement.executeQuery("SELECT * FROM animalprotect WHERE entityid = '" + uuid + "';");
 	public String getEntityOwner(UUID uuid)
 	{
-		ResultSet result = sql.get("SELECT name FROM ap_owners o INNER JOIN ap_locks l ON l.owner_id = o.id WHERE entity_id IN (SELECT id FROM ap_entities WHERE uuid = 'langer-code' LIMIT 1) LIMIT 1");
-		
+		ResultSet result = null;
+		try { result = sql.get("SELECT name FROM ap_owners o INNER JOIN ap_locks l ON l.owner_id = o.id WHERE entity_id IN (SELECT id FROM ap_entities WHERE uuid = '" + uuid + "')");
+		} catch (Exception e1) { }
+
 		if(result != null)
 		{
 			try { result.next(); } catch (SQLException e) { e.printStackTrace(); }
@@ -75,16 +82,38 @@ public class Commands implements CommandExecutor {
 					return ownerName;
 				}
 			} catch (SQLException e) { e.printStackTrace(); }
+			try { result.close(); } catch (SQLException e) { e.printStackTrace(); }
 		}
-		
-
 		return null;
 	}
 	
 	//statement.executeUpdate("INSERT INTO animalprotect (`entityid`, `owner`, `last_x`, `last_y`, `last_z`) VALUES ('" + entityid + "', '" + Owner + "', " + x + ", " + y + ", " + z + ");");
-	public void addEntity(UUID entityid, String Owner, int x, int y, int z)
+	public void addEntity(UUID uuid, String Owner, int x, int y, int z)
 	{
-		//TODO
+		ResultSet canFindEntity = null;
+		try { canFindEntity = sql.get("SELECT * FROM ap_entities WHERE uuid = '" + uuid + "';"); } catch (Exception e1) { }
+		ResultSet canFindPlayer = null;
+		try {  canFindPlayer = sql.get("SELECT * FROM ap_owners WHERE name = '" + Owner + "';"); } catch (Exception e2) { }
+		
+		if (canFindEntity == null)
+		{
+			sql.write("INSERT INTO ap_entities (`uuid`, `last_x`, `last_y`, `last_z`) VALUES (" + uuid + ", " + y + ", " + z + ");");
+			canFindEntity = sql.get("SELECT * FROM ap_entities WHERE uuid = '" + uuid + "' LIMIT 1;");
+		}
+		if (canFindPlayer == null)
+		{
+			sql.write("INSERT INTO ap_owners (`name`) VALUES (" + Owner + ");");
+			canFindPlayer = sql.get("SELECT * FROM ap_owners WHERE name = '" + Owner + "';");
+		}
+		
+		try {
+			canFindEntity.next();
+			canFindPlayer.next();
+			
+			sql.write("INSERT INTO ap_locks (`owner_id`, `entity_id`) VALUES (" + canFindPlayer.getInt("id") + ", " + canFindEntity.getInt("id") + ");");
+			canFindEntity.close();
+			canFindPlayer.close();
+		} catch (SQLException e) { }
 		
 		//sql.write("INSERT INTO animalprotect (`entityid`, `owner`, `last_x`, `last_y`, `last_z`) VALUES ('" + entityid + "', '" + Owner + "', " + x + ", " + y + ", " + z + ");")
 	}

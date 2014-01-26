@@ -27,7 +27,7 @@ public class Main extends JavaPlugin{
 			initializeTables();
 			
 			/* Commands intialisieren */
-			Commands commands = new Commands(sql);
+			Commands commands = new Commands(getServer(), sql);
 			this.getCommand("lockanimal").setExecutor(commands);
 			
 			/* Den Listener registrieren */

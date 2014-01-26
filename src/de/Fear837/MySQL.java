@@ -148,9 +148,6 @@ public class MySQL extends Database {
 		try {
 			statement = connection.createStatement();
 			res = statement.executeQuery(Query);
-			
-			res.close();
-			statement.close();
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
