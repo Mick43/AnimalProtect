@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.UUID;
 
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.Server;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -47,7 +48,7 @@ public class Commands implements CommandExecutor {
 		if (cmd.getName().equalsIgnoreCase("lockanimal")) {
 			Entity entity = null;
 			try { entity = animSel.getPlayerSelectedEntity(cs.getName()); } 
-			catch (Exception e) { cs.sendMessage("Es wurde kein Tier ausgewählt."); }
+			catch (Exception e) { cs.sendMessage(ChatColor.YELLOW + "Es wurde kein Tier ausgewählt."); }
 
 			if (entity != null) {
 				String isAlreadyLocked = getEntityOwner(entity.getUniqueId());
@@ -57,11 +58,11 @@ public class Commands implements CommandExecutor {
 					addEntity(entity.getUniqueId(), cs.getName(), entity
 							.getLocation().getBlockX(), entity.getLocation()
 							.getBlockY(), entity.getLocation().getBlockZ());
-					cs.sendMessage("Das Tier wurde gesichert! (ID: "
+					cs.sendMessage(ChatColor.GREEN + "Das Tier wurde gesichert! (ID: "
 							+ entity.getUniqueId() + ", NewOwner: "
 							+ getEntityOwner(entity.getUniqueId()) + ")");
 				} 
-				else { cs.sendMessage("Das Tier ist bereits von " + isAlreadyLocked + " gesichert."); }
+				else { cs.sendMessage(ChatColor.RED + "Das Tier ist bereits von " + isAlreadyLocked + " gesichert."); }
 			}
 			return true;
 		}
@@ -70,13 +71,13 @@ public class Commands implements CommandExecutor {
 			Entity entity = null;
 			
 			try { entity = animSel.getPlayerSelectedEntity(cs.getName()); } 
-			catch (Exception e) { cs.sendMessage("Es wurde kein Tier ausgewählt."); }
+			catch (Exception e) { cs.sendMessage(ChatColor.RED + "Es wurde kein Tier ausgewählt."); }
 			
 			if (entity != null) 
 			{
 				String isLocked = getEntityOwner(entity.getUniqueId());
-				if (isLocked == null) { cs.sendMessage("Dieses Tier ist nicht gesichert."); } 
-				else { cs.sendMessage("Das Tier ist von "+ isLocked + " gesichert."); }
+				if (isLocked == null) { cs.sendMessage(ChatColor.YELLOW + "Dieses Tier ist nicht gesichert."); } 
+				else { cs.sendMessage(ChatColor.YELLOW + "Dieses Tier ist von "+ isLocked + " gesichert."); }
 			}
 			return true;
 		}
@@ -176,31 +177,5 @@ public class Commands implements CommandExecutor {
 
 		// sql.write("INSERT INTO animalprotect (`entityid`, `owner`, `last_x`, `last_y`, `last_z`) VALUES ('"
 		// + entityid + "', '" + Owner + "', " + x + ", " + y + ", " + z + ");")
-	}
-
-	public void getEntitiesByOwner(String Owner)
-	{
-		/* Bekomme Spielerid vom Spieler */
-		ResultSet getOwnerID = sql.get("SELECT id FROM ap_owners WHERE name = '" + Owner + "'");
-		
-		if (getOwnerID != null)
-		{
-			try {
-				if (getOwnerID.next())
-				{
-					int ownerid = getOwnerID.getInt("id");
-					
-					/* Bekomme die id's der locked animals vom Owner */
-					ResultSet result = sql.get("SELECT entity_id FROM ap_locks WHERE owner_id = " + ownerid + ";");
-					if (result.next())
-					{
-						List<Integer> animalIDlist = new ArrayList<Integer>();
-						
-					}
-				}
-			} catch (SQLException e) {
-				e.printStackTrace();
-			}
-		}
 	}
 }
