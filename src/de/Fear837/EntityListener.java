@@ -37,8 +37,10 @@ public final class EntityListener implements Listener {
 				|| entityType == EntityType.WOLF) {
 
 			Entity entity = event.getEntity();
-			Entity damager = (Player) event.getDamager();
+			Entity damager = event.getDamager();
 
+			plugin.getServer().broadcastMessage("DEBUG::EntityType: "+damager.getType());
+			
 			switch (event.getDamager().getType()) {
 			case PLAYER:
 				String entityOwner = null;
