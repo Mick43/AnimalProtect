@@ -52,15 +52,20 @@ public final class EntityListener implements Listener {
 					e.printStackTrace();
 				}
 
+				for (Player p : plugin.getServer().getOnlinePlayers()) {
+					p.sendMessage("Entity-Damage-Event::EntityOwner: "
+							+ entityOwner);
+				}
+
 				if (entityOwner != null && !entityOwner.isEmpty()
 						&& damager.getName().equalsIgnoreCase(entityOwner)) {
 					event.setDamage(0); // TODO anders: deprecated
-					event.setCancelled(true);
 					damager.sendMessage("Das Tier ist von " + entityOwner
 							+ " gesichert!");
+					event.setCancelled(true);
 				}
 			}
 		}
 	}
-	
+
 }
