@@ -21,7 +21,8 @@ public class MySQL extends Database {
     private final String password;
     private final String port;
     private final String hostname;
-
+    
+    private Plugin plugin;
     private Connection connection;
 
     /**
@@ -47,6 +48,7 @@ public class MySQL extends Database {
         this.database = database;
         this.user = username;
         this.password = password;
+        this.plugin = plugin;
         this.connection = null;
     }
 
@@ -146,6 +148,9 @@ public class MySQL extends Database {
 		ResultSet res = null;
 		
 		try {
+			if (plugin.getConfig().getBoolean("settings.debug-messages")) {
+				plugin.getLogger().info("Querying: " + Query);
+			}
 			statement = connection.createStatement();
 			res = statement.executeQuery(Query);
 		} catch (SQLException e) {
@@ -161,7 +166,9 @@ public class MySQL extends Database {
 		try {
 			statement = connection.createStatement();
 			try {
-				System.out.println("[AnimalProtect] Inserting: " + Query);
+				if (plugin.getConfig().getBoolean("settings.debug-messages")) {
+					plugin.getLogger().info("Inserting: " + Query);
+				}
 				statement.executeUpdate(Query);
 				return true;
 			} catch (SQLException e) { e.printStackTrace(); }
