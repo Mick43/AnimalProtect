@@ -20,14 +20,17 @@ public class Main extends JavaPlugin{
 		PluginManager pm = getServer().getPluginManager();
 		
 		try {
+			/* MySQL-Datenbank initialisieren */
 			this.sql = new MySQL(this, "localhost", "3306", "ni2923_5_DB", "ni2923_5_DB", "je7gjA5E");
 			c = sql.openConnection();
 			
 			initializeTables();
 			
+			/* Commands intialisieren */
 			Commands commands = new Commands(sql);
 			this.getCommand("lockanimal").setExecutor(commands);
 			
+			/* Den Listener registrieren */
 			pm.registerEvents(new EntityListener(sql, c), this);
 			
 			getLogger().info("[AnimalLock] Loading finished!");
@@ -48,6 +51,7 @@ public class Main extends JavaPlugin{
 	
 	public void initializeTables()
 	{
+		/* Erstelle ap_owners */
 		Statement statement = null;
 		try {
 			statement = c.createStatement();
@@ -58,6 +62,7 @@ public class Main extends JavaPlugin{
 			} catch (SQLException e) { e.printStackTrace(); }
 		} catch (SQLException e1) { e1.printStackTrace(); }
 		
+		/* Erstelle ap_entities */
 	    statement = null;
 		try {
 			statement = c.createStatement();
@@ -71,6 +76,7 @@ public class Main extends JavaPlugin{
 			} catch (SQLException e) { e.printStackTrace(); }
 		} catch (SQLException e1) { e1.printStackTrace(); }
 		
+		/* Erstelle ap_locks */
 		statement = null;
 		try {
 			statement = c.createStatement();
