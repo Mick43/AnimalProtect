@@ -22,60 +22,63 @@ public class Commands implements CommandExecutor {
 	private Server server;
 
 	public Commands(Server server, MySQL sql) {
-		if (animSel == null) {
-			animSel = getAnimalSelector();
-		}
+		if (animSel == null) { animSel = getAnimalSelector(); }
+		
 		this.server = server;
+		
 		Commands.sql = sql;
 	}
 
 	public static AnimalSelector getAnimalSelector() {
 		// Get AnimalSelector plugin
-		AnimalSelector plugin = (AnimalSelector) Bukkit.getServer()
-				.getPluginManager().getPlugin("AnimalSelector");
+		AnimalSelector plugin = (AnimalSelector) Bukkit.getServer().getPluginManager().getPlugin("AnimalSelector");
 
 		if (plugin == null || !(plugin instanceof AnimalSelector)) {
-			Bukkit.getLogger().info(
-					"[WARNING] AnimalSelector isn't loaded yet.");
+			Bukkit.getLogger().info("[WARNING] AnimalSelector isn't loaded yet.");
 			return null;
 		}
 		return (AnimalSelector) plugin;
 	}
 
 	@Override
-	public boolean onCommand(CommandSender cs, Command cmd, String label,
-			String[] args) {
-		if (animSel == null) {
-			animSel = getAnimalSelector();
-		}
+	public boolean onCommand(CommandSender cs, Command cmd, String label, String[] args) {
+		if (animSel == null) { animSel = getAnimalSelector(); }
 
 		if (cmd.getName().equalsIgnoreCase("lockanimal")) {
 			Entity entity = null;
-			try {
-				entity = animSel.getPlayerSelectedEntity(cs.getName());
-			} catch (Exception e) {
-				cs.sendMessage("Es wurde kein Tier ausgewählt.");
-			}
+			try { entity = animSel.getPlayerSelectedEntity(cs.getName()); } 
+			catch (Exception e) { cs.sendMessage("Es wurde kein Tier ausgewählt."); }
 
 			if (entity != null) {
 				String isAlreadyLocked = getEntityOwner(entity.getUniqueId());
-				if (isAlreadyLocked == null) {
+				
+				if (isAlreadyLocked == null) 
+				{
 					addEntity(entity.getUniqueId(), cs.getName(), entity
 							.getLocation().getBlockX(), entity.getLocation()
 							.getBlockY(), entity.getLocation().getBlockZ());
 					cs.sendMessage("Das Tier wurde gesichert! (ID: "
 							+ entity.getUniqueId() + ", NewOwner: "
 							+ getEntityOwner(entity.getUniqueId()) + ")");
-				} else {
-					cs.sendMessage("Das Tier ist bereits von "
-							+ isAlreadyLocked + " gesichert.");
-				}
+				} 
+				else { cs.sendMessage("Das Tier ist bereits von " + isAlreadyLocked + " gesichert."); }
 			}
 			return true;
 		}
-		else if (cmd.getName().equalsIgnoreCase("listanimals")) 
+		else if (cmd.getName().equalsIgnoreCase("lockinfo")) 
 		{
+			Entity entity = null;
 			
+			try { entity = animSel.getPlayerSelectedEntity(cs.getName()); } 
+			catch (Exception e) { cs.sendMessage("Es wurde kein Tier ausgewählt."); }
+			
+			if (entity != null) 
+			{
+				String isLocked = getEntityOwner(entity.getUniqueId());
+				if (isLocked == null) { cs.sendMessage("Dieses Tier ist nicht gesichert."); } 
+				else { cs.sendMessage("Das Tier ist von "+ isLocked + " gesichert."); }
+			}
+			return true;
 		}
 		return false;
 	}
