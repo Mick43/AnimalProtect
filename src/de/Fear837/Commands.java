@@ -84,9 +84,7 @@ public class Commands implements CommandExecutor {
 		return false;
 	}
 
-	// res =
-	// statement.executeQuery("SELECT * FROM animalprotect WHERE entityid = '" +
-	// uuid + "';");
+	/* TODO Funktion entfernen und dafür EntityList nutzen */
 	public static String getEntityOwner(UUID uuid) {
 		ResultSet result = null;
 		try {
@@ -107,9 +105,7 @@ public class Commands implements CommandExecutor {
 			}
 
 			try {
-				if (result.getString("name") != null) { // java.sql.SQLException:
-														// Illegal operation on
-														// empty result set.
+				if (result.getString("name") != null) { 
 					String ownerName = result.getString("name");
 					result.close();
 					return ownerName;
@@ -126,8 +122,7 @@ public class Commands implements CommandExecutor {
 		return null;
 	}
 
-	// statement.executeUpdate("INSERT INTO animalprotect (`entityid`, `owner`, `last_x`, `last_y`, `last_z`) VALUES ('"
-	// + entityid + "', '" + Owner + "', " + x + ", " + y + ", " + z + ");");
+	/* TODO Funktion entfernen und dafür EntityList nutzen */
 	public void addEntity(UUID uuid, String Owner, int x, int y, int z) {
 		ResultSet canFindEntity = null;
 		try {
@@ -174,8 +169,5 @@ public class Commands implements CommandExecutor {
 		} catch (SQLException e) {
 			server.getLogger().info(e.getMessage());
 		}
-
-		// sql.write("INSERT INTO animalprotect (`entityid`, `owner`, `last_x`, `last_y`, `last_z`) VALUES ('"
-		// + entityid + "', '" + Owner + "', " + x + ", " + y + ", " + z + ");")
 	}
 }
