@@ -66,7 +66,7 @@ public class Commands implements CommandExecutor {
 							+ getEntityOwner(entity.getUniqueId()) + ")");
 				} else {
 					cs.sendMessage("Das Tier ist bereits von "
-							+ isAlreadyLocked + "gesichert.");
+							+ isAlreadyLocked + " gesichert.");
 				}
 			}
 			return true;
