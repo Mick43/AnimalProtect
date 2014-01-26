@@ -76,13 +76,9 @@ public class Main extends JavaPlugin {
 				statement
 						.executeUpdate("CREATE TABLE IF NOT EXISTS ap_owners ("
 								+ "id INT AUTO_INCREMENT PRIMARY KEY, "
-								+ "name TEXT)");
-			} catch (SQLException e) {
-				e.printStackTrace();
-			}
-		} catch (SQLException e1) {
-			e1.printStackTrace();
-		}
+								+ "name TEXT);");
+			} catch (SQLException e) { e.printStackTrace(); }
+		} catch (SQLException e1) { e1.printStackTrace(); }
 
 		/* Erstelle ap_entities */
 		statement = null;
@@ -95,13 +91,11 @@ public class Main extends JavaPlugin {
 								+ "uuid VARCHAR(40), "
 								+ "last_x SMALLINT(5) NOT NULL, "
 								+ "last_y SMALLINT(3) UNSIGNED NOT NULL, "
-								+ "last_z SMALLINT(5) NOT NULL)");
-			} catch (SQLException e) {
-				e.printStackTrace();
-			}
-		} catch (SQLException e1) {
-			e1.printStackTrace();
-		}
+								+ "last_z SMALLINT(5) NOT NULL, "
+								+ "animaltype ENUM('cow', 'chicken', 'pig', 'sheep', 'horse', 'wolf'), "
+								+ "nametag TEXT);");
+			} catch (SQLException e) { e.printStackTrace(); }
+		} catch (SQLException e1) { e1.printStackTrace(); }
 
 		/* Erstelle ap_locks */
 		statement = null;
@@ -110,13 +104,10 @@ public class Main extends JavaPlugin {
 			try {
 				statement.executeUpdate("CREATE TABLE IF NOT EXISTS ap_locks ("
 						+ "id INT AUTO_INCREMENT PRIMARY KEY, "
-						+ "owner_id INT, " + "entity_id INT, "
+						+ "owner_id INT, " 
+						+ "entity_id INT, "
 						+ "created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP);");
-			} catch (SQLException e) {
-				e.printStackTrace();
-			}
-		} catch (SQLException e1) {
-			e1.printStackTrace();
-		}
+			} catch (SQLException e) { e.printStackTrace(); }
+		} catch (SQLException e1) { e1.printStackTrace(); }
 	}
 }
