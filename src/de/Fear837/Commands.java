@@ -71,6 +71,10 @@ public class Commands implements CommandExecutor {
 			}
 			return true;
 		}
+		else if (cmd.getName().equalsIgnoreCase("listanimals")) 
+		{
+			
+		}
 		return false;
 	}
 
@@ -169,4 +173,20 @@ public class Commands implements CommandExecutor {
 		// + entityid + "', '" + Owner + "', " + x + ", " + y + ", " + z + ");")
 	}
 
+	public void getEntitiesByOwner(String Owner)
+	{
+		ResultSet getOwnerID = sql.get("SELECT id FROM ap_owners WHERE name = '" + Owner + "'");
+		
+		if (getOwnerID != null)
+		{
+			try {
+				if (getOwnerID.next())
+				{
+					
+				}
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+	}
 }
