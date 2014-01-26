@@ -69,7 +69,15 @@ public class EntityList {
 	}
 
 	public boolean unlock(Entity entity) {
-		// TODO
+		if (contains(entity)){
+			Player owner = get(entity);
+			
+			reverseKeys.remove(entity.getUniqueId());
+			keys.get(owner).remove(entity.getUniqueId());
+			
+			// TODO Einträge aus der Datenbank löschen
+			// Dafür wird ein MySQL-Object in der Klasse benötigt.
+		}
 		return false;
 	}
 
