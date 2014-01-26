@@ -1,15 +1,19 @@
 name: AnimalProtect
 main: de.Fear837.Main
 version: 0.1
-author: fear837
-website: www.youtube.com/fear837
+authors: [Fear837, Pingebam]
+website: www.craftolution.de
 commands:
    lockanimal:
       description: Sichert ein Entity in die Datenbank.
       usage: Write /<command>
       permission: animalprotect.protect
       permission-message: You don't have permission.
-      
+   lockinfo:
+      description: Gibt Informationen über ein Entity.
+      usage: Write /<command>
+      permission: animalprotect.protect
+      permission-message: You don't have permission.
 permissions:
   animalprotect.protect:
     default: true
