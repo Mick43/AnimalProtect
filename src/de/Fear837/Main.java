@@ -72,7 +72,7 @@ public class Main extends JavaPlugin{
 						+ "uuid VARCHAR(40), "
 						+ "last_x UNSIGNED SMALLINT(5),"
 						+ "last_y UNSIGNED SMALLINT(3),"
-						+ "last_z UNSIGNED SMALLINT(5)");
+						+ "last_z UNSIGNED SMALLINT(5))");
 			} catch (SQLException e) { e.printStackTrace(); }
 		} catch (SQLException e1) { e1.printStackTrace(); }
 		
