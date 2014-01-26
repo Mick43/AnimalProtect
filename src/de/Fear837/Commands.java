@@ -76,7 +76,7 @@ public class Commands implements CommandExecutor {
 			try { result.next(); } catch (SQLException e) { e.printStackTrace(); }
 			
 			try {
-				if(result.getString("name") != null) {
+				if(result.getString("name") != null) { // java.sql.SQLException: Illegal operation on empty result set.
 					String ownerName = result.getString("name");
 					result.close();
 					return ownerName;
