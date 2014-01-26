@@ -2,6 +2,8 @@ package de.Fear837;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 import org.bukkit.Bukkit;
@@ -175,6 +177,7 @@ public class Commands implements CommandExecutor {
 
 	public void getEntitiesByOwner(String Owner)
 	{
+		/* Bekomme Spielerid vom Spieler */
 		ResultSet getOwnerID = sql.get("SELECT id FROM ap_owners WHERE name = '" + Owner + "'");
 		
 		if (getOwnerID != null)
@@ -182,7 +185,15 @@ public class Commands implements CommandExecutor {
 			try {
 				if (getOwnerID.next())
 				{
+					int ownerid = getOwnerID.getInt("id");
 					
+					/* Bekomme die id's der locked animals vom Owner */
+					ResultSet result = sql.get("SELECT entity_id FROM ap_locks WHERE owner_id = " + ownerid + ";");
+					if (result.next())
+					{
+						List<Integer> animalIDlist = new ArrayList<Integer>();
+						
+					}
 				}
 			} catch (SQLException e) {
 				e.printStackTrace();
