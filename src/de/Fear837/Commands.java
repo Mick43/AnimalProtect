@@ -63,7 +63,9 @@ public class Commands implements CommandExecutor {
 					addEntity(entity.getUniqueId(), cs.getName(), entity
 							.getLocation().getBlockX(), entity.getLocation()
 							.getBlockY(), entity.getLocation().getBlockZ());
-					cs.sendMessage("Das Tier wurde gesichert!");
+					cs.sendMessage("Das Tier wurde gesichert! (ID: "
+							+ entity.getUniqueId() + ", NewOwner: "
+							+ getEntityOwner(entity.getUniqueId()) + ")");
 				} else {
 					cs.sendMessage("Das Tier ist bereits von "
 							+ isAlreadyLocked + "gesichert.");
@@ -135,8 +137,8 @@ public class Commands implements CommandExecutor {
 
 		try {
 			if (!canFindEntity.next()) {
-				sql.write("INSERT INTO ap_entities (`uuid`, `last_x`, `last_y`, `last_z`) VALUES ("
-						+ uuid + ", " + x + ", " + y + ", " + z + ");");
+				sql.write("INSERT INTO ap_entities (`uuid`, `last_x`, `last_y`, `last_z`) VALUES ('"
+						+ uuid + "', " + x + ", " + y + ", " + z + ");");
 				canFindEntity = sql
 						.get("SELECT id FROM ap_entities WHERE uuid = '" + uuid
 								+ "' LIMIT 1;");
