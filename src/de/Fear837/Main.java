@@ -3,17 +3,11 @@ package de.Fear837;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;
-
-import org.bukkit.Bukkit;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import com.volcanicplaza.BukkitDev.AnimalSelector.AnimalSelector;
-
 public class Main extends JavaPlugin{
 
-	AnimalSelector animSel = getAnimalSelector();
-	
 	boolean isEnabled = false;
 	
 	private MySQL sql;
@@ -29,14 +23,14 @@ public class Main extends JavaPlugin{
 			this.sql = new MySQL(this, "localhost", "3306", "ni2923_5_DB", "ni2923_5_DB", "je7gjA5E");
 			c = sql.openConnection();
 			
-			initializeTable();
+			initializeTables();
 			
-			Commands commands = new Commands(c, animSel);
-			pm.registerEvents(commands, this);
+			Commands commands = new Commands(sql);
 			this.getCommand("lockanimal").setExecutor(commands);
 			
+			pm.registerEvents(new EntityListener(sql, c), this);
+			
 			getLogger().info("[AnimalLock] Loading finished!");
-			//pm.registerEvents(new EntityListener(sql, c), this);
 		} catch (Exception e) {
 			getLogger().info("Failed to connect to MySQL-Database");
 			getLogger().info(e.getMessage());
@@ -52,35 +46,41 @@ public class Main extends JavaPlugin{
 		isEnabled = false;
 	}
 	
-	public void initializeTable()
+	public void initializeTables()
 	{
 		Statement statement = null;
 		try {
 			statement = c.createStatement();
 			try {
-				statement.executeUpdate("CREATE TABLE IF NOT EXISTS animalprotect ("
+				statement.executeUpdate("CREATE TABLE IF NOT EXISTS ap_owners ("
 						+ "id INT AUTO_INCREMENT PRIMARY KEY, "
-						+ "entityid TEXT, "
-						+ "owner TEXT, "
-						+ "last_x INT,"
-						+ "last_y INT,"
-						+ "last_z INT,"
-						+ "date TIMESTAMP DEFAULT CURRENT_TIMESTAMP)");
+						+ "name TEXT)");
 			} catch (SQLException e) { e.printStackTrace(); }
 		} catch (SQLException e1) { e1.printStackTrace(); }
 		
-	}
-	
-	
-	public static AnimalSelector getAnimalSelector() {
-		//Get AnimalSelector plugin for later on use.
-		AnimalSelector plugin = (AnimalSelector) Bukkit.getServer().getPluginManager().getPlugin("AnimalSelector");
+	    statement = null;
+		try {
+			statement = c.createStatement();
+			try {
+				statement.executeUpdate("CREATE TABLE IF NOT EXISTS ap_entities ("
+						+ "id INT AUTO_INCREMENT PRIMARY KEY, "
+						+ "uuid VARCHAR(40), "
+						+ "last_x UNSIGNED SMALLINT(5),"
+						+ "last_y UNSIGNED SMALLINT(3),"
+						+ "last_z UNSIGNED SMALLINT(5)");
+			} catch (SQLException e) { e.printStackTrace(); }
+		} catch (SQLException e1) { e1.printStackTrace(); }
 		
-		if (plugin == null || !(plugin instanceof AnimalSelector)) {
-	        Bukkit.getLogger().info("[WARNING] AnimalSelector isn't loaded yet.");
-	        return null;
-	    }
-	    return (AnimalSelector) plugin;
+		statement = null;
+		try {
+			statement = c.createStatement();
+			try {
+				statement.executeUpdate("CREATE TABLE IF NOT EXISTS ap_locks ("
+						+ "id INT AUTO_INCREMENT PRIMARY KEY, "
+						+ "owner_id INT, "
+						+ "entity_id INT,"
+						+ "created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP);");
+			} catch (SQLException e) { e.printStackTrace(); }
+		} catch (SQLException e1) { e1.printStackTrace(); }
 	}
-
 }

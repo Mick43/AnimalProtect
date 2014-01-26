@@ -1,9 +1,7 @@
 package de.Fear837;
 
-import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.UUID;
 
 import org.bukkit.Bukkit;
@@ -11,24 +9,22 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Entity;
-import org.bukkit.event.Listener;
 
 import com.volcanicplaza.BukkitDev.AnimalSelector.AnimalSelector;
 
-public class Commands implements CommandExecutor, Listener {
+public class Commands implements CommandExecutor {
 	
-	private Connection c;
+	private MySQL sql;
 	
 	private AnimalSelector animSel;
 	
-	public Commands(Connection c, AnimalSelector animSel)
+	public Commands(MySQL sql)
 	{
-		this.c = c;
-		this.animSel = animSel;
+		if (animSel == null) { animSel = getAnimalSelector(); }
 	}
 	
 	public static AnimalSelector getAnimalSelector() {
-		//Get AnimalSelector plugin for later on use.
+		//Get AnimalSelector plugin
 		AnimalSelector plugin = (AnimalSelector) Bukkit.getServer().getPluginManager().getPlugin("AnimalSelector");
 		
 		if (plugin == null || !(plugin instanceof AnimalSelector)) {
@@ -45,11 +41,8 @@ public class Commands implements CommandExecutor, Listener {
 		if (cmd.getName().equalsIgnoreCase("lockanimal"))
 		{
 			Entity entity = null;
-			try {
-				entity = animSel.getPlayerSelectedEntity(cs.getName());
-			} catch (Exception e) {
-				cs.sendMessage("Es wurde kein Tier ausgewählt.");
-			}
+			try { entity = animSel.getPlayerSelectedEntity(cs.getName()); } 
+			catch (Exception e) { cs.sendMessage("Es wurde kein Tier ausgewählt."); }
 			
 			if (entity != null)
 			{
@@ -59,49 +52,41 @@ public class Commands implements CommandExecutor, Listener {
 					addEntity(entity.getUniqueId(), cs.getName(), entity.getLocation().getBlockX(), entity.getLocation().getBlockY(), entity.getLocation().getBlockZ());
 					cs.sendMessage("Das Tier wurde gesichert!");
 				}
-				else { cs.sendMessage("Das Tier ist bereits gesichert."); }
+				else { cs.sendMessage("Das Tier ist bereits von " + isAlreadyLocked + "gesichert."); }
 			}
 			return true;
 		}
 		return false;
 	}
 	
+	//res = statement.executeQuery("SELECT * FROM animalprotect WHERE entityid = '" + uuid + "';");
 	public String getEntityOwner(UUID uuid)
 	{
-		Statement statement = null;
-		try {
-			statement = c.createStatement();
+		ResultSet result = sql.get("SELECT name FROM ap_owners o INNER JOIN ap_locks l ON l.owner_id = o.id WHERE entity_id IN (SELECT id FROM ap_entities WHERE uuid = 'langer-code' LIMIT 1) LIMIT 1");
+		
+		if(result != null)
+		{
+			try { result.next(); } catch (SQLException e) { e.printStackTrace(); }
 			
-			ResultSet res;
 			try {
-				res = statement.executeQuery("SELECT * FROM animalprotect WHERE entityid = '" + uuid + "';");
-				try {
-					res.next();
-					
-					if(res.getString("owner") != null) {
-						String ownerName = res.getString("owner");
-						res.close();
-						statement.close();
-						return ownerName;
-					}
-				} catch (Exception e) { e.printStackTrace(); }
+				if(result.getString("name") != null) {
+					String ownerName = result.getString("name");
+					result.close();
+					return ownerName;
+				}
 			} catch (SQLException e) { e.printStackTrace(); }
-		} catch (SQLException e1) { e1.printStackTrace(); }
+		}
+		
 
 		return null;
 	}
 	
+	//statement.executeUpdate("INSERT INTO animalprotect (`entityid`, `owner`, `last_x`, `last_y`, `last_z`) VALUES ('" + entityid + "', '" + Owner + "', " + x + ", " + y + ", " + z + ");");
 	public void addEntity(UUID entityid, String Owner, int x, int y, int z)
 	{
-		Statement statement = null;
-		try {
-			statement = c.createStatement();
-			try {
-				System.out.println("[AnimalProtect] Inserting: INSERT INTO animalprotect (`entityid`, `owner`, 'last_x', 'last_y', 'last_z') VALUES ('" + entityid + "', '" + Owner + "', '" + x + "', '" + y + "', '" + z + "');");
-				statement.executeUpdate("INSERT INTO animalprotect (`entityid`, `owner`, 'last_x', 'last_y', 'last_z') VALUES ('" + entityid + "', '" + Owner + "', " + x + ", " + y + ", " + z + ");");
-			} catch (SQLException e) { e.printStackTrace(); }
-			System.out.println("Inserted info");
-		} catch (SQLException e1) { e1.printStackTrace(); }
+		//TODO
+		
+		//sql.write("INSERT INTO animalprotect (`entityid`, `owner`, `last_x`, `last_y`, `last_z`) VALUES ('" + entityid + "', '" + Owner + "', " + x + ", " + y + ", " + z + ");")
 	}
 
 }

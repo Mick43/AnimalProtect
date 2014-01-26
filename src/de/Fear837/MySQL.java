@@ -137,5 +137,39 @@ public class MySQL extends Database {
         closeConnection();
 
     }
+    
+    
+    
+	public ResultSet get(String Query)
+	{
+		Statement statement = null;
+		ResultSet res = null;
+		
+		try {
+			statement = connection.createStatement();
+			res = statement.executeQuery(Query);
+			
+			res.close();
+			statement.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		return res;
+	}
+	
+	public boolean write(String Query)
+	{
+		Statement statement = null;
+		try {
+			statement = connection.createStatement();
+			try {
+				System.out.println("[AnimalProtect] Inserting: " + Query);
+				statement.executeUpdate(Query);
+				return true;
+			} catch (SQLException e) { e.printStackTrace(); }
+		} catch (SQLException e1) { e1.printStackTrace(); }
+		return false;
+	}
 
 }
