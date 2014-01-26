@@ -144,8 +144,8 @@ public class Commands implements CommandExecutor {
 					throw new SQLException("Inserting new entity failed.");
 			}
 			if (!canFindPlayer.next()) {
-				sql.write("INSERT INTO ap_owners (`name`) VALUES (" + Owner
-						+ ");");
+				sql.write("INSERT INTO ap_owners (`name`) VALUES ('" + Owner
+						+ "');");
 				canFindPlayer = sql
 						.get("SELECT id FROM ap_owners WHERE name = '" + Owner
 								+ "';");

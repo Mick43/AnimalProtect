@@ -6,76 +6,83 @@ import java.sql.Statement;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
-public class Main extends JavaPlugin{
+public class Main extends JavaPlugin {
 
 	boolean isEnabled = false;
-	
+
 	private MySQL sql;
 	Connection c = null;
-	
-	public void onEnable()
-	{
+
+	public void onEnable() {
 		getLogger().info("[AnimalLock] Loading Plugin...");
-		
+
 		PluginManager pm = getServer().getPluginManager();
-		
+
 		try {
 			/* MySQL-Datenbank initialisieren */
-			this.sql = new MySQL(this, "localhost", "3306", "ni2923_5_DB", "ni2923_5_DB", "je7gjA5E");
+			this.sql = new MySQL(this, "localhost", "3306", "ni2923_5_DB",
+					"ni2923_5_DB", "je7gjA5E");
 			c = sql.openConnection();
-			
+
 			initializeTables();
-			
+
 			/* Commands intialisieren */
 			Commands commands = new Commands(getServer(), sql);
 			this.getCommand("lockanimal").setExecutor(commands);
-			
+
 			/* Den Listener registrieren */
 			pm.registerEvents(new EntityListener(sql, c, this), this);
-			
+
 			getLogger().info("[AnimalLock] Loading finished!");
 		} catch (Exception e) {
 			getLogger().info("Failed to connect to MySQL-Database");
 			getLogger().info(e.getMessage());
 		}
 	}
-	
-	public void onDisable()
-	{
-		if (sql.checkConnection())
-		{
+
+	public void onDisable() {
+		if (sql.checkConnection()) {
 			sql.closeConnection();
 		}
 		isEnabled = false;
 	}
-	
-	public void initializeTables()
-	{
+
+	public void initializeTables() {
 		/* Erstelle ap_owners */
 		Statement statement = null;
 		try {
 			statement = c.createStatement();
 			try {
-				statement.executeUpdate("CREATE TABLE IF NOT EXISTS ap_owners ("
-						+ "id INT AUTO_INCREMENT PRIMARY KEY, "
-						+ "name TEXT)");
-			} catch (SQLException e) { e.printStackTrace(); }
-		} catch (SQLException e1) { e1.printStackTrace(); }
-		
+				statement
+						.executeUpdate("CREATE TABLE IF NOT EXISTS ap_owners ("
+								+ "id INT AUTO_INCREMENT PRIMARY KEY, "
+								+ "name TEXT)");
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		} catch (SQLException e1) {
+			e1.printStackTrace();
+		}
+
 		/* Erstelle ap_entities */
-	    statement = null;
+		statement = null;
 		try {
 			statement = c.createStatement();
 			try {
-				statement.executeUpdate("CREATE TABLE IF NOT EXISTS ap_entities ("
-						+ "id INT AUTO_INCREMENT PRIMARY KEY, "
-						+ "uuid VARCHAR(40), "
-						+ "last_x SMALLINT(5) UNSIGNED NOT NULL, "
-						+ "last_y SMALLINT(3) UNSIGNED NOT NULL, "
-						+ "last_z SMALLINT(5) UNSIGNED NOT NULL)");
-			} catch (SQLException e) { e.printStackTrace(); }
-		} catch (SQLException e1) { e1.printStackTrace(); }
-		
+				statement
+						.executeUpdate("CREATE TABLE IF NOT EXISTS ap_entities ("
+								+ "id INT AUTO_INCREMENT PRIMARY KEY, "
+								+ "uuid VARCHAR(40), "
+								+ "last_x SMALLINT(5) NOT NULL, "
+								+ "last_y SMALLINT(3) UNSIGNED NOT NULL, "
+								+ "last_z SMALLINT(5) NOT NULL)");
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		} catch (SQLException e1) {
+			e1.printStackTrace();
+		}
+
 		/* Erstelle ap_locks */
 		statement = null;
 		try {
@@ -83,10 +90,13 @@ public class Main extends JavaPlugin{
 			try {
 				statement.executeUpdate("CREATE TABLE IF NOT EXISTS ap_locks ("
 						+ "id INT AUTO_INCREMENT PRIMARY KEY, "
-						+ "owner_id INT, "
-						+ "entity_id INT, "
+						+ "owner_id INT, " + "entity_id INT, "
 						+ "created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP);");
-			} catch (SQLException e) { e.printStackTrace(); }
-		} catch (SQLException e1) { e1.printStackTrace(); }
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		} catch (SQLException e1) {
+			e1.printStackTrace();
+		}
 	}
 }
