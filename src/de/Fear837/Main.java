@@ -70,9 +70,9 @@ public class Main extends JavaPlugin{
 				statement.executeUpdate("CREATE TABLE IF NOT EXISTS ap_entities ("
 						+ "id INT AUTO_INCREMENT PRIMARY KEY, "
 						+ "uuid VARCHAR(40), "
-						+ "last_x SMALLINT(5) UNSIGNED NOT NULL, "
+						+ "last_x SMALLINT(5) NOT NULL, "
 						+ "last_y SMALLINT(3) UNSIGNED NOT NULL, "
-						+ "last_z SMALLINT(5) UNSIGNED NOT NULL)");
+						+ "last_z SMALLINT(5) NOT NULL)");
 			} catch (SQLException e) { e.printStackTrace(); }
 		} catch (SQLException e1) { e1.printStackTrace(); }
 		
