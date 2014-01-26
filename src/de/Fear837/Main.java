@@ -29,6 +29,7 @@ public class Main extends JavaPlugin {
 			initializeConfig();
 			
 			/* MySQL-Datenbank initialisieren */
+			getLogger().info("Connecting with database: " + hostname + "/" + username);
 			this.sql = new MySQL(this, hostname, port, username, dbname, password);
 			c = sql.openConnection();
 
