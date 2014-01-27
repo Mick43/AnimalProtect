@@ -10,7 +10,7 @@ commands:
       permission: animalprotect.protect
       permission-message: You don't have permission.
    lockinfo:
-      description: Gibt Informationen über ein Entity.
+      description: Gibt Informationen ueber ein Entity.
       usage: Write /<command>
       permission: animalprotect.protect
       permission-message: You don't have permission.
