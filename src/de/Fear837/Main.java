@@ -111,4 +111,8 @@ public class Main extends JavaPlugin {
 			} catch (SQLException e) { e.printStackTrace(); }
 		} catch (SQLException e1) { e1.printStackTrace(); }
 	}
+	
+	public MySQL getMySQL(){
+		return this.sql;
+	}
 }

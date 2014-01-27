@@ -9,6 +9,7 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 
 import de.Fear837.Main;
+import de.Fear837.MySQL;
 
 /**
  * Represents a list of entities (of predefined type: animal) foreach player and
@@ -22,15 +23,47 @@ public class EntityList {
 
 	/** The plugin using this list */
 	private Main plugin;
+	/** The database to get data from */
+	private MySQL database;
+
+	// TODO Fill on queries, SELECTS, INSERTS, UPDATES, DELETES!
+	/**
+	 * All loaded data as stored in database, to check quicker for changes.
+	 * Object[n] is the complete data for one player:<br>
+	 * 0 - Primary key for player<br>
+	 * 1 - Name of player
+	 */
+	private ArrayList<Object[]> memoryPlayers;
+	/**
+	 * All loaded data as stored in database, to check quicker for changes.
+	 * Object[n] is the complete data for one entity:<br>
+	 * 0 - Primary key for entity<br>
+	 * 1 - UUID of entity<br>
+	 * 2 - last_x<br>
+	 * 3 - last_y<br>
+	 * 4 - last_z
+	 */
+	private ArrayList<Object[]> memoryEntities;
+	/**
+	 * All loaded data as stored in database, to check quicker for changes.
+	 * Object[n] is the complete data for one lock:<br>
+	 * 0 - Primary key for lock<br>
+	 * 1 - player_id<br>
+	 * 2 - entity_id<br>
+	 * 3 - created_at
+	 */
+	private ArrayList<Object[]> memoryLocks;
+
 	/** Maps player to all his entities */
 	private HashMap<Player, ArrayList<UUID>> keys;
-	/** Reverse Maps an entity to his owner (redundant for speed) */
+	/** Reverse Maps an entity to his owner */
 	private HashMap<UUID, Player> reverseKeys;
+
 	/** The maximum allowed saved entities for one player */
 	private static int MAX_ENTITIES_FOR_PLAYER = 0;
-	/** If true, debugmessages will be displayed at the console. */
+	/** If true, debug-messages will be displayed at the console. */
 	private static boolean DEBUGGING = false;
-	/** Stores the last Method call success */
+	/** Stores the last Method call success status */
 	private boolean lastActionSuccess;
 
 	/**
@@ -55,9 +88,12 @@ public class EntityList {
 	 */
 	public EntityList(Main plugin, boolean empty) {
 		this.plugin = plugin;
+		this.database = plugin.getMySQL();
+		this.memoryPlayers = new ArrayList<Object[]>();
+		this.memoryEntities = new ArrayList<Object[]>();
+		this.memoryLocks = new ArrayList<Object[]>();
 		this.keys = new HashMap<Player, ArrayList<UUID>>();
 		this.reverseKeys = new HashMap<UUID, Player>();
-		this.lastActionSuccess = false;
 
 		if (!empty) {
 			for (Player player : plugin.getServer().getOnlinePlayers()) {
@@ -65,10 +101,10 @@ public class EntityList {
 			}
 		}
 
-		// TODO ?
 		MAX_ENTITIES_FOR_PLAYER = plugin.getConfig().getInt(
 				"settings.max_entities_for_player");
 		DEBUGGING = plugin.getConfig().getBoolean("settings.debug-messages");
+		this.lastActionSuccess = false;
 		// TODO
 	}
 
@@ -92,6 +128,21 @@ public class EntityList {
 	}
 
 	/**
+	 * Returns the amount of entities locked by a player.
+	 * 
+	 * @param player
+	 *            The player as the owner
+	 * @return Amount of entities for a player, returns 0 if player isn't active
+	 *         in RAM.
+	 */
+	public int sizeOfEntities(Player player) {
+		if (!containsPlayer(player)) {
+			return 0;
+		}
+		return keys.get(player).size();
+	}
+
+	/**
 	 * Returns the amount of players, which are active in RAM.
 	 * 
 	 * @return Amount of players in RAM.
@@ -107,7 +158,7 @@ public class EntityList {
 	 *            The player to check for
 	 * @return <tt>true</tt> if <tt>player</tt> is active in RAM.
 	 */
-	private boolean containsPlayer(Player player) {
+	public boolean containsPlayer(Player player) {
 		return keys.containsKey(player);
 	}
 
@@ -169,10 +220,15 @@ public class EntityList {
 			this.lastActionSuccess = false;
 			return this;
 		}
-		if (!contains(player))
+		if (!contains(player)) {
 			connect(player);
-		keys.get(player).add(entity.getUniqueId());
-		reverseKeys.put(entity.getUniqueId(), player);
+		}
+		if (sizeOfEntities(player) >= MAX_ENTITIES_FOR_PLAYER) {
+			this.lastActionSuccess = false;
+		} else {
+			keys.get(player).add(entity.getUniqueId());
+			reverseKeys.put(entity.getUniqueId(), player);
+		}
 		return this;
 	}
 
@@ -309,8 +365,8 @@ public class EntityList {
 	 * Returns if the last method call was successful.
 	 * 
 	 * @return <tt>true</tt> if last method call was successful, otherwise
-	 *         <tt>false</tt>. If no method was called yet, returns
-	 *         <tt>false</tt>.
+	 *         <tt>false</tt>.<br>
+	 *         If no method was called yet, returns <tt>false</tt>.
 	 */
 	public boolean lastActionSucceeded() {
 		return this.lastActionSuccess;
