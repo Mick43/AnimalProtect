@@ -46,7 +46,7 @@ public class Main extends JavaPlugin {
 			entitylist = new EntityList(this);
 
 			/* Commands intialisieren */
-			Commands commands = new Commands(getServer(), sql);
+			Commands commands = new Commands(this, sql);
 			this.getCommand("lockanimal").setExecutor(commands);
 			this.getCommand("lockinfo").setExecutor(commands);
 

@@ -4,54 +4,38 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.UUID;
 
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.Server;
+import org.bukkit.Sound;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LivingEntity;
+import org.bukkit.entity.Player;
 
-import com.volcanicplaza.BukkitDev.AnimalSelector.AnimalSelector;
+import de.Fear837.listener.EntityListener;
 
 public class Commands implements CommandExecutor {
 
 	private static MySQL sql;
-	private AnimalSelector animSel;
-	private Server server;
+	private Main plugin;
 
-	public Commands(Server server, MySQL sql) {
-		if (animSel == null) { animSel = getAnimalSelector(); }
-		
-		this.server = server;
+	public Commands(Main plugin, MySQL sql) {
+		this.plugin = plugin;
 		
 		Commands.sql = sql;
 	}
 
-	public static AnimalSelector getAnimalSelector() {
-		// Get AnimalSelector plugin
-		AnimalSelector plugin = (AnimalSelector) Bukkit.getServer().getPluginManager().getPlugin("AnimalSelector");
-
-		if (plugin == null || !(plugin instanceof AnimalSelector)) {
-			Bukkit.getLogger().info("[WARNING] AnimalSelector isn't loaded yet.");
-			return null;
-		}
-		return (AnimalSelector) plugin;
-	}
-
 	@Override
 	public boolean onCommand(CommandSender cs, Command cmd, String label, String[] args) {
-		if (animSel == null) { animSel = getAnimalSelector(); }
-
 		if (cmd.getName().equalsIgnoreCase("lockanimal")) {
 			Entity entity = null;
-			try { entity = animSel.getPlayerSelectedEntity(cs.getName()); } 
+			try { entity = EntityListener.getSelected((Player)cs); } 
 			catch (Exception e) { cs.sendMessage(ChatColor.YELLOW + "Es wurde kein Tier ausgewählt."); }
 
 			if (entity != null) {
-				if (entity.getType() == EntityType.COW 
+				if (entity.getType() == EntityType.COW
 						|| entity.getType() == EntityType.PIG
 						|| entity.getType() == EntityType.SHEEP
 						|| entity.getType() == EntityType.CHICKEN
@@ -67,9 +51,13 @@ public class Commands implements CommandExecutor {
 								.getLocation().getBlockX(), e.getLocation()
 								.getBlockY(), e.getLocation().getBlockZ(), e
 								.getType().toString(), e.getCustomName());
-						cs.sendMessage(ChatColor.GREEN + "Das Tier wurde gesichert! (ID: "
-								+ e.getUniqueId() + ", NewOwner: "
-								+ getEntityOwner(entity.getUniqueId()) + ")");
+						cs.sendMessage(ChatColor.GREEN + "Das Tier wurde erfolgreich gesichert!");
+						Player p = (Player)cs;
+						p.playSound(p.getLocation(), Sound.CLICK, 0.75f, 1.25f);
+						if (plugin.getConfig().getBoolean("settings.debug-messages")) {
+							cs.sendMessage(ChatColor.GRAY.ITALIC + "(ID: " + e.getUniqueId() 
+									+ ", NewOwner: " + getEntityOwner(entity.getUniqueId()) + ")");
+						}
 					} 
 					else { cs.sendMessage(ChatColor.RED + "Das Tier ist bereits von " + isAlreadyLocked + " gesichert."); }
 				}
@@ -82,7 +70,7 @@ public class Commands implements CommandExecutor {
 		{
 			Entity entity = null;
 			
-			try { entity = animSel.getPlayerSelectedEntity(cs.getName()); } 
+			try { entity = EntityListener.getSelected((Player)cs); } 
 			catch (Exception e) { cs.sendMessage(ChatColor.RED + "Es wurde kein Tier ausgewählt."); }
 			
 			if (entity != null) 
@@ -174,11 +162,11 @@ public class Commands implements CommandExecutor {
 			sql.write("INSERT INTO ap_locks (`owner_id`, `entity_id`) "
 					+ "VALUES (" + canFindPlayer.getInt("id") + ", " + canFindEntity.getInt("id") + ");");
 			
-			server.getLogger().info( "Inserting new entity-owner-lock at " + uuid + " for " + Owner + ".");
+			plugin.getLogger().info( "Inserting new entity-owner-lock at " + uuid + " for " + Owner + ".");
 			canFindEntity.close();
 			canFindPlayer.close();
 		} catch (SQLException e) {
-			server.getLogger().info(e.getMessage());
+			plugin.getLogger().info(e.getMessage());
 		}
 	}
 }
