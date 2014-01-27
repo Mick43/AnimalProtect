@@ -4,7 +4,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map.Entry;
 import java.util.UUID;
 
@@ -218,10 +217,16 @@ public class EntityList {
 										try {
 											if (rs.next()) {
 												String Ownername = rs.getString("name");
-												// Player kann nicht returned werden, weil in der Datenbank nur der Name bekannt ist.
-												// Der Spieler muss auch nicht umbedingt online sein, 
-												// also sollte man den Namen im Server nicht suchen
-												// TODO Player kann nicht returned werden.
+												try {
+													Player player = (Player) plugin.getServer().getOfflinePlayer(Ownername);
+													
+													if (player != null) {
+														return player;
+													}
+												} catch (Exception e) { 
+													plugin.getLogger().warning("EntityList.get: Could not cast OfflinePlayer to Player");
+													e.printStackTrace();
+												}
 											}
 										}
 									    catch (SQLException e) { e.printStackTrace(); }
