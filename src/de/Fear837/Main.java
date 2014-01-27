@@ -6,6 +6,9 @@ import java.sql.Statement;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import de.Fear837.listener.EntityLoadSaveListener;
+import de.Fear837.structs.EntityList;
+
 public class Main extends JavaPlugin {
 
 	boolean isEnabled = false;
@@ -13,12 +16,14 @@ public class Main extends JavaPlugin {
 	private MySQL sql;
 	Connection c = null;
 	
-	private String hostname;
-	private String username;
-	private String dbname;
-	private String password;
-	private String port;
+	private static String hostname;
+	private static String username;
+	private static String dbname;
+	private static String password;
+	private static String port;
 
+	private static EntityList entitylist;
+	
 	public void onEnable() {
 		getLogger().info("[AnimalLock] Loading Plugin...");
 
@@ -42,6 +47,9 @@ public class Main extends JavaPlugin {
 
 			/* Den Listener registrieren */
 			pm.registerEvents(new EntityListener(sql, this), this);
+			
+			entitylist = new EntityList(this);
+			pm.registerEvents(new EntityLoadSaveListener(this), this);
 
 			getLogger().info("[AnimalLock] Loading finished!");
 		} catch (Exception e) {
@@ -114,5 +122,9 @@ public class Main extends JavaPlugin {
 	
 	public MySQL getMySQL(){
 		return this.sql;
+	}
+	
+	public EntityList getEntityList(){
+		return entitylist;
 	}
 }
