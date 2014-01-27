@@ -159,7 +159,7 @@ public class Commands implements CommandExecutor {
 		try {
 			if (!canFindEntity.next()) {
 				sql.write("INSERT INTO ap_entities (`uuid`, `last_x`, `last_y`, `last_z`, `animaltype`, `nametag`) "
-						+ "VALUES ('" + uuid + "', " + x + ", " + y + ", " + z + ", '" + Type + "', '" + Nametag + ");");
+						+ "VALUES ('" + uuid + "', " + x + ", " + y + ", " + z + ", '" + Type + "', '" + Nametag + "');");
 				canFindEntity = sql.get("SELECT id FROM ap_entities WHERE uuid = '" + uuid + "' LIMIT 1;");
 				if (!canFindEntity.next())
 					throw new SQLException("Inserting new entity failed.");
