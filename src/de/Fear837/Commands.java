@@ -55,7 +55,7 @@ public class Commands implements CommandExecutor {
 						Player p = (Player)cs;
 						p.playSound(p.getLocation(), Sound.CLICK, 0.75f, 1.25f);
 						if (plugin.getConfig().getBoolean("settings.debug-messages")) {
-							cs.sendMessage(ChatColor.GRAY.ITALIC + "(ID: " + e.getUniqueId() 
+							cs.sendMessage("§7§o(ID: " + e.getUniqueId() 
 									+ ", NewOwner: " + getEntityOwner(entity.getUniqueId()) + ")");
 						}
 					} 

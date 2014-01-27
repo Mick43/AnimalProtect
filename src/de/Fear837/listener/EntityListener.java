@@ -59,24 +59,24 @@ public final class EntityListener implements Listener {
 				
 				if (entityOwner == null) {
 					switch (entity.getType()) {
-					case COW: player.sendMessage(ChatColor.YELLOW + "Du hast eine Kuh ausgewählt. (/lockhelp für weitere Informationen)"); 
+					case COW: player.sendMessage(ChatColor.YELLOW + "Du hast eine §6Kuh§e ausgewählt. §7(/lockanimal um sie zu protecten.)"); 
 						break;
-					case PIG: player.sendMessage(ChatColor.YELLOW + "Du hast ein Schwein ausgewählt. (/lockhelp für weitere Informationen)");
+					case PIG: player.sendMessage(ChatColor.YELLOW + "Du hast ein §6Schwein§e ausgewählt. §7(/lockanimal um es zu protecten.)");
 						break;
-					case SHEEP: player.sendMessage(ChatColor.YELLOW + "Du hast ein Schaf ausgewählt. (/lockhelp für weitere Informationen)");
+					case SHEEP: player.sendMessage(ChatColor.YELLOW + "Du hast ein §6Schaf§e ausgewählt. §7(/lockanimal um es zu protecten.)");
 						break;
-					case CHICKEN: player.sendMessage(ChatColor.YELLOW + "Du hast ein Huhn ausgewählt. (/lockhelp für weitere Informationen)");
+					case CHICKEN: player.sendMessage(ChatColor.YELLOW + "Du hast ein §6Huhn§e ausgewählt. §7(/lockanimal um es zu protecten.)");
 						break;
-					case HORSE: player.sendMessage(ChatColor.YELLOW + "Du hast ein Pferd ausgewählt. (/lockhelp für weitere Informationen)");
+					case HORSE: player.sendMessage(ChatColor.YELLOW + "Du hast ein §6Pferd§e ausgewählt. §7(/lockanimal um es zu protecten.)");
 						break;
-					case WOLF: player.sendMessage(ChatColor.YELLOW + "Du hast einen Wolf ausgewählt. (/lockhelp für weitere Informationen)");
+					case WOLF: player.sendMessage(ChatColor.YELLOW + "Du hast einen §6Wolf§e ausgewählt. §7(/lockanimal um ihn zu protecten.)");
 						break;
-					default: player.sendMessage(ChatColor.YELLOW + "Du hast ein unbekanntes Tier ausgewählt. (/lockhelp für weitere Informationen)");
+					default: player.sendMessage(ChatColor.YELLOW + "Du hast ein §6unbekanntes§e Tier ausgewählt. §7(/lockanimal um es zu protecten.)");
 						break;
 					}
 				}
 				else { 
-					player.sendMessage(ChatColor.YELLOW + "Du hast das Tier von " + entityOwner + " ausgewählt."); 
+					player.sendMessage(ChatColor.YELLOW + "Du hast das Tier von §6" + entityOwner + "§e ausgewählt."); 
 				}
 			}
 		}
