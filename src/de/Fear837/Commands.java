@@ -2,8 +2,6 @@ package de.Fear837;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.UUID;
 
 import org.bukkit.Bukkit;
@@ -13,6 +11,8 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.EntityType;
+import org.bukkit.entity.LivingEntity;
 
 import com.volcanicplaza.BukkitDev.AnimalSelector.AnimalSelector;
 
@@ -51,19 +51,31 @@ public class Commands implements CommandExecutor {
 			catch (Exception e) { cs.sendMessage(ChatColor.YELLOW + "Es wurde kein Tier ausgewählt."); }
 
 			if (entity != null) {
-				String isAlreadyLocked = getEntityOwner(entity.getUniqueId());
-				
-				if (isAlreadyLocked == null) 
-				{
-					addEntity(entity.getUniqueId(), cs.getName(), entity
-							.getLocation().getBlockX(), entity.getLocation()
-							.getBlockY(), entity.getLocation().getBlockZ());
-					cs.sendMessage(ChatColor.GREEN + "Das Tier wurde gesichert! (ID: "
-							+ entity.getUniqueId() + ", NewOwner: "
-							+ getEntityOwner(entity.getUniqueId()) + ")");
-				} 
-				else { cs.sendMessage(ChatColor.RED + "Das Tier ist bereits von " + isAlreadyLocked + " gesichert."); }
+				if (entity.getType() == EntityType.COW 
+						|| entity.getType() == EntityType.PIG
+						|| entity.getType() == EntityType.SHEEP
+						|| entity.getType() == EntityType.CHICKEN
+						|| entity.getType() == EntityType.HORSE
+						|| entity.getType() == EntityType.WOLF) {
+					String isAlreadyLocked = getEntityOwner(entity.getUniqueId());
+					
+					LivingEntity e = (LivingEntity)entity;
+					
+					if (isAlreadyLocked == null) 
+					{
+						addEntity(entity.getUniqueId(), cs.getName(), e
+								.getLocation().getBlockX(), e.getLocation()
+								.getBlockY(), e.getLocation().getBlockZ(), e
+								.getType().toString(), e.getCustomName());
+						cs.sendMessage(ChatColor.GREEN + "Das Tier wurde gesichert! (ID: "
+								+ e.getUniqueId() + ", NewOwner: "
+								+ getEntityOwner(entity.getUniqueId()) + ")");
+					} 
+					else { cs.sendMessage(ChatColor.RED + "Das Tier ist bereits von " + isAlreadyLocked + " gesichert."); }
+				}
+				else { cs.sendMessage(ChatColor.RED + "Dieses Entity ist kein Tier!"); }
 			}
+			else { cs.sendMessage(ChatColor.RED + "Du hast kein Tier ausgewählt!"); }
 			return true;
 		}
 		else if (cmd.getName().equalsIgnoreCase("lockinfo")) 
@@ -75,10 +87,20 @@ public class Commands implements CommandExecutor {
 			
 			if (entity != null) 
 			{
-				String isLocked = getEntityOwner(entity.getUniqueId());
-				if (isLocked == null) { cs.sendMessage(ChatColor.YELLOW + "Dieses Tier ist nicht gesichert."); } 
-				else { cs.sendMessage(ChatColor.YELLOW + "Dieses Tier ist von "+ isLocked + " gesichert."); }
+				if (entity.getType() == EntityType.COW 
+						|| entity.getType() == EntityType.PIG
+						|| entity.getType() == EntityType.SHEEP
+						|| entity.getType() == EntityType.CHICKEN
+						|| entity.getType() == EntityType.HORSE
+						|| entity.getType() == EntityType.WOLF) {
+					String isAlreadyLocked = getEntityOwner(entity.getUniqueId()); {
+						String isLocked = getEntityOwner(entity.getUniqueId());
+						if (isLocked == null) { cs.sendMessage(ChatColor.YELLOW + "Dieses Tier ist nicht gesichert."); } 
+						else { cs.sendMessage(ChatColor.YELLOW + "Dieses Tier ist von "+ isLocked + " gesichert."); }
+					}
+				}
 			}
+			else { cs.sendMessage(ChatColor.RED + "Es wurde kein Tier ausgewählt!"); }
 			return true;
 		}
 		return false;
@@ -123,47 +145,36 @@ public class Commands implements CommandExecutor {
 	}
 
 	/* TODO Funktion entfernen und dafür EntityList nutzen */
-	public void addEntity(UUID uuid, String Owner, int x, int y, int z) {
+	public void addEntity(UUID uuid, String Owner, int x, int y, int z, String Type, String Nametag) {
 		ResultSet canFindEntity = null;
 		try {
-			canFindEntity = sql.get("SELECT id FROM ap_entities WHERE uuid = '"
-					+ uuid + "';");
-		} catch (Exception e1) {
-		}
+			canFindEntity = sql.get("SELECT id FROM ap_entities WHERE uuid = '" + uuid + "';");
+		} catch (Exception e1) { }
 
 		ResultSet canFindPlayer = null;
 		try {
-			canFindPlayer = sql.get("SELECT id FROM ap_owners WHERE name = '"
-					+ Owner + "';");
-		} catch (Exception e2) {
-		}
+			canFindPlayer = sql.get("SELECT id FROM ap_owners WHERE name = '" + Owner + "';");
+		} catch (Exception e2) { }
 
 		try {
 			if (!canFindEntity.next()) {
-				sql.write("INSERT INTO ap_entities (`uuid`, `last_x`, `last_y`, `last_z`) VALUES ('"
-						+ uuid + "', " + x + ", " + y + ", " + z + ");");
-				canFindEntity = sql
-						.get("SELECT id FROM ap_entities WHERE uuid = '" + uuid
-								+ "' LIMIT 1;");
+				sql.write("INSERT INTO ap_entities (`uuid`, `last_x`, `last_y`, `last_z`, `animaltype`, `nametag`) "
+						+ "VALUES ('" + uuid + "', " + x + ", " + y + ", " + z + ", '" + Type + "', '" + Nametag + ");");
+				canFindEntity = sql.get("SELECT id FROM ap_entities WHERE uuid = '" + uuid + "' LIMIT 1;");
 				if (!canFindEntity.next())
 					throw new SQLException("Inserting new entity failed.");
 			}
 			if (!canFindPlayer.next()) {
-				sql.write("INSERT INTO ap_owners (`name`) VALUES ('" + Owner
-						+ "');");
-				canFindPlayer = sql
-						.get("SELECT id FROM ap_owners WHERE name = '" + Owner
-								+ "';");
+				sql.write("INSERT INTO ap_owners (`name`) VALUES ('" + Owner + "');");
+				canFindPlayer = sql.get("SELECT id FROM ap_owners WHERE name = '" + Owner + "';");
 				if (!canFindPlayer.next())
 					throw new SQLException("Inserting new entity-owner failed.");
 			}
 
-			sql.write("INSERT INTO ap_locks (`owner_id`, `entity_id`) VALUES ("
-					+ canFindPlayer.getInt("id") + ", "
-					+ canFindEntity.getInt("id") + ");");
-			server.getLogger().info(
-					"Inserting new entity-owner-lock at " + uuid + " for "
-							+ Owner + ".");
+			sql.write("INSERT INTO ap_locks (`owner_id`, `entity_id`) "
+					+ "VALUES (" + canFindPlayer.getInt("id") + ", " + canFindEntity.getInt("id") + ");");
+			
+			server.getLogger().info( "Inserting new entity-owner-lock at " + uuid + " for " + Owner + ".");
 			canFindEntity.close();
 			canFindPlayer.close();
 		} catch (SQLException e) {
