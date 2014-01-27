@@ -1,4 +1,4 @@
-package de.Fear837;
+package de.Fear837.listener;
 
 import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Egg;
@@ -12,6 +12,10 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.potion.Potion;
 
+import de.Fear837.Commands;
+import de.Fear837.Main;
+import de.Fear837.MySQL;
+
 public final class EntityListener implements Listener {
 
 	private Main plugin;
@@ -24,7 +28,7 @@ public final class EntityListener implements Listener {
 	}
 
 	@EventHandler
-	public void onEntityDamage(EntityDamageByEntityEvent event) {
+	public void onEntityDamage(EntityDamageByEntityEvent event) { // TODO animalprotect.bypass darf alles
 		if (sql == null || event.isCancelled()) { return; }
 		EntityType entityType = event.getEntityType();
 		
