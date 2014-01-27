@@ -1,5 +1,6 @@
 package de.Fear837;
 
+import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
@@ -30,7 +31,8 @@ public final class EntityListener implements Listener {
 			return;
 		}
 		EntityType entityType = event.getEntityType();
-		if (entityType == EntityType.COW || entityType == EntityType.PIG
+		if (entityType == EntityType.COW 
+				|| entityType == EntityType.PIG
 				|| entityType == EntityType.SHEEP
 				|| entityType == EntityType.CHICKEN
 				|| entityType == EntityType.HORSE
@@ -50,10 +52,7 @@ public final class EntityListener implements Listener {
 					e.printStackTrace();
 				}
 
-				for (Player p : plugin.getServer().getOnlinePlayers()) {
-					p.sendMessage("Entity-Damage-Event::EntityOwner: "
-							+ entityOwner);
-				}
+				plugin.getServer().broadcastMessage("Entity-Damage-Event::EntityOwner: " + entityOwner);
 
 				if ((entityOwner != null && !entityOwner.isEmpty() && !((Player) damager)
 						.getName().equalsIgnoreCase(entityOwner))) {
@@ -65,6 +64,20 @@ public final class EntityListener implements Listener {
 				break;
 			case ARROW:
 				plugin.getServer().broadcastMessage("Arrow detected...");
+				String entityOwner1 = null;
+				Arrow projectile = (Arrow)entity;
+				try {
+					entityOwner1 = Commands.getEntityOwner(projectile.getShooter().getUniqueId());
+				} catch (Exception e) { e.printStackTrace(); }
+				
+				if ((entityOwner1 != null && !entityOwner1.isEmpty())) {
+					if (!((Player) projectile.getShooter()).getName().equalsIgnoreCase(entityOwner1)) {
+						event.setCancelled(true);
+						
+						return;
+					}
+				}
+				
 				break;
 			case EGG:
 				plugin.getServer().broadcastMessage("Egg detected...");
