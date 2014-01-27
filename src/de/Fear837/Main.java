@@ -3,9 +3,11 @@ package de.Fear837;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;
+
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import de.Fear837.listener.EntityListener;
 import de.Fear837.listener.EntityLoadSaveListener;
 import de.Fear837.structs.EntityList;
 
@@ -40,16 +42,17 @@ public class Main extends JavaPlugin {
 
 			initializeTables();
 
+			/* Die EntityList initialisieren */
+			entitylist = new EntityList(this);
+
 			/* Commands intialisieren */
 			Commands commands = new Commands(getServer(), sql);
 			this.getCommand("lockanimal").setExecutor(commands);
 			this.getCommand("lockinfo").setExecutor(commands);
 
-			/* Den Listener registrieren */
+			/* Die Listener registrieren */
 			pm.registerEvents(new EntityListener(sql, this), this);
-			
-			entitylist = new EntityList(this);
-			pm.registerEvents(new EntityLoadSaveListener(this), this);
+			pm.registerEvents(new EntityLoadSaveListener(this), this);			
 
 			getLogger().info("[AnimalLock] Loading finished!");
 		} catch (Exception e) {
@@ -61,6 +64,8 @@ public class Main extends JavaPlugin {
 	public void onDisable() {
 		if (sql.checkConnection()) {
 			sql.closeConnection();
+			
+			// TODO SaveToDatabase
 		}
 		isEnabled = false;
 	}
