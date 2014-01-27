@@ -1,7 +1,10 @@
 package de.Fear837.structs;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map.Entry;
 import java.util.UUID;
 
@@ -199,7 +202,39 @@ public class EntityList {
 	public Player get(Entity entity) {
 		if (contains(entity))
 			return reverseKeys.get(entity);
-		// TODO if not containing, check for database
+		else {
+			ResultSet rs = database.get("SELECT id FROM ap_entities WHERE uuid='" + entity.getUniqueId() + "';");
+			if (rs != null) {
+				try {
+					if (rs.next()) {
+						int entityid = rs.getInt("id");
+						rs = database.get("SELECT owner_id FROM ap_locks WHERE entity_id=" + entityid + ";");
+						if (rs != null) {
+							try {
+								if (rs.next()) {
+									int ownerid = rs.getInt("owner_id");
+									rs = database.get("SELECT name FROM ap_owners WHERE id=" + ownerid + ";");
+									if (rs != null) {
+										try {
+											if (rs.next()) {
+												String Ownername = rs.getString("name");
+												// Player kann nicht returned werden, weil in der Datenbank nur der Name bekannt ist.
+												// Der Spieler muss auch nicht umbedingt online sein, 
+												// also sollte man den Namen im Server nicht suchen
+												// TODO Player kann nicht returned werden.
+											}
+										}
+									    catch (SQLException e) { e.printStackTrace(); }
+									}
+								}
+							}
+							catch (SQLException e) { e.printStackTrace(); }
+						}
+					}
+				} 
+				catch (SQLException e) { e.printStackTrace(); }
+			}
+		}
 		return null;
 	}
 
@@ -228,6 +263,8 @@ public class EntityList {
 		} else {
 			keys.get(player).add(entity.getUniqueId());
 			reverseKeys.put(entity.getUniqueId(), player);
+			
+			// TODO Fehlt hier nich noch ein Datenbank-Insert?
 		}
 		return this;
 	}
@@ -248,10 +285,10 @@ public class EntityList {
 
 			reverseKeys.remove(entity.getUniqueId());
 			keys.get(owner).remove(entity.getUniqueId());
-
-			// TODO Einträge aus der Datenbank löschen
-			// Dafür wird ein MySQL-Object in der Klasse benötigt.
-
+			
+			database.write("DELETE FROM ap_locks WHERE entity_id='" + entity.getUniqueId() +"';");
+			// Wenn das Entity auch noch aus der ap_entity tabelle gelöscht werden soll:
+			// database.write("DELETE FROM ap_entities WHERE uuid='" + entity.getUniqueId() + "';");
 			this.lastActionSuccess = true;
 		}
 		return this;
@@ -278,7 +315,41 @@ public class EntityList {
 		// TODO Load from db and insert all entities.
 		// Check if respawning is needed.
 		// Minimal create new ArrayList<UUID> in HashMap for player.
-
+		
+		keys.put(player, new ArrayList<UUID>()); // Der Spieler ist nicht in der keysliste. Also hinzufügen.
+		
+		ResultSet rs = database.get("SELECT id FROM ap_owners WHERE name='" + player.getName() + "';");
+		if (rs != null) {
+			try {
+				if (rs.next()) {
+					int ownerid = rs.getInt("id"); // Die OWNERID des Spielers
+					rs = database.get("SELECT entity_id FROM ap_locks WHERE owner_id=" + ownerid + ";");
+					if (rs != null) {
+						try {
+							// Jetzt für jede gefundene EntityID die UUID aus db_entities holen und dem playerkey hinzufügen
+							// Ich hoffe die getFetchSize ist die Anzahl an Reihen die selected wurden.
+							for(int i=0; i<rs.getFetchSize(); i++){ 
+								if (rs.next()) {
+									ResultSet rs2 = database.get("SELECT uuid FROM ap_entities WHERE id=" + rs.getInt("entity_id") + ";");
+									if (rs2 != null) {
+										try {
+											if (rs.next()) {
+												UUID id = UUID.fromString(rs2.getString("uuid"));
+												keys.get(player).add(id);
+												reverseKeys.put(id, player);
+											}
+										}
+										catch (SQLException e) { e.printStackTrace(); }
+									}
+								}
+							}
+						}
+						catch (SQLException e) { e.printStackTrace(); }
+					}
+				}
+			}
+			catch (SQLException e) { }
+		}
 		if (sizeOfEntities() == sizeE && sizeOfPlayers() == sizeP) {
 			this.lastActionSuccess = false;
 		}
