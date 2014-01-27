@@ -1,5 +1,9 @@
 package de.Fear837.listener;
 
+import java.util.HashMap;
+
+import org.bukkit.ChatColor;
+import org.bukkit.Sound;
 import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Egg;
 import org.bukkit.entity.Entity;
@@ -10,7 +14,8 @@ import org.bukkit.entity.ThrownPotion;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
-import org.bukkit.potion.Potion;
+import org.bukkit.event.entity.PlayerLeashEntityEvent;
+import org.bukkit.event.player.PlayerInteractEntityEvent;
 
 import de.Fear837.Commands;
 import de.Fear837.Main;
@@ -20,11 +25,61 @@ public final class EntityListener implements Listener {
 
 	private Main plugin;
 	private MySQL sql;
+	
+	private static HashMap<Player, Entity> list;
 
 	/* Der Entity-Listener */
 	public EntityListener(MySQL sql, Main plugin) {
 		this.plugin = plugin;
 		this.sql = sql;
+		
+		list = new HashMap<Player, Entity>();
+	}
+	
+	@EventHandler
+	public void onEntityInteract(PlayerInteractEntityEvent event) {
+		if (event.getPlayer().isSneaking()) {
+			Entity entity = event.getRightClicked();
+			if (entity.getType() == EntityType.COW 
+						|| entity.getType() == EntityType.PIG
+						|| entity.getType() == EntityType.SHEEP
+						|| entity.getType() == EntityType.CHICKEN
+						|| entity.getType() == EntityType.HORSE
+						|| entity.getType() == EntityType.WOLF) {
+				Player player = event.getPlayer();
+				if (list.get(player) == entity) {
+					player.sendMessage(ChatColor.YELLOW + "Du hast das Tier bereits ausgewählt."); 
+					player.playSound(player.getLocation(), Sound.CLICK, 0.4f, 0.8f);
+					return;
+				}
+				String entityOwner = Commands.getEntityOwner(entity.getUniqueId());
+				
+				player.playSound(player.getLocation(), Sound.CLICK, 0.75f, 0.8f);
+				addSelected(player, event.getRightClicked());
+				
+				if (entityOwner == null) {
+					switch (entity.getType()) {
+					case COW: player.sendMessage(ChatColor.YELLOW + "Du hast eine Kuh ausgewählt. (/lockhelp für weitere Informationen)"); 
+						break;
+					case PIG: player.sendMessage(ChatColor.YELLOW + "Du hast ein Schwein ausgewählt. (/lockhelp für weitere Informationen)");
+						break;
+					case SHEEP: player.sendMessage(ChatColor.YELLOW + "Du hast ein Schaf ausgewählt. (/lockhelp für weitere Informationen)");
+						break;
+					case CHICKEN: player.sendMessage(ChatColor.YELLOW + "Du hast ein Huhn ausgewählt. (/lockhelp für weitere Informationen)");
+						break;
+					case HORSE: player.sendMessage(ChatColor.YELLOW + "Du hast ein Pferd ausgewählt. (/lockhelp für weitere Informationen)");
+						break;
+					case WOLF: player.sendMessage(ChatColor.YELLOW + "Du hast einen Wolf ausgewählt. (/lockhelp für weitere Informationen)");
+						break;
+					default: player.sendMessage(ChatColor.YELLOW + "Du hast ein unbekanntes Tier ausgewählt. (/lockhelp für weitere Informationen)");
+						break;
+					}
+				}
+				else { 
+					player.sendMessage(ChatColor.YELLOW + "Du hast das Tier von " + entityOwner + " ausgewählt."); 
+				}
+			}
+		}
 	}
 
 	@EventHandler
@@ -128,4 +183,39 @@ public final class EntityListener implements Listener {
 		}
 	}
 
+	@EventHandler
+	public void onEntityLeash(PlayerLeashEntityEvent event) {
+		if (plugin.getConfig().getBoolean("settings.debug-messages")) {
+			plugin.getLogger().info("onEntityLeash Event called. [getPlayer:" + event.getPlayer().getName() + "]");
+		}
+		if (sql == null || event.isCancelled()) { plugin.getLogger().warning("EntityListener.onEntityLeash: event cancelled or sql=null!"); return; }
+		
+		String entityOwner = null;
+		try { entityOwner = Commands.getEntityOwner(event.getEntity().getUniqueId()); }
+		catch (Exception e) { e.printStackTrace(); }
+		if (entityOwner == null || entityOwner.isEmpty())
+		{ plugin.getLogger().warning("EntityListener.onEntityLeash: entityOwner is null or empty!"); return; }
+		
+		if (!event.getPlayer().getName().equalsIgnoreCase(entityOwner)){
+			event.setCancelled(true);
+		}
+	}
+
+	private void addSelected(Player player, Entity entity) {
+		if (!list.containsKey(player)) {
+			list.put(player, entity);
+		}
+		else {
+			list.remove(player);
+			list.put(player, entity);
+		}
+	}
+	
+	public static Entity getSelected(Player player) {
+		if (list.containsKey(player)) {
+			return list.get(player);
+		}
+		else { return null; }
+	}
+	
 }
