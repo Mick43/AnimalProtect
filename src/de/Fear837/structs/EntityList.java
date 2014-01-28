@@ -202,18 +202,18 @@ public class EntityList {
 	public Player get(Entity entity) {
 		if (contains(entity))
 			return reverseKeys.get(entity);
-		else {
-			ResultSet rs = database.get("SELECT id FROM ap_entities WHERE uuid='" + entity.getUniqueId() + "';");
+		else { // TODO Komplett umschreiben ohne rs.Next() // TODO FIXEN! Funktioniert noch nicht.
+			ResultSet rs = database.get("SELECT id FROM ap_entities WHERE uuid='" + entity.getUniqueId() + "';", false);
 			if (rs != null) {
 				try {
 					if (rs.next()) {
 						int entityid = rs.getInt("id");
-						rs = database.get("SELECT owner_id FROM ap_locks WHERE entity_id=" + entityid + ";");
+						rs = database.get("SELECT owner_id FROM ap_locks WHERE entity_id=" + entityid + ";", false);
 						if (rs != null) {
 							try {
 								if (rs.next()) {
 									int ownerid = rs.getInt("owner_id");
-									rs = database.get("SELECT name FROM ap_owners WHERE id=" + ownerid + ";");
+									rs = database.get("SELECT name FROM ap_owners WHERE id=" + ownerid + ";", false);
 									if (rs != null) {
 										try {
 											if (rs.next()) {
@@ -273,17 +273,50 @@ public class EntityList {
 			LivingEntity le = null;
 			try { le = (LivingEntity)entity; } catch (Exception e) {  e.printStackTrace(); }
 			
-			database.write("INSERT INTO ap_entities (`uuid`, `last_x`, `last_y`, `last_z`, `animaltype`, `nametag`) " + "VALUES ('" 
+			database.write("INSERT INTO ap_entities (`uuid`, `last_x`, `last_y`, `last_z`, `animaltype`, `nametag`, `maxhp`, `alive`) " + "VALUES ('" 
 			+ entity.getUniqueId() + "', " 
 			+ entity.getLocation().getBlockX() + ", " 
 			+ entity.getLocation().getBlockY() + ", " 
 			+ entity.getLocation().getBlockZ() + ", '" 
 			+ entity.getType().toString() + "', '" 
-			+ le.getCustomName()
-			+ le.getMaxHealth()
-			+ "');");
+			+ le.getCustomName() + "', " 
+			+ le.getMaxHealth() + ", " 
+			+ !le.isDead() + "" 
+			+ ");");
 			
-			database.write("INSERT INTO ap_locks (`entity_id`, `owner_id`) VALUES ('" + entity.getUniqueId() + "', '" + player.getName() + "');");
+			Integer animalid = null;
+			ResultSet result_AnimalID = database.get("SELECT id FROM ap_entities WHERE uuid='" + entity.getUniqueId() + "';", true);
+			if (result_AnimalID != null) {
+				try { animalid = result_AnimalID.getInt("id"); }
+				catch (SQLException e) {
+					plugin.getLogger().info("Exception at EntityList.lock().animalid = rs.getInt(id)");
+					e.printStackTrace();
+					animalid = null;
+				}
+			}
+			else {
+				plugin.getLogger().warning("Warning: Die ID des gerade eingetragenen Tieres konnte nicht gefunden werden.");
+				plugin.getLogger().warning("EntityList.lock().rs == null");
+			}
+			
+			Integer playerid = null;
+			ResultSet result_PlayerID = database.get("SELECT id FROM ap_owners WHERE name='" + player.getName() + "';", true);
+			if (result_PlayerID != null) {
+				try { playerid = result_PlayerID.getInt("id"); }
+				catch (SQLException e) {
+					plugin.getLogger().info("Exception at EntityList.lock().animalid = rs.getInt(id)");
+					e.printStackTrace();
+					playerid = null;
+				}
+			}
+			else {
+				plugin.getLogger().warning("Warning: Die ID des gerade eingetragenen Spielers konnte nicht gefunden werden.");
+				plugin.getLogger().warning("EntityList.lock().rs == null");
+			}
+			
+			if (playerid != null && animalid != null) {
+				database.write("INSERT INTO ap_locks (`entity_id`, `owner_id`) VALUES (" + animalid + ", " + playerid + ");");
+			}
 		}
 		return this;
 	}
@@ -330,40 +363,32 @@ public class EntityList {
 			return this;
 		}
 		
+		if (database == null) { this.lastActionSuccess = false; return this; }
+		
 		keys.put(player, new ArrayList<UUID>()); // Der Spieler ist nicht in der keysliste. Also hinzufügen.
 		
-		ResultSet rs = database.get("SELECT id FROM ap_owners WHERE name='" + player.getName() + "';");
-		if (rs != null) {
+		ResultSet result_PlayerID = database.get("SELECT id FROM ap_owners WHERE name='" + player.getName() + "';", true);
+		Integer ownerid = null;
+		if (result_PlayerID != null) {
+			try { ownerid = result_PlayerID.getInt("id"); }
+			catch (SQLException e1) { e1.printStackTrace(); }
+		}
+		else { database.write("INSERT INTO ap_owners (`name`) VALUES ('" + player.getName() + "')"); }
+		
+		ResultSet result_Entities = database.get("SELECT entity_id FROM ap_locks WHERE owner_id=" + ownerid + ";", false);
+		if (result_Entities != null) {
 			try {
-				if (rs.next()) {
-					int ownerid = rs.getInt("id"); // Die OWNERID des Spielers
-					rs = database.get("SELECT entity_id FROM ap_locks WHERE owner_id=" + ownerid + ";");
-					if (rs != null) {
-						try {
-							// Jetzt für jede gefundene EntityID die UUID aus db_entities holen und dem playerkey hinzufügen
-							// Ich hoffe die getFetchSize ist die Anzahl an Reihen die selected wurden.
-							for(int i=0; i<rs.getFetchSize(); i++){ 
-								if (rs.next()) {
-									ResultSet rs2 = database.get("SELECT uuid FROM ap_entities WHERE id=" + rs.getInt("entity_id") + ";");
-									if (rs2 != null) {
-										try {
-											if (rs.next()) {
-												UUID id = UUID.fromString(rs2.getString("uuid"));
-												keys.get(player).add(id);
-												reverseKeys.put(id, player);
-											}
-										}
-										catch (SQLException e) { e.printStackTrace(); }
-									}
-								}
-							}
-						}
-						catch (SQLException e) { e.printStackTrace(); }
+				for (int i = 0; i<result_Entities.getFetchSize(); i++) {
+					if (result_Entities.next()) {
+						UUID id = UUID.fromString(result_Entities.getString("uuid"));
+						keys.get(player).add(id);
+						reverseKeys.put(id, player);
 					}
 				}
 			}
-			catch (SQLException e) { }
+			catch (SQLException e) { e.printStackTrace(); }
 		}
+		
 		if (sizeOfEntities() == sizeE && sizeOfPlayers() == sizeP) {
 			this.lastActionSuccess = false;
 		}

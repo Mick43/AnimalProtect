@@ -69,8 +69,16 @@ public class Commands implements CommandExecutor {
 				
 				if (selectedEntity != null) {
 					if (list.contains(selectedEntity)) {
-						Player owner = list.get(selectedEntity);
-						cs.sendMessage("§eDieses Tier ist von §6" + owner.getName() + " §egesichert.");
+						Player owner = null;
+						try { owner = list.get(selectedEntity); } 
+						catch (Exception e) { }
+						
+						if (owner != null) { cs.sendMessage("§eDieses Tier ist von §6" + owner.getName() + " §egesichert."); }
+						else { 
+							cs.sendMessage("§eDieses Tier ist von einer unbekannten Person §egesichert."); 
+							plugin.getLogger().warning("Warnung: Ein Tier hat einen unbekannten Owner! (/lockinfo)");
+							plugin.getLogger().warning("Entity-UUID: [" + selectedEntity.getUniqueId() + "]");
+						}
 					}
 				}
 				else { cs.sendMessage("§cFehler: Es wurde kein Tier ausgewählt."); }
@@ -84,22 +92,12 @@ public class Commands implements CommandExecutor {
 	public String getEntityOwner(UUID uuid) {
 		ResultSet result = null;
 		try {
-			result = sql
-					.get("SELECT name FROM ap_owners o INNER JOIN ap_locks l ON l.owner_id = o.id WHERE entity_id IN (SELECT id FROM ap_entities WHERE uuid = '"
-							+ uuid + "')");
+			result = sql.get("SELECT name FROM ap_owners o INNER JOIN ap_locks l ON l.owner_id = o.id WHERE entity_id IN (SELECT id FROM ap_entities WHERE uuid = '"
+							+ uuid + "')", true);
 		} catch (Exception e1) {
 		}
 
 		if (result != null) {
-			try {
-				if (!result.next()) {
-					System.out.println("Keine Exception .................");
-					return null;
-				}
-			} catch (SQLException e) {
-				e.printStackTrace();
-			}
-
 			try {
 				if (result.getString("name") != null) { 
 					String ownerName = result.getString("name");
@@ -122,25 +120,25 @@ public class Commands implements CommandExecutor {
 	public void addEntity(UUID uuid, String Owner, int x, int y, int z, String Type, String Nametag) {
 		ResultSet canFindEntity = null;
 		try {
-			canFindEntity = sql.get("SELECT id FROM ap_entities WHERE uuid = '" + uuid + "';");
+			canFindEntity = sql.get("SELECT id FROM ap_entities WHERE uuid = '" + uuid + "';", true);
 		} catch (Exception e1) { }
 
 		ResultSet canFindPlayer = null;
 		try {
-			canFindPlayer = sql.get("SELECT id FROM ap_owners WHERE name = '" + Owner + "';");
+			canFindPlayer = sql.get("SELECT id FROM ap_owners WHERE name = '" + Owner + "';", true);
 		} catch (Exception e2) { }
 
 		try {
 			if (canFindEntity == null) {
 				sql.write("INSERT INTO ap_entities (`uuid`, `last_x`, `last_y`, `last_z`, `animaltype`, `nametag`) "
 						+ "VALUES ('" + uuid + "', " + x + ", " + y + ", " + z + ", '" + Type + "', '" + Nametag + "');");
-				canFindEntity = sql.get("SELECT id FROM ap_entities WHERE uuid = '" + uuid + "' LIMIT 1;");
+				canFindEntity = sql.get("SELECT id FROM ap_entities WHERE uuid = '" + uuid + "' LIMIT 1;", true);
 				if (!canFindEntity.next())
 					throw new SQLException("Inserting new entity failed.");
 			}
 			if (canFindPlayer == null) {
 				sql.write("INSERT INTO ap_owners (`name`) VALUES ('" + Owner + "');");
-				canFindPlayer = sql.get("SELECT id FROM ap_owners WHERE name = '" + Owner + "';");
+				canFindPlayer = sql.get("SELECT id FROM ap_owners WHERE name = '" + Owner + "';", true);
 				if (!canFindPlayer.next())
 					throw new SQLException("Inserting new entity-owner failed.");
 			}

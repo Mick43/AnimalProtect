@@ -142,7 +142,7 @@ public class MySQL extends Database {
     
     
     
-	public ResultSet get(String Query)
+	public ResultSet get(String Query, boolean next)
 	{
 		Statement statement = null;
 		ResultSet res = null;
@@ -165,11 +165,14 @@ public class MySQL extends Database {
 			return null;
 		}
 		
-		try { if (!res.next()) { return null; } } 
-		catch (SQLException e) {
-			plugin.getLogger().warning("Exception in MySQL.get() -> res.next()");
-			e.printStackTrace();
-			return null;
+		if (next) {
+			try { if (!res.next()) { return null; } } 
+			catch (SQLException e) {
+				plugin.getLogger().warning("Exception in MySQL.get() -> res.next()");
+				plugin.getLogger().warning("Query: " + Query);
+				e.printStackTrace();
+				return null;
+			}
 		}
 		
 		return res;
