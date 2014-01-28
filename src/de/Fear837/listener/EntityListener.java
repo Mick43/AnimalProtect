@@ -206,7 +206,7 @@ public final class EntityListener implements Listener {
 		
 		if (isAnimal(event.getEntity())) {
 			if (list.contains(event.getEntity())) {
-				sql.write("UPDATE ap_entities SET alive=FALSE WHERE uuid='" + event.getEntity().getUniqueId() + "');");
+				sql.write("UPDATE ap_entities SET alive=FALSE WHERE uuid='" + event.getEntity().getUniqueId() + "';");
 			}
 		}
 	}
