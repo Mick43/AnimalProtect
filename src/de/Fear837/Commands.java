@@ -1,7 +1,6 @@
 package de.Fear837;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.UUID;
 
 import org.bukkit.ChatColor;
@@ -85,6 +84,51 @@ public class Commands implements CommandExecutor {
 				else { cs.sendMessage("§cFehler: Es wurde kein Tier ausgewählt."); }
 			}
 			return true;
+		}
+		else if (cmd.getName().equalsIgnoreCase("locklist")) {
+			if (cs instanceof Player) {
+				Player player = (Player)cs;
+				if (args.length == 0) {
+					ArrayList<UUID> entityList = new ArrayList<UUID>();
+					entityList = list.get(player);
+					
+					if (entityList != null) {
+						plugin.getLogger().info("Number of entities in list: " + entityList.size());
+						cs.sendMessage("§e------ List of owned Entities ------");
+						int index = 1;
+						for (UUID id : entityList) {
+							ArrayList<Object> info = list.get(id);
+							if ((Boolean) info.get(6) == true) {
+								player.sendMessage("§e[" + index + "] - " 
+										+ info.get(3)  + " "
+										+ "[§6" + info.get(0) + "§e, "
+										+ "§6" + info.get(1) + "§e, "
+										+ "§6" + info.get(2) + "§e] "
+										+ "['" + info.get(4) + "'] - "
+										+ "§a[ALIVE]"
+										+ "");
+							}
+							else {
+								player.sendMessage("§e[" + index + "] - " 
+										+ info.get(3) + " "
+										+ "[§6" + info.get(0) + "§e, "
+										+ "§6" + info.get(1) + "§e, "
+										+ "§6" + info.get(2) + "§e] "
+										+ "['" + info.get(4) + "'] - "
+										+ "§c[DEAD]"
+										+ "");
+							}
+							index += 1;
+						}
+						cs.sendMessage("§e-------------------------------");
+					}
+					else { cs.sendMessage("§cFehler: Die Liste konnte nicht geladen werden."); }
+					
+				}
+				else if (args.length == 1) {
+					
+				}
+			}
 		}
 		return false;
 	}

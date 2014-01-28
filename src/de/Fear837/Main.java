@@ -49,6 +49,7 @@ public class Main extends JavaPlugin {
 			Commands commands = new Commands(this, sql, entitylist);
 			this.getCommand("lockanimal").setExecutor(commands);
 			this.getCommand("lockinfo").setExecutor(commands);
+			this.getCommand("locklist").setExecutor(commands);
 
 			/* Die Listener registrieren */
 			pm.registerEvents(new EntityListener(sql, this, entitylist), this);

@@ -142,12 +142,12 @@ public class MySQL extends Database {
     
     
     
-	public ResultSet get(String Query, boolean next)
+	public ResultSet get(String Query, boolean next, boolean log)
 	{
 		Statement statement = null;
 		ResultSet res = null;
 		
-		if (plugin.getConfig().getBoolean("settings.debug-messages")) {
+		if (plugin.getConfig().getBoolean("settings.debug-messages") && log) {
 			plugin.getLogger().info("Querying: " + Query);
 		}
 		
@@ -184,6 +184,23 @@ public class MySQL extends Database {
 		catch (SQLException e) { return null; }
 		
 		return v;
+	}
+	public Object getValue(ResultSet result, int columnID) {
+		Object v = null;
+		try { v = result.getObject(columnID); } 
+		catch (SQLException e) { return null; }
+		
+		return v;
+	}
+	public long getRowCount(String Query) {
+		ResultSet result_rows = get(Query, true, true);
+		long rows = 0;
+		
+		if (result_rows != null) { 
+			rows = (long) getValue(result_rows, 1); 
+		}
+		
+		return rows;
 	}
 	
 	public boolean write(String Query)

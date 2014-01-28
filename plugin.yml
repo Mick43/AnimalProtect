@@ -14,10 +14,18 @@ commands:
       usage: Write /<command>
       permission: animalprotect.protect
       permission-message: You don't have permission.
+   locklist:
+      description: Listet alle Tiere die der Person gehoeren auf.
+      usage: Write /<command> [playername]
+      permission: animalprotect.admin
+      permission-message: You don't have permission.
 permissions:
   animalprotect.protect:
     default: true
     description: desc.
   animalprotect.bypass:
+    default: false
+    description: desc.
+  animalprotect.admin:
     default: false
     description: desc.
