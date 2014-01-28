@@ -477,10 +477,10 @@ public class EntityList {
 		for (Entity ent : player.getWorld().getEntities()) {
 			for (UUID id : list) {
 				if (ent.getUniqueId() == id) {
-					database.write("UPDATE ap_entities SET last_x=" + ent.getLocation().getBlockX() + "WHERE uuid='" + id + "')");
-					database.write("UPDATE ap_entities SET last_y=" + ent.getLocation().getBlockY() + "WHERE uuid='" + id + "')");
-					database.write("UPDATE ap_entities SET last_z=" + ent.getLocation().getBlockZ() + "WHERE uuid='" + id + "')");
-					database.write("UPDATE ap_entities SET alive=" + ent.isDead() + "WHERE uuid='" + id + "')");
+					database.write("UPDATE ap_entities SET last_x=" + ent.getLocation().getBlockX() + " WHERE uuid='" + id + "')");
+					database.write("UPDATE ap_entities SET last_y=" + ent.getLocation().getBlockY() + " WHERE uuid='" + id + "')");
+					database.write("UPDATE ap_entities SET last_z=" + ent.getLocation().getBlockZ() + " WHERE uuid='" + id + "')");
+					database.write("UPDATE ap_entities SET alive=" + ent.isDead() + " WHERE uuid='" + id + "')");
 				}
 			}
 		}
