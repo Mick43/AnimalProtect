@@ -200,47 +200,43 @@ public class EntityList {
 	 * @return Player, who locked the entity
 	 */
 	public Player get(Entity entity) {
-		if (contains(entity))
-			return reverseKeys.get(entity);
-		else { // TODO Komplett umschreiben ohne rs.Next() // TODO FIXEN! Funktioniert noch nicht.
-			ResultSet rs = database.get("SELECT id FROM ap_entities WHERE uuid='" + entity.getUniqueId() + "';", false);
-			if (rs != null) {
-				try {
-					if (rs.next()) {
-						int entityid = rs.getInt("id");
-						rs = database.get("SELECT owner_id FROM ap_locks WHERE entity_id=" + entityid + ";", false);
-						if (rs != null) {
-							try {
-								if (rs.next()) {
-									int ownerid = rs.getInt("owner_id");
-									rs = database.get("SELECT name FROM ap_owners WHERE id=" + ownerid + ";", false);
-									if (rs != null) {
-										try {
-											if (rs.next()) {
-												String Ownername = rs.getString("name");
-												try {
-													Player player = (Player) plugin.getServer().getOfflinePlayer(Ownername);
-													
-													if (player != null) {
-														return player;
-													}
-												} catch (Exception e) { 
-													plugin.getLogger().warning("EntityList.get: Could not cast OfflinePlayer to Player");
-													e.printStackTrace();
-												}
-											}
-										}
-									    catch (SQLException e) { e.printStackTrace(); }
-									}
-								}
-							}
-							catch (SQLException e) { e.printStackTrace(); }
-						}
+		if (contains(entity))  {
+			return reverseKeys.get(entity.getUniqueId());
+		}
+		else {
+			ResultSet result_EntityID = database.get("SELECT id FROM ap_entities WHERE uuid='" + entity.getUniqueId() + "';", true);
+			if (result_EntityID == null) { return null; }
+			
+			Integer entityID = null;
+			try { entityID = result_EntityID.getInt("id"); } catch (SQLException e) { return null; }
+			
+			if (entityID != null) {
+				ResultSet result_OwnerID = database.get("SELECT owner_id WHERE entity_id =" + entityID + ";", true);
+				if (result_OwnerID == null) { plugin.getLogger().warning("Fehler: EntityList.get.ownerID == null"); return null; }
+				
+				Integer ownerID = null;
+				try { ownerID = result_OwnerID.getInt("owner_id"); } catch (SQLException e) { return null; }
+				
+				if (ownerID != null) {
+					Player player = null;
+					
+					ResultSet result = database.get("SELECT name WHERE id =" + ownerID + ";", true);
+					if (result == null) { plugin.getLogger().warning("Fehler: EntityList.get.result == null"); return null; }
+					
+					String playerName = null;
+					try { playerName = result.getString("name"); } catch (SQLException e) { return null; }
+					
+					if (plugin.getServer().getPlayer(playerName) != null) {
+						player = plugin.getServer().getPlayer(playerName);
 					}
-				} 
-				catch (SQLException e) { e.printStackTrace(); }
+					else { 
+						player = (Player) plugin.getServer().getOfflinePlayer(playerName); 
+						}
+					return player;
+				}
 			}
 		}
+		
 		return null;
 	}
 
