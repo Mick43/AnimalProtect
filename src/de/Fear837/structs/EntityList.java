@@ -186,10 +186,39 @@ public class EntityList {
 	 * @return ArrayList&lt;UUID&gt; of entities locked by the player.
 	 */
 	public ArrayList<UUID> get(Player player) {
-		if (!contains(player))
-			return new ArrayList<UUID>();
-		// TODO if not containing player, check for database
-		return keys.get(player);
+		if (contains(player)) {
+			return keys.get(player);
+		}
+		
+		else { // Wenn nicht im RAM, dann suche in der Datenbank
+			ResultSet result_PlayerID = database.get("SELECT id FROM ap_owners WHERE name='" + player.getName() + "';", true);
+			Integer ownerid = null;
+			if (result_PlayerID != null) {
+				try { ownerid = result_PlayerID.getInt("id"); }
+				catch (SQLException e1) { e1.printStackTrace(); }
+			}
+			else { return null; }
+			
+			ResultSet result_Entities = database.get("SELECT entity_id FROM ap_locks WHERE owner_id=" + ownerid + ";", false);
+			if (result_Entities != null) {
+				try {
+					ArrayList<UUID> returnList = new ArrayList<UUID>();
+					for (int i = 0; i<result_Entities.getFetchSize(); i++) {
+						if (result_Entities.next()) {
+							int id = result_Entities.getInt("id");
+							ResultSet result = database.get("SELECT uuid FROM ap_entities WHERE entity_id=" + id + ";", true);
+							if (result != null) { returnList.add(UUID.fromString(result.getString("uuid"))); }
+						}
+					}
+					if (!returnList.isEmpty()) {
+						connect(player); // Spieler war nicht in der Liste, also wird er hinzugefuegt.
+						return returnList;
+					}
+				}
+				catch (SQLException e) { e.printStackTrace(); }
+			}
+		}
+		return null;
 	}
 
 	/**
@@ -376,9 +405,13 @@ public class EntityList {
 			try {
 				for (int i = 0; i<result_Entities.getFetchSize(); i++) {
 					if (result_Entities.next()) {
-						UUID id = UUID.fromString(result_Entities.getString("uuid"));
-						keys.get(player).add(id);
-						reverseKeys.put(id, player);
+						int id = result_Entities.getInt("id");
+						ResultSet result = database.get("SELECT uuid FROM ap_entities WHERE entity_id=" + id + ";", true);
+						if (result != null) { 
+							UUID uuid = UUID.fromString(result.getString("uuid"));
+							keys.get(player).add(uuid);
+							reverseKeys.put(uuid, player);
+						}
 					}
 				}
 			}
