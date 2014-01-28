@@ -77,9 +77,10 @@ public class Commands implements CommandExecutor {
 						else { 
 							cs.sendMessage("§eDieses Tier ist von einer unbekannten Person §egesichert."); 
 							plugin.getLogger().warning("Warnung: Ein Tier hat einen unbekannten Owner! (/lockinfo)");
-							plugin.getLogger().warning("Entity-UUID: [" + selectedEntity.getUniqueId() + "]");
+							plugin.getLogger().warning("OWNER == NULL >>> Entity-UUID: [" + selectedEntity.getUniqueId() + "]");
 						}
 					}
+					else { cs.sendMessage("§eDieses Tier ist nicht protected."); }
 				}
 				else { cs.sendMessage("§cFehler: Es wurde kein Tier ausgewählt."); }
 			}
