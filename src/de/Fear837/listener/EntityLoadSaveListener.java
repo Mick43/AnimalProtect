@@ -4,6 +4,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.event.player.PlayerQuitEvent;
 
 import de.Fear837.Main;
 
@@ -22,6 +23,15 @@ public class EntityLoadSaveListener implements Listener {
 						+ event.getPlayer().getName() + ". => "
 						+ (plugin.getEntityList().lastActionSucceeded() ? "Success."
 								: "Failed!"));
+	}
+	
+	@EventHandler(priority = EventPriority.LOW)
+	public void onPlayerQuit(PlayerQuitEvent event) {
+		plugin.getEntityList().disconnect(event.getPlayer());
+		plugin.getServer().getLogger().info("Unloading player "
+				+ event.getPlayer().getName() + ". => "
+				+ (plugin.getEntityList().lastActionSucceeded() ? "Success."
+						: "Failed!"));
 	}
 
 }
