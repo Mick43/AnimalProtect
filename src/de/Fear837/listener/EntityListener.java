@@ -17,42 +17,39 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.PlayerLeashEntityEvent;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
 
-import de.Fear837.Commands;
 import de.Fear837.Main;
 import de.Fear837.MySQL;
+import de.Fear837.structs.EntityList;
 
 public final class EntityListener implements Listener {
 
 	private Main plugin;
 	private MySQL sql;
+	private EntityList list;
 	
-	private static HashMap<Player, Entity> list;
+	private static HashMap<Player, Entity> selectedList;
 
 	/* Der Entity-Listener */
-	public EntityListener(MySQL sql, Main plugin) {
+	public EntityListener(MySQL sql, Main plugin, EntityList list) {
 		this.plugin = plugin;
 		this.sql = sql;
+		this.list = list;
 		
-		list = new HashMap<Player, Entity>();
+		selectedList = new HashMap<Player, Entity>();
 	}
 	
 	@EventHandler
 	public void onEntityInteract(PlayerInteractEntityEvent event) {
 		if (event.getPlayer().isSneaking()) {
 			Entity entity = event.getRightClicked();
-			if (entity.getType() == EntityType.COW 
-						|| entity.getType() == EntityType.PIG
-						|| entity.getType() == EntityType.SHEEP
-						|| entity.getType() == EntityType.CHICKEN
-						|| entity.getType() == EntityType.HORSE
-						|| entity.getType() == EntityType.WOLF) {
+			if (isAnimal(entity)) {
 				Player player = event.getPlayer();
-				if (list.get(player) == entity) {
+				if (selectedList.get(player) == entity) {
 					player.sendMessage(ChatColor.YELLOW + "Du hast das Tier bereits ausgewählt."); 
 					player.playSound(player.getLocation(), Sound.CLICK, 0.4f, 0.8f);
 					return;
 				}
-				String entityOwner = Commands.getEntityOwner(entity.getUniqueId());
+				String entityOwner = list.get(entity).getName();
 				
 				player.playSound(player.getLocation(), Sound.CLICK, 0.75f, 0.8f);
 				addSelected(player, event.getRightClicked());
@@ -85,21 +82,13 @@ public final class EntityListener implements Listener {
 	@EventHandler
 	public void onEntityDamage(EntityDamageByEntityEvent event) { // TODO animalprotect.bypass darf alles
 		if (sql == null || event.isCancelled()) { return; }
-		EntityType entityType = event.getEntityType();
 		
-		if (entityType == EntityType.COW 
-				|| entityType == EntityType.PIG
-				|| entityType == EntityType.SHEEP
-				|| entityType == EntityType.CHICKEN
-				|| entityType == EntityType.HORSE
-				|| entityType == EntityType.WOLF) {
+		if (isAnimal(event.getEntity())) {
 
 			Entity entity = event.getEntity();
 			Entity damager = event.getDamager();
-			String entityOwner = null;
+			String entityOwner = list.get(entity).getName();
 			
-			try { entityOwner = Commands.getEntityOwner(entity.getUniqueId()); }
-			catch (Exception e) { e.printStackTrace(); }
 			if (entityOwner == null || entityOwner.isEmpty())
 			{ return; }
 
@@ -107,9 +96,9 @@ public final class EntityListener implements Listener {
 				plugin.getServer().broadcastMessage("DEBUG::EntityType: "+damager.getType() + " | Owner:" + entityOwner);
 			}
 			
-			switch (event.getDamager().getType()) {
+			switch (damager.getType()) {
 			case PLAYER:
-
+				if (((Player) damager).hasPermission("animalprotect.bypass")) { return; }
 				if (!((Player) damager).getName().equalsIgnoreCase(entityOwner))
 				{
 					((Player) damager).sendMessage("Das Tier ist von " + entityOwner + " gesichert!");
@@ -117,7 +106,6 @@ public final class EntityListener implements Listener {
 				}
 				break;
 			case ARROW:
-				plugin.getServer().broadcastMessage("Arrow detected...");
 			    Arrow projectile = (Arrow)damager;
 			    Entity shooter = null;
 			    try { shooter = projectile.getShooter(); }
@@ -126,13 +114,13 @@ public final class EntityListener implements Listener {
 				if (shooter != null) {
 					if (shooter instanceof Player) {
 						Player player = (Player)shooter;
+						if (player.hasPermission("animalprotect.bypass")) { return; }
 						if (!player.getName().equalsIgnoreCase(entityOwner))
 						{ event.setCancelled(true); return; }
 					}
 				}
 				break;
 			case EGG:
-				plugin.getServer().broadcastMessage("Egg detected...");
 				Egg projectile2 = (Egg)damager;
 			    Entity shooter2 = null;
 			    try { shooter2 = projectile2.getShooter(); }
@@ -141,13 +129,13 @@ public final class EntityListener implements Listener {
 				if (shooter2 != null) {
 					if (shooter2 instanceof Player) {
 						Player player = (Player)shooter2;
+						if (player.hasPermission("animalprotect.bypass")) { return; }
 						if (!player.getName().equalsIgnoreCase(entityOwner))
 						{ event.setCancelled(true); return; }
 					}
 				}
 				break;
 			case SNOWBALL:
-				plugin.getServer().broadcastMessage("Snowball detected...");
 				Snowball projectile3 = (Snowball)damager;
 			    Entity shooter3 = null;
 			    try { shooter3 = projectile3.getShooter(); }
@@ -156,13 +144,13 @@ public final class EntityListener implements Listener {
 				if (shooter3 != null) {
 					if (shooter3 instanceof Player) {
 						Player player = (Player)shooter3;
+						if (player.hasPermission("animalprotect.bypass")) { return; }
 						if (!player.getName().equalsIgnoreCase(entityOwner))
 						{ event.setCancelled(true); return; }
 					}
 				}
 				break;
 			case SPLASH_POTION:
-				plugin.getServer().broadcastMessage("Potion detected...");
 				ThrownPotion projectile4 = (ThrownPotion)damager;
 			    Entity shooter4 = null;
 			    try { shooter4 = projectile4.getShooter(); }
@@ -171,13 +159,17 @@ public final class EntityListener implements Listener {
 				if (shooter4 != null) {
 					if (shooter4 instanceof Player) {
 						Player player = (Player)shooter4;
+						if (player.hasPermission("animalprotect.bypass")) { return; }
 						if (!player.getName().equalsIgnoreCase(entityOwner))
 						{ event.setCancelled(true); return; }
 					}
 				}
 				break;
 			default:
-				plugin.getServer().broadcastMessage("Unknown Damager detected: " + event.getDamager().getType());
+				if (plugin.getConfig().getBoolean("settings.debug-messages")) {
+					plugin.getLogger().warning("DEBUG::Unknown Damager detected: " + event.getDamager().getType());
+				}
+				
 				break;
 			}
 		}
@@ -190,9 +182,7 @@ public final class EntityListener implements Listener {
 		}
 		if (sql == null || event.isCancelled()) { plugin.getLogger().warning("EntityListener.onEntityLeash: event cancelled or sql=null!"); return; }
 		
-		String entityOwner = null;
-		try { entityOwner = Commands.getEntityOwner(event.getEntity().getUniqueId()); }
-		catch (Exception e) { e.printStackTrace(); }
+		String entityOwner = list.get(event.getEntity()).getName();
 		if (entityOwner == null || entityOwner.isEmpty())
 		{ plugin.getLogger().warning("EntityListener.onEntityLeash: entityOwner is null or empty!"); return; }
 		
@@ -202,20 +192,35 @@ public final class EntityListener implements Listener {
 	}
 
 	private void addSelected(Player player, Entity entity) {
-		if (!list.containsKey(player)) {
-			list.put(player, entity);
+		if (!selectedList.containsKey(player)) {
+			selectedList.put(player, entity);
 		}
 		else {
-			list.remove(player);
-			list.put(player, entity);
+			selectedList.remove(player);
+			selectedList.put(player, entity);
 		}
 	}
 	
 	public static Entity getSelected(Player player) {
-		if (list.containsKey(player)) {
-			return list.get(player);
+		if (selectedList.containsKey(player)) {
+			return selectedList.get(player);
 		}
 		else { return null; }
+	}
+	
+	public boolean isAnimal(Entity entity) {
+		if (entity ==  null) { return false; }
+		else { 
+			if (entity.getType() == EntityType.COW 
+					|| entity.getType() == EntityType.PIG
+					|| entity.getType() == EntityType.SHEEP
+					|| entity.getType() == EntityType.CHICKEN
+					|| entity.getType() == EntityType.HORSE
+					|| entity.getType() == EntityType.WOLF) {
+				return true;
+			}
+		}
+		return false;
 	}
 	
 }
