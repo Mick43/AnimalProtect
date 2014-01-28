@@ -107,8 +107,8 @@ public class Main extends JavaPlugin {
 								+ "last_y SMALLINT(3) UNSIGNED NOT NULL, "
 								+ "last_z SMALLINT(5) NOT NULL, "
 								+ "animaltype ENUM('cow', 'chicken', 'pig', 'sheep', 'horse', 'wolf'), "
-								+ "nametag TEXT"
-								+ "alive BOOL"
+								+ "nametag TEXT, "
+								+ "alive BOOL, "
 								+ "maxhp INT);");
 			} catch (SQLException e) { e.printStackTrace(); }
 		} catch (SQLException e1) { e1.printStackTrace(); }
