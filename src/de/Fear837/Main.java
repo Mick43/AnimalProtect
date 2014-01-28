@@ -46,12 +46,12 @@ public class Main extends JavaPlugin {
 			entitylist = new EntityList(this);
 
 			/* Commands intialisieren */
-			Commands commands = new Commands(this, sql);
+			Commands commands = new Commands(this, sql, entitylist);
 			this.getCommand("lockanimal").setExecutor(commands);
 			this.getCommand("lockinfo").setExecutor(commands);
 
 			/* Die Listener registrieren */
-			pm.registerEvents(new EntityListener(sql, this), this);
+			pm.registerEvents(new EntityListener(sql, this, entitylist), this);
 			pm.registerEvents(new EntityLoadSaveListener(this), this);			
 
 			getLogger().info("[AnimalLock] Loading finished!");
