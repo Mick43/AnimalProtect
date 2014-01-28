@@ -83,7 +83,7 @@ public final class EntityListener implements Listener {
 	}
 
 	@EventHandler
-	public void onEntityDamage(EntityDamageByEntityEvent event) { // TODO animalprotect.bypass darf alles
+	public void onEntityDamage(EntityDamageByEntityEvent event) {
 		if (sql == null || event.isCancelled()) { return; }
 		
 		if (isAnimal(event.getEntity())) {
