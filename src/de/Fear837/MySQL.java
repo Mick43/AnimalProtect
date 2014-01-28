@@ -147,14 +147,29 @@ public class MySQL extends Database {
 		Statement statement = null;
 		ResultSet res = null;
 		
-		try {
-			if (plugin.getConfig().getBoolean("settings.debug-messages")) {
-				plugin.getLogger().info("Querying: " + Query);
-			}
-			statement = connection.createStatement();
-			res = statement.executeQuery(Query);
-		} catch (SQLException e) {
+		if (plugin.getConfig().getBoolean("settings.debug-messages")) {
+			plugin.getLogger().info("Querying: " + Query);
+		}
+		
+		try { statement = connection.createStatement(); } 
+		catch (SQLException e) {
+			plugin.getLogger().warning("Exception in MySQL.get() -> statement = connection.createStatement()");
 			e.printStackTrace();
+			return null;
+		}
+		
+		try { res = statement.executeQuery(Query); } 
+		catch (SQLException e) {
+			plugin.getLogger().warning("Exception in MySQL.get() -> res = statement.executeQuery(Query)");
+			e.printStackTrace();
+			return null;
+		}
+		
+		try { if (!res.next()) { return null; } } 
+		catch (SQLException e) {
+			plugin.getLogger().warning("Exception in MySQL.get() -> res.next()");
+			e.printStackTrace();
+			return null;
 		}
 		
 		return res;
