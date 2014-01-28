@@ -18,3 +18,6 @@ permissions:
   animalprotect.protect:
     default: true
     description: desc.
+  animalprotect.bypass:
+    default: false
+    description: desc.
