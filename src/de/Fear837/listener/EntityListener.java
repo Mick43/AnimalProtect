@@ -50,7 +50,9 @@ public final class EntityListener implements Listener {
 					player.playSound(player.getLocation(), Sound.CLICK, 0.4f, 0.8f);
 					return;
 				}
-				String entityOwner = list.get(entity).getName();
+				String entityOwner = null;
+				try { entityOwner = list.get(entity).getName(); }
+				catch (Exception e) { }
 				
 				player.playSound(player.getLocation(), Sound.CLICK, 0.75f, 0.8f);
 				addSelected(player, event.getRightClicked());
@@ -88,7 +90,9 @@ public final class EntityListener implements Listener {
 
 			Entity entity = event.getEntity();
 			Entity damager = event.getDamager();
-			String entityOwner = list.get(entity).getName();
+			String entityOwner = null;
+			try { entityOwner = list.get(entity).getName(); }
+			catch (Exception e) { }
 			
 			if (entityOwner == null || entityOwner.isEmpty())
 			{ return; }
@@ -184,7 +188,10 @@ public final class EntityListener implements Listener {
 		}
 		if (sql == null || event.isCancelled()) { plugin.getLogger().warning("EntityListener.onEntityLeash: event cancelled or sql=null!"); return; }
 		
-		String entityOwner = list.get(event.getEntity()).getName();
+		String entityOwner = null;
+		try { entityOwner = list.get(event.getEntity()).getName(); }
+		catch (Exception e) { }
+		
 		if (entityOwner == null || entityOwner.isEmpty())
 		{ plugin.getLogger().warning("EntityListener.onEntityLeash: entityOwner is null or empty!"); return; }
 		
