@@ -5,7 +5,6 @@ import java.sql.SQLException;
 import java.util.UUID;
 
 import org.bukkit.ChatColor;
-import org.bukkit.Sound;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -15,87 +14,74 @@ import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 
 import de.Fear837.listener.EntityListener;
+import de.Fear837.structs.EntityList;
 
 public class Commands implements CommandExecutor {
 
-	private static MySQL sql;
+	private MySQL sql;
 	private Main plugin;
+	private EntityList list;
 
-	public Commands(Main plugin, MySQL sql) {
+	public Commands(Main plugin, MySQL sql, EntityList list) {
 		this.plugin = plugin;
-		
-		Commands.sql = sql;
+		this.sql = sql;
+		this.list = list;
 	}
-
+	
 	@Override
 	public boolean onCommand(CommandSender cs, Command cmd, String label, String[] args) {
 		if (cmd.getName().equalsIgnoreCase("lockanimal")) {
-			Entity entity = null;
-			try { entity = EntityListener.getSelected((Player)cs); } 
-			catch (Exception e) { cs.sendMessage(ChatColor.YELLOW + "Es wurde kein Tier ausgewählt."); }
-
-			if (entity != null) {
-				if (entity.getType() == EntityType.COW
-						|| entity.getType() == EntityType.PIG
-						|| entity.getType() == EntityType.SHEEP
-						|| entity.getType() == EntityType.CHICKEN
-						|| entity.getType() == EntityType.HORSE
-						|| entity.getType() == EntityType.WOLF) {
-					String isAlreadyLocked = getEntityOwner(entity.getUniqueId());
-					
-					LivingEntity e = (LivingEntity)entity;
-					
-					if (isAlreadyLocked == null) 
-					{
-						addEntity(entity.getUniqueId(), cs.getName(), e
-								.getLocation().getBlockX(), e.getLocation()
-								.getBlockY(), e.getLocation().getBlockZ(), e
-								.getType().toString(), e.getCustomName());
-						cs.sendMessage(ChatColor.GREEN + "Das Tier wurde erfolgreich gesichert!");
-						Player p = (Player)cs;
-						p.playSound(p.getLocation(), Sound.CLICK, 0.75f, 1.25f);
-						if (plugin.getConfig().getBoolean("settings.debug-messages")) {
-							cs.sendMessage("§7§o(ID: " + e.getUniqueId() 
-									+ ", NewOwner: " + getEntityOwner(entity.getUniqueId()) + ")");
+			if (cs instanceof Player) {
+				Player player = (Player)cs;
+				Entity selectedEntity = null;
+				try { selectedEntity = EntityListener.getSelected(player); } 
+				catch (Exception e) { cs.sendMessage(ChatColor.RED + "Es wurde kein Tier ausgewählt."); }
+				
+				if (selectedEntity != null) {
+					if (!selectedEntity.isDead()) {
+						LivingEntity entity = (LivingEntity) selectedEntity;
+						if (isAnimal(entity)) {
+							if (!list.contains(entity)) {
+								list.lock(player, (Entity) entity);
+								if (list.lastActionSucceeded()) { cs.sendMessage("§aDas Tier wurde erfolgreich gesichert!"); }
+								else { 
+									cs.sendMessage("§cFehler: Das Tier konnte nicht gesichert werden.");
+									plugin.getLogger().warning("Warnung: Entity konnte nicht gelockt werden!");
+								}
+							}
+							else { cs.sendMessage("§c§cFehler: Das Tier ist bereits protected!"); }
 						}
-					} 
-					else { cs.sendMessage(ChatColor.RED + "Das Tier ist bereits von " + isAlreadyLocked + " gesichert."); }
+						else { cs.sendMessage("§c§cFehler: Das ausgewählte Entity ist kein Tier!"); }
+					}
+					else { cs.sendMessage("§c§cFehler: Das gewählte Tier ist tot."); }
 				}
-				else { cs.sendMessage(ChatColor.RED + "Dieses Entity ist kein Tier!"); }
+				else { cs.sendMessage("§c§cFehler: Es wurde kein Tier ausgewählt."); }
 			}
-			else { cs.sendMessage(ChatColor.RED + "Du hast kein Tier ausgewählt!"); }
 			return true;
 		}
 		else if (cmd.getName().equalsIgnoreCase("lockinfo")) 
 		{
-			Entity entity = null;
-			
-			try { entity = EntityListener.getSelected((Player)cs); } 
-			catch (Exception e) { cs.sendMessage(ChatColor.RED + "Es wurde kein Tier ausgewählt."); }
-			
-			if (entity != null) 
-			{
-				if (entity.getType() == EntityType.COW 
-						|| entity.getType() == EntityType.PIG
-						|| entity.getType() == EntityType.SHEEP
-						|| entity.getType() == EntityType.CHICKEN
-						|| entity.getType() == EntityType.HORSE
-						|| entity.getType() == EntityType.WOLF) {
-					String isAlreadyLocked = getEntityOwner(entity.getUniqueId()); {
-						String isLocked = getEntityOwner(entity.getUniqueId());
-						if (isLocked == null) { cs.sendMessage(ChatColor.YELLOW + "Dieses Tier ist nicht gesichert."); } 
-						else { cs.sendMessage(ChatColor.YELLOW + "Dieses Tier ist von "+ isLocked + " gesichert."); }
+			if (cs instanceof Player) {
+				Player player = (Player)cs;
+				Entity selectedEntity = EntityListener.getSelected(player);
+				try { selectedEntity = EntityListener.getSelected(player); } 
+				catch (Exception e) { cs.sendMessage(ChatColor.RED + "Es wurde kein Tier ausgewählt."); }
+				
+				if (selectedEntity != null) {
+					if (list.contains(selectedEntity)) {
+						Player owner = list.get(selectedEntity);
+						cs.sendMessage("§eDieses Tier ist von §6" + owner.getName() + " §egesichert.");
 					}
 				}
+				else { cs.sendMessage("§cFehler: Es wurde kein Tier ausgewählt."); }
 			}
-			else { cs.sendMessage(ChatColor.RED + "Es wurde kein Tier ausgewählt!"); }
 			return true;
 		}
 		return false;
 	}
 
 	/* TODO Funktion entfernen und dafür EntityList nutzen */
-	public static String getEntityOwner(UUID uuid) {
+	public String getEntityOwner(UUID uuid) {
 		ResultSet result = null;
 		try {
 			result = sql
@@ -145,14 +131,14 @@ public class Commands implements CommandExecutor {
 		} catch (Exception e2) { }
 
 		try {
-			if (!canFindEntity.next()) {
+			if (canFindEntity == null) {
 				sql.write("INSERT INTO ap_entities (`uuid`, `last_x`, `last_y`, `last_z`, `animaltype`, `nametag`) "
 						+ "VALUES ('" + uuid + "', " + x + ", " + y + ", " + z + ", '" + Type + "', '" + Nametag + "');");
 				canFindEntity = sql.get("SELECT id FROM ap_entities WHERE uuid = '" + uuid + "' LIMIT 1;");
 				if (!canFindEntity.next())
 					throw new SQLException("Inserting new entity failed.");
 			}
-			if (!canFindPlayer.next()) {
+			if (canFindPlayer == null) {
 				sql.write("INSERT INTO ap_owners (`name`) VALUES ('" + Owner + "');");
 				canFindPlayer = sql.get("SELECT id FROM ap_owners WHERE name = '" + Owner + "';");
 				if (!canFindPlayer.next())
@@ -168,5 +154,20 @@ public class Commands implements CommandExecutor {
 		} catch (SQLException e) {
 			plugin.getLogger().info(e.getMessage());
 		}
+	}
+	
+	public boolean isAnimal(Entity entity) {
+		if (entity ==  null) { return false; }
+		else { 
+			if (entity.getType() == EntityType.COW 
+					|| entity.getType() == EntityType.PIG
+					|| entity.getType() == EntityType.SHEEP
+					|| entity.getType() == EntityType.CHICKEN
+					|| entity.getType() == EntityType.HORSE
+					|| entity.getType() == EntityType.WOLF) {
+				return true;
+			}
+		}
+		return false;
 	}
 }
