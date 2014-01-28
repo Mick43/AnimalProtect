@@ -8,6 +8,7 @@ import java.util.Map.Entry;
 import java.util.UUID;
 
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 
 import de.Fear837.Main;
@@ -269,7 +270,20 @@ public class EntityList {
 			keys.get(player).add(entity.getUniqueId());
 			reverseKeys.put(entity.getUniqueId(), player);
 			
-			// TODO Fehlt hier nich noch ein Datenbank-Insert?
+			LivingEntity le = null;
+			try { le = (LivingEntity)entity; } catch (Exception e) {  e.printStackTrace(); }
+			
+			database.write("INSERT INTO ap_entities (`uuid`, `last_x`, `last_y`, `last_z`, `animaltype`, `nametag`) " + "VALUES ('" 
+			+ entity.getUniqueId() + "', " 
+			+ entity.getLocation().getBlockX() + ", " 
+			+ entity.getLocation().getBlockY() + ", " 
+			+ entity.getLocation().getBlockZ() + ", '" 
+			+ entity.getType().toString() + "', '" 
+			+ le.getCustomName()
+			+ le.getMaxHealth()
+			+ "');");
+			
+			database.write("INSERT INTO ap_locks (`entity_id`, `owner_id`) VALUES ('" + entity.getUniqueId() + "', '" + player.getName() + "');");
 		}
 		return this;
 	}
@@ -292,8 +306,7 @@ public class EntityList {
 			keys.get(owner).remove(entity.getUniqueId());
 			
 			database.write("DELETE FROM ap_locks WHERE entity_id='" + entity.getUniqueId() +"';");
-			// Wenn das Entity auch noch aus der ap_entity tabelle gelöscht werden soll:
-			// database.write("DELETE FROM ap_entities WHERE uuid='" + entity.getUniqueId() + "';");
+			database.write("DELETE FROM ap_entities WHERE uuid='" + entity.getUniqueId() + "';");
 			this.lastActionSuccess = true;
 		}
 		return this;
@@ -316,10 +329,6 @@ public class EntityList {
 			this.lastActionSuccess = false;
 			return this;
 		}
-
-		// TODO Load from db and insert all entities.
-		// Check if respawning is needed.
-		// Minimal create new ArrayList<UUID> in HashMap for player.
 		
 		keys.put(player, new ArrayList<UUID>()); // Der Spieler ist nicht in der keysliste. Also hinzufügen.
 		
