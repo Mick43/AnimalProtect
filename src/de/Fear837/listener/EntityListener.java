@@ -14,6 +14,7 @@ import org.bukkit.entity.ThrownPotion;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.entity.PlayerLeashEntityEvent;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
 
@@ -177,6 +178,7 @@ public final class EntityListener implements Listener {
 
 	@EventHandler
 	public void onEntityLeash(PlayerLeashEntityEvent event) {
+		if (sql==null || event.isCancelled()) { return; }
 		if (plugin.getConfig().getBoolean("settings.debug-messages")) {
 			plugin.getLogger().info("onEntityLeash Event called. [getPlayer:" + event.getPlayer().getName() + "]");
 		}
@@ -188,6 +190,17 @@ public final class EntityListener implements Listener {
 		
 		if (!event.getPlayer().getName().equalsIgnoreCase(entityOwner)){
 			event.setCancelled(true);
+		}
+	}
+	
+	@EventHandler
+	public void onEntityDeath(EntityDeathEvent event) {
+		if (sql==null) { return; }
+		
+		if (isAnimal(event.getEntity())) {
+			if (list.contains(event.getEntity())) {
+				sql.write("UPDATE ap_entities SET alive=FALSE WHERE uuid='" + event.getEntity().getUniqueId() + "');");
+			}
 		}
 	}
 
