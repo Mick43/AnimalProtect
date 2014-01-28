@@ -178,6 +178,14 @@ public class MySQL extends Database {
 		return res;
 	}
 	
+	public Object getValue(ResultSet result, String columnLabel) {
+		Object v = null;
+		try { v = result.getObject(columnLabel); } 
+		catch (SQLException e) { return null; }
+		
+		return v;
+	}
+	
 	public boolean write(String Query)
 	{
 		Statement statement = null;
