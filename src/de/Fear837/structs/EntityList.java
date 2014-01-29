@@ -11,6 +11,8 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.Horse;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
+import org.bukkit.entity.Sheep;
+import org.bukkit.entity.Wolf;
 
 import de.Fear837.Main;
 import de.Fear837.MySQL;
@@ -210,6 +212,7 @@ public class EntityList {
 						if (result_Entities.next()) {
 							int id = result_Entities.getInt("entity_id");
 							ResultSet result = database.get("SELECT uuid FROM ap_entities WHERE id=" + id + ";", true, false);
+							// TODO INNER-JOIN anwenden um sich die vielen SQL-Befehle zu ersparen
 							if (result != null) { returnList.add(UUID.fromString(result.getString("uuid"))); }
 						}
 					}
@@ -254,6 +257,7 @@ public class EntityList {
 					Player player = null;
 					
 					ResultSet result = database.get("SELECT name WHERE id =" + ownerID + ";", true, true);
+					// TODO INNER-JOIN anwenden um sich die vielen SQL-Befehle zu ersparen
 					if (result == null) { plugin.getLogger().warning("Fehler: EntityList.get.result == null"); return null; }
 					
 					String playerName = null;
@@ -361,12 +365,14 @@ public class EntityList {
 	    	String armor = "";
 	    	Double jumpstrength = 10.0;
 	    	String style = "";
-	    	String variant = "";
+	    	String variant = "NONE";
 	    	
 	    	try { nametag = ((LivingEntity) entity).getCustomName(); } catch (Exception e) { }
 	    	try { maxhp = ((LivingEntity) entity).getMaxHealth(); } catch (Exception e)  { }
 	    	try { alive = !entity.isDead(); } catch (Exception e)  { }
 	    	try { color = ((Horse) entity).getColor().toString(); } catch (Exception e)  { }
+	    	try { color = ((Wolf) entity).getCollarColor().toString(); } catch (Exception e)  { }
+	    	try { color = ((Sheep) entity).getColor().toString(); } catch (Exception e) { }
 	    	try {
 	    		String armorString = ((Horse) entity).getInventory().getArmor().toString();
 	    		if (armorString == "ItemStack{DIAMOND_BARDING x 1}") { armor = "diamond"; }
@@ -430,6 +436,7 @@ public class EntityList {
 			
 			if (playerid != null && animalid != null) {
 				database.write("INSERT INTO ap_locks (`entity_id`, `owner_id`) VALUES (" + animalid + ", " + playerid + ");");
+				// TODO INNER-JOIN Zaubertrick hier anwenden um Animalid und playerid zu bekommen.
 			}
 		}
 		return this;
@@ -498,6 +505,7 @@ public class EntityList {
 					if (result_Entities.next()) {
 						int id = result_Entities.getInt("entity_id");
 						ResultSet result = database.get("SELECT uuid FROM ap_entities WHERE id=" + id + ";", true, false);
+						// TODO INNER-JOIN anwenden um sich die vielen SQL-Befehle zu ersparen
 						if (result != null) { 
 							UUID uuid = UUID.fromString(result.getString("uuid"));
 							keys.get(player).add(uuid);
@@ -597,6 +605,7 @@ public class EntityList {
 		for (Entity ent : player.getWorld().getEntities()) {
 			for (UUID id : list) {
 				if (ent.getUniqueId() == id) {
+					// TODO Alle UPDATES in einem SQL-Befehl schreiben
 					database.write("UPDATE ap_entities SET last_x=" + ent.getLocation().getBlockX() + " WHERE uuid='" + id + "')");
 					database.write("UPDATE ap_entities SET last_y=" + ent.getLocation().getBlockY() + " WHERE uuid='" + id + "')");
 					database.write("UPDATE ap_entities SET last_z=" + ent.getLocation().getBlockZ() + " WHERE uuid='" + id + "')");
