@@ -1,6 +1,7 @@
 package de.Fear837.listener;
 
 import java.util.HashMap;
+import java.util.UUID;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Sound;
@@ -206,9 +207,19 @@ public final class EntityListener implements Listener {
 		
 		if (isAnimal(event.getEntity())) {
 			if (list.contains(event.getEntity())) {
+				updateEntityLocation(event.getEntity());
 				sql.write("UPDATE ap_entities SET alive=FALSE WHERE uuid='" + event.getEntity().getUniqueId() + "';");
+				// TODO Den Grund des Todes vom Entity auch in die Datenbank eintragen.
 			}
 		}
+	}
+	
+	private void updateEntityLocation(Entity entity)
+	{
+		UUID id = entity.getUniqueId();
+		sql.write("UPDATE ap_entities SET last_x=" + entity.getLocation().getBlockX() + " WHERE uuid='" + id + "';");
+		sql.write("UPDATE ap_entities SET last_y=" + entity.getLocation().getBlockY() + " WHERE uuid='" + id + "';");
+		sql.write("UPDATE ap_entities SET last_z=" + entity.getLocation().getBlockZ() + " WHERE uuid='" + id + "';");
 	}
 
 	private void addSelected(Player player, Entity entity) {
