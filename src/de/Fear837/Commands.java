@@ -88,59 +88,59 @@ public class Commands implements CommandExecutor {
 		else if (cmd.getName().equalsIgnoreCase("locklist")) {
 			if (cs instanceof Player) {
 				Player player = (Player)cs;
-				if (args.length == 0) {
-					ArrayList<UUID> entityList = new ArrayList<UUID>();
-					entityList = list.get(player);
-					
-					if (entityList != null) {
-						plugin.getLogger().info("Number of entities in list: " + entityList.size());
-						cs.sendMessage("§e------ List of owned Entities ------");
-						int index = 1;
-						for (UUID id : entityList) {
-							ArrayList<Object> info = list.get(id);
-							if (info != null) {
-								if ((Boolean) info.get(6) == true) {
-									player.sendMessage("§e[" + index + "] - " 
-											+ info.get(3)  + " "
-											+ "[§6" + info.get(0) + "§e, "
-											+ "§6" + info.get(1) + "§e, "
-											+ "§6" + info.get(2) + "§e] "
-											+ "['" + info.get(4) + "'] - "
-											+ "§a[ALIVE]"
-											+ "");
-								}
-								else {
-									player.sendMessage("§e[" + index + "] - " 
-											+ info.get(3) + " "
-											+ "[§6" + info.get(0) + "§e, "
-											+ "§6" + info.get(1) + "§e, "
-											+ "§6" + info.get(2) + "§e] "
-											+ "['" + info.get(4) + "'] - "
-											+ "§c[DEAD]"
-											+ "");
-								}
+				String targetPlayer = "";
+				if (args.length == 0) { targetPlayer = player.getName(); }
+				else if (args.length == 1) { targetPlayer = args[0]; }
+				
+				ArrayList<UUID> entityList = new ArrayList<UUID>();
+				try { entityList = list.get((Player) plugin.getServer().getOfflinePlayer(targetPlayer)); } 
+				catch (Exception e) 
+				{ cs.sendMessage("§cFehler: Der Spieler wurde nicht gefunden."); e.printStackTrace(); }
+				
+				if (entityList != null) {
+					plugin.getLogger().info("Number of entities in list: " + entityList.size());
+					cs.sendMessage("§e------ Liste der gesicherten Tiere von " + targetPlayer + " ------");
+					int index = 1;
+					for (UUID id : entityList) {
+						ArrayList<Object> info = list.get(id);
+						if (info != null) {
+							if ((Boolean) info.get(6) == true) {
+								player.sendMessage("§e[" + index + "] - " 
+										+ info.get(3)  + " "
+										+ "[§6" + info.get(0) + "§e, "
+										+ "§6" + info.get(1) + "§e, "
+										+ "§6" + info.get(2) + "§e] "
+										+ "['" + info.get(4) + "'] - "
+										+ "§a[ALIVE]"
+										+ "");
 							}
 							else {
 								player.sendMessage("§e[" + index + "] - " 
-										+ "NULL"  + " "
-										+ "[§6" + "NULL" + "§e, "
-										+ "§6" + "NULL" + "§e, "
-										+ "§6" + "NULL" + "§e] "
-										+ "['" + "NULL" + "'] - "
-										+ "§4[UNKNOWN]"
+										+ info.get(3) + " "
+										+ "[§6" + info.get(0) + "§e, "
+										+ "§6" + info.get(1) + "§e, "
+										+ "§6" + info.get(2) + "§e] "
+										+ "['" + info.get(4) + "'] - "
+										+ "§c[DEAD]"
 										+ "");
-								plugin.getLogger().info("NullPointer at Commands.onCommand.info = list.get(id)");
 							}
-							index += 1;
 						}
-						cs.sendMessage("§e-------------------------------");
+						else {
+							player.sendMessage("§e[" + index + "] - " 
+									+ "NULL"  + " "
+									+ "[§6" + "NULL" + "§e, "
+									+ "§6" + "NULL" + "§e, "
+									+ "§6" + "NULL" + "§e] "
+									+ "['" + "NULL" + "'] - "
+									+ "§4[UNKNOWN]"
+									+ "");
+							plugin.getLogger().info("NullPointer at Commands.onCommand.info = list.get(id)");
+						}
+						index += 1;
 					}
-					else { cs.sendMessage("§cFehler: Die Liste konnte nicht geladen werden."); }
-					
+					cs.sendMessage("§e-------------------------------");
 				}
-				else if (args.length == 1) {
-					
-				}
+				else { cs.sendMessage("§cFehler: Die Liste konnte nicht geladen werden."); }
 			}
 		}
 		return false;
