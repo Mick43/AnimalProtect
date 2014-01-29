@@ -109,7 +109,12 @@ public class Main extends JavaPlugin {
 								+ "animaltype ENUM('cow', 'chicken', 'pig', 'sheep', 'horse', 'wolf'), "
 								+ "nametag TEXT, "
 								+ "maxhp DOUBLE, "
-								+ "alive BOOL);");
+								+ "alive BOOL, "
+								+ "color TEXT, "
+								+ "armor TEXT, "
+								+ "horse_jumpstrength DOUBLE, "
+								+ "horse_style TEXT, "
+								+ "horse_variant ENUM('HORSE', 'DONKEY', 'MULE', 'SKELETON_HORSE', 'UNDEAD_HORSE'));");
 			} catch (SQLException e) { e.printStackTrace(); }
 		} catch (SQLException e1) { e1.printStackTrace(); }
 
