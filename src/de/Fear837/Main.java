@@ -114,7 +114,7 @@ public class Main extends JavaPlugin {
 								+ "armor TEXT, "
 								+ "horse_jumpstrength DOUBLE, "
 								+ "horse_style TEXT, "
-								+ "horse_variant ENUM('HORSE', 'DONKEY', 'MULE', 'SKELETON_HORSE', 'UNDEAD_HORSE'));");
+								+ "horse_variant ENUM('NONE', 'HORSE', 'DONKEY', 'MULE', 'SKELETON_HORSE', 'UNDEAD_HORSE'));");
 			} catch (SQLException e) { e.printStackTrace(); }
 		} catch (SQLException e1) { e1.printStackTrace(); }
 
