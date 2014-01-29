@@ -16,8 +16,11 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
+import org.bukkit.event.entity.EntityUnleashEvent;
 import org.bukkit.event.entity.PlayerLeashEntityEvent;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
+import org.bukkit.event.vehicle.VehicleEnterEvent;
+import org.bukkit.event.vehicle.VehicleExitEvent;
 
 import de.Fear837.Main;
 import de.Fear837.MySQL;
@@ -202,6 +205,16 @@ public final class EntityListener implements Listener {
 	}
 	
 	@EventHandler
+	public void onEntityUnleash(EntityUnleashEvent  event) {
+		if (sql == null) { return; }
+		if (isAnimal(event.getEntity())) {
+			if (list.contains(event.getEntity())) {
+				updateEntityLocation(event.getEntity());
+			}
+		}
+	}
+	
+	@EventHandler
 	public void onEntityDeath(EntityDeathEvent event) {
 		if (sql==null) { return; }
 		
@@ -210,6 +223,41 @@ public final class EntityListener implements Listener {
 				updateEntityLocation(event.getEntity());
 				sql.write("UPDATE ap_entities SET alive=FALSE WHERE uuid='" + event.getEntity().getUniqueId() + "';");
 				// TODO Den Grund des Todes vom Entity auch in die Datenbank eintragen.
+			}
+		}
+	}
+	
+	
+	@EventHandler
+	public void onEntityEnter(VehicleEnterEvent event) {
+		if (!event.isCancelled()) {
+			if (event.getVehicle().getType() == EntityType.HORSE || event.getVehicle().getType() == EntityType.PIG) {
+				if (event.getEntered().getType() == EntityType.PLAYER) {
+					Player player = (Player) event.getEntered();
+					Entity entity = (Entity) event.getVehicle();
+					
+					if (player.isSneaking()) { 
+						event.setCancelled(true); 
+						return; }
+					else {
+						if (list.contains(entity)) {
+							if (!list.get(entity).getName().equals(player.getName())) {
+								event.setCancelled(true);
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+	
+	@EventHandler
+	public void onEntityExit(VehicleExitEvent event) {
+		if (!event.isCancelled()) {
+			if (event.getVehicle().getType() == EntityType.HORSE || event.getVehicle().getType() == EntityType.PIG) {
+				if (list.contains(event.getVehicle())) {
+					updateEntityLocation(event.getVehicle());
+				}
 			}
 		}
 	}
