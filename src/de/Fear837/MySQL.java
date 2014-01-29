@@ -144,38 +144,43 @@ public class MySQL extends Database {
     
 	public ResultSet get(String Query, boolean next, boolean log)
 	{
-		Statement statement = null;
-		ResultSet res = null;
-		
-		if (plugin.getConfig().getBoolean("settings.debug-messages") && log) {
-			plugin.getLogger().info("Querying: " + Query);
-		}
-		
-		try { statement = connection.createStatement(); } 
-		catch (SQLException e) {
-			plugin.getLogger().warning("Exception in MySQL.get() -> statement = connection.createStatement()");
-			e.printStackTrace();
-			return null;
-		}
-		
-		try { res = statement.executeQuery(Query); } 
-		catch (SQLException e) {
-			plugin.getLogger().warning("Exception in MySQL.get() -> res = statement.executeQuery(Query)");
-			e.printStackTrace();
-			return null;
-		}
-		
-		if (next) {
-			try { if (!res.next()) { return null; } } 
+		if (checkConnection()) {
+			Statement statement = null;
+			ResultSet res = null;
+			
+			if (plugin.getConfig().getBoolean("settings.debug-messages") && log) {
+				plugin.getLogger().info("Querying: " + Query);
+			}
+			
+			try { statement = connection.createStatement(); } 
 			catch (SQLException e) {
-				plugin.getLogger().warning("Exception in MySQL.get() -> res.next()");
-				plugin.getLogger().warning("Query: " + Query);
+				plugin.getLogger().warning("Exception in MySQL.get() -> statement = connection.createStatement()");
 				e.printStackTrace();
 				return null;
 			}
+			
+			try { res = statement.executeQuery(Query); } 
+			catch (SQLException e) {
+				plugin.getLogger().warning("Exception in MySQL.get() -> res = statement.executeQuery(Query)");
+				e.printStackTrace();
+				return null;
+			}
+			
+			if (next) {
+				try { if (!res.next()) { return null; } } 
+				catch (SQLException e) {
+					plugin.getLogger().warning("Exception in MySQL.get() -> res.next()");
+					plugin.getLogger().warning("Query: " + Query);
+					e.printStackTrace();
+					return null;
+				}
+			}
+			
+			return res;
 		}
-		
-		return res;
+		else {
+			return null;
+		}
 	}
 	
 	public Object getValue(ResultSet result, String columnLabel) {
@@ -191,6 +196,17 @@ public class MySQL extends Database {
 		catch (SQLException e) { return null; }
 		
 		return v;
+	}
+	public Object getValue(String Query, String columnLabel, Boolean log) {
+		ResultSet rs = get(Query, true, log);
+		if (rs != null) {
+			try {
+				Object returnObject = rs.getObject(columnLabel);
+				return returnObject;
+			} 
+			catch (SQLException e) { }
+		}
+		return null;
 	}
 	public long getRowCount(String Query) {
 		ResultSet result_rows = get(Query, true, true);
