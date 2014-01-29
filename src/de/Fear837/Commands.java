@@ -98,25 +98,38 @@ public class Commands implements CommandExecutor {
 						int index = 1;
 						for (UUID id : entityList) {
 							ArrayList<Object> info = list.get(id);
-							if ((Boolean) info.get(6) == true) {
-								player.sendMessage("§e[" + index + "] - " 
-										+ info.get(3)  + " "
-										+ "[§6" + info.get(0) + "§e, "
-										+ "§6" + info.get(1) + "§e, "
-										+ "§6" + info.get(2) + "§e] "
-										+ "['" + info.get(4) + "'] - "
-										+ "§a[ALIVE]"
-										+ "");
+							if (info != null) {
+								if ((Boolean) info.get(6) == true) {
+									player.sendMessage("§e[" + index + "] - " 
+											+ info.get(3)  + " "
+											+ "[§6" + info.get(0) + "§e, "
+											+ "§6" + info.get(1) + "§e, "
+											+ "§6" + info.get(2) + "§e] "
+											+ "['" + info.get(4) + "'] - "
+											+ "§a[ALIVE]"
+											+ "");
+								}
+								else {
+									player.sendMessage("§e[" + index + "] - " 
+											+ info.get(3) + " "
+											+ "[§6" + info.get(0) + "§e, "
+											+ "§6" + info.get(1) + "§e, "
+											+ "§6" + info.get(2) + "§e] "
+											+ "['" + info.get(4) + "'] - "
+											+ "§c[DEAD]"
+											+ "");
+								}
 							}
 							else {
 								player.sendMessage("§e[" + index + "] - " 
-										+ info.get(3) + " "
-										+ "[§6" + info.get(0) + "§e, "
-										+ "§6" + info.get(1) + "§e, "
-										+ "§6" + info.get(2) + "§e] "
-										+ "['" + info.get(4) + "'] - "
-										+ "§c[DEAD]"
+										+ "NULL"  + " "
+										+ "[§6" + "NULL" + "§e, "
+										+ "§6" + "NULL" + "§e, "
+										+ "§6" + "NULL" + "§e] "
+										+ "['" + "NULL" + "'] - "
+										+ "§4[UNKNOWN]"
 										+ "");
+								plugin.getLogger().info("NullPointer at Commands.onCommand.info = list.get(id)");
 							}
 							index += 1;
 						}
