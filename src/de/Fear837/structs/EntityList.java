@@ -8,6 +8,7 @@ import java.util.Map.Entry;
 import java.util.UUID;
 
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.Horse;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 
@@ -347,20 +348,55 @@ public class EntityList {
 		} else {
 			keys.get(player).add(entity.getUniqueId());
 			reverseKeys.put(entity.getUniqueId(), player);
-			
-			LivingEntity le = null;
-			try { le = (LivingEntity)entity; } catch (Exception e) {  e.printStackTrace(); }
-			
-			database.write("INSERT INTO ap_entities (`uuid`, `last_x`, `last_y`, `last_z`, `animaltype`, `nametag`, `maxhp`, `alive`) " + "VALUES ('" 
-			+ entity.getUniqueId() + "', " 
-			+ entity.getLocation().getBlockX() + ", " 
-			+ entity.getLocation().getBlockY() + ", " 
-			+ entity.getLocation().getBlockZ() + ", '" 
-			+ entity.getType().toString() + "', '" 
-			+ le.getCustomName() + "', " 
-			+ le.getMaxHealth() + ", " 
-			+ !le.isDead() + "" 
-			+ ");");
+	    	
+	    	UUID id = entity.getUniqueId();
+	    	Integer x = entity.getLocation().getBlockX();
+	    	Integer y = entity.getLocation().getBlockY();
+	    	Integer z = entity.getLocation().getBlockZ();
+	    	String type = entity.getType().toString();
+	    	String nametag = "";
+	    	Double maxhp = 10.0;
+	    	Boolean alive = true;
+	    	String color = "";
+	    	String armor = "";
+	    	Double jumpstrength = 10.0;
+	    	String style = "";
+	    	String variant = "";
+	    	
+	    	try { nametag = ((LivingEntity) entity).getCustomName(); } catch (Exception e) { }
+	    	try { maxhp = ((LivingEntity) entity).getMaxHealth(); } catch (Exception e)  { }
+	    	try { alive = !entity.isDead(); } catch (Exception e)  { }
+	    	try { color = ((Horse) entity).getColor().toString(); } catch (Exception e)  { }
+	    	try {
+	    		String armorString = ((Horse) entity).getInventory().getArmor().toString();
+	    		if (armorString == "ItemStack{DIAMOND_BARDING x 1}") { armor = "diamond"; }
+	    		else if (armorString == "ItemStack{IRON_BARDING x 1}") { armor = "iron"; }
+	    		else if (armorString == "ItemStack{GOLD_BARDING x 1}") { armor = "gold"; }
+	    		else { armor = "unknown"; }
+	    	} catch (Exception e)  { }
+	    	try { jumpstrength = ((Horse) entity).getJumpStrength(); } catch (Exception e)  { }
+	    	try { style = ((Horse) entity).getStyle().toString(); } catch (Exception e)  { }
+	    	try { variant = ((Horse) entity).getVariant().toString(); } catch (Exception e)  { }
+	    	
+	    	nametag = nametag.replaceAll("'", "");
+	    	
+	    	database.write("INSERT INTO ap_entities (`uuid`, `last_x`, `last_y`, `last_z`, `animaltype`, `nametag`, "
+	    			+ "`maxhp`, `alive`, `color`, `armor`, `horse_jumpstrength`, `horse_style`, `horse_variant`) "
+	    			+ "VALUES ('"
+	    			+ id + "', "
+	    			+ x + ", "
+	    			+ y + ", "
+	    			+ z + ", '"
+	    			+ type + "', '"
+	    			+ nametag + "', "
+	    			+ maxhp + ", "
+	    			+ alive + ", '"
+	    			+ color + "', '"
+	    			+ armor + "', "
+	    			+ jumpstrength + ", '"
+	    			+ style + "', '"
+	    			+ variant + "'"
+	    			+ ");");
 			
 			Integer animalid = null;
 			ResultSet result_AnimalID = database.get("SELECT id FROM ap_entities WHERE uuid='" + entity.getUniqueId() + "';", true, true);
