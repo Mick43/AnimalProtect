@@ -64,9 +64,8 @@ public class Main extends JavaPlugin {
 
 	public void onDisable() {
 		if (sql.checkConnection()) {
+			entitylist.saveToDatabase();
 			sql.closeConnection();
-			
-			// TODO SaveToDatabase
 		}
 		isEnabled = false;
 	}
