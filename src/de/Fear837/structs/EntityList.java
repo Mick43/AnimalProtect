@@ -18,7 +18,6 @@ import org.bukkit.inventory.ItemStack;
 
 import de.Fear837.Main;
 import de.Fear837.MySQL;
-import de.Fear837.utility.APLogger;
 
 public class EntityList {
 	
