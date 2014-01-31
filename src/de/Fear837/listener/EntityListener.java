@@ -1,17 +1,11 @@
 package de.Fear837.listener;
 
 import java.util.HashMap;
-import java.util.UUID;
 
-import org.bukkit.ChatColor;
-import org.bukkit.Material;
-import org.bukkit.Sound;
 import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Egg;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
-import org.bukkit.entity.Horse;
-import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Snowball;
 import org.bukkit.entity.ThrownPotion;
@@ -21,24 +15,23 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.entity.EntityUnleashEvent;
 import org.bukkit.event.entity.PlayerLeashEntityEvent;
-import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.vehicle.VehicleEnterEvent;
 import org.bukkit.event.vehicle.VehicleExitEvent;
 
 import de.Fear837.Main;
 import de.Fear837.MySQL;
-import de.Fear837.structs.EntityList_old;
+import de.Fear837.structs.EntityList;
 
 public final class EntityListener implements Listener {
 
 	private Main plugin;
 	private MySQL sql;
-	private EntityList_old list;
+	private EntityList list;
 	
 	private static HashMap<Player, Entity> selectedList;
 
 	/* Der Entity-Listener */
-	public EntityListener(MySQL sql, Main plugin, EntityList_old list) {
+	public EntityListener(MySQL sql, Main plugin, EntityList list) {
 		this.plugin = plugin;
 		this.sql = sql;
 		this.list = list;
@@ -55,7 +48,7 @@ public final class EntityListener implements Listener {
 			Entity entity = event.getEntity();
 			Entity damager = event.getDamager();
 			String entityOwner = null;
-			try { entityOwner = list.get(entity).getName(); }
+			try { entityOwner = list.getPlayer(entity); }
 			catch (Exception e) { }
 			
 			if (entityOwner == null || entityOwner.isEmpty())
@@ -153,7 +146,7 @@ public final class EntityListener implements Listener {
 		if (sql == null || event.isCancelled()) { plugin.getLogger().warning("EntityListener.onEntityLeash: event cancelled or sql=null!"); return; }
 		
 		String entityOwner = null;
-		try { entityOwner = list.get(event.getEntity()).getName(); }
+		try { entityOwner = list.getPlayer(event.getEntity()); }
 		catch (Exception e) { }
 		
 		if (entityOwner == null || entityOwner.isEmpty())
@@ -168,8 +161,8 @@ public final class EntityListener implements Listener {
 	public void onEntityUnleash(EntityUnleashEvent  event) {
 		if (sql == null) { return; }
 		if (isAnimal(event.getEntity())) {
-			if (list.contains(event.getEntity())) {
-				updateEntity(event.getEntity());
+			if (list.containsEntity(event.getEntity())) {
+				list.updateEntity(event.getEntity(), false);
 			}
 		}
 	}
@@ -179,9 +172,8 @@ public final class EntityListener implements Listener {
 		if (sql==null) { return; }
 		
 		if (isAnimal(event.getEntity())) {
-			if (list.contains(event.getEntity())) {
-				updateEntity(event.getEntity());
-				sql.write("UPDATE ap_entities SET alive=FALSE WHERE uuid='" + event.getEntity().getUniqueId() + "';");
+			if (list.containsEntity(event.getEntity())) {
+				list.updateEntity(event.getEntity(), false);
 				// TODO Den Grund des Todes vom Entity auch in die Datenbank eintragen.
 			}
 		}
@@ -199,8 +191,8 @@ public final class EntityListener implements Listener {
 						event.setCancelled(true); 
 						return; }
 					else {
-						if (list.contains(entity)) {
-							if (!list.get(entity).getName().equals(player.getName())) {
+						if (list.containsEntity(entity)) {
+							if (!list.getPlayer(entity).equals(player.getName())) {
 								event.setCancelled(true);
 							}
 						}
@@ -214,56 +206,10 @@ public final class EntityListener implements Listener {
 	public void onEntityExit(VehicleExitEvent event) {
 		if (!event.isCancelled()) {
 			if (event.getVehicle().getType() == EntityType.HORSE || event.getVehicle().getType() == EntityType.PIG) {
-				if (list.contains(event.getVehicle())) {
-					updateEntity(event.getVehicle());
+				if (list.containsEntity(event.getVehicle())) {
+					list.updateEntity(event.getVehicle(), false);
 				}
 			}
-		}
-	}
-	
-	
-	
-	private void updateEntity(Entity entity)
-	{
-		UUID id = entity.getUniqueId();
-		LivingEntity e = (LivingEntity)entity;
-		
-		sql.write("UPDATE ap_entities SET last_x=" + entity.getLocation().getBlockX() + " WHERE uuid='" + id + "';");
-		sql.write("UPDATE ap_entities SET last_y=" + entity.getLocation().getBlockY() + " WHERE uuid='" + id + "';");
-		sql.write("UPDATE ap_entities SET last_z=" + entity.getLocation().getBlockZ() + " WHERE uuid='" + id + "';");
-		// TODO Alle 3 UPDATES in einem SQL-Befehl
-		
-		if (entity.isDead()) {
-			sql.write("UPDATE ap_entities SET alive=FALSE WHERE uuid='" + id + "';");
-		}
-		
-		if (e.getCustomName() != null) {
-			String nametag = e.getCustomName();
-			try { nametag = nametag.replaceAll("'", ""); } catch (Exception e1) { }
-			sql.write("UPDATE ap_entities SET nametag='" + e.getCustomName() + "' WHERE uuid='" + id + "';");
-		}
-		
-		if (e.getType() == EntityType.HORSE) {
-			Horse h = (Horse) entity;
-			String armor = "";
-			if (h.getInventory().getArmor() != null) {
-				String armorString = ((Horse) entity).getInventory().getArmor().toString();
-	    		if (armorString == "ItemStack{DIAMOND_BARDING x 1}") { armor = "diamond"; }
-	    		else if (armorString == "ItemStack{IRON_BARDING x 1}") { armor = "iron"; }
-	    		else if (armorString == "ItemStack{GOLD_BARDING x 1}") { armor = "gold"; }
-	    		else { armor = "unknown"; }
-	    		sql.write("UPODATE ap_entities SET armor='" + armor + "' WHERE uuid='" + id + "';");
-			}
-		}
-	}
-
-	private void addSelected(Player player, Entity entity) {
-		if (!selectedList.containsKey(player)) {
-			selectedList.put(player, entity);
-		}
-		else {
-			selectedList.remove(player);
-			selectedList.put(player, entity);
 		}
 	}
 	

@@ -26,8 +26,8 @@ public class Main extends JavaPlugin {
 	private static String password;
 	private static String port;
 
-	private static EntityList_old entitylist;
-	private static EntityList entityList_new;
+	private static EntityList_old entitylist; // TODO REMOVE entitylist (old)
+	private static EntityList entityList_new; // TODO RENAME entitylist_new TO entityList
 	
 	public void onEnable() {
 		getLogger().info("[AnimalLock] Loading Plugin...");
@@ -57,7 +57,7 @@ public class Main extends JavaPlugin {
 			this.getCommand("locktp").setExecutor(commands);
 
 			/* Die Listener registrieren */
-			pm.registerEvents(new EntityListener(sql, this, entitylist), this);
+			pm.registerEvents(new EntityListener(sql, this, entityList_new), this);
 			pm.registerEvents(new EntityLoadSaveListener(this), this);			
 			pm.registerEvents(new EntityInteractListener(entityList_new , sql), this);
 
