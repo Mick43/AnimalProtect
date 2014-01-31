@@ -290,7 +290,7 @@ public class EntityList {
 		    	Double maxhp = 10.0;
 		    	Boolean alive = true;
 		    	String color = "";
-		    	String armor = "";
+		    	String armor = "UNKNOWN";
 		    	Double jumpstrength = 10.0;
 		    	String style = "";
 		    	String variant = "NONE";
@@ -303,10 +303,10 @@ public class EntityList {
 		    	try { color = ((Sheep) entity).getColor().toString(); } catch (Exception e) { }
 		    	try {
 		    		ItemStack itemArmor = ((Horse) entity).getInventory().getArmor();
-		    		if (itemArmor.getType() == Material.DIAMOND_BARDING) { armor = "diamond"; }
-		    		else if (itemArmor.getType() == Material.IRON_BARDING) { armor = "iron"; }
-		    		else if (itemArmor.getType() == Material.GOLD_BARDING) { armor = "gold"; }
-		    		else { armor = "unknown"; }
+		    		if (itemArmor.getType() == Material.DIAMOND_BARDING) { armor = "DIAMOND"; }
+		    		else if (itemArmor.getType() == Material.IRON_BARDING) { armor = "IRON"; }
+		    		else if (itemArmor.getType() == Material.GOLD_BARDING) { armor = "GOLD"; }
+		    		else { armor = "UNKNOWN"; }
 		    	} catch (Exception e)  { }
 		    	try { jumpstrength = ((Horse) entity).getJumpStrength(); } catch (Exception e)  { }
 		    	try { style = ((Horse) entity).getStyle().toString(); } catch (Exception e)  { }
@@ -453,17 +453,17 @@ public class EntityList {
 					Boolean alive = !e.isDead();
 					String customName = "";
 					try { customName = (((LivingEntity) e).getCustomName()); } catch (Exception ex) { }
-					String armor = "";
+					String armor = "UNKNOWN";
 					try {
 						Horse horse = (Horse)e;
 						if (horse.getInventory().getArmor().equals(new ItemStack(Material.DIAMOND_BARDING))) {
-							armor = "diamond";
+							armor = "DIAMOND";
 						}
 						else if (horse.getInventory().getArmor().equals(new ItemStack(Material.GOLD_BARDING))) {
-							armor = "gold";
+							armor = "GOLD";
 						}
 						else if (horse.getInventory().getArmor().equals(new ItemStack(Material.IRON_BARDING))) {
-							armor = "iron";
+							armor = "IRON";
 						}
 					} catch (Exception ex) { }
 					String color = "";
@@ -472,7 +472,6 @@ public class EntityList {
 					try { color = (((Wolf) e).getCollarColor().toString()); } catch (Exception ex) { }
 					
 					color.toUpperCase();
-					armor.toUpperCase();
 					
 					String query = "UPDATE ap_entities SET last_x="+z+", last_y="+y+", last_z="+z+", "
 							+ "alive="+alive+", "

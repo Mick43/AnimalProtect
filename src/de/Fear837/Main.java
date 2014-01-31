@@ -117,7 +117,7 @@ public class Main extends JavaPlugin {
 								+ "maxhp DOUBLE, "
 								+ "alive BOOL, "
 								+ "color TEXT, "
-								+ "armor TEXT, "
+								+ "armor ENUM('DIAMOND', 'GOLD', 'IRON', 'UNKNOWN'), "
 								+ "horse_jumpstrength DOUBLE, "
 								+ "horse_style TEXT, "
 								+ "horse_variant ENUM('NONE', 'HORSE', 'DONKEY', 'MULE', 'SKELETON_HORSE', 'UNDEAD_HORSE'));");
