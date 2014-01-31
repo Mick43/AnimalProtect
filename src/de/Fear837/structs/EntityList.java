@@ -7,12 +7,14 @@ import java.util.HashMap;
 import java.util.Map.Entry;
 import java.util.UUID;
 
+import org.bukkit.Material;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Horse;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Sheep;
 import org.bukkit.entity.Wolf;
+import org.bukkit.inventory.ItemStack;
 
 import de.Fear837.Main;
 import de.Fear837.MySQL;
@@ -374,10 +376,10 @@ public class EntityList {
 	    	try { color = ((Wolf) entity).getCollarColor().toString(); } catch (Exception e)  { }
 	    	try { color = ((Sheep) entity).getColor().toString(); } catch (Exception e) { }
 	    	try {
-	    		String armorString = ((Horse) entity).getInventory().getArmor().toString();
-	    		if (armorString == "ItemStack{DIAMOND_BARDING x 1}") { armor = "diamond"; }
-	    		else if (armorString == "ItemStack{IRON_BARDING x 1}") { armor = "iron"; }
-	    		else if (armorString == "ItemStack{GOLD_BARDING x 1}") { armor = "gold"; }
+	    		ItemStack itemArmor = ((Horse) entity).getInventory().getArmor();
+	    		if (itemArmor.getType() == Material.DIAMOND_BARDING) { armor = "diamond"; }
+	    		else if (itemArmor.getType() == Material.IRON_BARDING) { armor = "iron"; }
+	    		else if (itemArmor.getType() == Material.GOLD_BARDING) { armor = "gold"; }
 	    		else { armor = "unknown"; }
 	    	} catch (Exception e)  { }
 	    	try { jumpstrength = ((Horse) entity).getJumpStrength(); } catch (Exception e)  { }
