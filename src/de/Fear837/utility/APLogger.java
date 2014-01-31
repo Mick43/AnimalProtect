@@ -56,7 +56,7 @@ public class APLogger {
 	 *             wenn <tt>plugin</tt> gleich <tt>null</tt> ist.
 	 */
 	public static void setPlugin(Main plugin) {
-		if (plugin == null && plugin.getLogger() == null) {
+		if (plugin == null || plugin.getLogger() == null) {
 			throw new RuntimeException(
 					"Das Plugin oder sein Logger darf nicht 'null' sein.");
 		}
