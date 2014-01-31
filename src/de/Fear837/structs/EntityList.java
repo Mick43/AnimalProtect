@@ -384,7 +384,7 @@ public class EntityList {
 	    	try { style = ((Horse) entity).getStyle().toString(); } catch (Exception e)  { }
 	    	try { variant = ((Horse) entity).getVariant().toString(); } catch (Exception e)  { }
 	    	
-	    	nametag = nametag.replaceAll("'", "");
+	    	try { nametag = nametag.replaceAll("'", ""); } catch (Exception e1) { }
 	    	
 	    	database.write("INSERT INTO ap_entities (`uuid`, `last_x`, `last_y`, `last_z`, `animaltype`, `nametag`, "
 	    			+ "`maxhp`, `alive`, `color`, `armor`, `horse_jumpstrength`, `horse_style`, `horse_variant`) "
