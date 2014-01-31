@@ -34,7 +34,7 @@ public class EntityList_old {
 	/** The database to get data from */
 	private MySQL database;
 
-	// TODO Fill on queries, SELECTS, INSERTS, UPDATES, DELETES!
+	
 	/**
 	 * All loaded data as stored in database, to check quicker for changes.
 	 * Object[n] is the complete data for one player:<br>
@@ -113,7 +113,7 @@ public class EntityList_old {
 				"settings.max_entities_for_player");
 		DEBUGGING = plugin.getConfig().getBoolean("settings.debug-messages");
 		this.lastActionSuccess = false;
-		// TODO
+		
 	}
 
 	/**
@@ -195,7 +195,7 @@ public class EntityList_old {
 			return keys.get(player);
 		}
 		
-		else { // Wenn nicht im RAM, dann suche in der Datenbank
+		else {
 			ResultSet result_PlayerID = database.get("SELECT id FROM ap_owners WHERE name='" + player.getName() + "';", true, true);
 			Integer ownerid = null;
 			if (result_PlayerID != null) {
@@ -214,7 +214,6 @@ public class EntityList_old {
 						if (result_Entities.next()) {
 							int id = result_Entities.getInt("entity_id");
 							ResultSet result = database.get("SELECT uuid FROM ap_entities WHERE id=" + id + ";", true, false);
-							// TODO INNER-JOIN anwenden um sich die vielen SQL-Befehle zu ersparen
 							if (result != null) { returnList.add(UUID.fromString(result.getString("uuid"))); }
 						}
 					}
@@ -259,7 +258,7 @@ public class EntityList_old {
 					Player player = null;
 					
 					ResultSet result = database.get("SELECT name WHERE id =" + ownerID + ";", true, true);
-					// TODO INNER-JOIN anwenden um sich die vielen SQL-Befehle zu ersparen
+					
 					if (result == null) { plugin.getLogger().warning("Fehler: EntityList.get.result == null"); return null; }
 					
 					String playerName = null;
@@ -438,7 +437,7 @@ public class EntityList_old {
 			
 			if (playerid != null && animalid != null) {
 				database.write("INSERT INTO ap_locks (`entity_id`, `owner_id`) VALUES (" + animalid + ", " + playerid + ");");
-				// TODO INNER-JOIN Zaubertrick hier anwenden um Animalid und playerid zu bekommen.
+				
 			}
 		}
 		return this;
@@ -507,7 +506,7 @@ public class EntityList_old {
 					if (result_Entities.next()) {
 						int id = result_Entities.getInt("entity_id");
 						ResultSet result = database.get("SELECT uuid FROM ap_entities WHERE id=" + id + ";", true, false);
-						// TODO INNER-JOIN anwenden um sich die vielen SQL-Befehle zu ersparen
+						
 						if (result != null) { 
 							UUID uuid = UUID.fromString(result.getString("uuid"));
 							keys.get(player).add(uuid);
@@ -587,7 +586,7 @@ public class EntityList_old {
 	 * @see de.Fear837.structs.EntityList.lastActionSucceeded()
 	 */
 	public void saveToDatabase() {
-		// TODO
+		
 	}
 
 	/**
@@ -607,7 +606,7 @@ public class EntityList_old {
 		for (Entity ent : player.getWorld().getEntities()) {
 			for (UUID id : list) {
 				if (ent.getUniqueId() == id) {
-					// TODO Alle UPDATES in einem SQL-Befehl schreiben
+					
 					database.write("UPDATE ap_entities SET last_x=" + ent.getLocation().getBlockX() + " WHERE uuid='" + id + "')");
 					database.write("UPDATE ap_entities SET last_y=" + ent.getLocation().getBlockY() + " WHERE uuid='" + id + "')");
 					database.write("UPDATE ap_entities SET last_z=" + ent.getLocation().getBlockZ() + " WHERE uuid='" + id + "')");
