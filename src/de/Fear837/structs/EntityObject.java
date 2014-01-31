@@ -30,13 +30,13 @@ public class EntityObject {
 	
 	private Boolean connected;
 	
-	public EntityObject(Main plugin, MySQL database, UUID id) {
+	public EntityObject(Main plugin, MySQL database, UUID id, boolean loadFromDB) {
 		this.plugin = plugin;
 		this.database = database;
 		this.entity_uuid = id.toString();
 		this.connected = false;
 		
-		update();
+		if (loadFromDB) { update(); }
 	}
 	
 	public void update() {
