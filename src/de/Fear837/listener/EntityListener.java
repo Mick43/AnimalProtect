@@ -27,18 +27,18 @@ import org.bukkit.event.vehicle.VehicleExitEvent;
 
 import de.Fear837.Main;
 import de.Fear837.MySQL;
-import de.Fear837.structs.EntityList;
+import de.Fear837.structs.EntityList_old;
 
 public final class EntityListener implements Listener {
 
 	private Main plugin;
 	private MySQL sql;
-	private EntityList list;
+	private EntityList_old list;
 	
 	private static HashMap<Player, Entity> selectedList;
 
 	/* Der Entity-Listener */
-	public EntityListener(MySQL sql, Main plugin, EntityList list) {
+	public EntityListener(MySQL sql, Main plugin, EntityList_old list) {
 		this.plugin = plugin;
 		this.sql = sql;
 		this.list = list;

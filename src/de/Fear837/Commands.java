@@ -25,15 +25,15 @@ import org.bukkit.entity.Wolf;
 import org.bukkit.inventory.ItemStack;
 
 import de.Fear837.listener.EntityListener;
-import de.Fear837.structs.EntityList;
+import de.Fear837.structs.EntityList_old;
 
 public class Commands implements CommandExecutor {
 
 	private MySQL sql;
 	private Main plugin;
-	private EntityList list;
+	private EntityList_old list;
 
-	public Commands(Main plugin, MySQL sql, EntityList list) {
+	public Commands(Main plugin, MySQL sql, EntityList_old list) {
 		this.plugin = plugin;
 		this.sql = sql;
 		this.list = list;

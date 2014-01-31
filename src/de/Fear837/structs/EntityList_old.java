@@ -27,7 +27,7 @@ import de.Fear837.MySQL;
  * @author Fear837
  * @version 0.2
  */
-public class EntityList {
+public class EntityList_old {
 
 	/** The plugin using this list */
 	private Main plugin;
@@ -80,7 +80,7 @@ public class EntityList {
 	 * @param plugin
 	 *            The plugin using this list.
 	 */
-	public EntityList(Main plugin) {
+	public EntityList_old(Main plugin) {
 		this(plugin, true);
 	}
 
@@ -94,7 +94,7 @@ public class EntityList {
 	 *            If <tt>false</tt> the list will be filled at start with the
 	 *            players, who are online, otherwise it's empty.
 	 */
-	public EntityList(Main plugin, boolean empty) {
+	public EntityList_old(Main plugin, boolean empty) {
 		this.plugin = plugin;
 		this.database = plugin.getMySQL();
 		this.memoryPlayers = new ArrayList<Object[]>();
@@ -340,7 +340,7 @@ public class EntityList {
 	 *         unmodified version of the list.
 	 * @see de.Fear837.structs.EntityList.lastActionSucceeded()
 	 */
-	public EntityList lock(Player player, Entity entity) {
+	public EntityList_old lock(Player player, Entity entity) {
 		this.lastActionSuccess = true;
 		if (reverseKeys.containsKey(entity.getUniqueId())) {
 			this.lastActionSuccess = false;
@@ -453,7 +453,7 @@ public class EntityList {
 	 *         unmodified version of the list.
 	 * @see de.Fear837.structs.EntityList.lastActionSucceeded()
 	 */
-	public EntityList unlock(Entity entity) {
+	public EntityList_old unlock(Entity entity) {
 		this.lastActionSuccess = false;
 		if (contains(entity)) {
 			Player owner = get(entity);
@@ -477,7 +477,7 @@ public class EntityList {
 	 *         the player was already loaded.
 	 * @see de.Fear837.structs.EntityList.lastActionSucceeded()
 	 */
-	public EntityList connect(Player player) {
+	public EntityList_old connect(Player player) {
 		int sizeE = sizeOfEntities();
 		int sizeP = sizeOfPlayers();
 		this.lastActionSuccess = true;
@@ -535,7 +535,7 @@ public class EntityList {
 	 *         list, if the player wasn't loaded.
 	 * @see de.Fear837.structs.EntityList.lastActionSucceeded()
 	 */
-	public EntityList disconnect(Player player) {
+	public EntityList_old disconnect(Player player) {
 		int sizeE = sizeOfEntities();
 		int sizeP = sizeOfPlayers();
 		this.lastActionSuccess = true;
@@ -562,7 +562,7 @@ public class EntityList {
 	 *         afterwards an error occured.
 	 * @see de.Fear837.structs.EntityList.lastActionSucceeded()
 	 */
-	public EntityList disconnectAll() {
+	public EntityList_old disconnectAll() {
 		this.lastActionSuccess = true;
 		for (Entry<Player, ArrayList<UUID>> entry : keys.entrySet()) {
 			disconnect(entry.getKey());
