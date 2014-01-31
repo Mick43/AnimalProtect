@@ -183,14 +183,14 @@ public class MySQL extends Database {
 		}
 	}
 	
-	public Object getValue(ResultSet result, String columnLabel) {
+	public Object getValueFromResult(ResultSet result, String columnLabel) {
 		Object v = null;
 		try { v = result.getObject(columnLabel); } 
 		catch (SQLException e) { return null; }
 		
 		return v;
 	}
-	public Object getValue(ResultSet result, int columnID) {
+	public Object getValueFromResult(ResultSet result, int columnID) {
 		Object v = null;
 		try { v = result.getObject(columnID); } 
 		catch (SQLException e) { return null; }
@@ -208,12 +208,23 @@ public class MySQL extends Database {
 		}
 		return null;
 	}
+	public Object getValue(String Query, int columnID, Boolean log) {
+		ResultSet rs = get(Query, true, log);
+		if (rs != null) {
+			try {
+				Object returnObject = rs.getObject(columnID);
+				return returnObject;
+			} 
+			catch (SQLException e) { }
+		}
+		return null;
+	}
 	public long getRowCount(String Query) {
 		ResultSet result_rows = get(Query, true, true);
 		long rows = 0;
 		
 		if (result_rows != null) { 
-			rows = (long) getValue(result_rows, 1); 
+			rows = (long) getValueFromResult(result_rows, 1); 
 		}
 		
 		return rows;
