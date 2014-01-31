@@ -4,11 +4,14 @@ import java.util.HashMap;
 import java.util.UUID;
 
 import org.bukkit.ChatColor;
+import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Egg;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
+import org.bukkit.entity.Horse;
+import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Snowball;
 import org.bukkit.entity.ThrownPotion;
@@ -45,7 +48,17 @@ public final class EntityListener implements Listener {
 	
 	@EventHandler
 	public void onEntityInteract(PlayerInteractEntityEvent event) {
-		if (event.getPlayer().isSneaking()) {
+		if (event.getPlayer().getInventory().getItemInHand().getType() == Material.NAME_TAG) {
+			if (isAnimal(event.getRightClicked())) {
+				if (list.contains(event.getRightClicked())) {
+					if (event.getPlayer().getInventory().getItemInHand().getItemMeta().getDisplayName() != null) {
+						String nametag = event.getPlayer().getInventory().getItemInHand().getItemMeta().getDisplayName();
+						sql.write("UPDATE ap_entities SET nametag='" + nametag + "' WHERE uuid='" + event.getRightClicked().getUniqueId().toString() + "';");
+					}
+				}
+			}
+		}
+		else if (event.getPlayer().isSneaking()) {
 			Entity entity = event.getRightClicked();
 			if (isAnimal(entity)) {
 				Player player = event.getPlayer();
@@ -81,6 +94,7 @@ public final class EntityListener implements Listener {
 				}
 				else { 
 					player.sendMessage(ChatColor.YELLOW + "Du hast das Tier von §6" + entityOwner + "§e ausgewählt."); 
+					updateEntity(entity);
 				}
 			}
 		}
@@ -209,7 +223,7 @@ public final class EntityListener implements Listener {
 		if (sql == null) { return; }
 		if (isAnimal(event.getEntity())) {
 			if (list.contains(event.getEntity())) {
-				updateEntityLocation(event.getEntity());
+				updateEntity(event.getEntity());
 			}
 		}
 	}
@@ -220,14 +234,13 @@ public final class EntityListener implements Listener {
 		
 		if (isAnimal(event.getEntity())) {
 			if (list.contains(event.getEntity())) {
-				updateEntityLocation(event.getEntity());
+				updateEntity(event.getEntity());
 				sql.write("UPDATE ap_entities SET alive=FALSE WHERE uuid='" + event.getEntity().getUniqueId() + "';");
 				// TODO Den Grund des Todes vom Entity auch in die Datenbank eintragen.
 			}
 		}
 	}
-	
-	
+
 	@EventHandler
 	public void onEntityEnter(VehicleEnterEvent event) {
 		if (!event.isCancelled()) {
@@ -256,18 +269,46 @@ public final class EntityListener implements Listener {
 		if (!event.isCancelled()) {
 			if (event.getVehicle().getType() == EntityType.HORSE || event.getVehicle().getType() == EntityType.PIG) {
 				if (list.contains(event.getVehicle())) {
-					updateEntityLocation(event.getVehicle());
+					updateEntity(event.getVehicle());
 				}
 			}
 		}
 	}
 	
-	private void updateEntityLocation(Entity entity)
+	
+	
+	private void updateEntity(Entity entity)
 	{
 		UUID id = entity.getUniqueId();
+		LivingEntity e = (LivingEntity)entity;
+		
 		sql.write("UPDATE ap_entities SET last_x=" + entity.getLocation().getBlockX() + " WHERE uuid='" + id + "';");
 		sql.write("UPDATE ap_entities SET last_y=" + entity.getLocation().getBlockY() + " WHERE uuid='" + id + "';");
 		sql.write("UPDATE ap_entities SET last_z=" + entity.getLocation().getBlockZ() + " WHERE uuid='" + id + "';");
+		// TODO Alle 3 UPDATES in einem SQL-Befehl
+		
+		if (entity.isDead()) {
+			sql.write("UPDATE ap_entities SET alive=FALSE WHERE uuid='" + id + "';");
+		}
+		
+		if (e.getCustomName() != null) {
+			String nametag = e.getCustomName();
+			try { nametag = nametag.replaceAll("'", ""); } catch (Exception e1) { }
+			sql.write("UPDATE ap_entities SET nametag='" + e.getCustomName() + "' WHERE uuid='" + id + "';");
+		}
+		
+		if (e.getType() == EntityType.HORSE) {
+			Horse h = (Horse) entity;
+			String armor = "";
+			if (h.getInventory().getArmor() != null) {
+				String armorString = ((Horse) entity).getInventory().getArmor().toString();
+	    		if (armorString == "ItemStack{DIAMOND_BARDING x 1}") { armor = "diamond"; }
+	    		else if (armorString == "ItemStack{IRON_BARDING x 1}") { armor = "iron"; }
+	    		else if (armorString == "ItemStack{GOLD_BARDING x 1}") { armor = "gold"; }
+	    		else { armor = "unknown"; }
+	    		sql.write("UPODATE ap_entities SET armor='" + armor + "' WHERE uuid='" + id + "';");
+			}
+		}
 	}
 
 	private void addSelected(Player player, Entity entity) {
