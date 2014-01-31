@@ -18,6 +18,7 @@ import org.bukkit.inventory.ItemStack;
 
 import de.Fear837.Main;
 import de.Fear837.MySQL;
+import de.Fear837.utility.APLogger;
 
 public class EntityList {
 	
@@ -149,10 +150,14 @@ public class EntityList {
 			return true;
 		}
 		else { // Wenn nicht, dann in der Datenbank nachschauen
-			String query = "SELECT id FROM ap_entities WHERE uuid='" + entity.getUniqueId() + "';"; // TODO Gibt es eine bessere Abfrage dafür?
-			Integer i = (Integer) database.getValue(query, "id", true);
-			if (i != null) {
-				return true;
+			if (database != null) {
+				if (database.checkConnection()) {
+					String query = "SELECT id FROM ap_entities WHERE uuid='" + entity.getUniqueId() + "';"; // TODO Gibt es eine bessere Abfrage dafür?
+					Integer i = (Integer) database.getValue(query, "id", true);
+					if (i != null) {
+						return true;
+					}
+				}
 			}
 		}
 		
@@ -171,10 +176,14 @@ public class EntityList {
 			return true;
 		}
 		else { // Wenn nicht, dann in der Datenbank nachschauen
-			String query = "SELECT id FROM ap_entities WHERE uuid='" + id + "';"; // TODO Gibt es eine bessere Abfrage dafür?
-			Integer i = (Integer) database.getValue(query, "id", true);
-			if (i != null) {
-				return true;
+			if (database != null) {
+				if (database.checkConnection()) {
+					String query = "SELECT id FROM ap_entities WHERE uuid='" + id + "';"; // TODO Gibt es eine bessere Abfrage dafür?
+					Integer i = (Integer) database.getValue(query, "id", true);
+					if (i != null) {
+						return true;
+					}
+				}
 			}
 		}
 		
@@ -371,7 +380,7 @@ public class EntityList {
 	}
 	
 	public void saveToDatabase() {
-		// TODO
+		// TODO saveToDatabase();
 	}
 	
 	public EntityList connect(String player) {
@@ -428,6 +437,59 @@ public class EntityList {
 	 */
 	public boolean lastActionSucceeded() {
 		return this.lastActionSuccess;
+	}
+	
+	public EntityList updateEntity(Entity e, boolean onlyLocation) {
+		if (database != null) {
+			if (database.checkConnection()) {
+				int x = e.getLocation().getBlockX();
+				int y = e.getLocation().getBlockY();
+				int z = e.getLocation().getBlockZ();
+				String uuid = e.getUniqueId().toString();
+				if (onlyLocation) {
+					String query = "UPDATE ap_entities SET last_x="+z+", last_y="+y+", last_z="+z+" WHERE uuid='"+uuid+"';";
+				}
+				else {
+					Boolean alive = !e.isDead();
+					String customName = "";
+					try { customName = (((LivingEntity) e).getCustomName()); } catch (Exception ex) { }
+					String armor = "";
+					try {
+						Horse horse = (Horse)e;
+						if (horse.getInventory().getArmor().equals(new ItemStack(Material.DIAMOND_BARDING))) {
+							armor = "diamond";
+						}
+						else if (horse.getInventory().getArmor().equals(new ItemStack(Material.GOLD_BARDING))) {
+							armor = "gold";
+						}
+						else if (horse.getInventory().getArmor().equals(new ItemStack(Material.IRON_BARDING))) {
+							armor = "iron";
+						}
+					} catch (Exception ex) { }
+					String color = "";
+					try { color = (((Horse) e).getColor().toString()); } catch (Exception ex) { }
+					try { color = (((Sheep) e).getColor().toString()); } catch (Exception ex) { }
+					try { color = (((Wolf) e).getCollarColor().toString()); } catch (Exception ex) { }
+					
+					color.toUpperCase();
+					armor.toUpperCase();
+					
+					String query = "UPDATE ap_entities SET last_x="+z+", last_y="+y+", last_z="+z+", "
+							+ "alive="+alive+", "
+							+ "nametag='"+customName+"', "
+							+ "armor='"+armor+"', "
+							+ "color='"+color+"', "
+							+ "WHERE uuid='"+uuid+"';";
+					
+					database.write(query);
+				}
+				
+				this.lastActionSuccess = true;
+				return this;
+			}
+		}
+		this.lastActionSuccess = false;
+		return this;
 	}
 	
 	private void addToList(EntityObject entity) {
