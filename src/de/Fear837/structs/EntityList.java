@@ -20,6 +20,8 @@ public class EntityList {
 	/** All loaded Entities of the Database **/
 	private ArrayList<EntityObject> EntityList;
 	
+	/** Reverse Maps an entity to his owner */
+	private HashMap<UUID, Player> reverseKeys;
 	/** Maps player to all his entities */
 	private HashMap<Player, ArrayList<EntityObject>> keys;
 	
@@ -106,14 +108,38 @@ public class EntityList {
 	public boolean containsEntity(Entity entity) {
 		if (entity instanceof Player) {
 			return containsPlayer((Player) entity); }
-		else {
-			EntityObject e = new EntityObject(plugin, database, entity.getUniqueId(), false);
-			for (EntityObject item : EntityList) {
-				if (item.getEntity_uuid() == entity.getUniqueId().toString()) {
-					return true;
-				}
-			}
+		if (reverseKeys.containsKey(entity.getUniqueId())) {
+			return true;
 		}
+		
+		// TODO Datenbank-Abfrage
 		return false;
+	}
+	
+	/**
+	 * Checks if an EntityObject is in the EntityList
+	 * 
+	 * @param entity
+	 *            The EntityObject to check for
+	 * @return <tt>true</tt> if <tt>entity</tt> is active in RAM and locked.
+	 */
+	public boolean containsEntityObject(EntityObject entity) {
+		if (EntityList.contains(entity)) { return true; }
+		return false;
+	}
+	
+	public Player getEntityOwner(Entity entity) {
+		if (containsEntity(entity)) {
+			return reverseKeys.get(entity);
+		}
+		
+		// TODO Datenbank-Abfrage
+		return null;
+	}
+	
+	public EntityObject getEntityObject(Entity entity) {
+		if (!containsEntity(entity)) { return null; }
+		// TODO
+		return null;
 	}
 }
