@@ -26,6 +26,7 @@ public class EntityObject {
 	private Double entity_jumpstrength;
 	private String entity_style;
 	private String entity_variant;
+	private String entity_owner;
 	
 	private Boolean connected;
 	
@@ -56,7 +57,21 @@ public class EntityObject {
 				entity_jumpstrength = result_Entities.getDouble("horse_jumpstrength");
 				entity_style = result_Entities.getString("horse_style");
 				entity_variant = result_Entities.getString("horse_variant");
-				connected = true;
+				
+				ResultSet result_owner = database.get("SELECT name FROM ap_owners WHERE id=(SELECT owner_id FROM ap_locks WHERE entity_id=(SELECT id FROM ap_entities WHERE uuid='" + entity_uuid + "'));", true, true);
+				if (result_owner != null) {
+					try { entity_owner = result_owner.getString("name"); }
+					catch (SQLException e) { 
+						connected = false;
+						plugin.getLogger().warning("Ein EntityLock konnte nicht geladen werden, weil der Ownername nicht geladen werden konnte!");
+						plugin.getLogger().warning("Weitere Informationen: [UUID=" + entity_uuid + "]");
+					}
+				}
+				else {
+					connected = false;
+					plugin.getLogger().warning("Ein EntityLock konnte nicht geladen werden, weil der Owner nicht gefunden werden konnte!");
+					plugin.getLogger().warning("Weitere Informationen: [UUID=" + entity_uuid + "]");
+				}
 			} catch (SQLException e) {
 				connected = false;
 				plugin.getLogger().warning("Ein EntityObject konnte nicht geladen werden, weil die Entity-Eigenschaften nicht geladen werden konnten!");
@@ -166,6 +181,13 @@ public class EntityObject {
 	 */
 	public String getEntity_variant() {
 		return entity_variant;
+	}
+
+	/**
+	 * @return Gibt den Owner des Entities zurück.
+	 */
+	public String getEntity_owner() {
+		return entity_owner;
 	}
 
 	/**
