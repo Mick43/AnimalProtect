@@ -1,11 +1,20 @@
 package de.Fear837.structs;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.UUID;
 
+import org.bukkit.Material;
+import org.bukkit.World;
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.Horse;
+import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
+import org.bukkit.entity.Sheep;
+import org.bukkit.entity.Wolf;
+import org.bukkit.inventory.ItemStack;
 
 import de.Fear837.Main;
 import de.Fear837.MySQL;
@@ -18,17 +27,19 @@ public class EntityList {
 	private MySQL database;
 
 	/** All loaded Entities of the Database **/
-	private ArrayList<EntityObject> EntityList;
+	private ArrayList<EntityObject> Entities;
 	
 	/** Reverse Maps an entity to his owner */
-	private HashMap<UUID, Player> reverseKeys;
+	private HashMap<UUID, String> reverseKeys;
 	/** Maps player to all his entities */
-	private HashMap<Player, ArrayList<EntityObject>> keys;
+	private HashMap<String, ArrayList<EntityObject>> keys;
 	
 	/** The maximum allowed saved entities for one player */
 	private int MAX_ENTITIES_FOR_PLAYER = 0;
 	/** If true, debug-messages will be displayed at the console. */
 	private boolean DEBUGGING = false;
+	/** Returns the current World **/
+	private World world = plugin.getServer().getWorld(plugin.getConfig().getString("settings.worldname"));
 	/** Stores the last Method call success status */
 	private boolean lastActionSuccess;
 	
@@ -55,12 +66,12 @@ public class EntityList {
 	public EntityList(Main plugin, boolean empty) {
 		this.plugin = plugin;
 		this.database = plugin.getMySQL();
-		this.EntityList = new ArrayList<EntityObject>();
-		this.keys = new HashMap<Player, ArrayList<EntityObject>>();
+		this.Entities = new ArrayList<EntityObject>();
+		this.keys = new HashMap<String, ArrayList<EntityObject>>();
 
 		if (!empty) {
 			for (Player player : plugin.getServer().getOnlinePlayers()) {
-				// TODO connect(player);
+				connect(player.getName());
 			}
 		}
 
@@ -74,8 +85,33 @@ public class EntityList {
 	 * 
 	 * @return Amount of entities in RAM.
 	 */
-	public int sizeOfEntities() {
-		return EntityList.size();
+	public int sizeOfEntitiesInRam() {
+		return Entities.size();
+	}
+	
+	/**
+	 * Returns the amount of entities locked by a player.
+	 * 
+	 * @param player
+	 *            The player as the owner
+	 * @return Amount of entities for a player, returns 0 if player isn't in Database
+	 */
+	public int sizeOfEntities(String player) {
+		if (!containsPlayer(player)) { // Wenn der Spieler nicht in der Datenbank ist, dann return 0;
+			return 0;
+		}
+		else if (keys.containsKey(player)) { // Wenn der Spieler in der Liste im RAM ist, dann return get(player).size();
+			return keys.get(player).size();
+		}
+		else { // Wenn der Spieler nicht im RAM, sondern in der Datenbank ist, dann aus der Datenbank lesen.
+			String query = "SELECT COUNT(id) FROM ap_locks WHERE owner_id=(SELECT id FROM ap_owners WHERE name='" + player + "');";
+			Integer count = (Integer) database.getValue(query, "COUNT(ID)", true);
+			if (count != null) {
+				return count;
+			}
+		}
+		
+		return 0;
 	}
 	
 	/**
@@ -88,31 +124,60 @@ public class EntityList {
 	}
 	
 	/**
-	 * Checks if a player is already active in RAM.
+	 * Checks if a player is in database.
 	 * 
 	 * @param player
 	 *            The player to check for
-	 * @return <tt>true</tt> if <tt>player</tt> is active in RAM.
+	 * @return <tt>true</tt> if <tt>player</tt> is in the database.
 	 */
-	public boolean containsPlayer(Player player) {
+	public boolean containsPlayer(String player) {
 		return keys.containsKey(player);
 	}
 	
 	/**
-	 * Checks if an entity is already active in RAM and locked.
+	 * Checks if an entity is in the database.
 	 * 
 	 * @param entity
 	 *            The entity to check for
-	 * @return <tt>true</tt> if <tt>entity</tt> is active in RAM and locked.
+	 * @return <tt>true</tt> if <tt>entity</tt> is in the database.
 	 */
 	public boolean containsEntity(Entity entity) {
 		if (entity instanceof Player) {
-			return containsPlayer((Player) entity); }
-		if (reverseKeys.containsKey(entity.getUniqueId())) {
+			return containsPlayer(((Player) entity).getName()); }
+		
+		if (reverseKeys.containsKey(entity.getUniqueId())) { // Wenn Spieler bereits im RAM, dann return true;
 			return true;
 		}
+		else { // Wenn nicht, dann in der Datenbank nachschauen
+			String query = "SELECT id FROM ap_entities WHERE uuid='" + entity.getUniqueId() + "';"; // TODO Gibt es eine bessere Abfrage dafür?
+			Integer i = (Integer) database.getValue(query, "id", true);
+			if (i != null) {
+				return true;
+			}
+		}
 		
-		// TODO Datenbank-Abfrage
+		return false;
+	}
+	
+	/**
+	 * Checks if an entity is in the database.
+	 * 
+	 * @param id
+	 *            The uniqueID of the entity.
+	 * @return <tt>true</tt> if <tt>entity</tt> is in the database.
+	 */
+	public boolean containsEntity(UUID id) {
+		if (reverseKeys.containsKey(id)) { // Wenn Spieler bereits im RAM, dann return true;
+			return true;
+		}
+		else { // Wenn nicht, dann in der Datenbank nachschauen
+			String query = "SELECT id FROM ap_entities WHERE uuid='" + id + "';"; // TODO Gibt es eine bessere Abfrage dafür?
+			Integer i = (Integer) database.getValue(query, "id", true);
+			if (i != null) {
+				return true;
+			}
+		}
+		
 		return false;
 	}
 	
@@ -124,22 +189,260 @@ public class EntityList {
 	 * @return <tt>true</tt> if <tt>entity</tt> is active in RAM and locked.
 	 */
 	public boolean containsEntityObject(EntityObject entity) {
-		if (EntityList.contains(entity)) { return true; }
+		if (Entities.contains(entity)) { return true; }
 		return false;
 	}
 	
-	public Player getEntityOwner(Entity entity) {
+	/**
+	 * Returns the player, who locked a given Entity
+	 * 
+	 * @param entity
+	 *            The entity searching for its owner
+	 * @return Player, who locked the entity
+	 */
+	public String getPlayer(Entity entity) {
 		if (containsEntity(entity)) {
 			return reverseKeys.get(entity);
 		}
-		
-		// TODO Datenbank-Abfrage
+		else {
+			String query = "SELECT name FROM ap_owners WHERE id=(SELECT owner_id FROM ap_locks WHERE entity_id=("
+					+ "SELECT id FROM ap_entities WHERE uuid='" + entity.getUniqueId() + "'));";
+			String playerName = (String) database.getValue(query, "name", true);
+			if (playerName != null) {
+				return playerName;
+			}
+		}
 		return null;
 	}
 	
-	public EntityObject getEntityObject(Entity entity) {
-		if (!containsEntity(entity)) { return null; }
-		// TODO
+	/**
+	 * Returns an EntityObject
+	 * 
+	 * @param entity
+	 *            The Entity
+	 * @return ArrayList<String>
+	 */
+	public EntityObject getEntityObject(UUID uniqueID) {
+		if (!containsEntity(uniqueID)) { return null; }
+		for (EntityObject e : Entities) {
+			if (e.getUniqueID().equals(uniqueID)) {
+				return e;
+			}
+		}
+		
+		String query = "SELECT id FROM ap_entities WHERE uuid='" + uniqueID + "';";
+		Integer id = (Integer) database.getValue(query, "id", true);
+		
+		if (id != null) {
+			EntityObject ent = new EntityObject(plugin, database, uniqueID, true);
+			if (ent.isConnected()) {
+				addToList(ent);
+				return ent;
+			}
+		}
 		return null;
+	}
+	
+	/**
+	 * Locks an entity for a player
+	 * 
+	 * @param player
+	 *            The player to lock as owner
+	 * @param entity
+	 *            The entity to be locked
+	 * @return EntityList after locking, if locking failed, returns an
+	 *         unmodified version of the list.
+	 * @see de.Fear837.structs.EntityList.lastActionSucceeded()
+	 */
+	public EntityList lock(String player, Entity entity) {
+		this.lastActionSuccess = true;
+		if (reverseKeys.containsKey(entity)) {
+			this.lastActionSuccess = false;
+			return this;
+		}
+		if (sizeOfEntities(player) >= MAX_ENTITIES_FOR_PLAYER) {
+			this.lastActionSuccess = false;
+			return this;
+		}
+		
+		if (!containsPlayer(player)) {
+			connect(player);
+		}
+		
+		if (database != null) {
+			if (database.checkConnection()) {
+				/* Das Entity in die Tabelle ap_entities schreiben */
+				UUID id = entity.getUniqueId();
+		    	Integer x = entity.getLocation().getBlockX();
+		    	Integer y = entity.getLocation().getBlockY();
+		    	Integer z = entity.getLocation().getBlockZ();
+		    	String type = entity.getType().toString();
+		    	String nametag = "";
+		    	Double maxhp = 10.0;
+		    	Boolean alive = true;
+		    	String color = "";
+		    	String armor = "";
+		    	Double jumpstrength = 10.0;
+		    	String style = "";
+		    	String variant = "NONE";
+		    	
+		    	try { nametag = ((LivingEntity) entity).getCustomName(); } catch (Exception e) { }
+		    	try { maxhp = ((LivingEntity) entity).getMaxHealth(); } catch (Exception e)  { }
+		    	try { alive = !entity.isDead(); } catch (Exception e)  { }
+		    	try { color = ((Horse) entity).getColor().toString(); } catch (Exception e)  { }
+		    	try { color = ((Wolf) entity).getCollarColor().toString(); } catch (Exception e)  { }
+		    	try { color = ((Sheep) entity).getColor().toString(); } catch (Exception e) { }
+		    	try {
+		    		ItemStack itemArmor = ((Horse) entity).getInventory().getArmor();
+		    		if (itemArmor.getType() == Material.DIAMOND_BARDING) { armor = "diamond"; }
+		    		else if (itemArmor.getType() == Material.IRON_BARDING) { armor = "iron"; }
+		    		else if (itemArmor.getType() == Material.GOLD_BARDING) { armor = "gold"; }
+		    		else { armor = "unknown"; }
+		    	} catch (Exception e)  { }
+		    	try { jumpstrength = ((Horse) entity).getJumpStrength(); } catch (Exception e)  { }
+		    	try { style = ((Horse) entity).getStyle().toString(); } catch (Exception e)  { }
+		    	try { variant = ((Horse) entity).getVariant().toString(); } catch (Exception e)  { }
+		    	
+		    	try { nametag = nametag.replaceAll("'", ""); } catch (Exception e1) { }
+		    	
+		    	database.write("INSERT INTO ap_entities (`uuid`, `last_x`, `last_y`, `last_z`, `animaltype`, `nametag`, "
+		    			+ "`maxhp`, `alive`, `color`, `armor`, `horse_jumpstrength`, `horse_style`, `horse_variant`) "
+		    			+ "VALUES ('"
+		    			+ id + "', "
+		    			+ x + ", "
+		    			+ y + ", "
+		    			+ z + ", '"
+		    			+ type + "', '"
+		    			+ nametag + "', "
+		    			+ maxhp + ", "
+		    			+ alive + ", '"
+		    			+ color + "', '"
+		    			+ armor + "', "
+		    			+ jumpstrength + ", '"
+		    			+ style + "', '"
+		    			+ variant + "'"
+		    			+ ");");
+		    	
+		    	/* Nun den Eintrag in ap_locks erstellen */
+		    	String query = "INSERT INTO ap_locks (`owner_id`, `entity_id`) VALUES ("
+		    			+ "(SELECT id FROM ap_owners WHERE name='"  + player + "'), "
+		    			+ "(SELECT id FROM ap_entities WHERE uuid='" + entity.getUniqueId().toString() + "'));";
+		    	database.write(query);
+		    	
+		    	this.lastActionSuccess = true;
+				return this;
+			}
+		}
+		
+    	
+    	this.lastActionSuccess = false;
+		return this;
+	}
+	
+	/**
+	 * Unlocks an entity
+	 * 
+	 * @param entity
+	 *            The entity to be unlocked
+	 * @return EntityList after unlocking, if unlocking failed, returns an
+	 *         unmodified version of the list.
+	 * @see de.Fear837.structs.EntityList.lastActionSucceeded()
+	 */
+	public EntityList unlock (Entity entity) {
+		this.lastActionSuccess = false;
+		if (containsEntity(entity)) {
+			String owner = getPlayer(entity);
+			
+			for (EntityObject e : Entities) {
+				if (e.equals(entity)) { Entities.remove(e); }
+			}
+			reverseKeys.remove(entity.getUniqueId());
+			keys.get(owner).remove(entity.getUniqueId());
+			
+			String query = "REMOVE FROM ap_locks WHERE entity_id=(SELECT id FROM ap_entities WHERE uuid='" + entity.getUniqueId() + "');";
+			database.write(query);
+		    query = "REMOVE FROM ap_entities WHERE uuid='" + entity.getUniqueId() + "';";
+		    database.write(query);
+			
+			this.lastActionSuccess = true;
+		}
+		else { this.lastActionSuccess = false; }
+		return this;
+	}
+	
+	public void saveToDatabase() {
+		// TODO
+	}
+	
+	public EntityList connect(String player) {
+		if (keys.containsKey(player)) { 
+			this.lastActionSuccess = false;
+			return this;
+		}
+		
+		if (database != null) {
+			if (database.checkConnection()) {
+				if (containsPlayer(player)) { // Wenn der Spieler in der Datenbank existiert, dann alle locked Entities von ihm laden.
+					 String query = "SELECT COUNT(*) FROM ap_locks WHERE owner_id=(SELECT id FROM ap_owners WHERE name='" + player + "');";
+					 Integer count = (Integer) database.getValue(query, "COUNT(*)", true);
+					 if (count != null) {
+						 for (int i=0; i<count; i++) {
+							 query = "SELECT uuid FROM ap_entities WHERE id=(SELECT entity_id FROM ap_locks WHERE owner_id=(SELECT id FROM ap_owners WHERE name='" + player + "') LIMIT " + i + ", 1);";
+							 ResultSet result = database.get(query, false, true);
+							 if (result != null) {
+								 try {
+									if (result.next()) {
+										 UUID uniqueID = UUID.fromString(result.getString("uuid"));
+										 EntityObject ent = new EntityObject(plugin, database, uniqueID, true);
+										 addToList(ent);
+									 }
+								} catch (SQLException e) { }
+							 }
+						 }
+						 
+						 this.lastActionSuccess = true;
+						 return this;
+					 }
+				 }
+				 else { // Wenn der Spieler nicht in der Datenbank existiert, dann erstelle den Spieler und füge ihn der Liste hinzu.
+					 String query = "INSERT INTO ap_owners (`name`) VALUES ('" + player + "');";
+					 database.write(query);
+					 
+					 keys.put(player, new ArrayList<EntityObject>());
+					 
+					 this.lastActionSuccess = true;
+					 return this;
+				 }
+			}
+		}
+		this.lastActionSuccess = false;
+		return this;
+	}
+	
+	/**
+	 * Returns if the last method call was successful.
+	 * 
+	 * @return <tt>true</tt> if last method call was successful, otherwise
+	 *         <tt>false</tt>.<br>
+	 *         If no method was called yet, returns <tt>false</tt>.
+	 */
+	public boolean lastActionSucceeded() {
+		return this.lastActionSuccess;
+	}
+	
+	private void addToList(EntityObject entity) {
+		if (entity.isConnected()) {
+			reverseKeys.put(UUID.fromString(entity.getUniqueID()), entity.getOwner());
+			Entities.add(entity);
+			
+			if (keys.containsKey(entity.getOwner())) {
+				keys.get(entity.getOwner()).add(entity);
+			} 
+			else { 
+				ArrayList<EntityObject> l = new ArrayList<EntityObject>();
+				l.add(entity);
+				keys.put(entity.getOwner(), l); 
+			}
+		}
 	}
 }

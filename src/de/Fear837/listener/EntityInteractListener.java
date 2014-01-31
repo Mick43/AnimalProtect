@@ -49,7 +49,7 @@ public class EntityInteractListener implements Listener{
 					return;
 				}
 				String entityOwner = null;
-				try { entityOwner = list.getEntityOwner(entity).getName(); }
+				try { entityOwner = list.getPlayer(entity); }
 				catch (Exception e) { }
 				
 				player.playSound(player.getLocation(), Sound.CLICK, 0.75f, 0.8f);
