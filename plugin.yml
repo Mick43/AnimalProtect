@@ -19,6 +19,16 @@ commands:
       usage: Write /<command> [playername]
       permission: animalprotect.admin
       permission-message: You don't have permission.
+   lockrespawn:
+      description: Spawnt das ausgewaehlte Tier neu.
+      usage: Write /<command> [id] [owner]
+      permission: animalprotect.admin
+      permission-message: You don't have permission.
+   locktp:
+      description: Teleportiert dich zu einem Tier.
+      usage: Write /<command> [id] [owner]
+      permission: animalprotect.admin
+      permission-message: You don't have permission.
 permissions:
   animalprotect.protect:
     default: true
