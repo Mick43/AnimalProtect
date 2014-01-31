@@ -9,6 +9,8 @@ import java.util.logging.Level;
 
 import org.bukkit.plugin.Plugin;
 
+import de.Fear837.utility.APLogger;
+
 /**
  * Connects to and uses a MySQL database
  * 
@@ -56,6 +58,7 @@ public class MySQL extends Database {
     public Connection openConnection() {
         try {
             Class.forName("com.mysql.jdbc.Driver");
+            plugin.getLogger().info("Connecting to jdbc:mysql://" + this.hostname + ":" + this.port + "/" + this.database + " ...");
             connection = DriverManager.getConnection("jdbc:mysql://" + this.hostname + ":" + this.port + "/" + this.database, this.user, this.password);
         } catch (SQLException e) {
             plugin.getLogger().log(Level.SEVERE, "Could not connect to MySQL server! because: " + e.getMessage());
@@ -177,10 +180,7 @@ public class MySQL extends Database {
 			}
 			
 			return res;
-		}
-		else {
-			return null;
-		}
+		} else { noConnection(); return null; }
 	}
 	
 	public Object getValueFromResult(ResultSet result, String columnLabel) {
@@ -232,18 +232,28 @@ public class MySQL extends Database {
 	
 	public boolean write(String Query)
 	{
-		Statement statement = null;
-		try {
-			statement = connection.createStatement();
+		if (checkConnection()) {
+			Statement statement = null;
 			try {
-				if (plugin.getConfig().getBoolean("settings.debug-messages")) {
-					plugin.getLogger().info("Inserting: " + Query);
-				}
-				statement.executeUpdate(Query);
-				return true;
-			} catch (SQLException e) { e.printStackTrace(); }
-		} catch (SQLException e1) { e1.printStackTrace(); }
+				statement = connection.createStatement();
+				try {
+					if (plugin.getConfig().getBoolean("settings.debug-messages")) {
+						plugin.getLogger().info("Inserting: " + Query);
+					}
+					statement.executeUpdate(Query);
+					return true;
+				} catch (SQLException e) { e.printStackTrace(); }
+			} catch (SQLException e1) { e1.printStackTrace(); }
+		} else { noConnection(); }
 		return false;
+	}
+	
+	private void noConnection() {
+		APLogger.setWarning(true);
+		APLogger.warn("Warnung: Es konnte keine Verbindung zur Datenbank hergestellt werden.");
+		APLogger.warn("Folgender Befehl konnte nicht ausgeführt werden:");
+		APLogger.warn("Weitere Informationen: MySQL.checkConnection() == " + checkConnection());
+		APLogger.setWarning(false);
 	}
 
 }
