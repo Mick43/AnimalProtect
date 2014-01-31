@@ -7,8 +7,10 @@ import java.sql.Statement;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import de.Fear837.listener.EntityInteractListener;
 import de.Fear837.listener.EntityListener;
 import de.Fear837.listener.EntityLoadSaveListener;
+import de.Fear837.structs.EntityList;
 import de.Fear837.structs.EntityList_old;
 
 public class Main extends JavaPlugin {
@@ -25,6 +27,7 @@ public class Main extends JavaPlugin {
 	private static String port;
 
 	private static EntityList_old entitylist;
+	private static EntityList entityList_new;
 	
 	public void onEnable() {
 		getLogger().info("[AnimalLock] Loading Plugin...");
@@ -56,6 +59,7 @@ public class Main extends JavaPlugin {
 			/* Die Listener registrieren */
 			pm.registerEvents(new EntityListener(sql, this, entitylist), this);
 			pm.registerEvents(new EntityLoadSaveListener(this), this);			
+			pm.registerEvents(new EntityInteractListener(entityList_new , sql), this);
 
 			getLogger().info("[AnimalLock] Loading finished!");
 		} catch (Exception e) {
