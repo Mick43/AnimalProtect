@@ -39,6 +39,8 @@ public class APLogger {
 	private static transient String[] messageCache;
 	/** Cache der letzten Ausgabe */
 	private static transient String builderCache;
+	/***/
+	private static transient boolean isWarning = false;
 
 	/**
 	 * Kein Konstruktor, da keine Instanziierung erlaubt.
@@ -56,7 +58,7 @@ public class APLogger {
 	 *             wenn <tt>plugin</tt> gleich <tt>null</tt> ist.
 	 */
 	public static void setPlugin(Main plugin) {
-		if (plugin == null && plugin.getLogger() == null) {
+		if (plugin == null || plugin.getLogger() == null) {
 			throw new RuntimeException(
 					"Das Plugin oder sein Logger darf nicht 'null' sein.");
 		}
@@ -66,6 +68,7 @@ public class APLogger {
 	/**
 	 * Gibt eine beliebig lange Nachricht auf dem zugehoerigen Logger des
 	 * Plugins aus.<br>
+	 * Der letzte Status (Info oder Warn) wird uebernommen.<br>
 	 * <br>
 	 * <u>Beispiele:</u><br>
 	 * <tt>APLogger.log();</tt><br>
@@ -99,6 +102,44 @@ public class APLogger {
 			builder.append(msg).append(SEPARATOR);
 		}
 		builder.append(SUFFIX);
-		logger.info(builderCache = builder.toString());
+		if (isWarning) {
+			logger.info(builderCache = builder.toString());
+		} else {
+			logger.warning(builderCache = builder.toString());
+		}
+	}
+
+	/**
+	 * Gibt eine Nachricht als Information aus.<br>
+	 * Der Status wird fuer weitere Ausgaben beibehalten.
+	 * 
+	 * @param message
+	 *            Die auszugebende Nachricht
+	 */
+	public static void info(String... message) {
+		setWarning(false);
+		log(message);
+	}
+
+	/**
+	 * Gibt eine Nachricht als Warnung aus.<br>
+	 * Der Status wird fuer weitere Ausgaben beibehalten.
+	 * 
+	 * @param message
+	 *            Die auszugebende Nachricht
+	 */
+	public static void warn(String... message) {
+		setWarning(true);
+		log(message);
+	}
+
+	/**
+	 * Setzt den Warnstatus
+	 * 
+	 * @param warning
+	 *            Neuer Status fuer Ausgaben
+	 */
+	public static void setWarning(boolean warning) {
+		isWarning = warning;
 	}
 }
