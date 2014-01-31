@@ -4,14 +4,16 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.UUID;
 
+import org.bukkit.entity.Entity;
+
 import de.Fear837.Main;
 import de.Fear837.MySQL;
 
-public class EntityObject {
-	
+public class EntityObject implements Comparable<Object> {
+
 	private Main plugin;
 	private MySQL database;
-	
+
 	private Integer entity_id;
 	private String entity_uuid;
 	private Integer entity_lastx;
@@ -27,20 +29,24 @@ public class EntityObject {
 	private String entity_style;
 	private String entity_variant;
 	private String entity_owner;
-	
+
 	private Boolean connected;
-	
+
 	public EntityObject(Main plugin, MySQL database, UUID id, boolean loadFromDB) {
 		this.plugin = plugin;
 		this.database = database;
 		this.entity_uuid = id.toString();
 		this.connected = false;
-		
-		if (loadFromDB) { update(); }
+
+		if (loadFromDB) {
+			update();
+		}
 	}
-	
+
 	public void update() {
-		ResultSet result_Entities = database.get("SELECT * FROM ap_entities WHERE uuid='" + entity_id + "';", true, true);
+		ResultSet result_Entities = database.get(
+				"SELECT * FROM ap_entities WHERE uuid='" + entity_id + "';",
+				true, true);
 		if (result_Entities != null) {
 			try {
 				entity_id = result_Entities.getInt("id");
@@ -54,34 +60,51 @@ public class EntityObject {
 				entity_alive = result_Entities.getBoolean("alive");
 				entity_color = result_Entities.getString("color");
 				entity_armor = result_Entities.getString("armor");
-				entity_jumpstrength = result_Entities.getDouble("horse_jumpstrength");
+				entity_jumpstrength = result_Entities
+						.getDouble("horse_jumpstrength");
 				entity_style = result_Entities.getString("horse_style");
 				entity_variant = result_Entities.getString("horse_variant");
-				
-				ResultSet result_owner = database.get("SELECT name FROM ap_owners WHERE id=(SELECT owner_id FROM ap_locks WHERE entity_id=(SELECT id FROM ap_entities WHERE uuid='" + entity_uuid + "'));", true, true);
+
+				ResultSet result_owner = database
+						.get("SELECT name FROM ap_owners WHERE id=(SELECT owner_id FROM ap_locks WHERE entity_id=(SELECT id FROM ap_entities WHERE uuid='"
+								+ entity_uuid + "'));", true, true);
 				if (result_owner != null) {
-					try { entity_owner = result_owner.getString("name"); }
-					catch (SQLException e) { 
+					try {
+						entity_owner = result_owner.getString("name");
+					} catch (SQLException e) {
 						connected = false;
-						plugin.getLogger().warning("Ein EntityLock konnte nicht geladen werden, weil der Ownername nicht geladen werden konnte!");
-						plugin.getLogger().warning("Weitere Informationen: [UUID=" + entity_uuid + "]");
+						plugin.getLogger()
+								.warning(
+										"Ein EntityLock konnte nicht geladen werden, weil der Ownername nicht geladen werden konnte!");
+						plugin.getLogger().warning(
+								"Weitere Informationen: [UUID=" + entity_uuid
+										+ "]");
 					}
-				}
-				else {
+				} else {
 					connected = false;
-					plugin.getLogger().warning("Ein EntityLock konnte nicht geladen werden, weil der Owner nicht gefunden werden konnte!");
-					plugin.getLogger().warning("Weitere Informationen: [UUID=" + entity_uuid + "]");
+					plugin.getLogger()
+							.warning(
+									"Ein EntityLock konnte nicht geladen werden, weil der Owner nicht gefunden werden konnte!");
+					plugin.getLogger()
+							.warning(
+									"Weitere Informationen: [UUID="
+											+ entity_uuid + "]");
 				}
 			} catch (SQLException e) {
 				connected = false;
-				plugin.getLogger().warning("Ein EntityObject konnte nicht geladen werden, weil die Entity-Eigenschaften nicht geladen werden konnten!");
-				plugin.getLogger().warning("Weitere Informationen: [UUID=" + entity_uuid + "]");
+				plugin.getLogger()
+						.warning(
+								"Ein EntityObject konnte nicht geladen werden, weil die Entity-Eigenschaften nicht geladen werden konnten!");
+				plugin.getLogger().warning(
+						"Weitere Informationen: [UUID=" + entity_uuid + "]");
 			}
-		}
-		else { 
+		} else {
 			connected = false;
-			plugin.getLogger().warning("Ein EntityLock konnte nicht geladen werden, weil das Entity nicht gefunden werden konnte!");
-			plugin.getLogger().warning("Weitere Informationen: [UUID=" + entity_uuid + "]");
+			plugin.getLogger()
+					.warning(
+							"Ein EntityLock konnte nicht geladen werden, weil das Entity nicht gefunden werden konnte!");
+			plugin.getLogger().warning(
+					"Weitere Informationen: [UUID=" + entity_uuid + "]");
 		}
 	}
 
@@ -191,9 +214,37 @@ public class EntityObject {
 	}
 
 	/**
-	 * @return Gibt zurück, ob die Eigenschaften des Entities erfolgreich aus der Datenbank gelesen werden konnte.
+	 * @return Gibt zurück, ob die Eigenschaften des Entities erfolgreich aus
+	 *         der Datenbank gelesen werden konnte.
 	 */
 	public Boolean getConnected() {
 		return connected;
+	}
+
+	public int hashCode() {
+		return entity_uuid.hashCode();
+	}
+
+	@Override
+	public int compareTo(Object o) {
+		if (this.equals(o))
+			return 0;
+		if (o instanceof EntityObject)
+			return this.hashCode() > ((EntityObject) o).hashCode() ? 1 : -1;
+		if (o instanceof Entity)
+			return this.hashCode() > ((Entity) o).hashCode() ? 1 : -1;
+		return this.hashCode() - o.hashCode();
+	}
+
+	public boolean equals(Object o) {
+		if (o == null)
+			return false;
+		if (o instanceof EntityObject
+				&& this.hashCode() == ((EntityObject) o).hashCode())
+			return true;
+		if (o instanceof Entity
+				&& this.hashCode() == ((Entity) o).getUniqueId().hashCode())
+			return true;
+		return false;
 	}
 }
