@@ -21,7 +21,7 @@ public class EntityUnloadListener implements Listener{
 		
 		for (Entity e : entityArray) {
 			if (list.containsEntity(e)) {
-				// TODO e.UpdateEntity(e);
+				list.updateEntity(e, false);
 			}
 		}
 	}
