@@ -7,8 +7,8 @@ import java.util.UUID;
 
 import org.bukkit.ChatColor;
 import org.bukkit.DyeColor;
+import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.Sound;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -104,11 +104,14 @@ public class Commands implements CommandExecutor {
 		else if (cmd.getName().equalsIgnoreCase("locklist")) {
 			if (cs instanceof Player) {
 				String playerName = cs.getName();
+				Player player = (Player)cs;
+				
 				if (args.length == 1) { 
 					playerName = args[0];
 				}
 				else if (args.length > 1) {
 					cs.sendMessage("§cFehler: Du hast zu viele Argumente angegeben! (/locklist <Name>)");
+					return true;
 				}
 				
 				ArrayList<EntityObject> entities = new ArrayList<EntityObject>();
@@ -117,19 +120,37 @@ public class Commands implements CommandExecutor {
 				if (entities != null) {
 					if (entities.size() != 0) {
 						String msg = "§e----- Liste der gesicherten Tiere von " + playerName + "-----";
-						cs.sendMessage(msg); cs.sendMessage("");
+						cs.sendMessage(msg);
 						int index = 1;
 						for (EntityObject e : entities) {
 							if (e.isConnected()) {
 								String alive = "";
 								if (e.isAlive()) { alive = "§a[ALIVE]"; }
-								else { alive = "§c[MISSING]"; }
+								else { alive = "§c[DEAD]"; }
+								
+								int x = e.getLastx();
+								int y = e.getLasty();
+								int z = e.getLastz();
+								
+								boolean found = false;
+								
+								for (Entity entity : player.getWorld().getEntities()) {
+									if (UUID.fromString(e.getUniqueID()).equals(entity.getUniqueId())) {
+										x = entity.getLocation().getBlockX();
+										y = entity.getLocation().getBlockY();
+										z = entity.getLocation().getBlockZ();
+										if (entity.isDead()) { alive = "§c[DEAD]"; }
+										else { alive = "§a[ALIVE]"; }
+										found = true;
+									}
+								}
+								if (!found && e.isAlive()) { alive = "§7[MISSING]"; }
 								
 								cs.sendMessage("§e("+index+") - "
 										+ e.getType().toUpperCase() + " "
-										+ "[§6"+e.getLastx()+"§e, "
-										+ "§6"+e.getLasty()+"§e, "
-										+ "§6"+e.getLastz()+"§e] "
+										+ "[§6"+x+"§e, "
+										+ "§6"+y+"§e, "
+										+ "§6"+z+"§e] "
 										+ "['§6"+e.getNametag()+"§e'] "
 										+ alive
 										+ "");
@@ -167,7 +188,7 @@ public class Commands implements CommandExecutor {
 			    try { Integer.parseInt(args[0]); } catch (Exception e) { cs.sendMessage("§cFehler: Die angegebene ID ist keine Zahl!"); return false; }
 			    ResultSet result = sql.get("SELECT * FROM ap_entities WHERE ID=("
 			    		+ "SELECT entity_id FROM ap_locks WHERE owner_id=("
-			    		+ "SELECT id FROM ap_owners WHERE name='" + playerName + "') LIMIT " + args[0] + ", 1);", true, true);
+			    		+ "SELECT id FROM ap_owners WHERE name='" + playerName + "') LIMIT " + (Integer.parseInt(args[0])-1) + ", 1);", true, true);
 				
 				if (result != null) {
 					Entity entity = null;
@@ -208,7 +229,16 @@ public class Commands implements CommandExecutor {
 						}
 						
 						try {
-							sql.write("UPDATE ap_entities SET uuid='" + entity.getUniqueId() + "' WHERE id=" + result.getString("id"));
+							int x = entity.getLocation().getBlockX();
+							int y = entity.getLocation().getBlockY();
+							int z = entity.getLocation().getBlockZ();
+							String id = entity.getUniqueId().toString();
+							
+							sql.write("UPDATE ap_entities SET uuid='"+id+"', last_x="+x+", last_y="+y+", last_z="+z+" "
+									+ "WHERE uuid='" + result.getString("uuid")+"'");
+							
+							EntityObject ent = list.getEntityObject(UUID.fromString(result.getString("uuid")));
+							if (ent != null) { ent.update(); }
 						} catch (SQLException e) { e.printStackTrace(); }
 						
 						player.sendMessage("§aDas Tier wurde erfolgreich respawnt!");
@@ -221,9 +251,43 @@ public class Commands implements CommandExecutor {
 			}
 		}
 		else if (cmd.getName().equalsIgnoreCase("locktp")) {
-			// TODO /locktp Befehl schreiben
-			cs.sendMessage("Dieser Befehl ist noch nicht fertig :)");
-			if (cs instanceof Player) { ((Player) cs).playSound(((Player) cs).getLocation(), Sound.LEVEL_UP, 1f, 0.5f); }
+			if (cs instanceof Player) {
+				Player player = (Player)cs;
+                String playerName = "";
+				
+				if (args.length == 0) { player.sendMessage("§cFehler: Es fehlen Argumente! /lockrespawn <id> <owner>"); }
+				else if (args.length == 1) { playerName = player.getName(); }
+				else if (args.length == 2) { playerName = args[1]; }
+				else { cs.sendMessage("§cFehler: Zu viele Argumente! /lockrespawn <id> <owner>"); }
+				
+				if (playerName != "") {
+					try { Integer.parseInt(args[0]); } catch (Exception e) { cs.sendMessage("§cFehler: Die angegebene ID ist keine Zahl!"); return false; }
+				    ResultSet result = sql.get("SELECT * FROM ap_entities WHERE ID=("
+				    		+ "SELECT entity_id FROM ap_locks WHERE owner_id=("
+				    		+ "SELECT id FROM ap_owners WHERE name='" + playerName + "') LIMIT " + (Integer.parseInt(args[0])-1) + ", 1);", true, true);
+				    
+				    if (result != null) {
+				    	try {
+							int x = result.getInt("last_x");
+							int y = result.getInt("last_y");
+							int z = result.getInt("last_z");
+							
+							for (Entity ent : ((Player) cs).getWorld().getEntities()) {
+								if (ent.getUniqueId().toString() == result.getString("uuid")) {
+									x = ent.getLocation().getBlockX();
+									y = ent.getLocation().getBlockY();
+									z = ent.getLocation().getBlockZ();
+								}
+							}
+							
+							Location location = new Location(player.getWorld(), x, y, z);
+							player.teleport(location);
+							cs.sendMessage("§eTeleported.");
+						}
+				    	catch (SQLException e) { e.printStackTrace(); }
+				    }
+				}
+			}
 			return true;
 		}
 		return false;
