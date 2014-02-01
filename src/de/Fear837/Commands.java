@@ -114,36 +114,42 @@ public class Commands implements CommandExecutor {
 				ArrayList<EntityObject> entities = new ArrayList<EntityObject>();
 				entities = list.getEntities(cs.getName());
 				
-				if (entities.size() != 0) {
-					String msg = "§e§n______Liste der gesicherten Tiere von " + playerName + "______";
-					cs.sendMessage(msg); cs.sendMessage("");
-					int index = 1;
-					for (EntityObject e : entities) {
-						if (e.isConnected()) {
-							String alive = "";
-							if (e.isAlive()) { alive = "§a[ALIVE]"; }
-							else { alive = "§c[MISSING]"; }
-							
-							cs.sendMessage("§e("+index+") - "
-									+ e.getType().toUpperCase() + " "
-									+ "[§6"+e.getLastx()+"§e, "
-									+ "§6"+e.getLasty()+"§e, "
-									+ "§6"+e.getLastz()+"§e] "
-									+ "['§6"+e.getNametag()+"§e'] "
-									+ alive
-									+ "");
+				if (entities != null) {
+					if (entities.size() != 0) {
+						String msg = "§e§n______Liste der gesicherten Tiere von " + playerName + "______";
+						cs.sendMessage(msg); cs.sendMessage("");
+						int index = 1;
+						for (EntityObject e : entities) {
+							if (e.isConnected()) {
+								String alive = "";
+								if (e.isAlive()) { alive = "§a[ALIVE]"; }
+								else { alive = "§c[MISSING]"; }
+								
+								cs.sendMessage("§e("+index+") - "
+										+ e.getType().toUpperCase() + " "
+										+ "[§6"+e.getLastx()+"§e, "
+										+ "§6"+e.getLasty()+"§e, "
+										+ "§6"+e.getLastz()+"§e] "
+										+ "['§6"+e.getNametag()+"§e'] "
+										+ alive
+										+ "");
+							}
+							index += 1;
 						}
-						index += 1;
+						String msg2 = "§n§e";
+						for (int i = 0; i < msg.length(); i++) {
+							msg2 += "_";
+						}
+						cs.sendMessage(msg2);
 					}
-					String msg2 = "§n§e";
-					for (int i = 0; i < msg.length(); i++) {
-						msg2 += "_";
+					else {
+						if (args.length == 0) { cs.sendMessage("§cFehler: Du hast noch keine Tiere gesichert!"); }
+						else { cs.sendMessage("§cFehler: Der Spieler "+playerName+" hat noch keine Tiere gesichert!"); }
 					}
-					cs.sendMessage(msg2);
 				}
 				else {
-					if (args.length == 0) { cs.sendMessage("§cFehler: Du hast noch keine Tiere gesichert!"); }
-					else { cs.sendMessage("§cFehler: Der Spieler "+playerName+" hat noch keine Tiere gesichert!"); }
+					if (args.length == 0) { cs.sendMessage("§cFehler: Es wurden keine Tiere von dir gefunden!"); }
+					else { cs.sendMessage("§cFehler: Es wurden keine Tiere von "+playerName+" gefunden!"); }
 				}
 			}
 			return true;
