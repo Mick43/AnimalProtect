@@ -1,8 +1,10 @@
 package de.Fear837.listener;
 
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.EntityType;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.world.ChunkUnloadEvent;
 
 import de.Fear837.structs.EntityList;
@@ -24,5 +26,30 @@ public class EntityUnloadListener implements Listener{
 				list.updateEntity(e, false);
 			}
 		}
+	}
+	
+	@EventHandler
+	public void onEntityDeath(EntityDeathEvent event) {
+		if (isAnimal(event.getEntity())) {
+			if (list.containsEntity(event.getEntity())) {
+				list.updateEntity(event.getEntity(), false);
+				// TODO Den Grund des Todes vom Entity auch in die Datenbank eintragen.
+			}
+		}
+	}
+	
+	public boolean isAnimal(Entity entity) {
+		if (entity ==  null) { return false; }
+		else { 
+			if (entity.getType() == EntityType.COW 
+					|| entity.getType() == EntityType.PIG
+					|| entity.getType() == EntityType.SHEEP
+					|| entity.getType() == EntityType.CHICKEN
+					|| entity.getType() == EntityType.HORSE
+					|| entity.getType() == EntityType.WOLF) {
+				return true;
+			}
+		}
+		return false;
 	}
 }

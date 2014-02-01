@@ -12,6 +12,7 @@ import de.Fear837.listener.EntityInteractListener;
 import de.Fear837.listener.EntityLeashListener;
 import de.Fear837.listener.EntityListener;
 import de.Fear837.listener.EntityLoadSaveListener;
+import de.Fear837.listener.EntityUnloadListener;
 import de.Fear837.structs.EntityList;
 import de.Fear837.structs.EntityList_old;
 
@@ -64,6 +65,7 @@ public class Main extends JavaPlugin {
 			pm.registerEvents(new EntityInteractListener(entityList_new , sql), this);
 			pm.registerEvents(new EntityDamageListener(entityList_new, sql, this), this);
 			pm.registerEvents(new EntityLeashListener(this, sql, entityList_new), this);
+			pm.registerEvents(new EntityUnloadListener(entityList_new), this);
 
 			getLogger().info("[AnimalLock] Loading finished!");
 		} catch (Exception e) {

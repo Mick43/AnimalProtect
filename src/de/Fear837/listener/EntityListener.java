@@ -40,18 +40,6 @@ public final class EntityListener implements Listener {
 	}
 
 	@EventHandler
-	public void onEntityDeath(EntityDeathEvent event) {
-		if (sql==null) { return; }
-		
-		if (isAnimal(event.getEntity())) {
-			if (list.containsEntity(event.getEntity())) {
-				list.updateEntity(event.getEntity(), false);
-				// TODO Den Grund des Todes vom Entity auch in die Datenbank eintragen.
-			}
-		}
-	}
-
-	@EventHandler
 	public void onEntityEnter(VehicleEnterEvent event) {
 		if (!event.isCancelled()) {
 			if (event.getVehicle().getType() == EntityType.HORSE || event.getVehicle().getType() == EntityType.PIG) {
