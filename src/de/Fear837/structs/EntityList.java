@@ -7,7 +7,6 @@ import java.util.HashMap;
 import java.util.UUID;
 
 import org.bukkit.Material;
-import org.bukkit.World;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Horse;
 import org.bukkit.entity.LivingEntity;
@@ -43,8 +42,6 @@ public class EntityList {
 	private long MAX_ENTITIES_FOR_PLAYER = 0;
 	/** If true, debug-messages will be displayed at the console. */
 	private boolean DEBUGGING = false;
-	/** Returns the current World **/
-	private World world = null;
 	/** Stores the last Method call success status */
 	private boolean lastActionSuccess;
 	
@@ -77,11 +74,6 @@ public class EntityList {
 		this.players = new HashMap<String, Integer>();
 
 		loadFromDatabase();
-		
-		try {
-			world = plugin.getServer().getWorld(plugin.getConfig().getString("settings.worldname"));
-		}
-		catch (Exception e) { }
 
 		MAX_ENTITIES_FOR_PLAYER = plugin.getConfig().getInt("settings.max_entities_for_player");
 		DEBUGGING = plugin.getConfig().getBoolean("settings.debug-messages");
