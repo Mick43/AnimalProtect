@@ -13,8 +13,23 @@ public class EntityObject implements Comparable<Object> {
 
 	private Main plugin;
 	private MySQL database;
-
 	private Boolean connected;
+	
+	private Integer id;
+	private String uuid;
+	private Integer lastx;
+	private Integer lasty;
+	private Integer lastz;
+	private String type;
+	private String nametag;
+	private Double maxhp;
+	private Boolean alive;
+	private String color;
+	private String armor;
+	private Double jumpstrength;
+	private String style;
+	private String variant;
+	private String owner;
 
 	public EntityObject(Main plugin, MySQL database, UUID uniqueID, boolean loadFromDB) {
 		this.plugin = plugin;
@@ -26,10 +41,10 @@ public class EntityObject implements Comparable<Object> {
 			update();
 		}
 	}
-	public EntityObject(Main plugin, MySQL database, int rowID, boolean loadFromDB) {
+	public EntityObject(Main plugin, MySQL database, int ID, boolean loadFromDB) {
 		this.plugin = plugin;
 		this.database = database;
-		this.id = rowID;
+		this.id = ID;
 		this.connected = false;
 
 		if (loadFromDB) {
@@ -43,7 +58,7 @@ public class EntityObject implements Comparable<Object> {
 		else if (id != null) { result_Entity = database.get("SELECT * FROM ap_entities WHERE id="+id+";" , true, true); }
 		else { 
 			connected = false; 
-			plugin.getLogger().info("Fehler: Keine uniqueID oder rowID beim initialisieren eines EntityObjects angegeben!");
+			plugin.getLogger().info("Fehler: Keine uniqueID oder ID beim initialisieren eines EntityObjects angegeben!");
 		}
 		
 		if (result_Entity != null) {
@@ -225,22 +240,6 @@ public class EntityObject implements Comparable<Object> {
 	public String getOwner() {
 		return owner;
 	}
-
-	private Integer id;
-	private String uuid;
-	private Integer lastx;
-	private Integer lasty;
-	private Integer lastz;
-	private String type;
-	private String nametag;
-	private Double maxhp;
-	private Boolean alive;
-	private String color;
-	private String armor;
-	private Double jumpstrength;
-	private String style;
-	private String variant;
-	private String owner;
 
 	@Override
 	public int compareTo(Object o) {
