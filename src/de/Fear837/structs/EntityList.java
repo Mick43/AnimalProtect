@@ -286,6 +286,14 @@ public class EntityList {
 	}
 	
 	
+	/** Locks an entity
+	 * 
+	 * @param entity
+	 *            The entity to be unlocked
+	 * @return EntityList after unlocking, if unlocking failed, returns an
+	 *         unmodified version of the list.
+	 * @see de.Fear837.structs.EntityList.lastActionSucceeded()
+	 */
 	public EntityList lock(String player, Entity entity) {
 		this.lastActionSuccess = true;
 		if (reverseKeys.containsKey(entity)) {
@@ -364,6 +372,9 @@ public class EntityList {
 		    			+ "(SELECT id FROM ap_entities WHERE uuid='" + entity.getUniqueId().toString() + "'));";
 		    	database.write(query);
 		    	
+		    	EntityObject ent = new EntityObject(plugin, database, id, true);
+		    	this.addToList(ent);
+		    	
 		    	this.lastActionSuccess = true;
 		    	if (DEBUGGING) {
 		    		APLogger.info("Inserted new Entity: [ID:"+id+"] [Owner:"+player+"] [EntityType:"+type+"] [x:"+x+", y:"+y+", z:"+z+"]");
@@ -377,8 +388,8 @@ public class EntityList {
 		return this;
 	}
 	
-	/**
-	 * Unlocks an entity
+	
+	/** Unlocks an entity
 	 * 
 	 * @param entity
 	 *            The entity to be unlocked
