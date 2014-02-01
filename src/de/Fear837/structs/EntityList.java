@@ -449,22 +449,29 @@ public class EntityList {
 		
 		if (database != null) {
 			if (database.checkConnection()) {
-				if (containsPlayer(player)) { // Wenn der Spieler in der Datenbank existiert, dann alle locked Entities von ihm laden.
-					 String query = "SELECT COUNT(*) FROM ap_locks WHERE owner_id=(" + players.get(player) + "');";
-					 Long count = (Long) database.getValue(query, "COUNT(*)", true);
-					 if (count != null) {
-						 for (int i=0; i<count; i++) {
-							 query = "SELECT uuid FROM ap_entities WHERE id=(SELECT entity_id FROM ap_locks WHERE owner_id=("+players.get(player)+") LIMIT " + i + ", 1);";
-							 ResultSet result = database.get(query, false, true);
-							 if (result != null) {
-								 try {
-									if (result.next()) {
-										 UUID uniqueID = UUID.fromString(result.getString("uuid"));
-										 EntityObject ent = new EntityObject(plugin, database, uniqueID, true);
-										 addToList(ent);
-									 }
-								} catch (SQLException e) { }
-							 }
+				if (containsPlayer(player)) { // Wenn der Spieler in der Datenbank existiert, dann alle locked Entities von ihm laden
+					 String query = "SELECT uuid FROM ap_entities "
+					 		+ "INNER JOIN ap_locks ON ap_entities.id=ap_locks.entity_id "
+					 		+ "INNER JOIN ap_owners ON ap_locks.owner_id="+players.get(player)+";";
+					 
+					 ResultSet result = database.get(query, false, true);
+					 
+					 if (result != null) {
+						 int rows = 0;
+						 try {
+							 result.last();
+							 rows = result.getRow();
+							 result.first();
+						 } catch (SQLException e) { }
+						 
+						 for (int i=0; i<rows; i++) {
+							 try {
+								if (result.next()) {
+									UUID uniqueID = UUID.fromString(result.getString("uuid"));
+									EntityObject ent = new EntityObject(plugin, database, uniqueID, true);
+									addToList(ent);
+								 }
+							} catch (SQLException e) { e.printStackTrace(); }
 						 }
 						 
 						 this.lastActionSuccess = true;
