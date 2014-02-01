@@ -178,7 +178,7 @@ public class EntityList {
 			if (database != null) {
 				if (database.checkConnection()) {
 					String query = "SELECT COUNT(1) FROM ap_entities WHERE uuid='" + id + "' LIMIT 1;";
-					Integer i = (Integer) database.getValue(query, "id", true);
+					Integer i = (Integer) database.getValue(query, "id", false);
 					if (i != null) {
 						if (i != 0) {
 							return true;
