@@ -53,9 +53,11 @@ public class EntityObject implements Comparable<Object> {
 	}
 
 	public void update() {
+		boolean failedToConnect = false;
+		
 		ResultSet result_Entity = null;
-		if (uuid != null) { result_Entity = database.get("SELECT * FROM ap_entities WHERE uuid='" + uuid + "';", true, true); }
-		else if (id != null) { result_Entity = database.get("SELECT * FROM ap_entities WHERE id="+id+";" , true, true); }
+		if (uuid != null) { result_Entity = database.get("SELECT * FROM ap_entities WHERE uuid='" + uuid + "';", true, false); }
+		else if (id != null) { result_Entity = database.get("SELECT * FROM ap_entities WHERE id="+id+";" , true, false); }
 		else { 
 			connected = false; 
 			plugin.getLogger().info("Fehler: Keine uniqueID oder ID beim initialisieren eines EntityObjects angegeben!");
@@ -81,7 +83,7 @@ public class EntityObject implements Comparable<Object> {
 
 				ResultSet result_owner = database
 						.get("SELECT name FROM ap_owners WHERE id=(SELECT owner_id FROM ap_locks WHERE entity_id=(SELECT id FROM ap_entities WHERE uuid='"
-								+ uuid + "'));", true, true);
+								+ uuid + "'));", true, false);
 				if (result_owner != null) {
 					try {
 						owner = result_owner.getString("name");
@@ -89,20 +91,22 @@ public class EntityObject implements Comparable<Object> {
 						connected = false;
 						plugin.getLogger()
 								.warning(
-										"Ein EntityLock konnte nicht geladen werden, weil der Ownername nicht geladen werden konnte!");
+										"Ein EntityObject konnte nicht geladen werden, weil der Ownername nicht geladen werden konnte!");
 						plugin.getLogger().warning(
 								"Weitere Informationen: [UUID=" + uuid
 										+ "]");
+						failedToConnect = true;
 					}
 				} else {
 					connected = false;
 					plugin.getLogger()
 							.warning(
-									"Ein EntityLock konnte nicht geladen werden, weil der Owner nicht gefunden werden konnte!");
+									"Ein EntityObject konnte nicht geladen werden, weil der Owner nicht gefunden werden konnte!");
 					plugin.getLogger()
 							.warning(
 									"Weitere Informationen: [UUID="
 											+ uuid + "]");
+					failedToConnect = true;
 				}
 			} catch (SQLException e) {
 				connected = false;
@@ -111,14 +115,20 @@ public class EntityObject implements Comparable<Object> {
 								"Ein EntityObject konnte nicht geladen werden, weil die Entity-Eigenschaften nicht geladen werden konnten!");
 				plugin.getLogger().warning(
 						"Weitere Informationen: [UUID=" + uuid + "]");
+				failedToConnect = true;
 			}
 		} else {
 			connected = false;
 			plugin.getLogger()
 					.warning(
-							"Ein EntityLock konnte nicht geladen werden, weil das Entity nicht gefunden werden konnte!");
+							"Ein EntityObject konnte nicht geladen werden, weil das Entity nicht gefunden werden konnte!");
 			plugin.getLogger().warning(
 					"Weitere Informationen: [UUID=" + uuid + "]");
+			failedToConnect = true;
+		}
+		
+		if (!failedToConnect) {
+			connected = true;
 		}
 	}
 
