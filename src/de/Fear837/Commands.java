@@ -48,7 +48,7 @@ public class Commands implements CommandExecutor {
 				Player player = (Player)cs;
 				Entity selectedEntity = null;
 				try { selectedEntity = EntityInteractListener.getSelected(player); } 
-				catch (Exception e) { cs.sendMessage(ChatColor.RED + "Es wurde kein Tier ausgewählt."); }
+				catch (Exception e) { cs.sendMessage(ChatColor.RED + "Es wurde kein Tier ausgewÃ¤hlt."); }
 				
 				if (selectedEntity != null) {
 					if (!selectedEntity.isDead()) {
@@ -56,21 +56,21 @@ public class Commands implements CommandExecutor {
 						if (isAnimal(entity)) {
 							if (!list.containsEntity(entity)) {
 								list.lock(player.getName(), (Entity) entity);
-								if (list.lastActionSucceeded()) { cs.sendMessage("§aDas Tier wurde erfolgreich gesichert!"); }
+								if (list.lastActionSucceeded()) { cs.sendMessage("Â§aDas Tier wurde erfolgreich gesichert!"); }
 								else { 
-									cs.sendMessage("§cFehler: Das Tier konnte nicht gesichert werden.");
+									cs.sendMessage("Â§cFehler: Das Tier konnte nicht gesichert werden.");
 									APLogger.setWarning(true);
 									APLogger.warn("Warnung: Ein Entity konnte nicht gelockt werden!");
 									APLogger.setWarning(false);
 								}
 							}
-							else { cs.sendMessage("§c§cFehler: Das Tier ist bereits protected!"); }
+							else { cs.sendMessage("Â§cÂ§cFehler: Das Tier ist bereits protected!"); }
 						}
-						else { cs.sendMessage("§c§cFehler: Das ausgewählte Entity ist kein Tier!"); }
+						else { cs.sendMessage("Â§cÂ§cFehler: Das ausgewÃ¤hlte Entity ist kein Tier!"); }
 					}
-					else { cs.sendMessage("§c§cFehler: Das gewählte Tier ist tot."); }
+					else { cs.sendMessage("Â§cÂ§cFehler: Das gewÃ¤hlte Tier ist tot."); }
 				}
-				else { cs.sendMessage("§c§cFehler: Es wurde kein Tier ausgewählt."); }
+				else { cs.sendMessage("Â§cÂ§cFehler: Es wurde kein Tier ausgewÃ¤hlt."); }
 			}
 			return true;
 		}
@@ -80,7 +80,7 @@ public class Commands implements CommandExecutor {
 				Player player = (Player)cs;
 				Entity selectedEntity = EntityInteractListener.getSelected(player);
 				try { selectedEntity = EntityInteractListener.getSelected(player); } 
-				catch (Exception e) { cs.sendMessage(ChatColor.RED + "Es wurde kein Tier ausgewählt."); }
+				catch (Exception e) { cs.sendMessage(ChatColor.RED + "Es wurde kein Tier ausgewÃ¤hlt."); }
 				
 				if (selectedEntity != null) {
 					if (list.containsEntity(selectedEntity)) {
@@ -88,16 +88,16 @@ public class Commands implements CommandExecutor {
 						try { owner = list.getPlayer(selectedEntity); } 
 						catch (Exception e) { }
 						
-						if (owner != null) { cs.sendMessage("§eDieses Tier ist von §6" + owner + " §egesichert."); }
+						if (owner != null) { cs.sendMessage("Â§eDieses Tier ist von Â§6" + owner + " Â§egesichert."); }
 						else { 
-							cs.sendMessage("§eDieses Tier ist von einer unbekannten Person §egesichert."); 
+							cs.sendMessage("Â§eDieses Tier ist von einer unbekannten Person Â§egesichert."); 
 							plugin.getLogger().warning("Warnung: Ein Tier hat einen unbekannten Owner! (/lockinfo)");
 							plugin.getLogger().warning("OWNER == NULL >>> Entity-UUID: [" + selectedEntity.getUniqueId() + "]");
 						}
 					}
-					else { cs.sendMessage("§eDieses Tier ist nicht protected."); }
+					else { cs.sendMessage("Â§eDieses Tier ist nicht protected."); }
 				}
-				else { cs.sendMessage("§cFehler: Es wurde kein Tier ausgewählt."); }
+				else { cs.sendMessage("Â§cFehler: Es wurde kein Tier ausgewÃ¤hlt."); }
 			}
 			return true;
 		}
@@ -108,7 +108,7 @@ public class Commands implements CommandExecutor {
 					playerName = args[0];
 				}
 				else if (args.length > 1) {
-					cs.sendMessage("§cFehler: Du hast zu viele Argumente angegeben! (/locklist <Name>)");
+					cs.sendMessage("Â§cFehler: Du hast zu viele Argumente angegeben! (/locklist <Name>)");
 				}
 				
 				ArrayList<EntityObject> entities = new ArrayList<EntityObject>();
@@ -116,40 +116,40 @@ public class Commands implements CommandExecutor {
 				
 				if (entities != null) {
 					if (entities.size() != 0) {
-						String msg = "§e§n______Liste der gesicherten Tiere von " + playerName + "______";
+						String msg = "Â§e----- Liste der gesicherten Tiere von " + playerName + "-----";
 						cs.sendMessage(msg); cs.sendMessage("");
 						int index = 1;
 						for (EntityObject e : entities) {
 							if (e.isConnected()) {
 								String alive = "";
-								if (e.isAlive()) { alive = "§a[ALIVE]"; }
-								else { alive = "§c[MISSING]"; }
+								if (e.isAlive()) { alive = "Â§a[ALIVE]"; }
+								else { alive = "Â§c[MISSING]"; }
 								
-								cs.sendMessage("§e("+index+") - "
+								cs.sendMessage("Â§e("+index+") - "
 										+ e.getType().toUpperCase() + " "
-										+ "[§6"+e.getLastx()+"§e, "
-										+ "§6"+e.getLasty()+"§e, "
-										+ "§6"+e.getLastz()+"§e] "
-										+ "['§6"+e.getNametag()+"§e'] "
+										+ "[Â§6"+e.getLastx()+"Â§e, "
+										+ "Â§6"+e.getLasty()+"Â§e, "
+										+ "Â§6"+e.getLastz()+"Â§e] "
+										+ "['Â§6"+e.getNametag()+"Â§e'] "
 										+ alive
 										+ "");
 							}
 							index += 1;
 						}
-						String msg2 = "§n§e";
+						String msg2 = "Â§nÂ§e";
 						for (int i = 0; i < msg.length(); i++) {
-							msg2 += "_";
+							msg2 += "-";
 						}
 						cs.sendMessage(msg2);
 					}
 					else {
-						if (args.length == 0) { cs.sendMessage("§cFehler: Du hast noch keine Tiere gesichert!"); }
-						else { cs.sendMessage("§cFehler: Der Spieler "+playerName+" hat noch keine Tiere gesichert!"); }
+						if (args.length == 0) { cs.sendMessage("Â§cFehler: Du hast noch keine Tiere gesichert!"); }
+						else { cs.sendMessage("Â§cFehler: Der Spieler "+playerName+" hat noch keine Tiere gesichert!"); }
 					}
 				}
 				else {
-					if (args.length == 0) { cs.sendMessage("§cFehler: Es wurden keine Tiere von dir gefunden!"); }
-					else { cs.sendMessage("§cFehler: Es wurden keine Tiere von "+playerName+" gefunden!"); }
+					if (args.length == 0) { cs.sendMessage("Â§cFehler: Es wurden keine Tiere von dir gefunden!"); }
+					else { cs.sendMessage("Â§cFehler: Es wurden keine Tiere von "+playerName+" gefunden!"); }
 				}
 			}
 			return true;
@@ -159,12 +159,12 @@ public class Commands implements CommandExecutor {
 				Player player = (Player) cs;
 				String playerName = "";
 				
-				if (args.length == 0) { player.sendMessage("§cFehler: Es fehlen Argumente! /lockrespawn <id> <owner>"); }
+				if (args.length == 0) { player.sendMessage("Â§cFehler: Es fehlen Argumente! /lockrespawn <id> <owner>"); }
 				else if (args.length == 1) { playerName = player.getName(); }
 				else if (args.length == 2) { playerName = args[1]; }
-				else { cs.sendMessage("§cFehler: Zu viele Argumente! /lockrespawn <id> <owner>"); }
+				else { cs.sendMessage("Â§cFehler: Zu viele Argumente! /lockrespawn <id> <owner>"); }
 			    
-			    try { Integer.parseInt(args[0]); } catch (Exception e) { cs.sendMessage("§cFehler: Die angegebene ID ist keine Zahl!"); return false; }
+			    try { Integer.parseInt(args[0]); } catch (Exception e) { cs.sendMessage("Â§cFehler: Die angegebene ID ist keine Zahl!"); return false; }
 			    ResultSet result = sql.get("SELECT * FROM ap_entities WHERE ID=("
 			    		+ "SELECT entity_id FROM ap_locks WHERE owner_id=("
 			    		+ "SELECT id FROM ap_owners WHERE name='" + playerName + "') LIMIT " + args[0] + ", 1);", true, true);
@@ -211,11 +211,11 @@ public class Commands implements CommandExecutor {
 							sql.write("UPDATE ap_entities SET uuid='" + entity.getUniqueId() + "' WHERE id=" + result.getString("id"));
 						} catch (SQLException e) { e.printStackTrace(); }
 						
-						player.sendMessage("§aDas Tier wurde erfolgreich respawnt!");
+						player.sendMessage("Â§aDas Tier wurde erfolgreich respawnt!");
 					}
-					else { player.sendMessage("§cFehler: Das respawnen ist fehlgeschlagen!"); }
+					else { player.sendMessage("Â§cFehler: Das respawnen ist fehlgeschlagen!"); }
 				}
-				else { player.sendMessage("§cFehler: Es wurde kein Tier gefunden."); }
+				else { player.sendMessage("Â§cFehler: Es wurde kein Tier gefunden."); }
 				
 				return true;
 			}
