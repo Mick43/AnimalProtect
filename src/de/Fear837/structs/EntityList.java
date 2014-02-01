@@ -257,6 +257,20 @@ public class EntityList {
 		return null;
 	}
 	
+	public ArrayList<EntityObject> getEntities(String player) {
+		if (containsPlayer(player)) {
+			if (!keys.containsKey(player)) {
+				connect(player);
+			}
+			ArrayList<EntityObject> list = new ArrayList<EntityObject>();
+			list = keys.get(player);
+			
+			return list;
+		}
+		
+		return null;
+	}
+	
 	/**
 	 * Locks an entity for a player
 	 * 
@@ -412,10 +426,6 @@ public class EntityList {
 						if (name != null && id != null) {
 							if (!players.containsKey(name)) {
 								players.put(name, id);
-								
-								if (!keys.containsKey(name)) {
-									keys.put(name, new ArrayList<EntityObject>());
-								}
 							}
 							else {
 								plugin.getLogger().info("Warnung: Beim laden eines Spielers aus der Datenbank ist ein Fehler aufgetreten!");
