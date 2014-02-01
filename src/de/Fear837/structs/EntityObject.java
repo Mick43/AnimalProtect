@@ -107,105 +107,105 @@ public class EntityObject implements Comparable<Object> {
 	}
 	
 	/**
-	 * @return the id
+	 * @return Gibt die ID des Entities in der Datenbank zurück.
 	 */
 	public Integer getId() {
 		return id;
 	}
 
 	/**
-	 * @return the uuid
+	 * @return Gibt die uniqueID des Entities zurück.
 	 */
 	public String getUniqueID() {
 		return uuid;
 	}
 
 	/**
-	 * @return the lastx
+	 * @return Gibt die letzte bekannte X-Koordinate des Entities zurück.
 	 */
 	public Integer getLastx() {
 		return lastx;
 	}
 
 	/**
-	 * @return the lasty
+	 * @return Gibt die letzte bekannte Y-Koordinate des Entities zurück.
 	 */
 	public Integer getLasty() {
 		return lasty;
 	}
 
 	/**
-	 * @return the lastz
+	 * @return Gibt die letzte bekannte Z-Koordinate des Entities zurück.
 	 */
 	public Integer getLastz() {
 		return lastz;
 	}
 
 	/**
-	 * @return the type
+	 * @return Gibt den Typ des Entities zurück.
 	 */
 	public String getType() {
 		return type;
 	}
 
 	/**
-	 * @return the nametag
+	 * @return Gibt den CustomName des Entities zurück.
 	 */
 	public String getNametag() {
 		return nametag;
 	}
 
 	/**
-	 * @return the maxhp
+	 * @return Gibt die maximale HP des Entities zurück. (Nur bei Pferden!)
 	 */
 	public Double getMaxhp() {
 		return maxhp;
 	}
 
 	/**
-	 * @return the alive
+	 * @return Gibt an, ob das Entity noch am Leben ist.
 	 */
-	public Boolean getAlive() {
+	public Boolean isAlive() {
 		return alive;
 	}
 
 	/**
-	 * @return the color
+	 * @return Gibt die Farbe des Entities zurück. (Nur bei Pferden, Wölfen, Schafen)
 	 */
 	public String getColor() {
 		return color;
 	}
 
 	/**
-	 * @return the armor
+	 * @return Gibt den Namen der Rüstung des Tieres zurück.  (Nur bei Pferden!)
 	 */
 	public String getArmor() {
 		return armor;
 	}
 
 	/**
-	 * @return the jumpstrength
+	 * @return Gibt die Sprungstärke des Entities zurück. (Nur bei Pferden!)
 	 */
 	public Double getJumpstrength() {
 		return jumpstrength;
 	}
 
 	/**
-	 * @return the style
+	 * @return Gibt den Style des Entities zurück. (Nur bei Pferden!)
 	 */
 	public String getStyle() {
 		return style;
 	}
 
 	/**
-	 * @return the variant
+	 * @return Gibt die Variante des Entities zurück. (Nur bei Pferden!)
 	 */
 	public String getVariant() {
 		return variant;
 	}
 
 	/**
-	 * @return the owner
+	 * @return Gibt den Owner an, der das Entity gelockt hat.
 	 */
 	public String getOwner() {
 		return owner;
