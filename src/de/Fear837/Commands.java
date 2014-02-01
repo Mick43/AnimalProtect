@@ -26,6 +26,7 @@ import org.bukkit.inventory.ItemStack;
 
 import de.Fear837.listener.EntityInteractListener;
 import de.Fear837.structs.EntityList;
+import de.Fear837.structs.EntityObject;
 import de.Fear837.utility.APLogger;
 
 public class Commands implements CommandExecutor {
@@ -102,48 +103,35 @@ public class Commands implements CommandExecutor {
 		}
 		else if (cmd.getName().equalsIgnoreCase("locklist")) {
 			if (cs instanceof Player) {
+				String playerName = cs.getName();
+				if (args.length == 1) { 
+					playerName = args[0];
+				}
+				else if (args.length > 1) {
+					cs.sendMessage("§cFehler: Du hast zu viele Argumente angegeben! (/locklist <Name>)");
+				}
 				
-				// TODO /locklist neuschreiben
+				ArrayList<EntityObject> entities = new ArrayList<EntityObject>();
+				entities = list.getEntities(cs.getName());
 				
-					/*plugin.getLogger().info("Number of entities in list: " + entityList.size());
-					String msg = "§e§n______Liste der gesicherten Tiere von " + targetPlayer + "______";
-					cs.sendMessage(msg);
-					cs.sendMessage("");
+				if (entities.size() != 0) {
+					String msg = "§e§n______Liste der gesicherten Tiere von " + playerName + "______";
+					cs.sendMessage(msg); cs.sendMessage("");
 					int index = 1;
-					for (UUID id : entityList) {
-						ArrayList<Object> info = list.get(id);
-						if (info != null) {
-							if ((Boolean) info.get(6) == true) {
-								player.sendMessage("§e[" + index + "] - " 
-										+ info.get(3)  + " "
-										+ "[§6" + info.get(0) + "§e, "
-										+ "§6" + info.get(1) + "§e, "
-										+ "§6" + info.get(2) + "§e] "
-										+ "['" + info.get(4) + "'] - "
-										+ "§a[ALIVE]"
-										+ "");
-							}
-							else {
-								player.sendMessage("§e[" + index + "] - " 
-										+ info.get(3) + " "
-										+ "[§6" + info.get(0) + "§e, "
-										+ "§6" + info.get(1) + "§e, "
-										+ "§6" + info.get(2) + "§e] "
-										+ "['" + info.get(4) + "'] - "
-										+ "§c[DEAD]"
-										+ "");
-							}
-						}
-						else {
-							player.sendMessage("§e[" + index + "] - " 
-									+ "NULL"  + " "
-									+ "[§6" + "NULL" + "§e, "
-									+ "§6" + "NULL" + "§e, "
-									+ "§6" + "NULL" + "§e] "
-									+ "['" + "NULL" + "'] - "
-									+ "§4[UNKNOWN]"
+					for (EntityObject e : entities) {
+						if (e.isConnected()) {
+							String alive = "";
+							if (e.isAlive()) { alive = "§a[ALIVE]"; }
+							else { alive = "§c[MISSING]"; }
+							
+							cs.sendMessage("§e("+index+") - "
+									+ e.getType().toUpperCase() + " "
+									+ "[§6"+e.getLastx()+"§e, "
+									+ "§6"+e.getLasty()+"§e, "
+									+ "§6"+e.getLastz()+"§e] "
+									+ "['§6"+e.getNametag()+"§e'] "
+									+ alive
 									+ "");
-							plugin.getLogger().warning("NullPointer at Commands.onCommand.info = list.get(id)");
 						}
 						index += 1;
 					}
@@ -153,7 +141,10 @@ public class Commands implements CommandExecutor {
 					}
 					cs.sendMessage(msg2);
 				}
-				else { cs.sendMessage("§cFehler: Die Liste konnte nicht geladen werden."); } */
+				else {
+					if (args.length == 0) { cs.sendMessage("§cFehler: Du hast noch keine Tiere gesichert!"); }
+					else { cs.sendMessage("§cFehler: Der Spieler "+playerName+" hat noch keine Tiere gesichert!"); }
+				}
 			}
 			return true;
 		}
@@ -168,8 +159,6 @@ public class Commands implements CommandExecutor {
 				else { cs.sendMessage("§cFehler: Zu viele Argumente! /lockrespawn <id> <owner>"); }
 			    
 			    try { Integer.parseInt(args[0]); } catch (Exception e) { cs.sendMessage("§cFehler: Die angegebene ID ist keine Zahl!"); return false; }
-				// TODO INNER JOIN geht noch nicht richtig
-			    // Das Resultat soll der args[0]ste Entity-Eintrag sein der dem 
 			    ResultSet result = sql.get("SELECT * FROM ap_entities WHERE ID=("
 			    		+ "SELECT entity_id FROM ap_locks WHERE owner_id=("
 			    		+ "SELECT id FROM ap_owners WHERE name='" + playerName + "') LIMIT " + args[0] + ", 1);", true, true);
