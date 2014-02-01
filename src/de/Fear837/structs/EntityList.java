@@ -461,7 +461,7 @@ public class EntityList {
 						 try {
 							 result.last();
 							 rows = result.getRow();
-							 result.first();
+							 result.beforeFirst();
 						 } catch (SQLException e) { }
 						 
 						 for (int i=0; i<rows; i++) {
@@ -469,6 +469,7 @@ public class EntityList {
 								if (result.next()) {
 									UUID uniqueID = UUID.fromString(result.getString("uuid"));
 									EntityObject ent = new EntityObject(plugin, database, uniqueID, true);
+									
 									addToList(ent);
 								 }
 							} catch (SQLException e) { e.printStackTrace(); }
@@ -574,8 +575,13 @@ public class EntityList {
 	
 	private void addToList(EntityObject entity) {
 		if (entity.isConnected()) {
-			reverseKeys.put(UUID.fromString(entity.getUniqueID()), entity.getOwner());
-			entities.put(entity, entity.getId());
+			if (!entities.containsKey(entity)) {
+				entities.put(entity, entity.getId());
+			}
+			
+			if (!reverseKeys.containsKey(UUID.fromString(entity.getUniqueID()))) {
+				reverseKeys.put(UUID.fromString(entity.getUniqueID()), entity.getOwner());
+			}
 			
 			if (keys.containsKey(entity.getOwner())) {
 				keys.get(entity.getOwner()).add(entity);
