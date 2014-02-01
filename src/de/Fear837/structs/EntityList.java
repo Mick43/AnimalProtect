@@ -263,25 +263,29 @@ public class EntityList {
 				connect(player);
 			}
 			ArrayList<EntityObject> list = new ArrayList<EntityObject>();
-			list = keys.get(player);
+			
+			if (keys.containsKey(player)) {
+				list = keys.get(player);
+			}
+			else { plugin.getLogger().info("Spieler nicht gefunden, obwohl er gerade eben eingetragen wurde."); }
+			
+			if (list == null) {
+				list = new ArrayList<EntityObject>();
+			}
 			
 			return list;
+		}
+		else {
+			if (DEBUGGING) {
+				plugin.getLogger().info("Fehler: MySQL.getEntities() - Spieler nicht gefunden.");
+				plugin.getLogger().info("Weitere Informationen: [Playername:" +player+ "]");
+			}
 		}
 		
 		return null;
 	}
 	
-	/**
-	 * Locks an entity for a player
-	 * 
-	 * @param player
-	 *            The player to lock as owner
-	 * @param entity
-	 *            The entity to be locked
-	 * @return EntityList after locking, if locking failed, returns an
-	 *         unmodified version of the list.
-	 * @see de.Fear837.structs.EntityList.lastActionSucceeded()
-	 */
+	
 	public EntityList lock(String player, Entity entity) {
 		this.lastActionSuccess = true;
 		if (reverseKeys.containsKey(entity)) {
@@ -574,23 +578,36 @@ public class EntityList {
 	}
 	
 	private void addToList(EntityObject entity) {
-		if (entity.isConnected()) {
-			if (!entities.containsKey(entity)) {
-				entities.put(entity, entity.getId());
+		if (entity != null) {
+			if (entity.isConnected()) {
+				if (!entities.containsKey(entity)) {
+					entities.put(entity, entity.getId());
+				}
+				
+				if (!reverseKeys.containsKey(UUID.fromString(entity.getUniqueID()))) {
+					reverseKeys.put(UUID.fromString(entity.getUniqueID()), entity.getOwner());
+				}
+				
+				if (keys.containsKey(entity.getOwner())) {
+					keys.get(entity.getOwner()).add(entity);
+				} 
+				else { 
+					ArrayList<EntityObject> l = new ArrayList<EntityObject>();
+					l.add(entity);
+					keys.put(entity.getOwner(), l); 
+				}
+				
+				plugin.getLogger().info("Ein neues Entity wird in den RAM gespeichert!");
+				plugin.getLogger().info("Weitere Informationen: [ID:" + entity.getId() + "] [Owner:" + entity.getOwner() + "]");
 			}
-			
-			if (!reverseKeys.containsKey(UUID.fromString(entity.getUniqueID()))) {
-				reverseKeys.put(UUID.fromString(entity.getUniqueID()), entity.getOwner());
+			else {
+				plugin.getLogger().warning("Fehler: Ein Entity konnte nicht der Liste hinzugefuegt werden.");
+				plugin.getLogger().warning("Weitere Informationen: Das Entity konnte sich nicht mit der DB verbinden.");
 			}
-			
-			if (keys.containsKey(entity.getOwner())) {
-				keys.get(entity.getOwner()).add(entity);
-			} 
-			else { 
-				ArrayList<EntityObject> l = new ArrayList<EntityObject>();
-				l.add(entity);
-				keys.put(entity.getOwner(), l); 
-			}
+		}
+		else {
+			plugin.getLogger().warning("Fehler: Ein Entity konnte nicht der Liste hinzugefuegt werden.");
+			plugin.getLogger().warning("Weitere Informationen: Das Entity, welches der addToList-Methode übergeben wurde, ist null.");
 		}
 	}
 }
