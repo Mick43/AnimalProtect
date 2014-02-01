@@ -19,13 +19,13 @@ public class EntityUnloadListener implements Listener{
 	
 	@EventHandler
 	public void onEntityUnload(ChunkUnloadEvent event) {
-		Entity[] entityArray = event.getChunk().getEntities();
+		/*Entity[] entityArray = event.getChunk().getEntities();
 		
 		for (Entity e : entityArray) {
 			if (list.containsEntity(e)) {
 				list.updateEntity(e, false);
 			}
-		}
+		}*/
 	}
 	
 	@EventHandler

@@ -26,6 +26,7 @@ import org.bukkit.inventory.ItemStack;
 
 import de.Fear837.listener.EntityInteractListener;
 import de.Fear837.structs.EntityList;
+import de.Fear837.utility.APLogger;
 
 public class Commands implements CommandExecutor {
 
@@ -57,7 +58,9 @@ public class Commands implements CommandExecutor {
 								if (list.lastActionSucceeded()) { cs.sendMessage("§aDas Tier wurde erfolgreich gesichert!"); }
 								else { 
 									cs.sendMessage("§cFehler: Das Tier konnte nicht gesichert werden.");
-									plugin.getLogger().warning("Warnung: Entity konnte nicht gelockt werden!");
+									APLogger.setWarning(true);
+									APLogger.warn("Warnung: Ein Entity konnte nicht gelockt werden!");
+									APLogger.setWarning(false);
 								}
 							}
 							else { cs.sendMessage("§c§cFehler: Das Tier ist bereits protected!"); }

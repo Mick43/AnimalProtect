@@ -15,7 +15,7 @@ import org.bukkit.event.player.PlayerInteractEntityEvent;
 import de.Fear837.MySQL;
 import de.Fear837.structs.EntityList;
 
-public class EntityInteractListener implements Listener{
+public class EntityInteractListener implements Listener {
 	
 	private EntityList list;
 	private MySQL database;
@@ -25,6 +25,7 @@ public class EntityInteractListener implements Listener{
 	public EntityInteractListener(EntityList list, MySQL database) {
 		this.list = list;
 		this.database = database;
+		this.selectedList = new HashMap<Player, Entity>();
 	}
 
 	@EventHandler
@@ -48,12 +49,10 @@ public class EntityInteractListener implements Listener{
 					player.playSound(player.getLocation(), Sound.CLICK, 0.4f, 0.8f);
 					return;
 				}
+				
 				String entityOwner = null;
 				try { entityOwner = list.getPlayer(entity); }
 				catch (Exception e) { }
-				
-				player.playSound(player.getLocation(), Sound.CLICK, 0.75f, 0.8f);
-				addSelected(player, event.getRightClicked());
 				
 				if (entityOwner == null) {
 					switch (entity.getType()) {
@@ -75,8 +74,12 @@ public class EntityInteractListener implements Listener{
 				}
 				else { 
 					player.sendMessage(ChatColor.YELLOW + "Du hast das Tier von §6" + entityOwner + "§e ausgewählt."); 
-					// TODO list.updateEntity(entity);
+					list.updateEntity(entity, false);
 				}
+				
+				player.playSound(player.getLocation(), Sound.CLICK, 0.75f, 0.8f);
+				addSelected(player, event.getRightClicked());
+				event.setCancelled(true);
 			}
 		}
 	}

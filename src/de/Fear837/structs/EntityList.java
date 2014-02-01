@@ -18,6 +18,7 @@ import org.bukkit.inventory.ItemStack;
 
 import de.Fear837.Main;
 import de.Fear837.MySQL;
+import de.Fear837.utility.APLogger;
 
 public class EntityList {
 	
@@ -39,7 +40,7 @@ public class EntityList {
 	/** If true, debug-messages will be displayed at the console. */
 	private boolean DEBUGGING = false;
 	/** Returns the current World **/
-	private World world = plugin.getServer().getWorld(plugin.getConfig().getString("settings.worldname"));
+	private World world = null;
 	/** Stores the last Method call success status */
 	private boolean lastActionSuccess;
 	
@@ -68,12 +69,18 @@ public class EntityList {
 		this.database = plugin.getMySQL();
 		this.Entities = new ArrayList<EntityObject>();
 		this.keys = new HashMap<String, ArrayList<EntityObject>>();
+		this.reverseKeys = new HashMap<UUID, String>();
 
 		if (!empty) {
 			for (Player player : plugin.getServer().getOnlinePlayers()) {
 				connect(player.getName());
 			}
 		}
+		
+		try {
+			world = plugin.getServer().getWorld(plugin.getConfig().getString("settings.worldname"));
+		}
+		catch (Exception e) { }
 
 		MAX_ENTITIES_FOR_PLAYER = plugin.getConfig().getInt("settings.max_entities_for_player");
 		DEBUGGING = plugin.getConfig().getBoolean("settings.debug-messages");
@@ -131,7 +138,20 @@ public class EntityList {
 	 * @return <tt>true</tt> if <tt>player</tt> is in the database.
 	 */
 	public boolean containsPlayer(String player) {
-		return keys.containsKey(player);
+		if (keys.containsKey(player)) {
+			return true;
+		} else {
+			// TODO Datenbank-Abfrage
+			String query = "SELECT COUNT(1) FROM ap_owners WHERE name='" + player + "' LIMIT 1;";
+			Integer i = (Integer) database.getValue(query, "id", true);
+			if (i != null) {
+				if (i != 0) {
+					return true;
+				}
+			}
+		}
+		
+		return false;
 	}
 	
 	/**
@@ -151,10 +171,12 @@ public class EntityList {
 		else { // Wenn nicht, dann in der Datenbank nachschauen
 			if (database != null) {
 				if (database.checkConnection()) {
-					String query = "SELECT id FROM ap_entities WHERE uuid='" + entity.getUniqueId() + "';"; // TODO Gibt es eine bessere Abfrage dafür?
+					String query = "SELECT COUNT(1) FROM ap_entities WHERE uuid='" + entity.getUniqueId() + "' LIMIT 1;";
 					Integer i = (Integer) database.getValue(query, "id", true);
 					if (i != null) {
-						return true;
+						if (i != 0) {
+							return true;
+						}
 					}
 				}
 			}
@@ -177,10 +199,12 @@ public class EntityList {
 		else { // Wenn nicht, dann in der Datenbank nachschauen
 			if (database != null) {
 				if (database.checkConnection()) {
-					String query = "SELECT id FROM ap_entities WHERE uuid='" + id + "';"; // TODO Gibt es eine bessere Abfrage dafür?
+					String query = "SELECT COUNT(1) FROM ap_entities WHERE uuid='" + id + "' LIMIT 1;";
 					Integer i = (Integer) database.getValue(query, "id", true);
 					if (i != null) {
-						return true;
+						if (i != 0) {
+							return true;
+						}
 					}
 				}
 			}
@@ -199,6 +223,8 @@ public class EntityList {
 	public boolean containsEntityObject(EntityObject entity) {
 		if (Entities.contains(entity)) { return true; }
 		return false;
+		
+		// TODO Datenbank-Abfrage
 	}
 	
 	/**
@@ -209,8 +235,8 @@ public class EntityList {
 	 * @return Player, who locked the entity
 	 */
 	public String getPlayer(Entity entity) {
-		if (containsEntity(entity)) {
-			return reverseKeys.get(entity);
+		if (reverseKeys.containsKey(entity.getUniqueId())) {
+			return reverseKeys.get(entity.getUniqueId());
 		}
 		else {
 			String query = "SELECT name FROM ap_owners WHERE id=(SELECT owner_id FROM ap_locks WHERE entity_id=("
@@ -273,9 +299,7 @@ public class EntityList {
 			return this;
 		}
 		
-		if (!containsPlayer(player)) {
-			connect(player);
-		}
+		connect(player);
 		
 		if (database != null) {
 			if (database.checkConnection()) {
@@ -338,6 +362,9 @@ public class EntityList {
 		    	database.write(query);
 		    	
 		    	this.lastActionSuccess = true;
+		    	if (DEBUGGING) {
+		    		APLogger.info("Inserted new Entity: [ID:"+id+"] [Owner:"+player+"] [EntityType:"+type+"] [x:"+x+", y:"+y+", z:"+z+"]");
+		    	}
 				return this;
 			}
 		}

@@ -40,7 +40,6 @@ public class Main extends JavaPlugin {
 			initializeConfig();
 			
 			/* MySQL-Datenbank initialisieren */
-			getLogger().info("Connecting with database: " + hostname + "/" + username);
 			this.sql = new MySQL(this, hostname, port, username, dbname, password);
 			c = sql.openConnection();
 
@@ -67,15 +66,17 @@ public class Main extends JavaPlugin {
 
 			getLogger().info("[AnimalLock] Loading finished!");
 		} catch (Exception e) {
-			getLogger().info("Failed to connect to MySQL-Database");
-			getLogger().info(e.getMessage());
+			getLogger().warning("Failed to load Plugin");
+			e.printStackTrace();
 		}
 	}
 
 	public void onDisable() {
-		if (sql.checkConnection()) {
-			entitylist.saveToDatabase();
-			sql.closeConnection();
+		if (sql != null) {
+			if (sql.checkConnection()) {
+				entitylist.saveToDatabase();
+				sql.closeConnection();
+			}
 		}
 		isEnabled = false;
 	}
@@ -92,54 +93,58 @@ public class Main extends JavaPlugin {
 	}
 
 	public void initializeTables() {
-		/* Erstelle ap_owners */
-		Statement statement = null;
-		try {
-			statement = c.createStatement();
-			try {
-				statement
-						.executeUpdate("CREATE TABLE IF NOT EXISTS ap_owners ("
-								+ "id INT AUTO_INCREMENT PRIMARY KEY, "
-								+ "name TEXT);");
-			} catch (SQLException e) { e.printStackTrace(); }
-		} catch (SQLException e1) { e1.printStackTrace(); }
+		if (sql != null) {
+			if (sql.checkConnection()) {
+				/* Erstelle ap_owners */
+				Statement statement = null;
+				try {
+					statement = c.createStatement();
+					try {
+						statement
+								.executeUpdate("CREATE TABLE IF NOT EXISTS ap_owners ("
+										+ "id INT AUTO_INCREMENT PRIMARY KEY, "
+										+ "name TEXT);");
+					} catch (SQLException e) { e.printStackTrace(); }
+				} catch (SQLException e1) { e1.printStackTrace(); }
 
-		/* Erstelle ap_entities */
-		statement = null;
-		try {
-			statement = c.createStatement();
-			try {
-				statement
-						.executeUpdate("CREATE TABLE IF NOT EXISTS ap_entities ("
-								+ "id INT AUTO_INCREMENT PRIMARY KEY, "
-								+ "uuid VARCHAR(40), "
-								+ "last_x SMALLINT(5) NOT NULL, "
-								+ "last_y SMALLINT(3) UNSIGNED NOT NULL, "
-								+ "last_z SMALLINT(5) NOT NULL, "
-								+ "animaltype ENUM('cow', 'chicken', 'pig', 'sheep', 'horse', 'wolf'), "
-								+ "nametag TEXT, "
-								+ "maxhp DOUBLE, "
-								+ "alive BOOL, "
-								+ "color TEXT, "
-								+ "armor ENUM('DIAMOND', 'GOLD', 'IRON', 'UNKNOWN'), "
-								+ "horse_jumpstrength DOUBLE, "
-								+ "horse_style TEXT, "
-								+ "horse_variant ENUM('NONE', 'HORSE', 'DONKEY', 'MULE', 'SKELETON_HORSE', 'UNDEAD_HORSE'));");
-			} catch (SQLException e) { e.printStackTrace(); }
-		} catch (SQLException e1) { e1.printStackTrace(); }
+				/* Erstelle ap_entities */
+				statement = null;
+				try {
+					statement = c.createStatement();
+					try {
+						statement
+								.executeUpdate("CREATE TABLE IF NOT EXISTS ap_entities ("
+										+ "id INT AUTO_INCREMENT PRIMARY KEY, "
+										+ "uuid VARCHAR(40), "
+										+ "last_x SMALLINT(5) NOT NULL, "
+										+ "last_y SMALLINT(3) UNSIGNED NOT NULL, "
+										+ "last_z SMALLINT(5) NOT NULL, "
+										+ "animaltype ENUM('cow', 'chicken', 'pig', 'sheep', 'horse', 'wolf'), "
+										+ "nametag TEXT, "
+										+ "maxhp DOUBLE, "
+										+ "alive BOOL, "
+										+ "color TEXT, "
+										+ "armor ENUM('DIAMOND', 'GOLD', 'IRON', 'UNKNOWN'), "
+										+ "horse_jumpstrength DOUBLE, "
+										+ "horse_style TEXT, "
+										+ "horse_variant ENUM('NONE', 'HORSE', 'DONKEY', 'MULE', 'SKELETON_HORSE', 'UNDEAD_HORSE'));");
+					} catch (SQLException e) { e.printStackTrace(); }
+				} catch (SQLException e1) { e1.printStackTrace(); }
 
-		/* Erstelle ap_locks */
-		statement = null;
-		try {
-			statement = c.createStatement();
-			try {
-				statement.executeUpdate("CREATE TABLE IF NOT EXISTS ap_locks ("
-						+ "id INT AUTO_INCREMENT PRIMARY KEY, "
-						+ "owner_id INT, " 
-						+ "entity_id INT, "
-						+ "created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP);");
-			} catch (SQLException e) { e.printStackTrace(); }
-		} catch (SQLException e1) { e1.printStackTrace(); }
+				/* Erstelle ap_locks */
+				statement = null;
+				try {
+					statement = c.createStatement();
+					try {
+						statement.executeUpdate("CREATE TABLE IF NOT EXISTS ap_locks ("
+								+ "id INT AUTO_INCREMENT PRIMARY KEY, "
+								+ "owner_id INT, " 
+								+ "entity_id INT, "
+								+ "created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP);");
+					} catch (SQLException e) { e.printStackTrace(); }
+				} catch (SQLException e1) { e1.printStackTrace(); }
+			}
+		}
 	}
 	
 	public MySQL getMySQL(){
