@@ -24,7 +24,7 @@ import org.bukkit.entity.Sheep;
 import org.bukkit.entity.Wolf;
 import org.bukkit.inventory.ItemStack;
 
-import de.Fear837.listener.EntityListener;
+import de.Fear837.listener.EntityInteractListener;
 import de.Fear837.structs.EntityList_old;
 
 public class Commands implements CommandExecutor {
@@ -45,7 +45,7 @@ public class Commands implements CommandExecutor {
 			if (cs instanceof Player) {
 				Player player = (Player)cs;
 				Entity selectedEntity = null;
-				try { selectedEntity = EntityListener.getSelected(player); } 
+				try { selectedEntity = EntityInteractListener.getSelected(player); } 
 				catch (Exception e) { cs.sendMessage(ChatColor.RED + "Es wurde kein Tier ausgewählt."); }
 				
 				if (selectedEntity != null) {
@@ -74,8 +74,8 @@ public class Commands implements CommandExecutor {
 		{
 			if (cs instanceof Player) {
 				Player player = (Player)cs;
-				Entity selectedEntity = EntityListener.getSelected(player);
-				try { selectedEntity = EntityListener.getSelected(player); } 
+				Entity selectedEntity = EntityInteractListener.getSelected(player);
+				try { selectedEntity = EntityInteractListener.getSelected(player); } 
 				catch (Exception e) { cs.sendMessage(ChatColor.RED + "Es wurde kein Tier ausgewählt."); }
 				
 				if (selectedEntity != null) {
