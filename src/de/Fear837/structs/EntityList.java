@@ -510,7 +510,8 @@ public class EntityList {
 				int z = e.getLocation().getBlockZ();
 				String uuid = e.getUniqueId().toString();
 				if (onlyLocation) {
-					String query = "UPDATE ap_entities SET last_x="+z+", last_y="+y+", last_z="+z+" WHERE uuid='"+uuid+"';";
+					String query = "UPDATE ap_entities SET last_x="+x+", last_y="+y+", last_z="+z+" WHERE uuid='"+uuid+"';";
+					database.write(query);
 				}
 				else {
 					Boolean alive = !e.isDead();
@@ -536,7 +537,7 @@ public class EntityList {
 					
 					color.toUpperCase();
 					
-					String query = "UPDATE ap_entities SET last_x="+z+", last_y="+y+", last_z="+z+", "
+					String query = "UPDATE ap_entities SET last_x="+x+", last_y="+y+", last_z="+z+", "
 							+ "alive="+alive+", "
 							+ "nametag='"+customName+"', "
 							+ "armor='"+armor+"', "
