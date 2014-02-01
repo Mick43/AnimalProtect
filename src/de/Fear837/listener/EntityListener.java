@@ -40,36 +40,6 @@ public final class EntityListener implements Listener {
 	}
 
 	@EventHandler
-	public void onEntityLeash(PlayerLeashEntityEvent event) {
-		if (sql==null || event.isCancelled()) { return; }
-		if (plugin.getConfig().getBoolean("settings.debug-messages")) {
-			plugin.getLogger().info("onEntityLeash Event called. [getPlayer:" + event.getPlayer().getName() + "]");
-		}
-		if (sql == null || event.isCancelled()) { plugin.getLogger().warning("EntityListener.onEntityLeash: event cancelled or sql=null!"); return; }
-		
-		String entityOwner = null;
-		try { entityOwner = list.getPlayer(event.getEntity()); }
-		catch (Exception e) { }
-		
-		if (entityOwner == null || entityOwner.isEmpty())
-		{ plugin.getLogger().warning("EntityListener.onEntityLeash: entityOwner is null or empty!"); return; }
-		
-		if (!event.getPlayer().getName().equalsIgnoreCase(entityOwner)){
-			event.setCancelled(true);
-		}
-	}
-	
-	@EventHandler
-	public void onEntityUnleash(EntityUnleashEvent  event) {
-		if (sql == null) { return; }
-		if (isAnimal(event.getEntity())) {
-			if (list.containsEntity(event.getEntity())) {
-				list.updateEntity(event.getEntity(), false);
-			}
-		}
-	}
-	
-	@EventHandler
 	public void onEntityDeath(EntityDeathEvent event) {
 		if (sql==null) { return; }
 		
