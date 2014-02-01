@@ -28,15 +28,19 @@ public class EntityList {
 	private MySQL database;
 
 	/** All loaded Entities of the Database **/
-	private ArrayList<EntityObject> Entities;
+	//private ArrayList<EntityObject> entities;
 	
 	/** Reverse Maps an entity to his owner */
 	private HashMap<UUID, String> reverseKeys;
 	/** Maps player to all his entities */
 	private HashMap<String, ArrayList<EntityObject>> keys;
+	/** Maps player to his ID **/
+	private HashMap<String, Integer> players;
+	/** Maps entity to his ID **/
+	private HashMap<EntityObject, Integer> entities;
 	
 	/** The maximum allowed saved entities for one player */
-	private int MAX_ENTITIES_FOR_PLAYER = 0;
+	private long MAX_ENTITIES_FOR_PLAYER = 0;
 	/** If true, debug-messages will be displayed at the console. */
 	private boolean DEBUGGING = false;
 	/** Returns the current World **/
@@ -67,15 +71,12 @@ public class EntityList {
 	public EntityList(Main plugin, boolean empty) {
 		this.plugin = plugin;
 		this.database = plugin.getMySQL();
-		this.Entities = new ArrayList<EntityObject>();
+		this.entities = new HashMap<EntityObject, Integer>();
 		this.keys = new HashMap<String, ArrayList<EntityObject>>();
 		this.reverseKeys = new HashMap<UUID, String>();
+		this.players = new HashMap<String, Integer>();
 
-		if (!empty) {
-			for (Player player : plugin.getServer().getOnlinePlayers()) {
-				connect(player.getName());
-			}
-		}
+		loadFromDatabase();
 		
 		try {
 			world = plugin.getServer().getWorld(plugin.getConfig().getString("settings.worldname"));
@@ -93,7 +94,7 @@ public class EntityList {
 	 * @return Amount of entities in RAM.
 	 */
 	public int sizeOfEntitiesInRam() {
-		return Entities.size();
+		return entities.size();
 	}
 	
 	/**
@@ -103,7 +104,7 @@ public class EntityList {
 	 *            The player as the owner
 	 * @return Amount of entities for a player, returns 0 if player isn't in Database
 	 */
-	public int sizeOfEntities(String player) {
+	public long sizeOfEntities(String player) {
 		if (!containsPlayer(player)) { // Wenn der Spieler nicht in der Datenbank ist, dann return 0;
 			return 0;
 		}
@@ -111,8 +112,8 @@ public class EntityList {
 			return keys.get(player).size();
 		}
 		else { // Wenn der Spieler nicht im RAM, sondern in der Datenbank ist, dann aus der Datenbank lesen.
-			String query = "SELECT COUNT(id) FROM ap_locks WHERE owner_id=(SELECT id FROM ap_owners WHERE name='" + player + "');";
-			Integer count = (Integer) database.getValue(query, "COUNT(ID)", true);
+			String query = "SELECT COUNT(id) FROM ap_locks WHERE owner_id=(" + players.get(player) + ");";
+			Long count = (Long) database.getValue(query, "COUNT(ID)", true);
 			if (count != null) {
 				return count;
 			}
@@ -138,19 +139,9 @@ public class EntityList {
 	 * @return <tt>true</tt> if <tt>player</tt> is in the database.
 	 */
 	public boolean containsPlayer(String player) {
-		if (keys.containsKey(player)) {
+		if (players.containsKey(player)) {
 			return true;
-		} else {
-			// TODO Datenbank-Abfrage
-			String query = "SELECT COUNT(1) FROM ap_owners WHERE name='" + player + "' LIMIT 1;";
-			Integer i = (Integer) database.getValue(query, "id", true);
-			if (i != null) {
-				if (i != 0) {
-					return true;
-				}
-			}
 		}
-		
 		return false;
 	}
 	
@@ -165,21 +156,8 @@ public class EntityList {
 		if (entity instanceof Player) {
 			return containsPlayer(((Player) entity).getName()); }
 		
-		if (reverseKeys.containsKey(entity.getUniqueId())) { // Wenn Spieler bereits im RAM, dann return true;
+		if (containsEntity(entity.getUniqueId())) {
 			return true;
-		}
-		else { // Wenn nicht, dann in der Datenbank nachschauen
-			if (database != null) {
-				if (database.checkConnection()) {
-					String query = "SELECT COUNT(1) FROM ap_entities WHERE uuid='" + entity.getUniqueId() + "' LIMIT 1;";
-					Integer i = (Integer) database.getValue(query, "id", true);
-					if (i != null) {
-						if (i != 0) {
-							return true;
-						}
-					}
-				}
-			}
 		}
 		
 		return false;
@@ -214,17 +192,19 @@ public class EntityList {
 	}
 	
 	/**
-	 * Checks if an EntityObject is in the EntityList
+	 * Checks if an EntityObject is in the database
 	 * 
 	 * @param entity
 	 *            The EntityObject to check for
-	 * @return <tt>true</tt> if <tt>entity</tt> is active in RAM and locked.
+	 * @return <tt>true</tt> if <tt>entity</tt> is in the database.
 	 */
-	public boolean containsEntityObject(EntityObject entity) {
-		if (Entities.contains(entity)) { return true; }
-		return false;
+	public boolean containsEntity(EntityObject entity) {
+		if (entities.containsKey(entity)) { return true; }
+		else if (containsEntity(UUID.fromString(entity.getUniqueID()))) {
+			return true;
+		}
 		
-		// TODO Datenbank-Abfrage
+		return false;
 	}
 	
 	/**
@@ -258,7 +238,7 @@ public class EntityList {
 	 */
 	public EntityObject getEntityObject(UUID uniqueID) {
 		if (!containsEntity(uniqueID)) { return null; }
-		for (EntityObject e : Entities) {
+		for (EntityObject e : entities.keySet()) {
 			if (e.getUniqueID().equals(uniqueID)) {
 				return e;
 			}
@@ -294,12 +274,17 @@ public class EntityList {
 			this.lastActionSuccess = false;
 			return this;
 		}
-		if (sizeOfEntities(player) >= MAX_ENTITIES_FOR_PLAYER) {
+		
+		int entitySize = (int) sizeOfEntities(player);
+		
+		if (entitySize >= MAX_ENTITIES_FOR_PLAYER) {
 			this.lastActionSuccess = false;
 			return this;
 		}
 		
-		connect(player);
+		if (entitySize == 0) {
+			connect(player);
+		}
 		
 		if (database != null) {
 			if (database.checkConnection()) {
@@ -357,7 +342,7 @@ public class EntityList {
 		    	
 		    	/* Nun den Eintrag in ap_locks erstellen */
 		    	String query = "INSERT INTO ap_locks (`owner_id`, `entity_id`) VALUES ("
-		    			+ "(SELECT id FROM ap_owners WHERE name='"  + player + "'), "
+		    			+ "(" + players.get(player) + "), "
 		    			+ "(SELECT id FROM ap_entities WHERE uuid='" + entity.getUniqueId().toString() + "'));";
 		    	database.write(query);
 		    	
@@ -388,8 +373,8 @@ public class EntityList {
 		if (containsEntity(entity)) {
 			String owner = getPlayer(entity);
 			
-			for (EntityObject e : Entities) {
-				if (e.equals(entity)) { Entities.remove(e); }
+			for (EntityObject e : entities.keySet()) {
+				if (e.equals(entity)) { entities.remove(e); }
 			}
 			reverseKeys.remove(entity.getUniqueId());
 			keys.get(owner).remove(entity.getUniqueId());
@@ -409,6 +394,43 @@ public class EntityList {
 		// TODO saveToDatabase();
 	}
 	
+	public void loadFromDatabase() {
+		plugin.getLogger().info("Loading all players from Database... ");
+		
+		Long playerCounter = (Long) database.getValue("SELECT COUNT(1) FROM ap_owners;", 1, true);
+		
+		String query = "SELECT * FROM ap_owners;";
+		ResultSet result = database.get(query, false, true);
+		
+		if (playerCounter != 0) {
+			for (int i=0; i<playerCounter; i++) {
+				try {
+					if (result.next()) {
+						String name = result.getString("name");
+						Integer id = result.getInt("id");
+						
+						if (name != null && id != null) {
+							if (!players.containsKey(name)) {
+								players.put(name, id);
+								
+								if (!keys.containsKey(name)) {
+									keys.put(name, new ArrayList<EntityObject>());
+								}
+							}
+							else {
+								plugin.getLogger().info("Warnung: Beim laden eines Spielers aus der Datenbank ist ein Fehler aufgetreten!");
+								plugin.getLogger().info("Weitere Informationen: Spieler bereits in der Liste! [Name: " + name + "]");
+							}
+						}
+					}
+				} 
+				catch (SQLException e) { }
+			}
+		}
+	    
+		plugin.getLogger().info("Loading finished! Added " + playerCounter + " players to the list.");
+	}
+	
 	public EntityList connect(String player) {
 		if (keys.containsKey(player)) { 
 			this.lastActionSuccess = false;
@@ -418,11 +440,11 @@ public class EntityList {
 		if (database != null) {
 			if (database.checkConnection()) {
 				if (containsPlayer(player)) { // Wenn der Spieler in der Datenbank existiert, dann alle locked Entities von ihm laden.
-					 String query = "SELECT COUNT(*) FROM ap_locks WHERE owner_id=(SELECT id FROM ap_owners WHERE name='" + player + "');";
-					 Integer count = (Integer) database.getValue(query, "COUNT(*)", true);
+					 String query = "SELECT COUNT(*) FROM ap_locks WHERE owner_id=(" + players.get(player) + "');";
+					 Long count = (Long) database.getValue(query, "COUNT(*)", true);
 					 if (count != null) {
 						 for (int i=0; i<count; i++) {
-							 query = "SELECT uuid FROM ap_entities WHERE id=(SELECT entity_id FROM ap_locks WHERE owner_id=(SELECT id FROM ap_owners WHERE name='" + player + "') LIMIT " + i + ", 1);";
+							 query = "SELECT uuid FROM ap_entities WHERE id=(SELECT entity_id FROM ap_locks WHERE owner_id=("+players.get(player)+") LIMIT " + i + ", 1);";
 							 ResultSet result = database.get(query, false, true);
 							 if (result != null) {
 								 try {
@@ -443,7 +465,18 @@ public class EntityList {
 					 String query = "INSERT INTO ap_owners (`name`) VALUES ('" + player + "');";
 					 database.write(query);
 					 
-					 keys.put(player, new ArrayList<EntityObject>());
+					 
+					 if (!players.containsKey(player)) {
+						 Integer id = (Integer) database.getValue("SELECT id FROM ap_owners WHERE name='" + player + "';", "id", true);
+						 if (id != null) { 
+							 players.put(player, id); 
+						 	 keys.put(player, new ArrayList<EntityObject>());
+						 }
+						 else {
+							 plugin.getLogger().info("Fehler: Ein Spieler konnte nicht in die Datenbank geschrieben werden.");
+							 plugin.getLogger().info("Weitere Informationen: ID des Spielers ist null. [Name:" + player + "]");
+						 }
+					 }
 					 
 					 this.lastActionSuccess = true;
 					 return this;
@@ -507,7 +540,7 @@ public class EntityList {
 							+ "alive="+alive+", "
 							+ "nametag='"+customName+"', "
 							+ "armor='"+armor+"', "
-							+ "color='"+color+"', "
+							+ "color='"+color+"' "
 							+ "WHERE uuid='"+uuid+"';";
 					
 					database.write(query);
@@ -524,7 +557,7 @@ public class EntityList {
 	private void addToList(EntityObject entity) {
 		if (entity.isConnected()) {
 			reverseKeys.put(UUID.fromString(entity.getUniqueID()), entity.getOwner());
-			Entities.add(entity);
+			entities.put(entity, entity.getId());
 			
 			if (keys.containsKey(entity.getOwner())) {
 				keys.get(entity.getOwner()).add(entity);
