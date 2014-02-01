@@ -7,7 +7,7 @@ Description:
 
 Todo:
 - Command: /locklist - verbessern: Eine Seitenfunktion hinzufuegen.
-- Command: /locktp <owner> <id> - Teleportiert sich zu einem gelockten Tier [AdminBefehl]
+- Datenbank-Struktur verbessern.
 
 Ideen:
 - Bei jedem Pferde-Inventar-Event mit der Prism-API eine costum Action in die Queue schreiben.
