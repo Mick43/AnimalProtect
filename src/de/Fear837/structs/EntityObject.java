@@ -16,10 +16,20 @@ public class EntityObject implements Comparable<Object> {
 
 	private Boolean connected;
 
-	public EntityObject(Main plugin, MySQL database, UUID id, boolean loadFromDB) {
+	public EntityObject(Main plugin, MySQL database, UUID uniqueID, boolean loadFromDB) {
 		this.plugin = plugin;
 		this.database = database;
-		this.uuid = id.toString();
+		this.uuid = uniqueID.toString();
+		this.connected = false;
+
+		if (loadFromDB) {
+			update();
+		}
+	}
+	public EntityObject(Main plugin, MySQL database, int rowID, boolean loadFromDB) {
+		this.plugin = plugin;
+		this.database = database;
+		this.id = rowID;
 		this.connected = false;
 
 		if (loadFromDB) {
@@ -28,26 +38,31 @@ public class EntityObject implements Comparable<Object> {
 	}
 
 	public void update() {
-		ResultSet result_Entities = database.get(
-				"SELECT * FROM ap_entities WHERE uuid='" + uuid + "';",
-				true, true);
-		if (result_Entities != null) {
+		ResultSet result_Entity = null;
+		if (uuid != null) { result_Entity = database.get("SELECT * FROM ap_entities WHERE uuid='" + uuid + "';", true, true); }
+		else if (id != null) { result_Entity = database.get("SELECT * FROM ap_entities WHERE id="+id+";" , true, true); }
+		else { 
+			connected = false; 
+			plugin.getLogger().info("Fehler: Keine uniqueID oder rowID beim initialisieren eines EntityObjects angegeben!");
+		}
+		
+		if (result_Entity != null) {
 			try {
-				id = result_Entities.getInt("id");
-				uuid = result_Entities.getString("uuid");
-				lastx = result_Entities.getInt("last_x");
-				lasty = result_Entities.getInt("last_y");
-				lastz = result_Entities.getInt("last_z");
-				type = result_Entities.getString("animaltype");
-				nametag = result_Entities.getString("nametag");
-				maxhp = result_Entities.getDouble("maxhp");
-				alive = result_Entities.getBoolean("alive");
-				color = result_Entities.getString("color");
-				armor = result_Entities.getString("armor");
-				jumpstrength = result_Entities
+				id = result_Entity.getInt("id");
+				uuid = result_Entity.getString("uuid");
+				lastx = result_Entity.getInt("last_x");
+				lasty = result_Entity.getInt("last_y");
+				lastz = result_Entity.getInt("last_z");
+				type = result_Entity.getString("animaltype");
+				nametag = result_Entity.getString("nametag");
+				maxhp = result_Entity.getDouble("maxhp");
+				alive = result_Entity.getBoolean("alive");
+				color = result_Entity.getString("color");
+				armor = result_Entity.getString("armor");
+				jumpstrength = result_Entity
 						.getDouble("horse_jumpstrength");
-				style = result_Entities.getString("horse_style");
-				variant = result_Entities.getString("horse_variant");
+				style = result_Entity.getString("horse_style");
+				variant = result_Entity.getString("horse_variant");
 
 				ResultSet result_owner = database
 						.get("SELECT name FROM ap_owners WHERE id=(SELECT owner_id FROM ap_locks WHERE entity_id=(SELECT id FROM ap_entities WHERE uuid='"
