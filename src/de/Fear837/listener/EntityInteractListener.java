@@ -25,7 +25,7 @@ public class EntityInteractListener implements Listener {
 	public EntityInteractListener(EntityList list, MySQL database) {
 		this.list = list;
 		this.database = database;
-		this.selectedList = new HashMap<Player, Entity>();
+		EntityInteractListener.selectedList = new HashMap<Player, Entity>();
 	}
 
 	@EventHandler
