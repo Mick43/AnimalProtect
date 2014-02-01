@@ -427,6 +427,10 @@ public class EntityList {
 		return this;
 	}
 	
+	public EntityList disconnect(String player) {
+		// TODO disconnect(String player);
+		return this;
+	}
 	/**
 	 * Returns if the last method call was successful.
 	 * 

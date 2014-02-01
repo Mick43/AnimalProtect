@@ -14,7 +14,6 @@ import de.Fear837.listener.EntityLoadSaveListener;
 import de.Fear837.listener.EntityUnloadListener;
 import de.Fear837.listener.EntityVehicleListener;
 import de.Fear837.structs.EntityList;
-import de.Fear837.structs.EntityList_old;
 
 public class Main extends JavaPlugin {
 
@@ -29,8 +28,7 @@ public class Main extends JavaPlugin {
 	private static String password;
 	private static String port;
 
-	private static EntityList_old entitylist; // TODO REMOVE entitylist (old)
-	private static EntityList entityList_new; // TODO RENAME entitylist_new TO entityList
+	private static EntityList entitylist;
 	
 	public void onEnable() {
 		getLogger().info("[AnimalLock] Loading Plugin...");
@@ -49,7 +47,7 @@ public class Main extends JavaPlugin {
 			initializeTables();
 
 			/* Die EntityList initialisieren */
-			entitylist = new EntityList_old(this);
+			entitylist = new EntityList(this);
 
 			/* Commands intialisieren */
 			Commands commands = new Commands(this, sql, entitylist);
@@ -61,11 +59,11 @@ public class Main extends JavaPlugin {
 
 			/* Die Listener registrieren */
 			pm.registerEvents(new EntityLoadSaveListener(this), this);			
-			pm.registerEvents(new EntityInteractListener(entityList_new , sql), this);
-			pm.registerEvents(new EntityDamageListener(entityList_new, sql, this), this);
-			pm.registerEvents(new EntityLeashListener(this, sql, entityList_new), this);
-			pm.registerEvents(new EntityUnloadListener(entityList_new), this);
-			pm.registerEvents(new EntityVehicleListener(entityList_new), this);
+			pm.registerEvents(new EntityInteractListener(entitylist , sql), this);
+			pm.registerEvents(new EntityDamageListener(entitylist, sql, this), this);
+			pm.registerEvents(new EntityLeashListener(this, sql, entitylist), this);
+			pm.registerEvents(new EntityUnloadListener(entitylist), this);
+			pm.registerEvents(new EntityVehicleListener(entitylist), this);
 
 			getLogger().info("[AnimalLock] Loading finished!");
 		} catch (Exception e) {
@@ -148,7 +146,7 @@ public class Main extends JavaPlugin {
 		return this.sql;
 	}
 	
-	public EntityList_old getEntityList(){
+	public EntityList getEntityList(){
 		return entitylist;
 	}
 }

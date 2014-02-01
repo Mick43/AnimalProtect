@@ -18,7 +18,7 @@ public class EntityLoadSaveListener implements Listener {
 
 	@EventHandler(priority = EventPriority.LOW)
 	public void onPlayerJoin(PlayerJoinEvent event) {
-		plugin.getEntityList().connect(event.getPlayer());
+		plugin.getEntityList().connect(event.getPlayer().getName());
 		plugin.getServer().getLogger().info("Loading player "
 						+ event.getPlayer().getName() + ". => "
 						+ (plugin.getEntityList().lastActionSucceeded() ? "Success."
@@ -27,7 +27,7 @@ public class EntityLoadSaveListener implements Listener {
 	
 	@EventHandler(priority = EventPriority.LOW)
 	public void onPlayerQuit(PlayerQuitEvent event) {
-		plugin.getEntityList().disconnect(event.getPlayer());
+		plugin.getEntityList().disconnect(event.getPlayer().getName());
 		plugin.getServer().getLogger().info("Unloading player "
 				+ event.getPlayer().getName() + ". => "
 				+ (plugin.getEntityList().lastActionSucceeded() ? "Success."

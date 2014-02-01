@@ -25,15 +25,15 @@ import org.bukkit.entity.Wolf;
 import org.bukkit.inventory.ItemStack;
 
 import de.Fear837.listener.EntityInteractListener;
-import de.Fear837.structs.EntityList_old;
+import de.Fear837.structs.EntityList;
 
 public class Commands implements CommandExecutor {
 
 	private MySQL sql;
 	private Main plugin;
-	private EntityList_old list;
+	private EntityList list;
 
-	public Commands(Main plugin, MySQL sql, EntityList_old list) {
+	public Commands(Main plugin, MySQL sql, EntityList list) {
 		this.plugin = plugin;
 		this.sql = sql;
 		this.list = list;
@@ -52,8 +52,8 @@ public class Commands implements CommandExecutor {
 					if (!selectedEntity.isDead()) {
 						LivingEntity entity = (LivingEntity) selectedEntity;
 						if (isAnimal(entity)) {
-							if (!list.contains(entity)) {
-								list.lock(player, (Entity) entity);
+							if (!list.containsEntity(entity)) {
+								list.lock(player.getName(), (Entity) entity);
 								if (list.lastActionSucceeded()) { cs.sendMessage("§aDas Tier wurde erfolgreich gesichert!"); }
 								else { 
 									cs.sendMessage("§cFehler: Das Tier konnte nicht gesichert werden.");
@@ -79,12 +79,12 @@ public class Commands implements CommandExecutor {
 				catch (Exception e) { cs.sendMessage(ChatColor.RED + "Es wurde kein Tier ausgewählt."); }
 				
 				if (selectedEntity != null) {
-					if (list.contains(selectedEntity)) {
-						Player owner = null;
-						try { owner = list.get(selectedEntity); } 
+					if (list.containsEntity(selectedEntity)) {
+						String owner = null;
+						try { owner = list.getPlayer(selectedEntity); } 
 						catch (Exception e) { }
 						
-						if (owner != null) { cs.sendMessage("§eDieses Tier ist von §6" + owner.getName() + " §egesichert."); }
+						if (owner != null) { cs.sendMessage("§eDieses Tier ist von §6" + owner + " §egesichert."); }
 						else { 
 							cs.sendMessage("§eDieses Tier ist von einer unbekannten Person §egesichert."); 
 							plugin.getLogger().warning("Warnung: Ein Tier hat einen unbekannten Owner! (/lockinfo)");
@@ -99,18 +99,10 @@ public class Commands implements CommandExecutor {
 		}
 		else if (cmd.getName().equalsIgnoreCase("locklist")) {
 			if (cs instanceof Player) {
-				Player player = (Player)cs;
-				String targetPlayer = "";
-				if (args.length == 0) { targetPlayer = player.getName(); }
-				else if (args.length == 1) { targetPlayer = args[0]; }
 				
-				ArrayList<UUID> entityList = new ArrayList<UUID>();
-				try { entityList = list.get((Player) plugin.getServer().getOfflinePlayer(targetPlayer)); } 
-				catch (Exception e) 
-				{ cs.sendMessage("§cFehler: Der Spieler wurde nicht gefunden."); return true; }
+				// TODO /locklist neuschreiben
 				
-				if (entityList != null) {
-					plugin.getLogger().info("Number of entities in list: " + entityList.size());
+					/*plugin.getLogger().info("Number of entities in list: " + entityList.size());
 					String msg = "§e§n______Liste der gesicherten Tiere von " + targetPlayer + "______";
 					cs.sendMessage(msg);
 					cs.sendMessage("");
@@ -158,7 +150,7 @@ public class Commands implements CommandExecutor {
 					}
 					cs.sendMessage(msg2);
 				}
-				else { cs.sendMessage("§cFehler: Die Liste konnte nicht geladen werden."); }
+				else { cs.sendMessage("§cFehler: Die Liste konnte nicht geladen werden."); } */
 			}
 			return true;
 		}
