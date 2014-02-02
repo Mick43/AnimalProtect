@@ -229,9 +229,23 @@ public class EntityList {
 	 * 
 	 * @param entity
 	 *            The Entity
-	 * @return ArrayList<String>
+	 * @return EntityObject, or null if the entity is not in the database.
 	 */
 	public EntityObject getEntityObject(UUID uniqueID) {
+		/* Zuerst schauen ob das Entity im RAM gespeichert ist. */
+		for (EntityObject e: entities.keySet()) {
+			if (e.getUniqueID().equals(uniqueID)) {
+				return e;
+			}
+		}
+		
+		/* Wenn nicht im RAM, dann wird in der Datenbank geschaut. */
+		EntityObject entity = new EntityObject(plugin, database, uniqueID, true);
+		if (entity.isConnected()) {
+			addToList(entity);
+			return entity;
+		}
+		
 		return null;
 	}
 	
