@@ -5,7 +5,6 @@ import org.bukkit.entity.EntityType;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDeathEvent;
-import org.bukkit.event.world.ChunkUnloadEvent;
 
 import de.AnimalProtect.Main;
 import de.AnimalProtect.MySQL;
@@ -25,7 +24,7 @@ public class DeathEventListener implements Listener {
 	
 	@EventHandler
 	public void onEntityDeath(EntityDeathEvent event) {
-		if (plugin.isEnabled() && database.checkConnection()) {
+		if (plugin.isEnabled() && database.checkConnection() && isAnimal(event.getEntity())) {
 			list.updateEntity(event.getEntity(), false);
 			// TODO: Den Grund des Todes in die Datenbank schreiben!
 		}
