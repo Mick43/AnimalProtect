@@ -18,6 +18,7 @@ import org.bukkit.inventory.ItemStack;
 import de.AnimalProtect.Main;
 import de.AnimalProtect.MySQL;
 import de.AnimalProtect.utility.APLogger;
+import de.Fear837.structs.EntityObject;
 
 public class EntityList {
 	
@@ -633,7 +634,38 @@ public class EntityList {
 		return null;
 	}
 	
-	private void addToList(EntityObject entity) {
-		return;
+	private EntityList addToList(EntityObject entity) {
+		this.lastActionSuccess = false;
+		
+		/* Wenn das Entite null ist oder nicht mit der DB verbunden ist, */
+		/* dann wird die Funktion abgebrochen.                           */
+		if (entity == null) { return this; }
+		if (!entity.isConnected()) { return this; }
+		
+		/* Wenn nicht, dann wird das Entity den 3 Listen hinzugefuegt. */
+		if (!entities.containsKey(entity)) {
+			entities.put(entity, entity.getId());
+		}
+		
+		if (!reverseKeys.containsKey(UUID.fromString(entity.getUniqueID()))) {
+			reverseKeys.put(UUID.fromString(entity.getUniqueID()), entity.getOwner());
+		}
+		
+		if (keys.containsKey(entity.getOwner())) {
+			keys.get(entity.getOwner()).add(entity);
+		}
+		else {
+			ArrayList<EntityObject> l = new ArrayList<EntityObject>();
+			l.add(entity);
+			keys.put(entity.getOwner(), l);
+		}
+		
+		if (DEBUGGING) {
+			APLogger.info("[DEBUG] A new entity has been added to the list!");
+			APLogger.info("More Information: [ID:"+entity.getUniqueID()+"] [Owner:" + entity.getOwner() + "]");
+		}
+		
+		this.lastActionSuccess = true;
+		return this;
 	}
 }
