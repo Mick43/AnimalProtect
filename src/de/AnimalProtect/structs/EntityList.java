@@ -142,6 +142,17 @@ public class EntityList {
 	 * @return <tt>true</tt> if <tt>entity</tt> is in the database.
 	 */
 	public boolean containsEntity(Entity entity) {
+		/* Wenn das angegebene Entity ein Spieler ist, */ 
+		/* dann muss nur noch im RAM geschaut werden.  */
+		if (entity instanceof Player) {
+			return containsPlayer(((Player) entity).getName());
+		}
+		/* Sollte es kein Spieler sein, dann wird auf die */
+		/* containsEntity(UUID id)-Methode verwiesen.     */
+		else if (containsEntity(entity.getUniqueId())) {
+			return true;
+		}
+		
 		return false;
 	}
 	
