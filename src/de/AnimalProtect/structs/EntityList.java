@@ -480,8 +480,76 @@ public class EntityList {
 		APLogger.info("Loading finished! " +count+ " players have been loaded.");
 	}
 	
+	/** Loads a player and his entities from the database into the RAM
+	 * 
+	 * @param player
+	 *            The name of the player.
+	 * @return EntityList after unlocking, if connecting failed, returns an
+	 *         unmodified version of the list.
+	 * @see de.Fear837.structs.EntityList.lastActionSucceeded()
+	 */
 	public EntityList connect(String player) {
-		return null;
+		this.lastActionSuccess = false;
+		/* Schauen ob der Spieler bereits im RAM ist */
+		if (keys.containsKey(player)) {
+			return this;
+		}
+		
+		/* Funktion abbrechen wenn keine Verbindung zur Datenbank besteht. */
+		if (database == null) { this.lastActionSuccess = false; return this; }
+		if (!database.checkConnection()) { this.lastActionSuccess = false; return this; }
+		
+		/* Nun alle Entities, die von dem Spieler gelockt wurden, aus der Datenbank laden. */
+		 String Query = "SELECT uuid FROM ap_entities "
+			 		  + "INNER JOIN ap_locks ON ap_entities.id=ap_locks.entity_id "
+			 		  + "INNER JOIN ap_owners ON ap_locks.owner_id="+players.get(player)+";";
+		 ResultSet result = database.get(Query, false, true);
+		 
+		 if (result != null) {
+			 /* Der Spieler wurde gefunden, weil result nicht null ist. */
+			 Integer rows = database.getResultSize(result);
+			 
+			 /* Jedes Entity welches gefunden wurde, wird der Liste hinzugefuegt. */
+			 for (int i=0; i<rows; i++) {
+				 try {
+					 if (result.next()) {
+						 UUID uuid = UUID.fromString(result.getString("uuid"));
+						 
+						 EntityObject ent = new EntityObject(plugin, database, uuid, true);
+						 
+						 addToList(ent);
+					 }
+				 }
+				 catch (Exception e) { e.printStackTrace(); }
+			 }
+			 
+			 this.lastActionSuccess = true;
+		 }
+		 else {
+			 /* Der Spieler wurde nicht gefunden, weil result null ist. */
+			 /* Also wird er jetzt erstellt. */
+			 Query = "INSERT INTO ap_owners (`name`) VALUES ('" +player+ "');";
+			 database.write(Query);
+			 
+			 /* Jetzt schauen ob der Spieler im RAM ist, was er wahrscheinlich nicht */
+			 /* ist, weil er erst jetzt erstellt wurde. Wenn er nicht im RAM ist,    */
+			 /* dann wird er der Liste im RAM hinzugefuegt.                          */
+			 if (!players.containsKey(player)) {
+				 Integer id = (Integer) database.getValue("SELECT id FROM ap_owners WHERE name='" + player + "';", "id", true);
+				 if (id != null) {
+					 players.put(player, id);
+					 keys.put(player, new ArrayList<EntityObject>());
+					 
+					 this.lastActionSuccess = true;
+				 }
+				 else {
+					 APLogger.warn("Warning: A player could not be added to the database!");
+					 APLogger.warn("More Infromation: The id of the player is null. [Name:"+player+"]");
+				 }
+			 }
+		 }
+		 
+		 return this;
 	}
 	
 	public EntityList disconnect(String player) {
