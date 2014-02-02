@@ -1,5 +1,8 @@
 package de.AnimalProtect.listener;
 
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.EntityType;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.vehicle.VehicleEnterEvent;
@@ -23,8 +26,20 @@ public class VehicleEventListener implements Listener {
 	
 	@EventHandler
 	public void onVehicleEnter(VehicleEnterEvent event) {
-		if (plugin.isEnabled() && database.checkConnection()) {
-			// TODO: Listener -> onVehicleEnter
+		if (plugin.isEnabled() && database.checkConnection() && !event.isCancelled()) {
+			if (!isAnimal(event.getVehicle())) { return; }
+			Player player = (Player) event.getEntered();
+			Entity entity = (Entity) event.getVehicle();
+			
+			String owner = list.getPlayer(entity);
+			
+			if (owner != null) {
+				if (!owner.equals(player.getName())) {
+					event.setCancelled(true);
+				}
+			}
+			
+			return;
 		}
 	}
 	
@@ -33,5 +48,17 @@ public class VehicleEventListener implements Listener {
 		if (plugin.isEnabled() && database.checkConnection()) {
 			// TODO: Listener -> onVehicleExit
 		}
+	}
+	
+	private boolean isAnimal(Entity entity) {
+		EntityType type = entity.getType();
+		if (type == EntityType.SHEEP
+		||  type == EntityType.PIG
+		||  type == EntityType.COW
+		||  type == EntityType.CHICKEN
+		||  type == EntityType.HORSE
+		||  type == EntityType.WOLF)
+		{ return true; }
+		return false;
 	}
 }
