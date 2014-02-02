@@ -45,8 +45,9 @@ public class VehicleEventListener implements Listener {
 	
 	@EventHandler
 	public void onVehicleExit(VehicleExitEvent event) {
-		if (plugin.isEnabled() && database.checkConnection()) {
-			// TODO: Listener -> onVehicleExit
+		if (plugin.isEnabled() && database.checkConnection() && !event.isCancelled()) {
+			if (!isAnimal(event.getVehicle())) { return; }
+			list.updateEntity(event.getVehicle(), false);
 		}
 	}
 	
