@@ -553,7 +553,8 @@ public class EntityList {
 	}
 	
 	public EntityList disconnect(String player) {
-		return null;
+		// TODO: disconnect(String player) in EntityList.java
+		return this;
 	}
 	/**
 	 * Returns if the last method call was successful.
