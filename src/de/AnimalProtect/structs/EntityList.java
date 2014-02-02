@@ -126,6 +126,11 @@ public class EntityList {
 	 * @return <tt>true</tt> if <tt>player</tt> is in the database.
 	 */
 	public boolean containsPlayer(String player) {
+		/* Da alle Spieler von der Datenbank in die Liste geladen werden, */
+		/* muss nicht mehr in der Datenbank geschaut werden ob es ihn gibt. */
+		if (players.containsKey(player)) {
+			return true;
+		}
 		return false;
 	}
 	
