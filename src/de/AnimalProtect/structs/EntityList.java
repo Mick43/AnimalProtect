@@ -272,7 +272,7 @@ public class EntityList {
 		}
 		else {
 			/* Spieler ist nicht im RAM, also wird er aus der DB geladen. */
-			connect(player);
+			connect(player, false);
 			ArrayList<EntityObject> list = keys.get(player);
 			
 			/* Wenn die ArrayList aus irgendeinem Grund null ist, wird sie leer erstellt. */
@@ -306,7 +306,7 @@ public class EntityList {
 		Integer entitySize = (Integer) sizeOfEntities(player);
 		
 		/* Wenn der Spieler nicht in der DB ist, wird er hinzugefuegt. */
-		if (entitySize == 0) { connect(player); }
+		if (entitySize == 0) { connect(player, true); }
 		
 		/* Jetzt wird das Entity un der Lock in die Datenbank eingetragen */
 		if (database != null && database.checkConnection()) {
@@ -496,12 +496,15 @@ public class EntityList {
 	 *         unmodified version of the list.
 	 * @see de.Fear837.structs.EntityList.lastActionSucceeded()
 	 */
-	public EntityList connect(String player) {
+	public EntityList connect(String player, boolean addPlayer) {
 		this.lastActionSuccess = false;
-		/* Schauen ob der Spieler bereits im RAM ist */
+		/* Schauen ob der Spieler bereits im RAM ist und schon Entities von ihm eingetragen sind */
 		if (keys.containsKey(player)) {
 			return this;
 		}
+		
+		/* Prüfen ob der Spieler überhaupt in der Datenbank ist */
+		if (!containsPlayer(player) && !addPlayer) { this.lastActionSuccess = false; return this; }
 		
 		/* Funktion abbrechen wenn keine Verbindung zur Datenbank besteht. */
 		if (database == null) { this.lastActionSuccess = false; return this; }
