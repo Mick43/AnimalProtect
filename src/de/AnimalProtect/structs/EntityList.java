@@ -568,6 +568,68 @@ public class EntityList {
 	}
 	
 	public EntityList updateEntity(Entity e, boolean onlyLocation) {
+		this.lastActionSuccess = false;
+		
+		/* Zuerst schauen ob eine Datenbankverbindung steht und ob das Entity nicht null ist. */
+		if (database == null) { return this; }
+		if (!database.checkConnection()) { return this; }
+		if (e == null) { return this; }
+		
+		/* Die Position des Entities laden.*/
+		int x = e.getLocation().getBlockX();
+		int y = e.getLocation().getBlockY();
+		int z = e.getLocation().getBlockY();
+		String uuid = e.getUniqueId().toString();
+		
+		/* Wenn nur die Positon des Entities gespeichert werden soll,   */
+		/* dann wird in der Query nur last_x, last_y, last_z geupdated. */
+		if (onlyLocation)
+		{
+			String query = "UPDATE ap_entities SET last_x="+x+", last_y="+y+", last_z="+z+" WHERE uuid='"+uuid+"';";
+			database.write(query);
+		}
+		/* Wenn nicht nur die Position vom Entity gespeichert werden soll, */
+		/* dann werden weitere Informationen vom Entity geladen.           */
+		else
+		{
+			/* Die Variablen bereit stellen, die nur für bestimmte Tiere gedacht sind. */
+			Boolean isalive = !e.isDead();
+			String customName = "";
+			String armor = "UNKNOWN";
+			String color = "";
+			
+			/* Jetzt den Variablen Werte geben, falls sie vorhanden sind. */
+			try {
+				Horse horse = (Horse)e;
+				if (horse.getInventory().getArmor().equals(new ItemStack(Material.DIAMOND_BARDING))) {
+					armor = "DIAMOND";
+				}
+				else if (horse.getInventory().getArmor().equals(new ItemStack(Material.GOLD_BARDING))) {
+					armor = "GOLD";
+				}
+				else if (horse.getInventory().getArmor().equals(new ItemStack(Material.IRON_BARDING))) {
+					armor = "IRON";
+				}
+			} catch (Exception ex) { }
+			
+			try { customName = (((LivingEntity) e).getCustomName());  } catch (Exception ex) { }
+			try { color = (((Horse) e).getColor().toString()); } catch (Exception ex) { }
+			try { color = (((Sheep) e).getColor().toString()); } catch (Exception ex) { }
+			try { color = (((Wolf) e).getCollarColor().toString()); } catch (Exception ex) { }
+			
+			color.toUpperCase();
+			
+			/* Jetzt die Informationen in der Datenbank updaten. */
+			String query = "UPDATE ap_entities SET last_x="+x+", last_y="+y+", last_z="+z+", "
+					+ "alive="+isalive+", "
+					+ "nametag='"+customName+"', "
+					+ "armor='"+armor+"', "
+					+ "color='"+color+"' "
+					+ "WHERE uuid='"+uuid+"';";
+			database.write(query);
+			
+			this.lastActionSuccess = true;
+		}
 		return null;
 	}
 	
