@@ -5,7 +5,6 @@ import java.sql.SQLException;
 import java.util.UUID;
 
 import org.bukkit.DyeColor;
-import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -68,7 +67,7 @@ public class lockrespawn implements CommandExecutor {
 			/* Das Entity aus der Datenbank auslesen */
 			ResultSet result = database.get("SELECT * FROM ap_entities WHERE ID=("
 		    		+ "SELECT entity_id FROM ap_locks WHERE owner_id=("
-		    		+ "SELECT id FROM ap_owners WHERE name='" + owner + "') LIMIT " + (Integer.parseInt(args[0])-1) + ", 1);", true, true);
+		    		+ "SELECT id FROM ap_owners WHERE name='" + owner + "') LIMIT " + (animal-1) + ", 1);", true, true);
 			
 			/* Prüfen ob das Entity gefunden wurde */
 			if (result == null) {
