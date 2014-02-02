@@ -94,7 +94,7 @@ public class EntityList {
 	 *            The player as the owner
 	 * @return Amount of entities for a player, returns 0 if player isn't in Database
 	 */
-	public int sizeOfEntities(String player) {
+	public long sizeOfEntities(String player) {
 		/* Erst schauen ob der Spieler im RAM ist */
 		if (keys.containsKey(player)) {
 			return keys.get(player).size();
@@ -102,7 +102,7 @@ public class EntityList {
 		/* Wenn nicht, dann soll in der Datenbank gesucht werden. */
 		else { 
 			String query = "SELECT count(id) FROM ap_locks WHERE owner_id=("+players.get(player)+ ");";
-			Integer count = (Integer)database.getValue(query, "COUNT(ID)", true);
+			Long count = (Long)database.getValue(query, "COUNT(ID)", true);
 			if (count != null) { return count; }
 		}
 		
@@ -303,7 +303,7 @@ public class EntityList {
 		/* geschaut werden ob es den Spieler bereits   */
 		/* in der Datenbank gibt und wie viele Tiere   */
 		/* er bereits gelockt hat.                     */
-		Integer entitySize = (Integer) sizeOfEntities(player);
+		Long entitySize = (Long) sizeOfEntities(player);
 		
 		/* Wenn der Spieler nicht in der DB ist, wird er hinzugefuegt. */
 		if (entitySize == 0) { connect(player, true); }
