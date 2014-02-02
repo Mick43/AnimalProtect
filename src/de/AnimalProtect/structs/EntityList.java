@@ -283,7 +283,104 @@ public class EntityList {
 	 * @see de.Fear837.structs.EntityList.lastActionSucceeded()
 	 */
 	public EntityList lock(String player, Entity entity) {
-		return null;
+		this.lastActionSuccess = false;
+		
+		/* Wenn das Entity bereits im RAM ist, dann */
+		/* kann es nicht nochmal gelockt werden.    */
+		if (reverseKeys.containsKey(entity)) {
+			return this;
+		}
+		
+		/* Wenn das Entity nicht im RAM ist, soll erst */
+		/* geschaut werden ob es den Spieler bereits   */
+		/* in der Datenbank gibt und wie viele Tiere   */
+		/* er bereits gelockt hat.                     */
+		Integer entitySize = (Integer) sizeOfEntities(player);
+		
+		/* Wenn der Spieler nicht in der DB ist, wird er hinzugefuegt. */
+		if (entitySize == 0) { connect(player); }
+		
+		/* Jetzt wird das Entity un der Lock in die Datenbank eingetragen */
+		if (database != null && database.checkConnection()) {
+			/* Zuerst werden die Eigenschaften des Entities erstellt */
+			UUID uuid = entity.getUniqueId();
+			Integer x = entity.getLocation().getBlockX();
+			Integer y = entity.getLocation().getBlockY();
+			Integer z = entity.getLocation().getBlockZ();
+			String type = entity.getType().toString();
+			String nametag = "";
+			Double maxhp = 10.0;
+			Boolean alive = !entity.isDead();
+			String color = "";
+			String armor = "UNKNOWN";
+			Double jumpstrength = 10.0;
+			String style = "";
+			String variant = "NONE";
+			
+			/* Jetzt werden die restlichen Eigenschaften, die nicht bei jedem */
+			/* Entity vorhanden sind, in die Variablen eingetragen            */
+			try { nametag = ((LivingEntity) entity).getCustomName(); } catch (Exception e) { }
+	    	try { maxhp = ((LivingEntity) entity).getMaxHealth(); } catch (Exception e)  { }
+	    	try { alive = !entity.isDead(); } catch (Exception e)  { }
+	    	try { color = ((Horse) entity).getColor().toString(); } catch (Exception e)  { }
+	    	try { color = ((Wolf) entity).getCollarColor().toString(); } catch (Exception e)  { }
+	    	try { color = ((Sheep) entity).getColor().toString(); } catch (Exception e) { }
+	    	try {
+	    		ItemStack itemArmor = ((Horse) entity).getInventory().getArmor();
+	    		if (itemArmor.getType() == Material.DIAMOND_BARDING) { armor = "DIAMOND"; }
+	    		else if (itemArmor.getType() == Material.IRON_BARDING) { armor = "IRON"; }
+	    		else if (itemArmor.getType() == Material.GOLD_BARDING) { armor = "GOLD"; }
+	    		else { armor = "UNKNOWN"; }
+	    	} catch (Exception e)  { }
+	    	try { jumpstrength = ((Horse) entity).getJumpStrength(); } catch (Exception e)  { }
+	    	try { style = ((Horse) entity).getStyle().toString(); } catch (Exception e)  { }
+	    	try { variant = ((Horse) entity).getVariant().toString(); } catch (Exception e)  { }
+	    	
+	    	try { nametag = nametag.replaceAll("'", ""); } catch (Exception e1) { }
+	    	
+	    	/* Jetzt wird die Query zusammengestellt. */
+	    	String Query = "INSERT INTO ap_entities (`uuid`, `last_x`, `last_y`, `last_z`, `animaltype`, `nametag`, "
+	    			+ "`maxhp`, `alive`, `color`, `armor`, `horse_jumpstrength`, `horse_style`, `horse_variant`) "
+	    			+ "VALUES ('"
+	    			+ uuid.toString() + "', "
+	    			+ x + ", "
+	    			+ y + ", "
+	    			+ z + ", '"
+	    			+ type + "', '"
+	    			+ nametag + "', "
+	    			+ maxhp + ", "
+	    			+ alive + ", '"
+	    			+ color + "', '"
+	    			+ armor + "', "
+	    			+ jumpstrength + ", '"
+	    			+ style + "', '"
+	    			+ variant + "'"
+	    			+ ");";
+	    	
+	    	/* Die Query wird abgeschickt. */
+	    	database.write(Query);
+	    	
+	    	/* Jetzt muss der Eintrag in 'ap_locks' erstellt werden. */
+	        Query = "INSERT INTO ap_locks (`owner_id`, `entity_id`) VALUES ("
+	    			+ "(" + players.get(player) + "), "
+	    			+ "(SELECT id FROM ap_entities WHERE uuid='" + uuid + "'));";
+	    	database.write(Query);
+	    	
+	    	/* Zum Schluss wird das EntityObject erstellt und direkt im RAM eingetragen. */
+	    	EntityObject ent = new EntityObject(plugin, database, uuid, true);
+	    	if (ent.isConnected()) {
+	    		this.addToList(ent);
+	    		this.lastActionSuccess = true;
+	    		APLogger.info("Inserted new Entity: [ID:"+uuid+"] [Owner:"+player+"] [EntityType:"+type+"] [x:"+x+", y:"+y+", z:"+z+"]");
+	    	}
+	    	/* Wenn das Entity sich nicht mit der Datenbank verbinden konnte, */
+	    	/* dann sind die INSERTS fehlgeschlagen. */
+	    	else {
+	    		this.lastActionSuccess = false;
+	    	}
+		}
+		else { this.lastActionSuccess = false; }
+		return this;
 	}
 	
 	
