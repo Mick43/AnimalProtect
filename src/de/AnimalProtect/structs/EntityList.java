@@ -115,7 +115,7 @@ public class EntityList {
 	 * @return Amount of players in RAM.
 	 */
 	public int sizeOfPlayers() {
-		return keys.size();
+		return players.size();
 	}
 	
 	/**
