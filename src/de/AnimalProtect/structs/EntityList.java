@@ -309,7 +309,10 @@ public class EntityList {
 		if (entitySize == 0) { connect(player, true); }
 		
 		/* Prüfen ob der Spieler bereits das Limit der Locks erreicht hat */
-		if (entitySize >= MAX_ENTITIES_FOR_PLAYER) { return this; }
+		if (entitySize >= MAX_ENTITIES_FOR_PLAYER) { 
+			APLogger.info("Info: The player '"+player+"' has reached the MAX_ENTITIES_FOR_PLAYER limit!");
+			return this; 
+		}
 		
 		/* Jetzt wird das Entity un der Lock in die Datenbank eingetragen */
 		if (database != null && database.checkConnection()) {
