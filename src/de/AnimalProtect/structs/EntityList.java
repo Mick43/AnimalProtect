@@ -273,7 +273,6 @@ public class EntityList {
 		}
 	}
 	
-	
 	/** Locks an entity
 	 * 
 	 * @param entity
@@ -382,7 +381,6 @@ public class EntityList {
 		else { this.lastActionSuccess = false; }
 		return this;
 	}
-	
 	
 	/** Unlocks an entity
 	 * 
