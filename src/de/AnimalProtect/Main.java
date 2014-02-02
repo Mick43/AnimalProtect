@@ -89,6 +89,7 @@ public class Main extends JavaPlugin {
 			dbname = getConfig().getString("database.dbname");
 			password = getConfig().getString("database.password");
 			port = getConfig().getString("database.port");
+			DEBUGMODE = getConfig().getBoolean("settings.debug-messages");
 		} catch (Exception e) {
 			APLogger.warn("Warnung: Die Config konnte nicht geladen werden!");
 			e.printStackTrace();
