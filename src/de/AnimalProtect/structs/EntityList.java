@@ -94,7 +94,18 @@ public class EntityList {
 	 *            The player as the owner
 	 * @return Amount of entities for a player, returns 0 if player isn't in Database
 	 */
-	public long sizeOfEntities(String player) {
+	public int sizeOfEntities(String player) {
+		/* Erst schauen ob der Spieler im RAM ist */
+		if (keys.containsKey(player)) {
+			return keys.get(player).size();
+		}
+		/* Wenn nicht, dann soll in der Datenbank gesucht werden. */
+		else { 
+			String query = "SELECT count(id) FROM ap_locks WHERE owner_id=("+players.get(player)+ ");";
+			Integer count = (Integer)database.getValue(query, "COUNT(ID)", true);
+			if (count != null) { return count; }
+		}
+		
 		return 0;
 	}
 	
