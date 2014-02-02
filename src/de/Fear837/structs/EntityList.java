@@ -412,7 +412,6 @@ public class EntityList {
 	}
 	
 	public void saveToDatabase() {
-		// TODO saveToDatabase();
 	}
 	
 	public void loadFromDatabase() {
@@ -513,7 +512,6 @@ public class EntityList {
 	}
 	
 	public EntityList disconnect(String player) {
-		// TODO disconnect(String player);
 		return this;
 	}
 	/**

@@ -33,7 +33,6 @@ public class EntityUnloadListener implements Listener{
 		if (isAnimal(event.getEntity())) {
 			if (list.containsEntity(event.getEntity())) {
 				list.updateEntity(event.getEntity(), false);
-				// TODO Den Grund des Todes vom Entity auch in die Datenbank eintragen.
 			}
 		}
 	}
