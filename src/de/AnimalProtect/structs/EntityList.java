@@ -676,7 +676,7 @@ public class EntityList {
 		
 		if (DEBUGGING) {
 			APLogger.info("[DEBUG] A new entity has been added to the list!");
-			APLogger.info("More Information: [ID:"+entity.getUniqueID()+"] [Owner:" + entity.getOwner() + "]");
+			APLogger.info("[DEBUG] More Information: [ID:"+entity.getUniqueID()+"] [Owner:" + entity.getOwner() + "]");
 		}
 		
 		this.lastActionSuccess = true;
