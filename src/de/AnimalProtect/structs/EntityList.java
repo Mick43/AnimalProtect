@@ -76,6 +76,12 @@ public class EntityList {
 		this.lastActionSuccess = false;
 		
 		loadFromDatabase();
+		
+		if (!empty) {
+  			for (Player player : plugin.getServer().getOnlinePlayers()) {
+  				connect(player.getName(), false);
+  			}
+  		}
 	}
 	
 	/**

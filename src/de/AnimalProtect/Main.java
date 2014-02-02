@@ -50,7 +50,7 @@ public class Main extends JavaPlugin {
 		initializeDatabase();
 		
 		/* Die EntityList initialisieren */
-		list = new EntityList(this);
+		list = new EntityList(this, false);
 		
 		/* Die Befehle initialisieren */
 		this.getCommand("lockanimal").setExecutor(new lockanimal(this));
