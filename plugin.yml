@@ -29,6 +29,11 @@ commands:
       usage: Write /<command> [id] [owner]
       permission: animalprotect.admin
       permission-message: You don't have permission.
+   lockdebug:
+      description: Gibt Debug-Informationen ueber das Plugin aus.
+      usage: Write /<command>
+      permission: animalprotect.admin
+      permission-message: You don't have permission.
 permissions:
   animalprotect.protect:
     default: true
