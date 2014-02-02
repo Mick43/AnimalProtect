@@ -71,11 +71,11 @@ public class EntityList {
 		this.reverseKeys = new HashMap<UUID, String>();
 		this.players = new HashMap<String, Integer>();
 
-		loadFromDatabase();
-
 		MAX_ENTITIES_FOR_PLAYER = plugin.getConfig().getInt("settings.max_entities_for_player");
 		DEBUGGING = Main.DEBUGMODE;
 		this.lastActionSuccess = false;
+		
+		loadFromDatabase();
 	}
 	
 	/**
@@ -182,7 +182,7 @@ public class EntityList {
 		/* Datenbank nach der UUID des Entities gesucht. */
 		else if (database != null && database.checkConnection()) {
 			String query = "SELECT count(1) FROM ap_entities WHERE uuid='"+id.toString()+"' LIMIT 1;";
-			Integer i = (Integer)database.getValue(query, "id", true);
+			Long i = (Long)database.getValue(query, "id", true);
 			if (i == null) { return false; }
 			else if (i == 0) { return false; }
 			else { return true; }
@@ -453,7 +453,7 @@ public class EntityList {
 		APLogger.info("Loading all players from the database... ");
 		
 		/* Zuerst schauen wie viele Spieler in ap_owners eingetragen sind. */
-		Integer count = (Integer)database.getValue("SELECT COUNT(1) FROM ap_owners;", 1, true);
+		Long count = (Long)database.getValue("SELECT COUNT(1) FROM ap_owners;", 1, true);
 		
 		/* Wenn es keine Spieler gibt, dann soll auch nichts geladen werden. */
 		if (count == 0) { return; }
@@ -661,13 +661,9 @@ public class EntityList {
 		if (!entity.isConnected()) { return this; }
 		
 		/* Wenn nicht, dann wird das Entity den 3 Listen hinzugefuegt. */
-		if (!entities.containsKey(entity)) {
-			entities.put(entity, entity.getId());
-		}
+		entities.put(entity, entity.getId());
 		
-		if (!reverseKeys.containsKey(UUID.fromString(entity.getUniqueID()))) {
-			reverseKeys.put(UUID.fromString(entity.getUniqueID()), entity.getOwner());
-		}
+		reverseKeys.put(UUID.fromString(entity.getUniqueID()), entity.getOwner());
 		
 		if (keys.containsKey(entity.getOwner())) {
 			keys.get(entity.getOwner()).add(entity);
