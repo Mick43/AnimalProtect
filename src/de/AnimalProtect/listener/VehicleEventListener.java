@@ -31,7 +31,7 @@ public class VehicleEventListener implements Listener {
 			Player player = (Player) event.getEntered();
 			Entity entity = (Entity) event.getVehicle();
 			
-			String owner = list.getPlayer(entity);
+			String owner = list.getPlayer(entity.getUniqueId());
 			
 			if (owner != null) {
 				if (!owner.equals(player.getName())) {
