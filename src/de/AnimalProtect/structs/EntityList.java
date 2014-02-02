@@ -392,8 +392,49 @@ public class EntityList {
 	 *         unmodified version of the list.
 	 * @see de.Fear837.structs.EntityList.lastActionSucceeded()
 	 */
-	public EntityList unlock (Entity entity) {
-		return null;
+	public EntityList unlock (UUID id) {
+		this.lastActionSuccess = false;
+		
+		/* Zuerst schauen ob das Entity in der DB ist und */
+		/* wie der Name des Owners vom Entity heißt.      */
+		String owner = getPlayer(id);
+		
+		/* Wenn das Entity in der Datenbank nicht vorhanden ist, */
+		/* dann wird die Funktion abgebrochen.                   */
+		if (owner == null) { 
+			APLogger.info("Unlock failed: The owner of the entity is null");
+			this.lastActionSuccess = false; 
+			return this;
+		}
+		
+		/* Erst nach dem EntityObject im RAM schauen */
+		/* Wenn es gefunden wird, dann entfernen.    */
+		for (EntityObject e : entities.keySet()) {
+			if (e.getUniqueID().equals(id)) {
+				entities.remove(e);
+			}
+		}
+		
+		/* Das Entity aus der reverseKeys-Liste entfernen */
+		if (reverseKeys.containsKey(id)) { reverseKeys.remove(id); }
+		
+		/* Das Entity aus der ArrayList des Owners entfernen */
+		if (keys.containsKey(owner)) {
+			for (EntityObject e : keys.get(owner)) {
+				if (e.getUniqueID().equals(id)) {
+					keys.get(owner).remove(e);
+				}
+			}
+		}
+		
+		/* Jetzt das Entity aus der Datenbank löschen. */
+		String Query = "REMOVE FROM ap_locks WHERE entity_id=(SELECT id FROM ap_entities WHERE uuid='" +id+ "') LIMIT 1;";
+		database.write(Query);
+		Query = "REMOVE FROM ap_locks WHERE uuid='"+id+"' LIMIT 1;";
+		database.write(Query);
+		
+		this.lastActionSuccess = true;
+		return this;
 	}
 	
 	public void saveToDatabase() {
