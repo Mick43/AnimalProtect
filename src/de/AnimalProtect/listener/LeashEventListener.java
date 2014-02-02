@@ -1,5 +1,7 @@
 package de.AnimalProtect.listener;
 
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.EntityType;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityUnleashEvent;
@@ -23,15 +25,42 @@ public class LeashEventListener implements Listener {
 	
 	@EventHandler
 	public void onEntityLeash(PlayerLeashEntityEvent event) {
-		if (plugin.isEnabled() && database.checkConnection()) {
-			// TODO: Listener -> onEntityLeash
+		if (plugin.isEnabled() && database.checkConnection() && !event.isCancelled()) {
+			/* Prüfen ob eine Datenbank-Verbindung besteht und ob das Entity ein Tier ist */
+			if (database == null) { return; }
+			if (!database.checkConnection()) { return; }
+			if (!isAnimal(event.getEntity())) { return; }
+			
+			/* Den Owner des Entities bekommen, null falls entity nicht locked. */
+			String owner = list.getPlayer(event.getEntity().getUniqueId());
+			
+			if (owner != null) {
+				/* Wenn dem Spieler das Tier nicht gehört */
+				if (!owner.equals(event.getPlayer().getName()))
+				{ event.setCancelled(true); }
+			}
 		}
 	}
 	
 	@EventHandler
 	public void onEntityUnleash(EntityUnleashEvent event) {
 		if (plugin.isEnabled() && database.checkConnection()) {
-			// TODO: Listener -> onEntityUnleash
+			/* Prüfen ob das Entity ein Tier ist */
+			if (!isAnimal(event.getEntity())) { return; }
+			
+			list.updateEntity(event.getEntity(), false);
 		}
+	}
+	
+	private boolean isAnimal(Entity entity) {
+		EntityType type = entity.getType();
+		if (type == EntityType.SHEEP
+		||  type == EntityType.PIG
+		||  type == EntityType.COW
+		||  type == EntityType.CHICKEN
+		||  type == EntityType.HORSE
+		||  type == EntityType.WOLF)
+		{ return true; }
+		return false;
 	}
 }
