@@ -386,8 +386,8 @@ public class EntityList {
 	
 	/** Unlocks an entity
 	 * 
-	 * @param entity
-	 *            The entity to be unlocked
+	 * @param id
+	 *            The unique id of the entity.
 	 * @return EntityList after unlocking, if unlocking failed, returns an
 	 *         unmodified version of the list.
 	 * @see de.Fear837.structs.EntityList.lastActionSucceeded()
@@ -442,7 +442,42 @@ public class EntityList {
 	}
 	
 	public void loadFromDatabase() {
-		return;
+		APLogger.info("Loading all players from the database... ");
+		
+		/* Zuerst schauen wie viele Spieler in ap_owners eingetragen sind. */
+		Integer count = (Integer)database.getValue("SELECT COUNT(1) FROM ap_owners;", 1, true);
+		
+		/* Wenn es keine Spieler gibt, dann soll auch nichts geladen werden. */
+		if (count == 0) { return; }
+		
+		/* Alle Spieler aus der Datenbank laden. */
+		String Query = "SELECT * from ap_owners;";
+		ResultSet result = database.get(Query, false, true);
+		
+		/* Alle Spieler in den RAM eintragen. */
+		for (int i=0; i<count; i++) {
+			try {
+				if (result.next()) {
+					String name = result.getString("name");
+					Integer id = result.getInt("id");
+					
+					if (name != null && id != null) {
+						if (!players.containsKey(name)) { players.put(name, id); }
+						else {
+							APLogger.warn("Warning: An error has occured while loading a player from the database!");
+							APLogger.warn("More Information: The player is already in the list! [Name:"+name+"] [ID:"+id+"] [Count:"+i+"]");
+						}
+					}
+					else {
+						APLogger.warn("Warning: An error has occured while loading a player from the database!" );
+						APLogger.warn("More Information: player or id == null! [Count: " +i+ "]");
+					}
+				}
+			}
+			catch (Exception e) { }
+		}
+		
+		APLogger.info("Loading finished! " +count+ " players have been loaded.");
 	}
 	
 	public EntityList connect(String player) {
