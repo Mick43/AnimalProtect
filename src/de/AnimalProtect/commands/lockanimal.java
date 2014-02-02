@@ -4,7 +4,6 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Entity;
-import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 
 import de.AnimalProtect.Main;
@@ -54,18 +53,6 @@ public class lockanimal implements CommandExecutor {
 			
 			player.sendMessage("§aDas Tier wurde erfolgreich gesichert!");
 		}
-		return false;
-	}
-	
-	private boolean isAnimal(Entity entity) {
-		EntityType type = entity.getType();
-		if (type == EntityType.SHEEP
-		||  type == EntityType.PIG
-		||  type == EntityType.COW
-		||  type == EntityType.CHICKEN
-		||  type == EntityType.HORSE
-		||  type == EntityType.WOLF)
-		{ return true; }
 		return false;
 	}
 }
