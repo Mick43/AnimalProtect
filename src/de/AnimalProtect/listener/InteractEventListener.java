@@ -72,6 +72,9 @@ public class InteractEventListener implements Listener {
 				case WOLF:
 					player.sendMessage("§eDu hast einen §6Wolf §eausgewählt. §7(/lockanimal um ihn zu protecten.);");
 					break;
+				case SHEEP:
+					player.sendMessage("§eDu hast ein §6Schaf §eausgewählt. §7(/lockanimal um es zu protecten.);");
+					break;
 				default:
 					player.sendMessage("§eDu hast ein §6unbekanntes §eTier ausgewählt. §7(/lockanimal um es zu protecten.);");
 					break;
