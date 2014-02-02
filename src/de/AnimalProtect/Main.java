@@ -8,6 +8,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import de.AnimalProtect.commands.lockanimal;
 import de.AnimalProtect.commands.lockdebug;
 import de.AnimalProtect.commands.lockinfo;
+import de.AnimalProtect.commands.locklimit;
 import de.AnimalProtect.commands.locklist;
 import de.AnimalProtect.commands.lockrespawn;
 import de.AnimalProtect.commands.locktp;
@@ -58,6 +59,7 @@ public class Main extends JavaPlugin {
 		this.getCommand("lockrespawn").setExecutor(new lockrespawn(this));
 		this.getCommand("locktp").setExecutor(new locktp(this));
 		this.getCommand("lockdebug").setExecutor(new lockdebug(this));
+		this.getCommand("locklimit").setExecutor(new locklimit(this));
 		
 		/* Die Listener registrieren */
 		PluginManager pm = getServer().getPluginManager();

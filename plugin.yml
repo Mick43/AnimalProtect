@@ -34,6 +34,11 @@ commands:
       usage: Write /<command>
       permission: animalprotect.admin
       permission-message: You don't have permission.
+   locklimit:
+      description: Gibt die Anzahl der Locks ueber einen Spieler aus.
+      usage: Write /<command> <name>
+      permission: animalprotect.protect
+      permission-message: You don't have permission.
 permissions:
   animalprotect.protect:
     default: true
