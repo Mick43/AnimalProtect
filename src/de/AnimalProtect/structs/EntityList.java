@@ -249,8 +249,28 @@ public class EntityList {
 		return null;
 	}
 	
+	/**
+	 * Returns a list of Entities, locked by a given player
+	 * 
+	 * @param player
+	 *            The name of the player
+	 * @return ArrayList<EntityObject> or an empty list if player is not in the database.
+	 */
 	public ArrayList<EntityObject> getEntities(String player) {
-		return null;
+		/* Zuerst schauen ob die Entities im RAM sind. */
+		if (keys.containsKey(player)) {
+			return keys.get(player);
+		}
+		else {
+			/* Spieler ist nicht im RAM, also wird er aus der DB geladen. */
+			connect(player);
+			ArrayList<EntityObject> list = keys.get(player);
+			
+			/* Wenn die ArrayList aus irgendeinem Grund null ist, wird sie leer erstellt. */
+			if (list == null) { list = new ArrayList<EntityObject>(); }
+			
+			return list;
+		}
 	}
 	
 	
