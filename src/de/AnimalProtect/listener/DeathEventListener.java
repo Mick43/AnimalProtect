@@ -1,5 +1,7 @@
 package de.AnimalProtect.listener;
 
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.EntityType;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDeathEvent;
@@ -24,7 +26,20 @@ public class DeathEventListener implements Listener {
 	@EventHandler
 	public void onEntityDeath(EntityDeathEvent event) {
 		if (plugin.isEnabled() && database.checkConnection()) {
-			// TODO: Listener -> onEntityDeath
+			list.updateEntity(event.getEntity(), false);
+			// TODO: Den Grund des Todes in die Datenbank schreiben!
 		}
+	}
+	
+	private boolean isAnimal(Entity entity) {
+		EntityType type = entity.getType();
+		if (type == EntityType.SHEEP
+		||  type == EntityType.PIG
+		||  type == EntityType.COW
+		||  type == EntityType.CHICKEN
+		||  type == EntityType.HORSE
+		||  type == EntityType.WOLF)
+		{ return true; }
+		return false;
 	}
 }
