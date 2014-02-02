@@ -1,7 +1,6 @@
 package de.AnimalProtect.structs;
 
 import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.UUID;
@@ -18,7 +17,7 @@ import org.bukkit.inventory.ItemStack;
 import de.AnimalProtect.Main;
 import de.AnimalProtect.MySQL;
 import de.AnimalProtect.utility.APLogger;
-import de.Fear837.structs.EntityObject;
+import de.AnimalProtect.structs.EntityObject;
 
 public class EntityList {
 	
@@ -442,6 +441,7 @@ public class EntityList {
 		return;
 	}
 	
+	/** Loads all players from the database into the list. */
 	public void loadFromDatabase() {
 		APLogger.info("Loading all players from the database... ");
 		
@@ -557,6 +557,7 @@ public class EntityList {
 		// TODO: disconnect(String player) in EntityList.java
 		return this;
 	}
+	
 	/**
 	 * Returns if the last method call was successful.
 	 * 
@@ -568,6 +569,16 @@ public class EntityList {
 		return this.lastActionSuccess;
 	}
 	
+	/** Updates some Information about an entity in the database.
+	 * 
+	 * @param e
+	 *            the entity.
+	 * @param onlyLocation
+	 *            if true, only the position of the entity will be updated.
+	 * @return EntityList after updating.
+	 * 
+	 * @see de.Fear837.structs.EntityList.lastActionSucceeded()
+	 */
 	public EntityList updateEntity(Entity e, boolean onlyLocation) {
 		this.lastActionSuccess = false;
 		
