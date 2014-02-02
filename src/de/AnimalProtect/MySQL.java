@@ -183,6 +183,17 @@ public class MySQL extends Database {
 		} else { noConnection(); return null; }
 	}
 	
+	public int getResultSize(ResultSet result) {
+		int rows = 0;
+		try {
+			result.last();
+			rows = result.getRow();
+			result.beforeFirst();
+		}
+		catch (Exception e) { return 0; }
+		return rows;
+	}
+	
 	public Object getValueFromResult(ResultSet result, String columnLabel) {
 		Object v = null;
 		try { v = result.getObject(columnLabel); } 
