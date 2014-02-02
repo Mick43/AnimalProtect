@@ -208,6 +208,19 @@ public class EntityList {
 	 * @return Player, who locked the entity
 	 */
 	public String getPlayer(Entity entity) {
+		/* Wenn das Entity in der reverseKeys-Liste ist,    */
+		/* dann wird Entity einfach aus der Liste returned. */
+		if (reverseKeys.containsKey(entity.getUniqueId())) {
+			return reverseKeys.get(entity.getUniqueId());
+		}
+		/* Wenn das Entity nicht im RAM ist, dann wird in der Datenbank geschaut. */
+		else {
+			String query = "Select name FROM ap_owners WHERE id=("
+					+ "SELECT owner_id FROM ap_locks WHERE entity_id=("
+					+ "SELECT id FROM ap_entities WHERE uuid='"+entity.getUniqueId()+"'));";
+			String owner = (String) database.getValue(query, "name", true);
+			if (owner != null) { return owner; }
+		}
 		return null;
 	}
 	
