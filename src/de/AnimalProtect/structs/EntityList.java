@@ -308,6 +308,9 @@ public class EntityList {
 		/* Wenn der Spieler nicht in der DB ist, wird er hinzugefuegt. */
 		if (entitySize == 0) { connect(player, true); }
 		
+		/* Prüfen ob der Spieler bereits das Limit der Locks erreicht hat */
+		if (entitySize >= MAX_ENTITIES_FOR_PLAYER) { return this; }
+		
 		/* Jetzt wird das Entity un der Lock in die Datenbank eingetragen */
 		if (database != null && database.checkConnection()) {
 			/* Zuerst werden die Eigenschaften des Entities erstellt */
