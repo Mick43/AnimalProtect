@@ -80,7 +80,8 @@ public class InteractEventListener implements Listener {
 			/* Wenn das Tier protected ist, dann wird der Owner erwähnt. */
 			else {
 				player.sendMessage("§eDu hast das Tier von §6"+owner+" §eausgewählt.");
-				list.updateEntity(entity, false);
+				if (entity.getType() == EntityType.HORSE) { list.updateEntity(entity, false); }
+				else { list.updateEntity(entity, true); }
 			}
 			
 			/* Zum Schluss wird bei dem Spieler noch ein Sound abgespielt und sein zuletzt ausgewähltes Tier wird gespeichert. */
