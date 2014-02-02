@@ -164,6 +164,21 @@ public class EntityList {
 	 * @return <tt>true</tt> if <tt>entity</tt> is in the database.
 	 */
 	public boolean containsEntity(UUID id) {
+		/* Wenn das Entity bereits im RAM ist, */
+		/* dann einfach true returnen.         */
+		if (reverseKeys.containsKey(id)) {
+			return true;
+		}
+		/* Ist das Entity nicht im RAM, dann wird in der */
+		/* Datenbank nach der UUID des Entities gesucht. */
+		else if (database != null && database.checkConnection()) {
+			String query = "SELECT count(1) FROM ap_entities WHERE uuid='"+id.toString()+"' LIMIT 1;";
+			Integer i = (Integer)database.getValue(query, "id", true);
+			if (i == null) { return false; }
+			else if (i == 0) { return false; }
+			else { return true; }
+		}
+		
 		return false;
 	}
 	
