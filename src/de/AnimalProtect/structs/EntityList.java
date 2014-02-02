@@ -119,6 +119,15 @@ public class EntityList {
 	}
 	
 	/**
+	 * Returns the amount of locks, which are active in RAM.
+	 * 
+	 * @return Amount of locks in RAM.
+	 */
+	public int sizeOfLocks() {
+		return keys.size();
+	}
+	
+	/**
 	 * Checks if a player is in database.
 	 * 
 	 * @param player
