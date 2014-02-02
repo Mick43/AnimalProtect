@@ -190,6 +190,13 @@ public class EntityList {
 	 * @return <tt>true</tt> if <tt>entity</tt> is in the database.
 	 */
 	public boolean containsEntity(EntityObject entity) {
+		/* Erst schauen ob das Entity in der 'entities'-Liste ist. */
+		if (entities.containsKey(entity)) { return true; }
+		/* Wenn nicht, dann auf die containsEntity-Methode verweisen. */
+		else if (containsEntity(UUID.fromString(entity.getUniqueID()))) {
+			return true;
+		}
+		
 		return false;
 	}
 	
