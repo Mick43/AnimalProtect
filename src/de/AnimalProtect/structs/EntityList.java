@@ -36,7 +36,7 @@ public class EntityList {
 	private HashMap<EntityObject, Integer> entities;
 	
 	/** The maximum allowed saved entities for one player */
-	private long MAX_ENTITIES_FOR_PLAYER = 0;
+	public long MAX_ENTITIES_FOR_PLAYER = 0;
 	/** If true, debug-messages will be displayed at the console. */
 	private boolean DEBUGGING = false;
 	/** Stores the last Method call success status */
