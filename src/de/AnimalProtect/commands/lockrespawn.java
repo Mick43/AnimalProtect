@@ -137,8 +137,4 @@ public class lockrespawn implements CommandExecutor {
 		}
 		return false;
 	}
-	
-	private void spawnAnimal(EntityObject ent, Location pos) {
-		
-	}
 }
