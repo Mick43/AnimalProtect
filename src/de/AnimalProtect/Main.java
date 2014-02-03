@@ -138,6 +138,7 @@ public class Main extends JavaPlugin {
 						+ "nametag TEXT, "
 						+ "maxhp DOUBLE, "
 						+ "alive BOOL, "
+						+ "deathcause TEXT, "
 						+ "color TEXT, "
 						+ "armor ENUM('DIAMOND', 'GOLD', 'IRON', 'UNKNOWN'), "
 						+ "horse_jumpstrength DOUBLE, "
