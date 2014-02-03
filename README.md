@@ -22,10 +22,10 @@ Ideen:
 
 Commands:
 ---------
-`/lockanimal` - Protectet das ausgewählte Entity.
-`/lockinfo` - Gibt Informationen über das ausgewählte Entity aus.
-`/locklist <name>` - Listet alle gelockten Tiere eines Spielers auf. (Optional: <name>)
-`/locklimit <name>` - Sagt dir, wie viele Spieler du noch locken kannst. (Optional: <name>)
-`/locktp <id> <owner>` - Teleportiert dich zu dem angegebenen Entity. (Optional: <owner>)
-`/lockrespawn <id> <owner>` - Respawnt ein Entity in der Welt neu. (Optional: <owner>)
-`/lockdebug` - Gibt DEBUG-Informationen über das Plugin selber aus.
+- `/lockanimal` - Protectet das ausgewählte Entity.
+- `/lockinfo` - Gibt Informationen über das ausgewählte Entity aus.
+- `/locklist <name>` - Listet alle gelockten Tiere eines Spielers auf. (Optional: <name>)
+- `/locklimit <name>` - Sagt dir, wie viele Spieler du noch locken kannst. (Optional: <name>)
+- `/locktp <id> <owner>` - Teleportiert dich zu dem angegebenen Entity. (Optional: <owner>)
+- `/lockrespawn <id> <owner>` - Respawnt ein Entity in der Welt neu. (Optional: <owner>)
+- `/lockdebug` - Gibt DEBUG-Informationen über das Plugin selber aus.
