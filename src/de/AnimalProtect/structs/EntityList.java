@@ -315,6 +315,12 @@ public class EntityList {
 		/* Wenn der Spieler nicht in der DB ist, wird er hinzugefuegt. */
 		if (entitySize == 0) { connect(player, true); }
 		
+		/* Prüfen ob das connecten funktioniert hat */
+		if (entitySize == 0 && !this.lastActionSucceeded()) { 
+			APLogger.warn("Failed to lock an entity! Could not connect player to database!");
+			return this;
+		}
+		
 		/* Prüfen ob der Spieler bereits das Limit der Locks erreicht hat */
 		if (entitySize >= MAX_ENTITIES_FOR_PLAYER) { 
 			APLogger.info("Info: The player '"+player+"' has reached the MAX_ENTITIES_FOR_PLAYER limit!");
