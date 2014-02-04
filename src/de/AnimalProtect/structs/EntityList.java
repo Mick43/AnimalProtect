@@ -1,6 +1,7 @@
 package de.AnimalProtect.structs;
 
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.UUID;
@@ -510,29 +511,28 @@ public class EntityList {
 	 */
 	public EntityList connect(String player, boolean addPlayer) {
 		this.lastActionSuccess = false;
+		
 		/* Schauen ob der Spieler bereits im RAM ist und schon Entities von ihm eingetragen sind */
 		if (keys.containsKey(player)) {
 			return this;
 		}
 		
-		/* Prüfen ob der Spieler überhaupt in der Datenbank ist */
-		if (!containsPlayer(player) && !addPlayer) { this.lastActionSuccess = false; return this; }
-		
 		/* Funktion abbrechen wenn keine Verbindung zur Datenbank besteht. */
-		if (database == null) { this.lastActionSuccess = false; return this; }
-		if (!database.checkConnection()) { this.lastActionSuccess = false; return this; }
+		if (database == null) { this.lastActionSuccess = false; }
+		if (!database.checkConnection()) { this.lastActionSuccess = false; }
 		
 		/* Nun alle Entities, die von dem Spieler gelockt wurden, aus der Datenbank laden. */
 		 String Query = "SELECT uuid FROM ap_entities "
 		 		+ "INNER JOIN ap_locks ON ap_entities.id = ap_locks.entity_ID "
 		 		+ "INNER JOIN ap_owners ON ap_locks.owner_id=ap_owners.id "
-		 		+ "WHERE ap_owners.name='Fear837'";
+		 		+ "WHERE ap_owners.name='"+player+"';";
 		 ResultSet result = database.get(Query, false, true);
 		 
+		 /* Prüfen ob der Spieler gefunden wurde . */
+		 Integer rows = database.getResultSize(result);
+		 if (rows == 0) { result = null; }
+		 
 		 if (result != null) {
-			 /* Der Spieler wurde gefunden, weil result nicht null ist. */
-			 Integer rows = database.getResultSize(result);
-			 
 			 /* Jedes Entity welches gefunden wurde, wird der Liste hinzugefuegt. */
 			 for (int i=0; i<rows; i++) {
 				 try {
@@ -549,7 +549,7 @@ public class EntityList {
 			 
 			 this.lastActionSuccess = true;
 		 }
-		 else {
+		 else if (addPlayer) {
 			 /* Der Spieler wurde nicht gefunden, weil result null ist. */
 			 /* Also wird er jetzt erstellt. */
 			 Query = "INSERT INTO ap_owners (`name`) VALUES ('" +player+ "');";
