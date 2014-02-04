@@ -48,6 +48,7 @@ public class lockinfo implements CommandExecutor {
 			
 			/* Wenn es protected ist, dann den Owner herausgeben. */
 			player.sendMessage("§eDieses Tier ist von §6"+owner+" §eprotected.");
+			return true;
 		}
 		return false;
 	}
