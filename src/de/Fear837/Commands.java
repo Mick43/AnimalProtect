@@ -1,5 +1,6 @@
 package de.Fear837;
 
+/*
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -22,20 +23,22 @@ import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Sheep;
 import org.bukkit.entity.Wolf;
-import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.ItemStack;*/
 
-import de.Fear837.listener.EntityInteractListener;
-import de.Fear837.structs.EntityList;
-import de.Fear837.structs.EntityObject;
-import de.Fear837.utility.APLogger;
+//import de.Fear837.listener.EntityInteractListener;
+//import de.Fear837.structs.EntityList;
+//import de.Fear837.structs.EntityObject;
+//import de.Fear837.utility.APLogger;
 
-public class Commands implements CommandExecutor {
+public class Commands //implements CommandExecutor 
+{
 
+	/*
 	private MySQL sql;
 	private Main plugin;
 	private EntityList list;
 
-	public Commands(Main plugin, MySQL sql, EntityList list) {
+	public Commands() {
 		this.plugin = plugin;
 		this.sql = sql;
 		this.list = list;
@@ -60,7 +63,7 @@ public class Commands implements CommandExecutor {
 								else { 
 									cs.sendMessage("§cFehler: Das Tier konnte nicht gesichert werden.");
 									APLogger.setWarning(true);
-									APLogger.warn("Warnung: Ein Entity konnte nicht gelockt werden!");
+							    	APLogger.warn("Warnung: Ein Entity konnte nicht gelockt werden!");
 									APLogger.setWarning(false);
 								}
 							}
@@ -307,4 +310,5 @@ public class Commands implements CommandExecutor {
 		}
 		return false;
 	}
+	*/
 }
