@@ -28,7 +28,10 @@ public class lockdebug implements CommandExecutor {
 			cs.sendMessage("Current locks in RAM: " + list.sizeOfLocks());
 			cs.sendMessage("Database connection stable: " + database.checkConnection());
 		}
+		else {
+			cs.sendMessage("§cFehler: Es besteht keine Verbindung zur Datenbank!");
+		}
 		
-		return false;
+		return true;
 	}
 }
