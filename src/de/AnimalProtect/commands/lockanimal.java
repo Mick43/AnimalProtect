@@ -52,6 +52,7 @@ public class lockanimal implements CommandExecutor {
 			}
 			
 			player.sendMessage("§aDas Tier wurde erfolgreich gesichert!");
+			return true;
 		}
 		return false;
 	}
