@@ -524,8 +524,9 @@ public class EntityList {
 		
 		/* Nun alle Entities, die von dem Spieler gelockt wurden, aus der Datenbank laden. */
 		 String Query = "SELECT uuid FROM ap_entities "
-			 		  + "INNER JOIN ap_locks ON ap_entities.id=ap_locks.entity_id "
-			 		  + "INNER JOIN ap_owners ON ap_locks.name='"+player+"';";
+		 		+ "INNER JOIN ap_locks ON ap_entities.id = ap_locks.entity_ID "
+		 		+ "INNER JOIN ap_owners ON ap_locks.owner_id=ap_owners.id "
+		 		+ "WHERE ap_owners.name='Fear837'";
 		 ResultSet result = database.get(Query, false, true);
 		 
 		 if (result != null) {
