@@ -44,15 +44,19 @@ public class Main extends JavaPlugin {
 		isEnabled = true;
 		
 		/* Die Config initialisieren */
+		APLogger.info("> Loading Config...");
 		initializeConfig();
 		
 		/* Die Datenbank initialisieren */
+		APLogger.info("> Loading Database...");
 		initializeDatabase();
 		
 		/* Die EntityList initialisieren */
+		APLogger.info("> Loading EntityList...");
 		list = new EntityList(this, false);
 		
 		/* Die Befehle initialisieren */
+		APLogger.info("> Loading Commands...");
 		this.getCommand("lockanimal").setExecutor(new lockanimal(this));
 		this.getCommand("lockinfo").setExecutor(new lockinfo(this));
 		this.getCommand("locklist").setExecutor(new locklist(this));
@@ -62,6 +66,7 @@ public class Main extends JavaPlugin {
 		this.getCommand("locklimit").setExecutor(new locklimit(this));
 		
 		/* Die Listener registrieren */
+		APLogger.info("> Loading Listeners...");
 		PluginManager pm = getServer().getPluginManager();
 		pm.registerEvents(new InteractEventListener(this), this);
 		pm.registerEvents(new DamageEventListener(this), this);
