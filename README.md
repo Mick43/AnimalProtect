@@ -8,7 +8,6 @@ Description:
 Todo:
 ------
 - Command: /locklist - In dem neuen Package schreiben.
-- Command: /locktp - In dem neuen Package schreiben.
 - Command: /lockrespawn - In dem neuen Package schreiben.
 - EntityList.disconnect() - schreiben
 - Datenbank-Struktur verbessern.
