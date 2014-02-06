@@ -12,6 +12,7 @@ Todo:
 - EntityList.disconnect() - schreiben
 - Datenbank-Struktur verbessern.
 - ALLE Entities aus dem RAM laden!
+- Bei keiner Datenbank-Verbindung alles in eine Datei schreiben und versuchen neu zu verbinden.
 
 Ideen:
 ------
