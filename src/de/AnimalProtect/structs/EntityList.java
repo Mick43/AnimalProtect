@@ -503,6 +503,8 @@ public class EntityList {
 			catch (Exception e) { }
 		}
 		
+		// TODO: Alle Entities aus der Datenbank laden!
+		
 		APLogger.info("Loading finished! " +count+ " players have been loaded.");
 	}
 	
