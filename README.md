@@ -11,6 +11,7 @@ Todo:
 - Command: /lockrespawn - In dem neuen Package schreiben.
 - EntityList.disconnect() - schreiben
 - Datenbank-Struktur verbessern.
+- ALLE Entities aus dem RAM laden!
 
 Ideen:
 ------
