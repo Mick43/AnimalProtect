@@ -97,7 +97,9 @@ public class APLogger {
 		messageCache = message;
 		StringBuilder builder = new StringBuilder(BUFFER_MIN_LENGTH
 				+ BUFFER_MULTIPLIER * message.length);
-		builder.append(PREFIX).append(SEPARATOR);
+		if(PREFIX != null && !PREFIX.isEmpty()){
+			builder.append(PREFIX).append(SEPARATOR);
+		}
 		for (String msg : message) {
 			builder.append(msg).append(SEPARATOR);
 		}
