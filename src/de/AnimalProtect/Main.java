@@ -1,6 +1,8 @@
 package de.AnimalProtect;
 
+import java.io.File;
 import java.sql.Connection;
+import java.util.ArrayList;
 
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -19,7 +21,7 @@ import de.AnimalProtect.listener.LeashEventListener;
 import de.AnimalProtect.listener.LoadSaveEventListener;
 import de.AnimalProtect.listener.VehicleEventListener;
 import de.AnimalProtect.structs.EntityList;
-import de.AnimalProtect.utility.APLogger;
+import de.AnimalProtect.utility.*;
 
 public class Main extends JavaPlugin {
 	
@@ -50,6 +52,10 @@ public class Main extends JavaPlugin {
 		/* Die Datenbank initialisieren */
 		APLogger.info("> Loading Database...");
 		initializeDatabase();
+		
+		/* Das Crashfile importieren */
+		APLogger.info("> Loading Crashfile...");
+		initializeCrashfile();
 		
 		/* Die EntityList initialisieren */
 		APLogger.info("> Loading EntityList...");
@@ -83,6 +89,11 @@ public class Main extends JavaPlugin {
 	public void onDisable() {
 		if (list != null) { list.saveToDatabase(); }
 		if (database != null) { database.closeConnection(); }
+		
+		if (MySQL.CrashedQueries.size() != 0) {
+			new CrashfileObject(this, MySQL.CrashedQueries, "queries");
+		}
+		
 		APLogger.info("Plugin has been disabled.");
 	}
 	
@@ -153,4 +164,28 @@ public class Main extends JavaPlugin {
 			}
 		}
 	}
+	
+	private void initializeCrashfile() {
+		File f = new File(this.getDataFolder() + "/crashFiles/queries");
+		if(f.exists() && !f.isDirectory()) { 
+			CrashfileObject cfo = new CrashfileObject(this, "queries");
+			try {
+				ArrayList<String> queries = (ArrayList<String>)cfo.getObject();
+				if (database != null && database.checkConnection()) {
+					for (String query : queries) {
+						database.write(query);
+					}
+				}
+				else {
+					APLogger.info("Could not import crashed Queries!");
+					for (String query : queries) {
+						MySQL.CrashedQueries.add(query);
+					}
+				}
+			}
+			catch (Exception e) { }
+		}
+	}
+
+
 }

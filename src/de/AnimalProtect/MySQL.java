@@ -5,6 +5,7 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.logging.Level;
 
 import org.bukkit.plugin.Plugin;
@@ -26,6 +27,8 @@ public class MySQL extends Database {
     
     private Plugin plugin;
     private Connection connection;
+    
+    public static ArrayList<String> CrashedQueries = new ArrayList<String>();
 
     /**
      * Creates a new MySQL instance
@@ -249,14 +252,19 @@ public class MySQL extends Database {
 				statement = connection.createStatement();
 				try {
 					if (plugin.getConfig().getBoolean("settings.debug-messages")) {
-						APLogger.warn("Inserting: " + Query);
+						APLogger.warn("[MySQL] Inserting: " + Query);
 					}
 					statement.executeUpdate(Query);
 					return true;
-				} catch (SQLException e) { e.printStackTrace(); }
-			} catch (SQLException e1) { e1.printStackTrace(); }
-		} else { noConnection(); }
+				} catch (SQLException e) { e.printStackTrace(); failedQuery(Query); }
+			} catch (SQLException e1) { e1.printStackTrace(); failedQuery(Query); }
+		} else { noConnection(); failedQuery(Query); }
 		return false;
+	}
+	
+	private void failedQuery(String Query) {
+		APLogger.info("Failed to insert a Query...");
+		MySQL.CrashedQueries.add(Query);
 	}
 	
 	private void noConnection() {
