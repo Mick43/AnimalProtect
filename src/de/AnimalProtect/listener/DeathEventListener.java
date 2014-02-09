@@ -24,6 +24,7 @@ public class DeathEventListener implements Listener {
 	
 	@EventHandler
 	public void onEntityDeath(EntityDeathEvent event) {
+		if (!database.checkConnection()) { database.openConnection(); }
 		if (plugin.isEnabled() && database.checkConnection() && isAnimal(event.getEntity())) {
 			
 			String deathCause = event.getEntity().getLastDamageCause().toString();

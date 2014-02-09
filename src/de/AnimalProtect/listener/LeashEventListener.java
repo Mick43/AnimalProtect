@@ -25,6 +25,7 @@ public class LeashEventListener implements Listener {
 	
 	@EventHandler
 	public void onEntityLeash(PlayerLeashEntityEvent event) {
+		if (!database.checkConnection()) { database.openConnection(); }
 		if (plugin.isEnabled() && database.checkConnection() && !event.isCancelled()) {
 			/* Prüfen ob eine Datenbank-Verbindung besteht und ob das Entity ein Tier ist */
 			if (database == null) { return; }

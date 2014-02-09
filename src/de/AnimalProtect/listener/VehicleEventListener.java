@@ -26,6 +26,7 @@ public class VehicleEventListener implements Listener {
 	
 	@EventHandler
 	public void onVehicleEnter(VehicleEnterEvent event) {
+		if (!database.checkConnection()) { database.openConnection(); }
 		if (plugin.isEnabled() && database.checkConnection() && !event.isCancelled()) {
 			if (!isAnimal(event.getVehicle())) { return; }
 			Player player = (Player) event.getEntered();
