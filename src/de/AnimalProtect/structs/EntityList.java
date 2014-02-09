@@ -79,7 +79,7 @@ public class EntityList {
 		
 		if (!empty) {
   			for (Player player : plugin.getServer().getOnlinePlayers()) {
-  				connect(player.getName(), false);
+  				connect(player.getName(), false, false);
   			}
   		}
 	}
@@ -278,7 +278,7 @@ public class EntityList {
 		}
 		else {
 			/* Spieler ist nicht im RAM, also wird er aus der DB geladen. */
-			connect(player, false);
+			connect(player, false, true);
 			ArrayList<EntityObject> list = keys.get(player);
 			
 			/* Wenn die ArrayList aus irgendeinem Grund null ist, wird sie leer erstellt. */
@@ -312,7 +312,7 @@ public class EntityList {
 		Long entitySize = (Long) sizeOfEntities(player);
 		
 		/* Wenn der Spieler nicht in der DB ist, wird er hinzugefuegt. */
-		if (entitySize == 0) { connect(player, true); }
+		if (entitySize == 0) { connect(player, true, true); }
 		
 		/* Prüfen ob das connecten funktioniert hat */
 		if (entitySize == 0 && !this.lastActionSucceeded()) { 
@@ -531,7 +531,7 @@ public class EntityList {
 	 *         unmodified version of the list.
 	 * @see de.Fear837.structs.EntityList.lastActionSucceeded()
 	 */
-	public EntityList connect(String player, boolean addPlayer) {
+	public EntityList connect(String player, boolean addPlayer, boolean log) {
 		this.lastActionSuccess = false;
 		
 		/* Schauen ob der Spieler bereits im RAM ist und schon Entities von ihm eingetragen sind */
@@ -548,7 +548,7 @@ public class EntityList {
 		 		+ "INNER JOIN ap_locks ON ap_entities.id = ap_locks.entity_ID "
 		 		+ "INNER JOIN ap_owners ON ap_locks.owner_id=ap_owners.id "
 		 		+ "WHERE ap_owners.name='"+player+"';";
-		 ResultSet result = database.get(Query, false, true);
+		 ResultSet result = database.get(Query, false, log);
 		 
 		 /* Prüfen ob der Spieler gefunden wurde . */
 		 Integer rows = database.getResultSize(result);
