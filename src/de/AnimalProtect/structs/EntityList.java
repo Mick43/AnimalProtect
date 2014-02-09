@@ -257,7 +257,7 @@ public class EntityList {
 		/* Wenn nicht im RAM, dann wird in der Datenbank geschaut. */
 		EntityObject entity = new EntityObject(plugin, database, uniqueID, true);
 		if (entity.isConnected()) {
-			addToList(entity);
+			addToList(entity, true);
 			return entity;
 		}
 		
@@ -395,7 +395,7 @@ public class EntityList {
 	    	/* Zum Schluss wird das EntityObject erstellt und direkt im RAM eingetragen. */
 	    	EntityObject ent = new EntityObject(plugin, database, uuid, true);
 	    	if (ent.isConnected()) {
-	    		this.addToList(ent);
+	    		this.addToList(ent, true);
 	    		this.lastActionSuccess = true;
 	    	}
 	    	/* Wenn das Entity sich nicht mit der Datenbank verbinden konnte, */
@@ -514,7 +514,7 @@ public class EntityList {
 					
 					keys.get(e.getOwner()).add(e);
 					
-					addToList(e);
+					addToList(e, false);
 				}
 			}
 			catch (Exception e) { }
@@ -563,7 +563,7 @@ public class EntityList {
 						 
 						 EntityObject ent = new EntityObject(plugin, database, uuid, true);
 						 
-						 addToList(ent);
+						 addToList(ent, false);
 					 }
 				 }
 				 catch (Exception e) { e.printStackTrace(); }
@@ -690,7 +690,7 @@ public class EntityList {
 		return null;
 	}
 	
-	private EntityList addToList(EntityObject entity) {
+	private EntityList addToList(EntityObject entity, Boolean log) {
 		this.lastActionSuccess = false;
 		
 		/* Wenn das Entite null ist oder nicht mit der DB verbunden ist, */
@@ -712,7 +712,7 @@ public class EntityList {
 			keys.put(entity.getOwner(), l);
 		}
 		
-		if (DEBUGGING) {
+		if (DEBUGGING && log) {
 			APLogger.info("[DEBUG] A new entity has been added to the list!");
 			APLogger.info("[DEBUG] More Information: [ID:"+entity.getUniqueID()+"] [Owner:" + entity.getOwner() + "]");
 		}
