@@ -7,12 +7,12 @@ Description:
 
 Todo:
 ------
-- Command: /locklist - In dem neuen Package schreiben.
+- Command: /unlockanimal - In dem neuen Package schreiben.
 - Command: /lockrespawn - In dem neuen Package schreiben.
-- EntityList.disconnect() - schreiben
 - Datenbank-Struktur verbessern.
-- ALLE Entities aus dem RAM laden!
+- Den automatischen Datenbank-Verbindungs-Abbruch nach einer gewissen inaktiven Zeit deaktivieren.
 - Bei keiner Datenbank-Verbindung alles in eine Datei schreiben und versuchen neu zu verbinden.
+- Überprüfen ob bei jedem Command die Permission-Abfrage stimmt.
 
 Ideen:
 ------
@@ -30,6 +30,7 @@ Datenbank-Struktur:
 Commands:
 ---------
 - `/lockanimal` - Protectet das ausgewählte Entity.
+- `/unlockanimal` - Entfernt die Protection des ausgewählten Entities. (TODO!) (Optional: <name><id>)
 - `/lockinfo` - Gibt Informationen über das ausgewählte Entity aus.
 - `/locklist <name>` - Listet alle gelockten Tiere eines Spielers auf. (Optional: <name>)
 - `/locklimit <name>` - Sagt dir, wie viele Spieler du noch locken kannst. (Optional: <name>)
