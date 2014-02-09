@@ -170,6 +170,7 @@ public class Main extends JavaPlugin {
 		if(f.exists() && !f.isDirectory()) { 
 			CrashfileObject cfo = new CrashfileObject(this, "queries");
 			try {
+				@SuppressWarnings("unchecked")
 				ArrayList<String> queries = (ArrayList<String>)cfo.getObject();
 				if (database != null && database.checkConnection()) {
 					for (String query : queries) {
