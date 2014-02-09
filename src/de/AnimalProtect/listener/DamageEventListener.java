@@ -80,7 +80,7 @@ public class DamageEventListener implements Listener {
 			/* dann wird überprüft ob der Spieler das darf */
 			if (damager instanceof Player) { 
 				Player player = (Player)damager;
-				if (!player.hasPermission("animalprotect.bypass") && player.getName() != owner) {
+				if (!player.hasPermission("animalprotect.bypass") && !player.getName().equalsIgnoreCase(owner)) {
 					event.setCancelled(true);
 					player.sendMessage("§eDieses Tier ist von §6" +owner+ " §egesichert!");
 				}
