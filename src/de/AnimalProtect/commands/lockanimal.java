@@ -1,5 +1,6 @@
 package de.AnimalProtect.commands;
 
+import org.bukkit.Sound;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -51,6 +52,7 @@ public class lockanimal implements CommandExecutor {
 				return true;
 			}
 			
+			player.playSound(player.getLocation(), Sound.CLICK, 2.0f, 2.5f);
 			player.sendMessage("§aDas Tier wurde erfolgreich gesichert!");
 			return true;
 		}
