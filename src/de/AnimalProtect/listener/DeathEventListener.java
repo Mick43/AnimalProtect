@@ -27,7 +27,7 @@ public class DeathEventListener implements Listener {
 		if (plugin.isEnabled() && database.checkConnection() && isAnimal(event.getEntity())) {
 			
 			String deathCause = event.getEntity().getLastDamageCause().toString();
-			database.write("UPDATE ap_entities SET deathcause='"+deathCause+"' WHERE uuid='"+event.getEntity().getUniqueId()+"';");
+			database.write("UPDATE ap_entities SET deathcause='"+deathCause+"' WHERE uuid='"+event.getEntity().getUniqueId()+"';", true);
 			
 			list.updateEntity(event.getEntity(), false);
 		}

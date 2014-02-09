@@ -121,7 +121,7 @@ public class lockrespawn implements CommandExecutor {
 				
 				String Query = "UPDATE ap_entities SET uuid='"+id+"', last_x="+x+", last_y="+y+", last_z="+z+" "
 						+ "WHERE uuid='" + result.getString("uuid")+"'";
-				database.write(Query);
+				database.write(Query, true);
 				
 				/* Das EntityObjet aus dem RAM holen und updaten */
 				EntityObject ent = list.getEntityObject(UUID.fromString(result.getString("uuid")));

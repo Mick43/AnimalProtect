@@ -244,14 +244,14 @@ public class MySQL extends Database {
 		return rows;
 	}
 	
-	public boolean write(String Query)
+	public boolean write(String Query, Boolean log)
 	{
 		if (checkConnection()) {
 			Statement statement = null;
 			try {
 				statement = connection.createStatement();
 				try {
-					if (Main.DEBUGMODE) {
+					if (Main.DEBUGMODE && log) {
 						APLogger.warn("[MySQL] Inserting: " + Query);
 					}
 					statement.executeUpdate(Query);
