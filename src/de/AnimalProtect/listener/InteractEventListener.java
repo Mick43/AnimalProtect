@@ -99,7 +99,10 @@ public class InteractEventListener implements Listener {
 		||  type == EntityType.COW
 		||  type == EntityType.CHICKEN
 		||  type == EntityType.HORSE
-		||  type == EntityType.WOLF)
+		||  type == EntityType.WOLF
+		||  type == EntityType.IRON_GOLEM
+		||  type == EntityType.SNOWMAN
+		||  type == EntityType.OCELOT)
 		{ return true; }
 		return false;
 	}
