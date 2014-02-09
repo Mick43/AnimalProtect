@@ -178,15 +178,6 @@ public class EntityList {
 		if (reverseKeys.containsKey(id)) {
 			return true;
 		}
-		/* Ist das Entity nicht im RAM, dann wird in der */
-		/* Datenbank nach der UUID des Entities gesucht. */
-		else if (database != null && database.checkConnection()) {
-			String query = "SELECT count(1) FROM ap_entities WHERE uuid='"+id.toString()+"' LIMIT 1;";
-			Long i = (Long)database.getValue(query, "id", true);
-			if (i == null) { return false; }
-			else if (i == 0) { return false; }
-			else { return true; }
-		}
 		
 		return false;
 	}
