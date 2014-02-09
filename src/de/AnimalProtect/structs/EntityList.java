@@ -668,6 +668,13 @@ public class EntityList {
 					+ "WHERE uuid='"+uuid+"';";
 			database.write(query);
 			
+			/* Das Entity im RAM aktualisieren */
+			for (EntityObject ent : entities.keySet()) {
+				if (ent.getUniqueID().equals(e.getUniqueId().toString())) {
+					ent.update();
+				}
+			}
+			
 			this.lastActionSuccess = true;
 		}
 		return null;
