@@ -61,12 +61,12 @@ public class MySQL extends Database {
     public Connection openConnection() {
         try {
             Class.forName("com.mysql.jdbc.Driver");
-            APLogger.info("Connecting to jdbc:mysql://" + this.hostname + ":" + this.port + "/" + this.database + " ...");
+            APLogger.info("[MySQL] Connecting to jdbc:mysql://" + this.hostname + ":" + this.port + "/" + this.database + " ...");
             connection = DriverManager.getConnection("jdbc:mysql://" + this.hostname + ":" + this.port + "/" + this.database, this.user, this.password);
         } catch (SQLException e) {
-            plugin.getLogger().log(Level.SEVERE, "Could not connect to MySQL server! because: " + e.getMessage());
+            plugin.getLogger().log(Level.SEVERE, "[MySQL] Could not connect to MySQL server! because: " + e.getMessage());
         } catch (ClassNotFoundException e) {
-            plugin.getLogger().log(Level.SEVERE, "JDBC Driver not found!");
+            plugin.getLogger().log(Level.SEVERE, "[MySQL] JDBC Driver not found!");
         }
         return connection;
     }
@@ -87,7 +87,7 @@ public class MySQL extends Database {
             try {
                 connection.close();
             } catch (SQLException e) {
-                plugin.getLogger().log(Level.SEVERE, "Error closing the MySQL Connection!");
+                plugin.getLogger().log(Level.SEVERE, "[MySQL] Error closing the MySQL Connection!");
                 e.printStackTrace();
             }
         }
@@ -251,7 +251,7 @@ public class MySQL extends Database {
 			try {
 				statement = connection.createStatement();
 				try {
-					if (plugin.getConfig().getBoolean("settings.debug-messages")) {
+					if (Main.DEBUGMODE) {
 						APLogger.warn("[MySQL] Inserting: " + Query);
 					}
 					statement.executeUpdate(Query);
@@ -263,14 +263,14 @@ public class MySQL extends Database {
 	}
 	
 	private void failedQuery(String Query) {
-		APLogger.info("Failed to insert a Query...");
+		APLogger.info("[MySQL] Failed to insert a Query...");
 		MySQL.CrashedQueries.add(Query);
 	}
 	
 	private void noConnection() {
-		APLogger.warn("Warnung: Es konnte keine Verbindung zur Datenbank hergestellt werden.");
-		APLogger.warn("Folgender Befehl konnte nicht ausgeführt werden:");
-		APLogger.warn("Weitere Informationen: MySQL.checkConnection() == " + checkConnection());
+		APLogger.warn("[MySQL] Warnung: Es konnte keine Verbindung zur Datenbank hergestellt werden.");
+		APLogger.warn("[MySQL] Folgender Befehl konnte nicht ausgeführt werden:");
+		APLogger.warn("[MySQL] Weitere Informationen: MySQL.checkConnection() == " + checkConnection());
 	}
 
 }
