@@ -155,19 +155,19 @@ public class MySQL extends Database {
 			ResultSet res = null;
 			
 			if (plugin.getConfig().getBoolean("settings.debug-messages") && log) {
-				APLogger.warn("Querying: " + Query);
+				APLogger.warn("[MySQL] Querying: " + Query);
 			}
 			
 			try { statement = connection.createStatement(); } 
 			catch (SQLException e) {
-				APLogger.warn("Exception in MySQL.get() -> statement = connection.createStatement()");
+				APLogger.warn("[MySQL] Exception in MySQL.get() -> statement = connection.createStatement()");
 				e.printStackTrace();
 				return null;
 			}
 			
 			try { res = statement.executeQuery(Query); } 
 			catch (SQLException e) {
-				APLogger.warn("Exception in MySQL.get() -> res = statement.executeQuery(Query)");
+				APLogger.warn("[MySQL] Exception in MySQL.get() -> res = statement.executeQuery(Query)");
 				e.printStackTrace();
 				return null;
 			}
@@ -175,7 +175,7 @@ public class MySQL extends Database {
 			if (next) {
 				try { if (!res.next()) { return null; } } 
 				catch (SQLException e) {
-					APLogger.warn("Exception in MySQL.get() -> res.next()");
+					APLogger.warn("[MySQL] Exception in MySQL.get() -> res.next()");
 					APLogger.warn("Query: " + Query);
 					e.printStackTrace();
 					return null;
