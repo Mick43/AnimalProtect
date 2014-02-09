@@ -124,7 +124,7 @@ public class EntityList {
 	 * @return Amount of locks in RAM.
 	 */
 	public int sizeOfLocks() {
-		return keys.size();
+		return reverseKeys.size();
 	}
 	
 	/**
