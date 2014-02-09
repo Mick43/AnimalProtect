@@ -397,7 +397,6 @@ public class EntityList {
 	    	if (ent.isConnected()) {
 	    		this.addToList(ent);
 	    		this.lastActionSuccess = true;
-	    		APLogger.info("Inserted new Entity: [ID:"+uuid+"] [Owner:"+player+"] [EntityType:"+type+"] [x:"+x+", y:"+y+", z:"+z+"]");
 	    	}
 	    	/* Wenn das Entity sich nicht mit der Datenbank verbinden konnte, */
 	    	/* dann sind die INSERTS fehlgeschlagen. */
