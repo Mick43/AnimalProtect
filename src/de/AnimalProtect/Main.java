@@ -7,20 +7,9 @@ import java.util.ArrayList;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import de.AnimalProtect.commands.lockanimal;
-import de.AnimalProtect.commands.lockdebug;
-import de.AnimalProtect.commands.lockinfo;
-import de.AnimalProtect.commands.locklimit;
-import de.AnimalProtect.commands.locklist;
-import de.AnimalProtect.commands.lockrespawn;
-import de.AnimalProtect.commands.locktp;
-import de.AnimalProtect.listener.DamageEventListener;
-import de.AnimalProtect.listener.DeathEventListener;
-import de.AnimalProtect.listener.InteractEventListener;
-import de.AnimalProtect.listener.LeashEventListener;
-import de.AnimalProtect.listener.LoadSaveEventListener;
-import de.AnimalProtect.listener.VehicleEventListener;
 import de.AnimalProtect.structs.EntityList;
+import de.AnimalProtect.commands.*;
+import de.AnimalProtect.listener.*;
 import de.AnimalProtect.utility.*;
 
 public class Main extends JavaPlugin {
@@ -64,6 +53,7 @@ public class Main extends JavaPlugin {
 		/* Die Befehle initialisieren */
 		APLogger.info("> Loading Commands...");
 		this.getCommand("lockanimal").setExecutor(new lockanimal(this));
+		this.getCommand("unlockanimal").setExecutor(new unlockanimal(this));
 		this.getCommand("lockinfo").setExecutor(new lockinfo(this));
 		this.getCommand("locklist").setExecutor(new locklist(this));
 		this.getCommand("lockrespawn").setExecutor(new lockrespawn(this));
@@ -80,6 +70,7 @@ public class Main extends JavaPlugin {
 		pm.registerEvents(new LoadSaveEventListener(this), this);
 		pm.registerEvents(new DeathEventListener(this), this);
 		pm.registerEvents(new VehicleEventListener(this), this);
+		pm.registerEvents(new TargetEventListener(this), this);
 		
 		/* Den Server informieren */
 		APLogger.info("Plugin initialized successfully.");
