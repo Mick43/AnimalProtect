@@ -512,6 +512,9 @@ public class EntityList {
 				if (result.next()) {
 					String uuid = result.getString("uuid");
 					EntityObject e = new EntityObject(plugin, database, UUID.fromString(uuid), true);
+					
+					keys.get(e.getOwner()).add(e);
+					
 					addToList(e);
 				}
 			}
