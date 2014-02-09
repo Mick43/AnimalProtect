@@ -28,6 +28,7 @@ public class locklist implements CommandExecutor {
 	
 	@Override
 	public boolean onCommand(CommandSender cs, Command cmd, String label, String[] args) {
+		if (!database.checkConnection()) { database.openConnection(); }
 		if (plugin.isEnabled() && database.checkConnection()) {
 			/* Variablen initialisieren */
 			String player = "";
