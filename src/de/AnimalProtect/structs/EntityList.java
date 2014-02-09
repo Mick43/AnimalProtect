@@ -71,7 +71,7 @@ public class EntityList {
 		this.reverseKeys = new HashMap<UUID, String>();
 		this.players = new HashMap<String, Integer>();
 
-		MAX_ENTITIES_FOR_PLAYER = plugin.getConfig().getInt("settings.max_entities_for_player");
+		MAX_ENTITIES_FOR_PLAYER = plugin.getConfig().getInt("settings.max_entities_for_player") + 1;
 		DEBUGGING = Main.DEBUGMODE;
 		this.lastActionSuccess = false;
 		
