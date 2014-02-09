@@ -470,18 +470,15 @@ public class EntityList {
 	public void loadFromDatabase() {
 		APLogger.info("Loading all players from the database... ");
 		
-		/* Zuerst schauen wie viele Spieler in ap_owners eingetragen sind. */
-		Long count = (Long)database.getValue("SELECT COUNT(1) FROM ap_owners;", 1, true);
-		
-		/* Wenn es keine Spieler gibt, dann soll auch nichts geladen werden. */
-		if (count == 0) { return; }
-		
 		/* Alle Spieler aus der Datenbank laden. */
 		String Query = "SELECT * from ap_owners;";
 		ResultSet result = database.get(Query, false, true);
 		
+		/* Prüfen wie viele Spieler vorhanden sind */
+		Integer playerCount = database.getResultSize(result);
+		
 		/* Alle Spieler in den RAM eintragen. */
-		for (int i=0; i<count; i++) {
+		for (int i=0; i<playerCount; i++) {
 			try {
 				if (result.next()) {
 					String name = result.getString("name");
@@ -503,9 +500,25 @@ public class EntityList {
 			catch (Exception e) { }
 		}
 		
-		// TODO: Alle Entities aus der Datenbank laden!
+		/* Alle Entities aus der Datenbank laden */
+		String entityQuery = "SELECT * from ap_entities;";
+		ResultSet entityResult = database.get(entityQuery, false, true);
 		
-		APLogger.info("Loading finished! " +count+ " players have been loaded.");
+		/* Prüfen wie viele Entities vorhanden sind. */
+		Integer entityCount = database.getResultSize(entityResult);
+		
+		for (int i=0; i<entityCount; i++) {
+			try {
+				if (result.next()) {
+					String uuid = result.getString("uuid");
+					EntityObject e = new EntityObject(plugin, database, UUID.fromString(uuid), true);
+					addToList(e);
+				}
+			}
+			catch (Exception e) { }
+		}
+		
+		APLogger.info("Loading finished! " +playerCount+ " players and "+entityCount+ " entities have been loaded.");
 	}
 	
 	/** Loads a player and his entities from the database into the RAM
