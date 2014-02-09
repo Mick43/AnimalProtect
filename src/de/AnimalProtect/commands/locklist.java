@@ -102,10 +102,7 @@ public class locklist implements CommandExecutor {
 					Integer x = e.getLastx();
 					Integer y = e.getLasty();
 					Integer z = e.getLastz();
-					
-					/* Dem Sender schreiben wie viele Entities in der Liste sind. */
-					APLogger.info("Amount of entities: " + plugin.getServer().getWorld(world).getEntities().size());
-					
+										
 					/* Den Status des Entities überprüfen */
 					for (Entity entity : plugin.getServer().getWorld(world).getEntities()) {
 						if (e.getUniqueID().equals(entity.getUniqueId().toString())) {
