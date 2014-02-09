@@ -33,15 +33,4 @@ public class LoadSaveEventListener implements Listener {
 									: "Failed!"));
 		}
 	}
-	
-	@EventHandler
-	public void onPlayerQuit(PlayerQuitEvent event) {
-		if (plugin.isEnabled() && database.checkConnection()) {
-			list.disconnect(event.getPlayer().getName());
-			APLogger.info("Unloading player "
-							+ event.getPlayer().getName() + ". => "
-							+ (list.lastActionSucceeded() ? "Success."
-									: "Failed!"));
-		}
-	}
 }
