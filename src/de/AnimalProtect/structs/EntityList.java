@@ -471,7 +471,7 @@ public class EntityList {
 		
 		/* Alle Spieler aus der Datenbank laden. */
 		String Query = "SELECT * from ap_owners;";
-		ResultSet result = database.get(Query, false, true);
+		ResultSet result = database.get(Query, false, false);
 		
 		/* Prüfen wie viele Spieler vorhanden sind */
 		Integer playerCount = database.getResultSize(result);
@@ -501,7 +501,7 @@ public class EntityList {
 		
 		/* Alle Entities aus der Datenbank laden */
 		String entityQuery = "SELECT * from ap_entities;";
-		ResultSet entityResult = database.get(entityQuery, false, true);
+		ResultSet entityResult = database.get(entityQuery, false, false);
 		
 		/* Prüfen wie viele Entities vorhanden sind. */
 		Integer entityCount = database.getResultSize(entityResult);
