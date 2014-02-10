@@ -24,7 +24,6 @@ public class LoadSaveEventListener implements Listener {
 
 	@EventHandler
 	public void onPlayerJoin(PlayerJoinEvent event) {
-		if (!database.checkConnection()) { database.openConnection(); }
 		if (plugin.isEnabled() && database.checkConnection()) {
 			list.connect(event.getPlayer().getName(), false, true);
 			APLogger.info("Loading player "

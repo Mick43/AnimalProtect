@@ -26,7 +26,6 @@ public class lockanimal implements CommandExecutor {
 	
 	@Override
 	public boolean onCommand(CommandSender cs, Command cmd, String label, String[] args) {
-		if (!database.checkConnection()) { database.openConnection(); }
 		if (plugin.isEnabled() && database.checkConnection() && cs instanceof Player) {
 			/* Variablen initialisieren */
 			Player player = (Player)cs;

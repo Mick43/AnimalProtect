@@ -22,7 +22,6 @@ public class TargetEventListener implements Listener {
 	
 	@EventHandler
 	public void onEntityEvent(EntityTargetLivingEntityEvent  event) {
-		if (!database.checkConnection()) { database.openConnection(); }
 		if (plugin.isEnabled() && database.checkConnection() && !event.isCancelled()) {
 			// TODO: EntityTargetLivingEntityEvent!
 			// Das Event soll gecancelled werden wenn das Target nicht der Owner ist!

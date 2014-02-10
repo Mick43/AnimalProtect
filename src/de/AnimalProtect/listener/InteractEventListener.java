@@ -32,7 +32,6 @@ public class InteractEventListener implements Listener {
 	
 	@EventHandler
 	public void onEntityEvent(PlayerInteractEntityEvent event) {
-		if (!database.checkConnection()) { database.openConnection(); }
 		if (plugin.isEnabled() && database.checkConnection() && !event.isCancelled()) {
 			/* Wenn der Spieler nicht geduckt ist, dann wird returned. */
 			if (!event.getPlayer().isSneaking()) { return; }

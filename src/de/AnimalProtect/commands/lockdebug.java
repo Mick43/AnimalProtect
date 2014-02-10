@@ -24,7 +24,6 @@ public class lockdebug implements CommandExecutor {
 	
 	@Override
 	public boolean onCommand(CommandSender cs, Command cmd, String label, String[] args) {
-		if (!database.checkConnection()) { database.openConnection(); }
 		if (plugin.isEnabled() && database.checkConnection()) {
 			cs.sendMessage("Current Entities in RAM: " + list.sizeOfEntitiesInRam());
 			cs.sendMessage("Current Players in RAM: " + list.sizeOfPlayers());
