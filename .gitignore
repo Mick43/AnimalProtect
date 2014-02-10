@@ -4,3 +4,4 @@ bin/
 AnimalProtect.jardesc
 src/de/Vip/vip_Commands.java
 src/de/Vip/vip_Main.java
+.settings/org.eclipse.jdt.core.prefs
