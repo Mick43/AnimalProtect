@@ -12,7 +12,6 @@ import de.AnimalProtect.Main;
 import de.AnimalProtect.MySQL;
 import de.AnimalProtect.structs.EntityList;
 import de.AnimalProtect.structs.EntityObject;
-import de.AnimalProtect.utility.APLogger;
 
 public class locklist implements CommandExecutor {
 
