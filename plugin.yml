@@ -37,7 +37,6 @@ commands:
    lockdebug:
       description: Gibt Debug-Informationen ueber das Plugin aus.
       usage: Write /<command>
-      permission: animalprotect.admin
       permission-message: You don't have permission.
    locklimit:
       description: Gibt die Anzahl der Locks ueber einen Spieler aus.
