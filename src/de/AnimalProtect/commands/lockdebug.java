@@ -24,15 +24,10 @@ public class lockdebug implements CommandExecutor {
 	
 	@Override
 	public boolean onCommand(CommandSender cs, Command cmd, String label, String[] args) {
-		if (plugin.isEnabled() && database.checkConnection()) {
-			cs.sendMessage("Current Entities in RAM: " + list.sizeOfEntitiesInRam());
-			cs.sendMessage("Current Players in RAM: " + list.sizeOfPlayers());
-			cs.sendMessage("Current locks in RAM: " + list.sizeOfLocks());
-			cs.sendMessage("Database connection stable: " + database.checkConnection());
-		}
-		else {
-			cs.sendMessage("§cFehler: Es besteht keine Verbindung zur Datenbank!");
-		}
+		cs.sendMessage("Current Entities in RAM: " + list.sizeOfEntitiesInRam());
+		cs.sendMessage("Current Players in RAM: " + list.sizeOfPlayers());
+		cs.sendMessage("Current locks in RAM: " + list.sizeOfLocks());
+		cs.sendMessage("Database connection stable: " + database.checkConnection());
 		
 		if (args.length == 3 && cs instanceof Player) {
 			Player player = (Player)cs;
