@@ -1,5 +1,7 @@
 package de.AnimalProtect.commands;
 
+import java.sql.SQLException;
+
 import org.bukkit.Sound;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -24,18 +26,39 @@ public class lockdebug implements CommandExecutor {
 	
 	@Override
 	public boolean onCommand(CommandSender cs, Command cmd, String label, String[] args) {
-		cs.sendMessage("Current Entities in RAM: " + list.sizeOfEntitiesInRam());
-		cs.sendMessage("Current Players in RAM: " + list.sizeOfPlayers());
-		cs.sendMessage("Current locks in RAM: " + list.sizeOfLocks());
-		cs.sendMessage("Database connection stable: " + database.checkConnection());
-		
-		if (args.length == 3 && cs instanceof Player) {
+		if (cs instanceof Player) {
 			Player player = (Player)cs;
-			try {
-				player.playSound(player.getLocation(), Sound.valueOf(args[0]), Float.parseFloat(args[1]), Float.parseFloat(args[2]));
+			if (args.length == 3 && cs instanceof Player) {
+				try {
+					player.playSound(player.getLocation(), Sound.valueOf(args[0]), Float.parseFloat(args[1]), Float.parseFloat(args[2]));
+				}
+				catch (Exception e) { }
+				
+				return true;
 			}
-			catch (Exception e) { }
+			
+			if (!player.hasPermission("animalprotect.admin")) { 
+				player.sendMessage("§cYou don't have permission.");
+				return true;
+			}
 		}
+		
+		int entities = list.sizeOfEntitiesInRam();
+		int players = list.sizeOfPlayers();
+		int locks = list.sizeOfLocks();
+		boolean dbnull = !database.checkConnection();
+		boolean dbclosed;
+		try { dbclosed = database.getConnection().isClosed();
+		} catch (SQLException e) { dbclosed=true; }
+		boolean dbvalid;
+		try { dbvalid = database.getConnection().isValid(2);
+		} catch (SQLException e) { dbvalid = false; }
+		
+		cs.sendMessage("");
+		cs.sendMessage("EntityList-Size: [§7"+entities+" §fEntities] [§7"+players+" §fPlayers] [§7"+locks+" §fLocks]");
+		cs.sendMessage("Amount of failed queries: [§7" + MySQL.CrashedQueries.size() + "§f]");
+		cs.sendMessage("Is plugin enabled: [§7" + plugin.isEnabled() + "§f]");
+		cs.sendMessage("Database: [NULL: §7"+dbnull+"§f] [Closed: §7"+dbclosed+"§f] [Valid: §7"+dbvalid+"§f]");
 		
 		return true;
 	}
