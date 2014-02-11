@@ -48,10 +48,11 @@ public class lockdebug implements CommandExecutor {
 			boolean dbnull = !database.checkConnection();
 			boolean dbclosed;
 			try { dbclosed = database.getConnection().isClosed();
-			} catch (SQLException e) { dbclosed=true; }
+			} 
+			catch (Exception e) { dbclosed=true; }
 			boolean dbvalid;
 			try { dbvalid = database.getConnection().isValid(2);
-			} catch (SQLException e) { dbvalid = false; }
+			} catch (Exception e) { dbvalid = false; }
 			
 			cs.sendMessage("");
 			cs.sendMessage("EntityList-Size: [§7"+entities+" §fEntities] [§7"+players+" §fPlayers] [§7"+locks+" §fLocks]");

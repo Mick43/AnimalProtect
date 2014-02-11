@@ -31,5 +31,10 @@ public class LoadSaveEventListener implements Listener {
 							+ (list.lastActionSucceeded() ? "Success."
 									: "Failed!"));
 		}
+		else if (!database.checkConnection()) {
+			if (event.getPlayer().hasPermission("animalprotect.admin")) {
+				event.getPlayer().sendMessage("§c[!] §7Warnung: Die Datenbankverbindung ist nicht aktiv!");
+			}
+		}
 	}
 }
