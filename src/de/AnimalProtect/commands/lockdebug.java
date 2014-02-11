@@ -41,24 +41,42 @@ public class lockdebug implements CommandExecutor {
 				player.sendMessage("§cYou don't have permission.");
 				return true;
 			}
+			
+			int entities = list.sizeOfEntitiesInRam();
+			int players = list.sizeOfPlayers();
+			int locks = list.sizeOfLocks();
+			boolean dbnull = !database.checkConnection();
+			boolean dbclosed;
+			try { dbclosed = database.getConnection().isClosed();
+			} catch (SQLException e) { dbclosed=true; }
+			boolean dbvalid;
+			try { dbvalid = database.getConnection().isValid(2);
+			} catch (SQLException e) { dbvalid = false; }
+			
+			cs.sendMessage("");
+			cs.sendMessage("EntityList-Size: [§7"+entities+" §fEntities] [§7"+players+" §fPlayers] [§7"+locks+" §fLocks]");
+			cs.sendMessage("Amount of failed queries: [§7" + MySQL.CrashedQueries.size() + "§f]");
+			cs.sendMessage("Is plugin enabled: [§7" + plugin.isEnabled() + "§f]");
+			cs.sendMessage("Database: [NULL: §7"+dbnull+"§f] [Closed: §7"+dbclosed+"§f] [Valid: §7"+dbvalid+"§f]");
 		}
-		
-		int entities = list.sizeOfEntitiesInRam();
-		int players = list.sizeOfPlayers();
-		int locks = list.sizeOfLocks();
-		boolean dbnull = !database.checkConnection();
-		boolean dbclosed;
-		try { dbclosed = database.getConnection().isClosed();
-		} catch (SQLException e) { dbclosed=true; }
-		boolean dbvalid;
-		try { dbvalid = database.getConnection().isValid(2);
-		} catch (SQLException e) { dbvalid = false; }
-		
-		cs.sendMessage("");
-		cs.sendMessage("EntityList-Size: [§7"+entities+" §fEntities] [§7"+players+" §fPlayers] [§7"+locks+" §fLocks]");
-		cs.sendMessage("Amount of failed queries: [§7" + MySQL.CrashedQueries.size() + "§f]");
-		cs.sendMessage("Is plugin enabled: [§7" + plugin.isEnabled() + "§f]");
-		cs.sendMessage("Database: [NULL: §7"+dbnull+"§f] [Closed: §7"+dbclosed+"§f] [Valid: §7"+dbvalid+"§f]");
+		else {
+			int entities = list.sizeOfEntitiesInRam();
+			int players = list.sizeOfPlayers();
+			int locks = list.sizeOfLocks();
+			boolean dbnull = !database.checkConnection();
+			boolean dbclosed;
+			try { dbclosed = database.getConnection().isClosed();
+			} catch (SQLException e) { dbclosed=true; }
+			boolean dbvalid;
+			try { dbvalid = database.getConnection().isValid(2);
+			} catch (SQLException e) { dbvalid = false; }
+			
+			cs.sendMessage("");
+			cs.sendMessage("EntityList-Size: ["+entities+" Entities] ["+players+" Players] ["+locks+" Locks]");
+			cs.sendMessage("Amount of failed queries: [" + MySQL.CrashedQueries.size() + "]");
+			cs.sendMessage("Is plugin enabled: [" + plugin.isEnabled() + "]");
+			cs.sendMessage("Database: [NULL: "+dbnull+"] [Closed: "+dbclosed+"] [Valid: "+dbvalid+"]");
+		}
 		
 		return true;
 	}
