@@ -437,9 +437,9 @@ public class EntityList {
 		}
 		
 		/* Jetzt das Entity aus der Datenbank löschen. */
-		String Query = "REMOVE FROM ap_locks WHERE entity_id=(SELECT id FROM ap_entities WHERE uuid='" +id+ "') LIMIT 1;";
+		String Query = "DELETE FROM ap_locks WHERE entity_id=(SELECT id FROM ap_entities WHERE uuid='" +id+ "') LIMIT 1;";
 		database.write(Query, true);
-		Query = "REMOVE FROM ap_locks WHERE uuid='"+id+"' LIMIT 1;";
+		Query = "DELETE FROM ap_entities WHERE uuid='"+id+"' LIMIT 1;";
 		database.write(Query, true);
 		
 		this.lastActionSuccess = true;
