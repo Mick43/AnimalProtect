@@ -264,7 +264,9 @@ public class MySQL extends Database {
 	
 	private void failedQuery(String Query) {
 		APLogger.info("[MySQL] Failed to insert a Query...");
-		MySQL.CrashedQueries.add(Query);
+		if (!MySQL.CrashedQueries.contains(Query)) {
+			MySQL.CrashedQueries.add(Query);
+		}
 	}
 	
 	private void noConnection() {
