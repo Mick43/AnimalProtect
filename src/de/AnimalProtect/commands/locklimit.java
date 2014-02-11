@@ -23,7 +23,7 @@ public class locklimit implements CommandExecutor {
 	
 	@Override
 	public boolean onCommand(CommandSender cs, Command cmd, String label, String[] args) {
-		if (plugin.isEnabled() && database.checkConnection() && cs instanceof Player) {
+		if (plugin.isEnabled() && cs instanceof Player) {
 			if (args.length == 0) {
 				String player = ((Player) cs).getName();
 				Long count = list.sizeOfEntities(player);

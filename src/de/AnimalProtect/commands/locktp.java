@@ -22,7 +22,7 @@ public class locktp implements CommandExecutor {
 	
 	@Override
 	public boolean onCommand(CommandSender cs, Command cmd, String label, String[] args) {
-		if (plugin.isEnabled() && database.checkConnection()) {
+		if (plugin.isEnabled()) {
 			// TODO: Command -> /locktp
 		}
 		return false;

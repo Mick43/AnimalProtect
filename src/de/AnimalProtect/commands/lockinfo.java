@@ -25,7 +25,7 @@ public class lockinfo implements CommandExecutor {
 	
 	@Override
 	public boolean onCommand(CommandSender cs, Command cmd, String label, String[] args) {
-		if (plugin.isEnabled() && database.checkConnection() && cs instanceof Player) {
+		if (plugin.isEnabled() && cs instanceof Player) {
 			/* Die Variablen initialisieren. */
 			Player player = (Player)cs;
 			Entity entity = InteractEventListener.getSelected(player);

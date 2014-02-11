@@ -23,7 +23,7 @@ public class unlockanimal implements CommandExecutor {
 	
 	@Override
 	public boolean onCommand(CommandSender cs, Command cmd, String label, String[] args) {
-		if (plugin.isEnabled() && database.checkConnection() && cs instanceof Player) {
+		if (plugin.isEnabled() && cs instanceof Player) {
 			// TODO: Command -> /unlockanimal 
 		}
 		
