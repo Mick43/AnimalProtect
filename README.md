@@ -7,12 +7,10 @@ Description:
 
 Todo:
 ------
-- Command: /unlockanimal - In dem neuen Package schreiben.
-- Command: /lockrespawn - In dem neuen Package schreiben.
+- Command: /lockrespawn - Bugs fixen
 - Datenbank-Struktur verbessern.
 - Den automatischen Datenbank-Verbindungs-Abbruch nach einer gewissen inaktiven Zeit deaktivieren.
-- Bei keiner Datenbank-Verbindung alles in eine Datei schreiben und versuchen neu zu verbinden.
-- Überprüfen ob bei jedem Command die Permission-Abfrage stimmt.
+- Ueberpruefen ob bei jedem Command die Permission-Abfrage stimmt.
 
 Ideen:
 ------

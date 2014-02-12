@@ -27,12 +27,12 @@ public class locklimit implements CommandExecutor {
 			if (args.length == 0) {
 				String player = ((Player) cs).getName();
 				Long count = list.sizeOfEntities(player);
-				cs.sendMessage("§eDu hast §6"+count+"§e von "+list.MAX_ENTITIES_FOR_PLAYER+" Tieren protectet.");
+				cs.sendMessage("§eDu hast §6"+count+"§e von "+(list.MAX_ENTITIES_FOR_PLAYER-1)+" Tieren protectet.");
 			}
 			else if (args.length == 1) {
 				String player = args[0];
 				Long count = list.sizeOfEntities(player);
-				cs.sendMessage("§eDer Spieler "+player+" hat §6"+count+"§e von "+list.MAX_ENTITIES_FOR_PLAYER+" Tieren protectet.");
+				cs.sendMessage("§eDer Spieler "+player+" hat §6"+count+"§e von "+(list.MAX_ENTITIES_FOR_PLAYER-1)+" Tieren protectet.");
 			}
 			else {
 				cs.sendMessage("§cFehler: Zu viele Argumente! (/locklimit <name>)");

@@ -494,8 +494,8 @@ public class EntityList {
 		for (int i=0; i<entityCount; i++) {
 			try {
 				if (result.next()) {
-					String uuid = result.getString("uuid");
-					EntityObject e = new EntityObject(plugin, database, UUID.fromString(uuid), true);
+					String id = result.getString("id");
+					EntityObject e = new EntityObject(plugin, database, UUID.fromString(id), true);
 					
 					addToList(e, false);
 				}

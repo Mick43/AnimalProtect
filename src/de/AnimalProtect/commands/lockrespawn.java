@@ -25,6 +25,7 @@ import de.AnimalProtect.Main;
 import de.AnimalProtect.MySQL;
 import de.AnimalProtect.structs.EntityList;
 import de.AnimalProtect.structs.EntityObject;
+import de.AnimalProtect.utility.APLogger;
 
 public class lockrespawn implements CommandExecutor {
 
@@ -65,9 +66,12 @@ public class lockrespawn implements CommandExecutor {
 			}
 			
 			/* Das Entity aus der Datenbank auslesen */
-			ResultSet result = database.get("SELECT * FROM ap_entities WHERE ID=("
-		    		+ "SELECT entity_id FROM ap_locks WHERE owner_id=("
-		    		+ "SELECT id FROM ap_owners WHERE name='" + owner + "') LIMIT " + (animal-1) + ", 1);", true, true);
+			//ResultSet result = database.get("SELECT * FROM ap_entities WHERE ID=("
+		    //		+ "SELECT entity_id FROM ap_locks WHERE owner_id=("
+		    //		+ "SELECT id FROM ap_owners WHERE name='" + owner + "') LIMIT " + (animal-1) + ", 1);", true, true);
+			ResultSet result = database.get("SELECT * FROM ap_entities "
+					+ "INNER JOIN ap_locks ON ap_locks.entity_id=ap_entities.id "
+					+ "INNER JOIN ap_owners ON ap_locks.owner_id=ap_owners.id WHERE ap_entities.id="+(animal)+";", true, true);
 			
 			/* Prüfen ob das Entity gefunden wurde */
 			if (result == null) {
@@ -85,17 +89,19 @@ public class lockrespawn implements CommandExecutor {
 			
 			/* Nun dem Entity alle Eigenschaften geben */
 			LivingEntity le = (LivingEntity) entity;
-			try { le.setCustomName(result.getString("nametag")); } catch (Exception e) { e.printStackTrace(); }
+			try { if (result.getString("ap_entities.nametag") != null) {
+				le.setCustomName(result.getString("ap_entities.nametag")); }
+			} catch (Exception e) { e.printStackTrace(); }
 			if (entity.getType() == EntityType.HORSE) {
 				Horse horse = (Horse)entity;
-				try { horse.setColor(Color.valueOf(result.getString("color").toUpperCase())); } catch (Exception e) { e.printStackTrace();}
-				try { horse.setMaxHealth(result.getDouble("maxhp")); } catch (Exception e) { e.printStackTrace(); }
-				try { horse.setJumpStrength(result.getDouble("horse_jumpstrength")); } catch (Exception e) { e.printStackTrace(); }
-				try { horse.setStyle(Style.valueOf(result.getString("horse_style").toUpperCase())); } catch (Exception e) { e.printStackTrace(); }
-				try { horse.setVariant(Variant.valueOf(result.getString("horse_variant").toUpperCase())); } catch (Exception e) { e.printStackTrace(); }
-				try { horse.setOwner(plugin.getServer().getOfflinePlayer(result.getString("name"))); } catch (Exception e) { e.printStackTrace(); }
+				try { horse.setColor(Color.valueOf(result.getString("ap_entities.color").toUpperCase())); } catch (Exception e) { e.printStackTrace();}
+				try { horse.setMaxHealth(result.getDouble("ap_entities.maxhp")); } catch (Exception e) { e.printStackTrace(); }
+				try { horse.setJumpStrength(result.getDouble("ap_entities.horse_jumpstrength")); } catch (Exception e) { e.printStackTrace(); }
+				try { horse.setStyle(Style.valueOf(result.getString("ap_entities.horse_style").toUpperCase())); } catch (Exception e) { e.printStackTrace(); }
+				try { horse.setVariant(Variant.valueOf(result.getString("ap_entities.horse_variant").toUpperCase())); } catch (Exception e) { e.printStackTrace(); }
+				try { horse.setOwner(plugin.getServer().getOfflinePlayer(result.getString("ap_owners.name"))); } catch (Exception e) { e.printStackTrace(); }
 				String armor = null;
-				try { armor = result.getString("armor"); } catch (Exception e) { }
+				try { armor = result.getString("ap_entities.armor"); } catch (Exception e) { }
 				if (armor != null) {
 					if (armor.equalsIgnoreCase("iron")) { horse.getInventory().setArmor(new ItemStack(Material.IRON_BARDING)); }
 					else if (armor.equalsIgnoreCase("gold")) { horse.getInventory().setArmor(new ItemStack(Material.GOLD_BARDING)); }
@@ -104,12 +110,12 @@ public class lockrespawn implements CommandExecutor {
 			}
 			else if (entity.getType() == EntityType.SHEEP) {
 				Sheep sheep = (Sheep)entity;
-				try { sheep.setColor(DyeColor.valueOf(result.getString("color").toUpperCase())); } catch (Exception e) { e.printStackTrace(); }
+				try { sheep.setColor(DyeColor.valueOf(result.getString("ap_entities.color").toUpperCase())); } catch (Exception e) { e.printStackTrace(); }
 			}
 			else if (entity.getType() == EntityType.WOLF) {
 				Wolf wolf = (Wolf)entity;
-				try { wolf.setCollarColor(DyeColor.valueOf(result.getString("color").toUpperCase())); } catch (Exception e) { e.printStackTrace(); }
-				try { wolf.setOwner(plugin.getServer().getOfflinePlayer(result.getString("name"))); } catch (Exception e) { e.printStackTrace(); }
+				try { wolf.setCollarColor(DyeColor.valueOf(result.getString("ap_entities.color").toUpperCase())); } catch (Exception e) { e.printStackTrace(); }
+				try { wolf.setOwner(plugin.getServer().getOfflinePlayer(result.getString("ap_owners.name"))); } catch (Exception e) { e.printStackTrace(); }
 			}
 			
 			/* Jetzt dem EntityObject in der Datenbank die neuen Werte geben */
@@ -120,12 +126,13 @@ public class lockrespawn implements CommandExecutor {
 				String id = entity.getUniqueId().toString();
 				
 				String Query = "UPDATE ap_entities SET uuid='"+id+"', last_x="+x+", last_y="+y+", last_z="+z+" "
-						+ "WHERE uuid='" + result.getString("uuid")+"'";
+						+ "WHERE uuid='" + result.getString("ap_entities.uuid")+"'";
 				database.write(Query, true);
 				
 				/* Das EntityObjet aus dem RAM holen und updaten */
-				EntityObject ent = list.getEntityObject(UUID.fromString(result.getString("uuid")));
-				if (ent != null) { ent.update(); }
+				EntityObject ent = list.getEntityObject(UUID.fromString(result.getString("ap_entities.uuid")));
+				if (ent != null) { ent.setUniqueID(id); ent.update(); }
+				else { APLogger.info("[Error/lockrespawn] EntityObject==null! Zeile 132"); }
 				
 				player.sendMessage("§aDas Tier wurde erfolgreich gespawnt!");
 			} 

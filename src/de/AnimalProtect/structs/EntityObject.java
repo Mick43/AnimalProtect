@@ -58,10 +58,9 @@ public class EntityObject implements Comparable<Object> {
 		ResultSet result_Entity = null;
 	    if (id != null) { result_Entity = database.get("SELECT * FROM ap_entities WHERE id="+id+";" , true, false); }
 	    else if (uuid != null) { result_Entity = database.get("SELECT * FROM ap_entities WHERE uuid='" + uuid + "';", true, false); }
-		
 		else { 
 			connected = false; 
-			plugin.getLogger().info("Fehler: Keine uniqueID oder ID beim initialisieren eines EntityObjects angegeben!");
+			plugin.getLogger().info("[Error/EntityObject] Keine uniqueID oder ID beim initialisieren eines EntityObjects angegeben!");
 		}
 		
 		if (result_Entity != null) {
@@ -92,9 +91,9 @@ public class EntityObject implements Comparable<Object> {
 						connected = false;
 						plugin.getLogger()
 								.warning(
-										"Ein EntityObject konnte nicht geladen werden, weil der Ownername nicht geladen werden konnte!");
+										"[Error/EntityObject] Ein EntityObject konnte nicht geladen werden, weil der Ownername nicht geladen werden konnte!");
 						plugin.getLogger().warning(
-								"Weitere Informationen: [UUID=" + uuid
+								"[Error/EntityObject] Weitere Informationen: [UUID=" + uuid
 										+ "]");
 						failedToConnect = true;
 					}
@@ -102,10 +101,10 @@ public class EntityObject implements Comparable<Object> {
 					connected = false;
 					plugin.getLogger()
 							.warning(
-									"Ein EntityObject konnte nicht geladen werden, weil der Owner nicht gefunden werden konnte!");
+									"[Error/EntityObject] Ein EntityObject konnte nicht geladen werden, weil der Owner nicht gefunden werden konnte!");
 					plugin.getLogger()
 							.warning(
-									"Weitere Informationen: [UUID="
+									"[Error/EntityObject] Weitere Informationen: [UUID="
 											+ uuid + "]");
 					failedToConnect = true;
 				}
@@ -113,18 +112,18 @@ public class EntityObject implements Comparable<Object> {
 				connected = false;
 				plugin.getLogger()
 						.warning(
-								"Ein EntityObject konnte nicht geladen werden, weil die Entity-Eigenschaften nicht geladen werden konnten!");
+								"[Error/EntityObject] Ein EntityObject konnte nicht geladen werden, weil die Entity-Eigenschaften nicht geladen werden konnten!");
 				plugin.getLogger().warning(
-						"Weitere Informationen: [UUID=" + uuid + "]");
+						"[Error/EntityObject] Weitere Informationen: [UUID=" + uuid + "]");
 				failedToConnect = true;
 			}
 		} else {
 			connected = false;
 			plugin.getLogger()
 					.warning(
-							"Ein EntityObject konnte nicht geladen werden, weil das Entity nicht gefunden werden konnte!");
+							"[Error/EntityObject] Ein EntityObject konnte nicht geladen werden, weil das Entity nicht gefunden werden konnte!");
 			plugin.getLogger().warning(
-					"Weitere Informationen: [UUID=" + uuid + "]");
+					"[Error/EntityObject] Weitere Informationen: [UUID=" + uuid + "] [id="+id+"]");
 			failedToConnect = true;
 		}
 		
@@ -159,6 +158,15 @@ public class EntityObject implements Comparable<Object> {
 	 */
 	public String getUniqueID() {
 		return uuid;
+	}
+	
+	/**
+	 * Ändert die uniqueId des EntityObjects
+	 */
+	public void setUniqueID(String uuid) {
+		if (uuid != null) {
+			this.uuid = uuid;
+		}
 	}
 
 	/**
