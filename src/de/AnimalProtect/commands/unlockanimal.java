@@ -43,6 +43,12 @@ public class unlockanimal implements CommandExecutor {
 				return true;
 			}
 			
+			/* Prüfen ob der Sender der Owner oder Admin/Moderator ist */
+			if (!list.getPlayer(entity.getUniqueId()).equalsIgnoreCase(player.getName()) && !player.hasPermission("animalprotect.admin")) {
+				player.sendMessage("§cFehler: Du hast nicht genügend Rechte um das Tier zu unlocken!");
+				return true;
+			}
+			
 			/* Das Tier wird gelockt. */
 			list.unlock(entity.getUniqueId());
 			

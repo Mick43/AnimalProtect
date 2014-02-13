@@ -31,6 +31,12 @@ public class lockinfo implements CommandExecutor {
 			Entity entity = InteractEventListener.getSelected(player);
 			String owner = null;
 			
+			/* Prüfen ob der Spieler die Permission hat */
+			if (!player.hasPermission("animalprotect.protect")) {
+				player.sendMessage("§cFehler: Du hast nicht genügend Rechte um den Befehl auszuführen!");
+				return true;
+			}
+			
 			/* Schauen ob ein Tier ausgewählt wurde. */
 			if (entity == null) {
 				player.sendMessage("§cFehler: Es wurde kein Tier ausgewählt!");

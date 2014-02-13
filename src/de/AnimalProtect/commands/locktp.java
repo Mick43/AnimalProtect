@@ -36,6 +36,12 @@ public class locktp implements CommandExecutor {
 			ArrayList<EntityObject> entities = null;
 			String world = plugin.getConfig().getString("settings.worldname");
 			
+			/* Prüfen ob der Spieler die Permission hat */
+			if (!sender.hasPermission("animalprotect.admin")) {
+				sender.sendMessage("§cFehler: Du hast nicht genügend Rechte um den Befehl auszuführen!");
+				return true;
+			}
+			
 			/* Argumente überprüfen */
 			if (args.length == 0) {
 				cs.sendMessage("§cFehler: Zu wenig Argumente! (/locktp <id> <name>)");

@@ -31,6 +31,11 @@ public class VehicleEventListener implements Listener {
 			Player player = (Player) event.getEntered();
 			Entity entity = (Entity) event.getVehicle();
 			
+			/* Prüfen ob der Spieler alles darf. */
+			if (player.hasPermission("animalprotect.bypass")) {
+				return;
+			}
+			
 			String owner = list.getPlayer(entity.getUniqueId());
 			
 			if (owner != null) {

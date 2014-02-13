@@ -48,6 +48,12 @@ public class lockrespawn implements CommandExecutor {
 			String owner = null;
 			Integer animal = null;
 			
+			/* Prüfen ob der Spieler die Permission hat */
+			if (!player.hasPermission("animalprotect.admin")) {
+				player.sendMessage("§cFehler: Du hast nicht genügend Rechte um den Befehl auszuführen!");
+				return true;
+			}
+			
 			/* Argumente überprüfen */
 			if (args.length == 0)
 			{ player.sendMessage("§cFehler: Es fehlen Argumente! /lockrespawn <id> <owner>"); return true; }

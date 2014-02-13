@@ -28,6 +28,13 @@ public class lockdebug implements CommandExecutor {
 	public boolean onCommand(CommandSender cs, Command cmd, String label, String[] args) {
 		if (cs instanceof Player) {
 			Player player = (Player)cs;
+			
+			/* Prüfen ob der Spieler die Permission hat */
+			if (!player.hasPermission("animalprotect.debug")) {
+				player.sendMessage("§cFehler: Du hast nicht genügend Rechte um den Befehl auszuführen!");
+				return true;
+			}
+			
 			if (args.length == 3 && cs instanceof Player) {
 				try {
 					player.playSound(player.getLocation(), Sound.valueOf(args[0]), Float.parseFloat(args[1]), Float.parseFloat(args[2]));

@@ -150,6 +150,12 @@ public class MySQL extends Database {
     
 	public ResultSet get(String Query, boolean next, boolean log)
 	{
+		try {
+			if (connection.isClosed() || !this.checkConnection()) {
+				this.openConnection();
+			}
+		} catch (Exception e1) { }
+		
 		if (checkConnection()) {
 			Statement statement = null;
 			ResultSet res = null;
@@ -246,6 +252,11 @@ public class MySQL extends Database {
 	
 	public boolean write(String Query, Boolean log)
 	{
+		try {
+			if (connection.isClosed() || !this.checkConnection()) {
+				this.openConnection();
+			}
+		} catch (Exception e1) { }
 		if (checkConnection()) {
 			Statement statement = null;
 			try {

@@ -28,6 +28,15 @@ public class locklist implements CommandExecutor {
 	@Override
 	public boolean onCommand(CommandSender cs, Command cmd, String label, String[] args) {
 		if (plugin.isEnabled()) {
+			/* Prüfen ob der Spieler die Permission hat */
+			if (cs instanceof Player) {
+				/* Prüfen ob der Spieler die Permission hat */
+				if (((Player)cs).hasPermission("animalprotect.protect")) {
+					((Player)cs).sendMessage("§cFehler: Du hast nicht genügend Rechte um den Befehl auszuführen!");
+					return true;
+				}
+			}
+			
 			/* Variablen initialisieren */
 			String player = "";
 			Integer page = 1;
