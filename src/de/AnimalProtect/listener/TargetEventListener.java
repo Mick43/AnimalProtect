@@ -6,18 +6,18 @@ import org.bukkit.event.entity.EntityTargetLivingEntityEvent;
 
 import de.AnimalProtect.Main;
 import de.AnimalProtect.MySQL;
-import de.AnimalProtect.structs.EntityList;
+//import de.AnimalProtect.structs.EntityList;
 
 public class TargetEventListener implements Listener {
 
 	private Main plugin;
 	private MySQL database;
-	private EntityList list;
+	//private EntityList list;
 	
 	public TargetEventListener(Main plugin) {
 		this.plugin = plugin;
 		this.database = plugin.database;
-		this.list = plugin.list;
+		//this.list = plugin.list;
 	}
 	
 	@EventHandler

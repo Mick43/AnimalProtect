@@ -46,7 +46,7 @@ public class EntityObject implements Comparable<Object> {
 		this.database = database;
 		this.id = ID;
 		this.connected = false;
-
+		
 		if (loadFromDB) {
 			update();
 		}
@@ -56,8 +56,13 @@ public class EntityObject implements Comparable<Object> {
 		boolean failedToConnect = false;
 		
 		ResultSet result_Entity = null;
-	    if (id != null) { result_Entity = database.get("SELECT * FROM ap_entities WHERE id="+id+";" , true, false); }
-	    else if (uuid != null) { result_Entity = database.get("SELECT * FROM ap_entities WHERE uuid='" + uuid + "';", true, false); }
+		
+	    if (id != null) { 
+	    	result_Entity = database.get("SELECT * FROM ap_entities WHERE id="+id+";" , true, false); 
+	    }
+	    else if (uuid != null) { 
+	    	result_Entity = database.get("SELECT * FROM ap_entities WHERE uuid='" + uuid + "';", true, false); 
+	    }
 		else { 
 			connected = false; 
 			plugin.getLogger().info("[Error/EntityObject] Keine uniqueID oder ID beim initialisieren eines EntityObjects angegeben!");

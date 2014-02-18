@@ -31,7 +31,7 @@ public class locklist implements CommandExecutor {
 			/* Prüfen ob der Spieler die Permission hat */
 			if (cs instanceof Player) {
 				/* Prüfen ob der Spieler die Permission hat */
-				if (((Player)cs).hasPermission("animalprotect.protect")) {
+				if (!((Player)cs).hasPermission("animalprotect.protect")) {
 					((Player)cs).sendMessage("§cFehler: Du hast nicht genügend Rechte um den Befehl auszuführen!");
 					return true;
 				}

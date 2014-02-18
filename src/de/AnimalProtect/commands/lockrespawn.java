@@ -132,12 +132,15 @@ public class lockrespawn implements CommandExecutor {
 				String id = entity.getUniqueId().toString();
 				
 				String Query = "UPDATE ap_entities SET uuid='"+id+"', last_x="+x+", last_y="+y+", last_z="+z+" "
-						+ "WHERE uuid='" + result.getString("ap_entities.uuid")+"'";
+						+ "WHERE id=" + result.getString("ap_entities.id")+"";
 				database.write(Query, true);
+				
+				APLogger.info("[TEMPDEBUG] Getting EntityObject from uuid: " + result.getString("ap_entities.uuid"));
+				
 				
 				/* Das EntityObjet aus dem RAM holen und updaten */
 				EntityObject ent = list.getEntityObject(UUID.fromString(result.getString("ap_entities.uuid")));
-				if (ent != null) { ent.setUniqueID(id); ent.update(); }
+				if (ent != null) { ent.update(); ent.setUniqueID(id); }
 				else { APLogger.info("[Error/lockrespawn] EntityObject==null! Zeile 132"); }
 				
 				player.sendMessage("§aDas Tier wurde erfolgreich gespawnt!");

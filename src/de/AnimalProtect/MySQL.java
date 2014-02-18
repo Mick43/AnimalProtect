@@ -57,6 +57,9 @@ public class MySQL extends Database {
         this.connection = null;
     }
 
+    /**
+     * Opens the MySQL-Connection
+     */
     @Override
     public Connection openConnection() {
         try {
@@ -71,16 +74,25 @@ public class MySQL extends Database {
         return connection;
     }
 
+    /**
+     * Checks if the connection is open. Returns null if not
+     */
     @Override
     public boolean checkConnection() {
         return connection != null;
     }
 
+    /**
+     * Returns the connection
+     */
     @Override
     public Connection getConnection() {
         return connection;
     }
 
+    /**
+     * Closes the MySQL-Connection
+     */
     @Override
     public void closeConnection() {
         if (connection != null) {
@@ -160,20 +172,20 @@ public class MySQL extends Database {
 			Statement statement = null;
 			ResultSet res = null;
 			
-			if (plugin.getConfig().getBoolean("settings.debug-messages") && log) {
-				APLogger.warn("[MySQL] Querying: " + Query);
+			if (Main.DEBUGMODE && log) {
+				APLogger.info("[MySQL] Querying: " + Query);
 			}
 			
 			try { statement = connection.createStatement(); } 
 			catch (SQLException e) {
-				APLogger.warn("[MySQL] Exception in MySQL.get() -> statement = connection.createStatement()");
+				APLogger.warn("[Error/MySQL] Exception in MySQL.get() -> statement = connection.createStatement()");
 				e.printStackTrace();
 				return null;
 			}
 			
 			try { res = statement.executeQuery(Query); } 
 			catch (SQLException e) {
-				APLogger.warn("[MySQL] Exception in MySQL.get() -> res = statement.executeQuery(Query)");
+				APLogger.warn("[Error/MySQL] Exception in MySQL.get() -> res = statement.executeQuery(Query)");
 				e.printStackTrace();
 				return null;
 			}
@@ -181,8 +193,8 @@ public class MySQL extends Database {
 			if (next) {
 				try { if (!res.next()) { return null; } } 
 				catch (SQLException e) {
-					APLogger.warn("[MySQL] Exception in MySQL.get() -> res.next()");
-					APLogger.warn("Query: " + Query);
+					APLogger.warn("[Error/MySQL] Exception in MySQL.get() -> res.next()");
+					APLogger.warn("[Error/MySQL] Query: " + Query);
 					e.printStackTrace();
 					return null;
 				}
@@ -263,7 +275,7 @@ public class MySQL extends Database {
 				statement = connection.createStatement();
 				try {
 					if (Main.DEBUGMODE && log) {
-						APLogger.warn("[MySQL] Inserting: " + Query);
+						APLogger.info("[MySQL] Inserting: " + Query);
 					}
 					statement.executeUpdate(Query);
 					return true;
@@ -281,9 +293,8 @@ public class MySQL extends Database {
 	}
 	
 	private void noConnection() {
-		APLogger.warn("[MySQL] Warnung: Es konnte keine Verbindung zur Datenbank hergestellt werden.");
-		APLogger.warn("[MySQL] Folgender Befehl konnte nicht ausgeführt werden:");
-		APLogger.warn("[MySQL] Weitere Informationen: MySQL.checkConnection() == " + checkConnection());
+		APLogger.warn("[Error/MySQL] Warnung: Es konnte keine Verbindung zur Datenbank hergestellt werden.");
+		APLogger.warn("[Error/MySQL] Weitere Informationen: MySQL.checkConnection() == " + checkConnection());
 	}
 
 }
