@@ -7,10 +7,10 @@ Description:
 
 Todo:
 ------
-- Command: /lockrespawn - Bugs fixen
-- Datenbank-Struktur verbessern.
-- Den automatischen Datenbank-Verbindungs-Abbruch nach einer gewissen inaktiven Zeit deaktivieren.
-- Ueberpruefen ob bei jedem Command die Permission-Abfrage stimmt.
+- [DONE] Command: /lockrespawn - Bugs fixen
+- [DONE] Datenbank-Struktur verbessern.
+- [DONE] Den automatischen Datenbank-Verbindungs-Abbruch nach einer gewissen inaktiven Zeit deaktivieren.
+- [DONE] Ueberpruefen ob bei jedem Command die Permission-Abfrage stimmt.
 
 Ideen:
 ------
