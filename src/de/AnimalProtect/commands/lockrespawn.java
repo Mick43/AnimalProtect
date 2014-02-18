@@ -1,8 +1,6 @@
 package de.AnimalProtect.commands;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.UUID;
+import java.util.ArrayList;
 
 import org.bukkit.DyeColor;
 import org.bukkit.Material;
@@ -71,43 +69,46 @@ public class lockrespawn implements CommandExecutor {
 				return true;
 			}
 			
-			/* Das Entity aus der Datenbank auslesen */
-			//ResultSet result = database.get("SELECT * FROM ap_entities WHERE ID=("
-		    //		+ "SELECT entity_id FROM ap_locks WHERE owner_id=("
-		    //		+ "SELECT id FROM ap_owners WHERE name='" + owner + "') LIMIT " + (animal-1) + ", 1);", true, true);
-			ResultSet result = database.get("SELECT * FROM ap_entities "
-					+ "INNER JOIN ap_locks ON ap_locks.entity_id=ap_entities.id "
-					+ "INNER JOIN ap_owners ON ap_locks.owner_id=ap_owners.id WHERE ap_entities.id="+(animal)+";", true, true);
+			/* Alle Entities des Spielers in eine Liste packen */
+			ArrayList<EntityObject> array = list.getEntities(owner);
 			
 			/* Prüfen ob das Entity gefunden wurde */
-			if (result == null) {
+			if (array == null) {
 				player.sendMessage("§cFehler: Das Tier wurde nicht gefunden!");
 				return true;
 			}
 			
+			if (array.isEmpty() || animal < 0 || animal > array.size() || array.size() == 0) {
+				player.sendMessage("§cFehler: Das Tier wurde nicht gefunden!");
+				return true;
+			}
+			
+			/* Das Entity aus der Liste rausholen */
+			EntityObject object = array.get(animal-1);
+			
 			/* Jetzt versuchen das Entity in der Welt zu spawnen */
-			try { plugin.getLogger().info("Spawning Entity: " + EntityType.valueOf(result.getString("animaltype").toUpperCase())); } catch (Exception e) { }
-			try { entity = player.getWorld().spawnEntity(player.getLocation(), EntityType.valueOf(result.getString("animaltype").toUpperCase())); } 
-			catch (SQLException e) {
+			try { plugin.getLogger().info("Spawning Entity: " + EntityType.valueOf(object.getType())); } catch (Exception e) { }
+			try { entity = player.getWorld().spawnEntity(player.getLocation(), EntityType.valueOf(object.getType().toUpperCase())); } 
+			catch (Exception e) {
 				player.sendMessage("§cFehler: Das Tier konnte nicht in der Welt gespawned werden!");
 				e.printStackTrace(); 
 			}
 			
 			/* Nun dem Entity alle Eigenschaften geben */
 			LivingEntity le = (LivingEntity) entity;
-			try { if (result.getString("ap_entities.nametag") != null) {
-				le.setCustomName(result.getString("ap_entities.nametag")); }
+			try { if (object.getNametag() != null) {
+				le.setCustomName(object.getNametag()); }
 			} catch (Exception e) { e.printStackTrace(); }
 			if (entity.getType() == EntityType.HORSE) {
 				Horse horse = (Horse)entity;
-				try { horse.setColor(Color.valueOf(result.getString("ap_entities.color").toUpperCase())); } catch (Exception e) { e.printStackTrace();}
-				try { horse.setMaxHealth(result.getDouble("ap_entities.maxhp")); } catch (Exception e) { e.printStackTrace(); }
-				try { horse.setJumpStrength(result.getDouble("ap_entities.horse_jumpstrength")); } catch (Exception e) { e.printStackTrace(); }
-				try { horse.setStyle(Style.valueOf(result.getString("ap_entities.horse_style").toUpperCase())); } catch (Exception e) { e.printStackTrace(); }
-				try { horse.setVariant(Variant.valueOf(result.getString("ap_entities.horse_variant").toUpperCase())); } catch (Exception e) { e.printStackTrace(); }
-				try { horse.setOwner(plugin.getServer().getOfflinePlayer(result.getString("ap_owners.name"))); } catch (Exception e) { e.printStackTrace(); }
+				try { horse.setColor(Color.valueOf(object.getColor().toUpperCase())); } catch (Exception e) { e.printStackTrace();}
+				try { horse.setMaxHealth(object.getMaxhp()); } catch (Exception e) { e.printStackTrace(); }
+				try { horse.setJumpStrength(object.getJumpstrength()); } catch (Exception e) { e.printStackTrace(); }
+				try { horse.setStyle(Style.valueOf(object.getStyle().toUpperCase())); } catch (Exception e) { e.printStackTrace(); }
+				try { horse.setVariant(Variant.valueOf(object.getVariant().toUpperCase())); } catch (Exception e) { e.printStackTrace(); }
+				try { horse.setOwner(plugin.getServer().getOfflinePlayer(object.getOwner())); } catch (Exception e) { e.printStackTrace(); }
 				String armor = null;
-				try { armor = result.getString("ap_entities.armor"); } catch (Exception e) { }
+				try { armor = object.getArmor(); } catch (Exception e) { }
 				if (armor != null) {
 					if (armor.equalsIgnoreCase("iron")) { horse.getInventory().setArmor(new ItemStack(Material.IRON_BARDING)); }
 					else if (armor.equalsIgnoreCase("gold")) { horse.getInventory().setArmor(new ItemStack(Material.GOLD_BARDING)); }
@@ -116,12 +117,12 @@ public class lockrespawn implements CommandExecutor {
 			}
 			else if (entity.getType() == EntityType.SHEEP) {
 				Sheep sheep = (Sheep)entity;
-				try { sheep.setColor(DyeColor.valueOf(result.getString("ap_entities.color").toUpperCase())); } catch (Exception e) { e.printStackTrace(); }
+				try { sheep.setColor(DyeColor.valueOf(object.getColor().toUpperCase())); } catch (Exception e) { e.printStackTrace(); }
 			}
 			else if (entity.getType() == EntityType.WOLF) {
 				Wolf wolf = (Wolf)entity;
-				try { wolf.setCollarColor(DyeColor.valueOf(result.getString("ap_entities.color").toUpperCase())); } catch (Exception e) { e.printStackTrace(); }
-				try { wolf.setOwner(plugin.getServer().getOfflinePlayer(result.getString("ap_owners.name"))); } catch (Exception e) { e.printStackTrace(); }
+				try { wolf.setCollarColor(DyeColor.valueOf(object.getColor().toUpperCase())); } catch (Exception e) { e.printStackTrace(); }
+				try { wolf.setOwner(plugin.getServer().getOfflinePlayer(object.getOwner())); } catch (Exception e) { e.printStackTrace(); }
 			}
 			
 			/* Jetzt dem EntityObject in der Datenbank die neuen Werte geben */
@@ -132,20 +133,19 @@ public class lockrespawn implements CommandExecutor {
 				String id = entity.getUniqueId().toString();
 				
 				String Query = "UPDATE ap_entities SET uuid='"+id+"', last_x="+x+", last_y="+y+", last_z="+z+" "
-						+ "WHERE id=" + result.getInt("ap_entities.id")+"";
+						+ "WHERE id=" + object.getId();
 				database.write(Query, true);
 				
-				APLogger.info("[TEMPDEBUG] Getting EntityObject from uuid: " + result.getString("ap_entities.uuid"));
+				APLogger.info("[TEMPDEBUG] Getting EntityObject from uuid: " + object.getUniqueID());
 				
 				
-				/* Das EntityObjet aus dem RAM holen und updaten */
-				EntityObject ent = list.getEntityObject(UUID.fromString(result.getString("ap_entities.uuid")));
-				if (ent != null) { ent.update(); ent.setUniqueID(id); }
-				else { APLogger.info("[Error/lockrespawn] EntityObject==null! Zeile 132"); }
+				/* Das EntityObject updaten */
+				object.update();
 				
 				player.sendMessage("§aDas Tier wurde erfolgreich gespawnt!");
+				return true;
 			} 
-			catch (SQLException e) { 
+			catch (Exception e) { 
 				e.printStackTrace(); 
 				player.sendMessage("§cFehler: Das respawnen ist fehlgeschlagen!");
 			}
