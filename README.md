@@ -7,10 +7,9 @@ Description:
 
 Todo:
 ------
-- [DONE] Command: /lockrespawn - Bugs fixen
-- [DONE] Datenbank-Struktur verbessern.
-- [DONE] Den automatischen Datenbank-Verbindungs-Abbruch nach einer gewissen inaktiven Zeit deaktivieren.
-- [DONE] Ueberpruefen ob bei jedem Command die Permission-Abfrage stimmt.
+- Beim EntityDeathEvent das Entity unlocken, falls der Killer der Owner ist.
+- Bei /locklimit anzeigen wie viele Locks man noch machen kann.
+- Den Befehl /lockrespawn bei den Argumenten benutzerfreundlicher machen.
 
 Ideen:
 ------
