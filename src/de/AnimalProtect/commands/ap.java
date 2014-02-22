@@ -21,12 +21,9 @@ public class ap implements CommandExecutor {
 
 	@Override
 	public boolean onCommand(CommandSender cs, Command cmd, String label, String[] args) {
-		cs.sendMessage("§eCommand called");
-		
 		if (database.checkConnection()) { database.openConnection(); }
 		
 		if (plugin.isEnabled() && database.checkConnection() && cs instanceof Player) {
-			cs.sendMessage("§epassed first ifs");
 			Player player = (Player)cs;
 			
 			/* Argumente überprüfen */
