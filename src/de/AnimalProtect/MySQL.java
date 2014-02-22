@@ -79,7 +79,14 @@ public class MySQL extends Database {
      */
     @Override
     public boolean checkConnection() {
-        return connection != null;
+    	try {
+    		if (connection == null) { return false; }
+            else if (connection.isClosed()) { return false; }
+            else if (!connection.isValid(2)) { return false; }
+    	}
+    	catch (Exception e) { return false; }
+    	
+    	return true;
     }
 
     /**
