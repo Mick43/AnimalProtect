@@ -60,6 +60,7 @@ public class Main extends JavaPlugin {
 		this.getCommand("locktp").setExecutor(new locktp(this));
 		this.getCommand("lockdebug").setExecutor(new lockdebug(this));
 		this.getCommand("locklimit").setExecutor(new locklimit(this));
+		this.getCommand("ap").setExecutor(new ap(this));
 		
 		/* Die Listener registrieren */
 		APLogger.info("> Loading Listeners...");
@@ -88,7 +89,7 @@ public class Main extends JavaPlugin {
 		APLogger.info("Plugin has been disabled.");
 	}
 	
-	private void initializeConfig() {
+	public void initializeConfig() {
 		try {
 			getConfig().options().copyDefaults(true);
 			saveConfig();
@@ -106,8 +107,9 @@ public class Main extends JavaPlugin {
 		}
 	}
 	
-	private void initializeDatabase() {
+	public void initializeDatabase() {
 		try {
+			try { database.closeConnection(); } catch (Exception e) { }
 			database = new MySQL(this, hostname, port, username, dbname, password);
 			connection = database.openConnection();
 		} catch (Exception e) {
