@@ -25,6 +25,9 @@ public class LeashEventListener implements Listener {
 	
 	@EventHandler
 	public void onEntityLeash(PlayerLeashEntityEvent event) {
+		/* Datenbank-Verbindung aufbauen, falls nicht vorhanden. */
+		if (!database.checkConnection()) { database.openConnection(); }
+		
 		if (plugin.isEnabled() && database.checkConnection() && !event.isCancelled()) {
 			/* Prüfen ob der Spieler alles darf */
 			if (event.getPlayer().hasPermission("animalprotect.bypass")) {
