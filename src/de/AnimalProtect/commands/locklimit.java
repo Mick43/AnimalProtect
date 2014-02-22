@@ -23,6 +23,9 @@ public class locklimit implements CommandExecutor {
 	
 	@Override
 	public boolean onCommand(CommandSender cs, Command cmd, String label, String[] args) {
+		/* Datenbank-Verbindung aufbauen, falls nicht vorhanden. */
+		if (!database.checkConnection()) { database.openConnection(); }
+		
 		if (plugin.isEnabled() && cs instanceof Player) {
 			if (args.length == 0) {
 				String player = ((Player) cs).getName();

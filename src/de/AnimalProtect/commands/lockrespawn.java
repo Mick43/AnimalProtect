@@ -39,6 +39,9 @@ public class lockrespawn implements CommandExecutor {
 	
 	@Override
 	public boolean onCommand(CommandSender cs, Command cmd, String label, String[] args) {
+		/* Datenbank-Verbindung aufbauen, falls nicht vorhanden. */
+		if (!database.checkConnection()) { database.openConnection(); }
+		
 		if (plugin.isEnabled() && cs instanceof Player) {
 			/* Variablen intialisieren */
 			Player player = (Player)cs;

@@ -25,6 +25,9 @@ public class lockinfo implements CommandExecutor {
 	
 	@Override
 	public boolean onCommand(CommandSender cs, Command cmd, String label, String[] args) {
+		/* Datenbank-Verbindung aufbauen, falls nicht vorhanden. */
+		if (!database.checkConnection()) { database.openConnection(); }
+		
 		if (plugin.isEnabled() && cs instanceof Player) {
 			/* Die Variablen initialisieren. */
 			Player player = (Player)cs;

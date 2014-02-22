@@ -27,6 +27,9 @@ public class locklist implements CommandExecutor {
 	
 	@Override
 	public boolean onCommand(CommandSender cs, Command cmd, String label, String[] args) {
+		/* Datenbank-Verbindung aufbauen, falls nicht vorhanden. */
+		if (!database.checkConnection()) { database.openConnection(); }
+		
 		if (plugin.isEnabled()) {
 			/* Prüfen ob der Spieler die Permission hat */
 			if (cs instanceof Player) {
