@@ -31,7 +31,7 @@ public class ap implements CommandExecutor {
 			
 			else {
 				String[] newArgs = new String[args.length -1];
-				for (int i = 1; i<newArgs.length; i++) { newArgs[i-1] = args[i]; }
+				for (int i = 0; i<newArgs.length; i++) { newArgs[i] = args[i+1]; }
 				
 				if (args[0].equalsIgnoreCase("help"))
 				{ help(player); }
