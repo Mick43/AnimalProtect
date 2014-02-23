@@ -62,8 +62,10 @@ public class lockanimal implements CommandExecutor {
 				return true;
 			}
 			
+			Integer locksLeft = (int) ((list.MAX_ENTITIES_FOR_PLAYER-1) - list.sizeOfEntities(player.getName()));
+			
 			player.playSound(player.getLocation(), Sound.CLICK, 2.0f, 2.5f);
-			player.sendMessage("§aDas Tier wurde erfolgreich gesichert!");
+			player.sendMessage("§aDas Tier wurde erfolgreich gesichert! ("+locksLeft+" Locks verbleibend)");
 			return true;
 		}
 		return false;
