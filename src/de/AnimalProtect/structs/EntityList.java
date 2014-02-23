@@ -213,14 +213,6 @@ public class EntityList {
 		if (reverseKeys.containsKey(id)) {
 			return reverseKeys.get(id);
 		}
-		/* Wenn das Entity nicht im RAM ist, dann wird in der Datenbank geschaut. */
-		else {
-			String query = "Select name FROM ap_owners WHERE id=("
-					+ "SELECT owner_id FROM ap_locks WHERE entity_id=("
-					+ "SELECT id FROM ap_entities WHERE uuid='"+id+"'));";
-			String owner = (String) database.getValue(query, "name", true);
-			if (owner != null) { return owner; }
-		}
 		return null;
 	}
 	
