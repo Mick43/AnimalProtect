@@ -348,6 +348,7 @@ public class EntityList {
 	    	try { variant = ((Horse) entity).getVariant().toString(); } catch (Exception e)  { }
 	    	
 	    	try { nametag = nametag.replaceAll("'", ""); } catch (Exception e1) { }
+	    	if (nametag != null) { nametag = "'" + nametag + "'"; }
 	    	
 	    	/* Jetzt wird die Query zusammengestellt. */
 	    	String Query = "INSERT INTO ap_entities (`uuid`, `last_x`, `last_y`, `last_z`, `animaltype`, `nametag`, "
@@ -357,8 +358,8 @@ public class EntityList {
 	    			+ x + ", "
 	    			+ y + ", "
 	    			+ z + ", '"
-	    			+ type + "', '"
-	    			+ nametag + "', "
+	    			+ type + "', "
+	    			+ nametag + ", "
 	    			+ maxhp + ", "
 	    			+ alive + ", '"
 	    			+ color + "', '"
