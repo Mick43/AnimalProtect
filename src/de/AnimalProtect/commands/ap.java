@@ -52,9 +52,14 @@ public class ap implements CommandExecutor {
 				{ new unlockanimal(plugin).onCommand(cs, cmd, label, newArgs); }
 				else if (args[0].equalsIgnoreCase("reload"))
 				{
-					plugin.getServer().getPluginManager().disablePlugin(plugin);
-					plugin.getServer().getPluginManager().enablePlugin(plugin);
-					player.sendMessage("§cDas Plugin wurde erfolgreich reloaded!");
+					try {
+						plugin.getServer().getPluginManager().disablePlugin(plugin);
+						plugin.getServer().getPluginManager().enablePlugin(plugin);
+						player.sendMessage("§aDas Plugin wurde erfolgreich reloaded!");
+					}
+					catch (Exception e) {
+						player.sendMessage("§cFehler: Das Plugin konnte nicht reloaded werden!");
+					}
 				}
 			}
 		}
