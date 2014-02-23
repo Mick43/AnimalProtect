@@ -1,5 +1,7 @@
 package de.AnimalProtect.commands;
 
+import java.util.UUID;
+
 import org.bukkit.Sound;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -11,6 +13,8 @@ import de.AnimalProtect.Main;
 import de.AnimalProtect.MySQL;
 import de.AnimalProtect.listener.InteractEventListener;
 import de.AnimalProtect.structs.EntityList;
+import de.AnimalProtect.structs.EntityObject;
+import de.AnimalProtect.utility.APLogger;
 
 public class unlockanimal implements CommandExecutor {
 
@@ -34,6 +38,24 @@ public class unlockanimal implements CommandExecutor {
 			Player player = (Player)cs;
 			Entity entity = InteractEventListener.getSelected(player);
 			
+			/* Argumente überprüfen */
+			if (args.length == 1) {
+				if (args[0].equalsIgnoreCase("alldead") && player.hasPermission("animalprotect.admin")) {
+					player.sendMessage("§eAlle toten Tiere werden aus der Datenbank entfernt...");
+					Integer unlockCounter = 0;
+					for (EntityObject e : list.getAllEntities()) {
+						if (!e.isAlive()) {
+							list.unlock(UUID.fromString(e.getUniqueID()));
+							unlockCounter += 1;
+						}
+					}
+					
+					cs.sendMessage("§eEs wurden "+unlockCounter+" Tiere entfernt.");
+					APLogger.info(unlockCounter + " Entities have been removed from the database.");
+					return true;
+				}
+			}
+
 			/* Prüfen ob ein Tier ausgewählt wurde. */
 			if (entity == null) { 
 				player.sendMessage("§cFehler: Es wurde kein Tier ausgewählt!");
