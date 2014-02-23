@@ -45,6 +45,8 @@ public class DeathEventListener implements Listener {
 			if (e != null) {
 				if (e.getDamager() instanceof Player) {
 					try {
+						damager = (Player) e.getDamager();
+						
 						/* Prüfen ob der Mörder der Owner ist */
 						if (list.getPlayer(entity.getUniqueId()).equalsIgnoreCase(damager.getName())) {
 							list.unlock(entity.getUniqueId());

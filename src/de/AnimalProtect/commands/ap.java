@@ -7,7 +7,6 @@ import org.bukkit.entity.Player;
 
 import de.AnimalProtect.Main;
 import de.AnimalProtect.MySQL;
-import de.AnimalProtect.structs.EntityList;
 
 public class ap implements CommandExecutor {
 	
@@ -53,10 +52,9 @@ public class ap implements CommandExecutor {
 				{ new unlockanimal(plugin).onCommand(cs, cmd, label, newArgs); }
 				else if (args[0].equalsIgnoreCase("reload"))
 				{
-					plugin.reloadConfig();
-					plugin.initializeDatabase();
-					plugin.list = new EntityList(plugin, false);
-					player.sendMessage("§aDas Plugin wurde erfolgreich reloaded!");
+					plugin.getServer().getPluginManager().disablePlugin(plugin);
+					plugin.getServer().getPluginManager().enablePlugin(plugin);
+					player.sendMessage("§cDas Plugin wurde erfolgreich reloaded!");
 				}
 			}
 		}

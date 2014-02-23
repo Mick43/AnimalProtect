@@ -447,7 +447,12 @@ public class EntityList {
 		return this;
 	}
 	
-	public void saveToDatabase() {
+	public void unload() {
+		reverseKeys.clear();
+		keys.clear();
+		players.clear();
+		entities.clear();
+		
 		return;
 	}
 	

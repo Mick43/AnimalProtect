@@ -2,6 +2,7 @@ package de.AnimalProtect;
 
 import java.io.File;
 import java.sql.Connection;
+import java.sql.SQLException;
 import java.util.ArrayList;
 
 import org.bukkit.plugin.PluginManager;
@@ -79,12 +80,18 @@ public class Main extends JavaPlugin {
 	
 	@Override
 	public void onDisable() {
-		if (list != null) { list.saveToDatabase(); }
+		if (list != null) { list.unload(); }
 		if (database != null) { database.closeConnection(); }
+		if (connection != null) { try { connection.close(); } 
+		catch (SQLException e) { e.printStackTrace(); } }
 		
 		if (MySQL.CrashedQueries.size() != 0) {
 			new CrashfileObject(this, MySQL.CrashedQueries, "queries");
 		}
+		
+		this.list = null;
+		this.database = null;
+		this.connection = null;
 		
 		APLogger.info("Plugin has been disabled.");
 	}
