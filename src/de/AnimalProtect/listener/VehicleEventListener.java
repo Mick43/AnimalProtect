@@ -69,6 +69,7 @@ public class VehicleEventListener implements Listener {
 		||  type == EntityType.WOLF
 		||  type == EntityType.IRON_GOLEM
 		||  type == EntityType.SNOWMAN
+		||  type == EntityType.VILLAGER
 		||  type == EntityType.OCELOT)
 		{ return true; }
 		return false;
