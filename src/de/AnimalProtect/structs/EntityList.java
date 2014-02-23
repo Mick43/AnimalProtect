@@ -265,6 +265,21 @@ public class EntityList {
 		}
 	}
 	
+	/**
+	 * Returns all Entities
+	 * 
+	 * @return ArrayList<EntityObject> or an empty list if there are no locked entities.
+	 */
+	public ArrayList<EntityObject> getAllEntities() {
+		ArrayList<EntityObject> list = new ArrayList<EntityObject>();
+		
+		for (EntityObject e : entities.keySet()) {
+			list.add(e);
+		}
+		
+		return list;
+	}
+	
 	/** Locks an entity
 	 * 
 	 * @param entity
