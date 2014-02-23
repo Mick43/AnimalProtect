@@ -44,17 +44,18 @@ public class DeathEventListener implements Listener {
 			/* Prüfen ob der Mörder ein Spieler ist */
 			if (e != null) {
 				if (e.getDamager() instanceof Player) {
-					damager = (Player) e.getDamager();
-					
-					/* Prüfen ob der Mörder der Owner ist */
-					if (list.getPlayer(entity.getUniqueId()).equalsIgnoreCase(damager.getName())) {
-						list.unlock(entity.getUniqueId());
-						return;
+					try {
+						/* Prüfen ob der Mörder der Owner ist */
+						if (list.getPlayer(entity.getUniqueId()).equalsIgnoreCase(damager.getName())) {
+							list.unlock(entity.getUniqueId());
+							return;
+						}
+						else {
+							APLogger.warn("Warnung: Ein gelocktes Entity wurde gerade von einem Spieler getötet, der nicht der Owner ist.");
+							APLogger.warn("Eventuell wird irgendein Damage-Event nicht abgefangen!");
+						}
 					}
-					else {
-						APLogger.warn("Warnung: Ein gelocktes Entity wurde gerade von einem Spieler getötet, der nicht der Owner ist.");
-						APLogger.warn("Eventuell wird irgendein Damage-Event nicht abgefangen!");
-					}
+					catch (Exception exception) { }
 				}
 			}
 			
