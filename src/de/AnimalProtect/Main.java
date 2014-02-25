@@ -117,7 +117,7 @@ public class Main extends JavaPlugin {
 	public void initializeDatabase() {
 		try {
 			try { database.closeConnection(); } catch (Exception e) { }
-			database = new MySQL(this, hostname, port, username, dbname, password);
+			database = new MySQL(this, hostname, port, username, dbname, password, true);
 			connection = database.openConnection();
 		} catch (Exception e) {
 			APLogger.warn("Warnung: Die Datenbank konnte nicht initialisiert werden!");
