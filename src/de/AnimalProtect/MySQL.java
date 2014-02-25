@@ -168,13 +168,13 @@ public class MySQL {
 		return res;
 	}
 	
-	 /**
-		 * Returns the size of the given ResultSet.
-		 * 
-		 * @param result
-		 *            The ResultSet
-		 * @return Returns the size of the given ResultSet
-		 */
+	/**
+	 * Returns the size of the given ResultSet.
+	 * 
+	 * @param result
+     *            The ResultSet
+	 * @return Returns the size of the given ResultSet
+     */
 	public int getResultSize(ResultSet result) {
 		int rows = 0;
 		
