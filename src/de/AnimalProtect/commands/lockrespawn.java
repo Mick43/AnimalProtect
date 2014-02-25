@@ -56,19 +56,45 @@ public class lockrespawn implements CommandExecutor {
 			}
 			
 			/* Argumente überprüfen */
-			if (args.length == 0)
-			{ player.sendMessage("§cFehler: Es fehlen Argumente! /lockrespawn <id> <owner>"); return true; }
-			else if (args.length == 1)
-			{ owner = player.getName(); }
-			else if (args.length == 2)
-			{ owner = args[1]; }
-			else
-			{ player.sendMessage("§cFehler: Zu viele Argumente! /lockrespawn <id> <owner>"); return true; }
+			if (args.length == 0) {
+				cs.sendMessage("§cFehler: Es fehlen Argumente! (/locklist <owner> <id>)");
+				return true;
+			}
+			else if (args.length == 1) {
+				/* Prüfen ob das Argument die Seitennummer oder der Spielername ist */
+				if (isNumber(args[0])) {
+					animal = Integer.parseInt(args[0]);
+					
+					if (cs instanceof Player) { 
+						Player p = (Player)cs;
+						owner = p.getName();
+					}
+					else {
+						cs.sendMessage("Fehler: Es fehlen Argumente! (/locklist <owner> <id>)");
+						return true;
+					}
+				}
+				else {
+					animal = 1;
+					owner = args[0];
+				}
+			}
+			else if (args.length == 2) {
+				owner = args[0];
+				
+				if (isNumber(args[1])) {
+					animal = Integer.parseInt(args[1]);
+				}
+				else {
+					cs.sendMessage("§cFehler: Die angegebene Zahl ist keine Nummer!");
+					return true;
+				}
+			}
+			else { cs.sendMessage("§cFehler: Zu viele Argumente angegeben!"); return true; }
 			
-			/* Prüfen ob die <ID> eine Zahl ist */
-			try { animal = Integer.parseInt(args[0]); }
-			catch (NumberFormatException e) { 
-				player.sendMessage("§cFehler: Die angegebene ID ist keine Zahl! /lockrespawn <id> <owner>");
+			/* Prüfen ob der Spieler existiert */
+			if (!list.containsPlayer(owner)) {
+				player.sendMessage("§cFehler: Der angegebene Spieler wurde nicht gefunden!");
 				return true;
 			}
 			
@@ -77,7 +103,7 @@ public class lockrespawn implements CommandExecutor {
 			
 			/* Prüfen ob das Entity gefunden wurde */
 			if (array == null) {
-				player.sendMessage("§cFehler: Das Tier wurde nicht gefunden!");
+				player.sendMessage("§cFehler: Das Tier oder der Spieler wurde nicht gefunden!");
 				return true;
 			}
 			
@@ -154,5 +180,13 @@ public class lockrespawn implements CommandExecutor {
 			}
 		}
 		return false;
+	}
+	
+	private boolean isNumber(String value) {
+		try {
+			Integer.parseInt(value);
+			return true;
+		}
+		catch (Exception e) { return false; }
 	}
 }

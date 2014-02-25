@@ -159,7 +159,7 @@ public class locklist implements CommandExecutor {
 	
 	private boolean isNumber(String value) {
 		try {
-			Integer number = Integer.parseInt(value);
+			Integer.parseInt(value);
 			return true;
 		}
 		catch (Exception e) { return false; }
