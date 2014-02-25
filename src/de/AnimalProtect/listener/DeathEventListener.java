@@ -54,7 +54,7 @@ public class DeathEventListener implements Listener {
 						}
 						else {
 							APLogger.warn("Warnung: Ein gelocktes Entity wurde gerade von einem Spieler getötet, der nicht der Owner ist.");
-							APLogger.warn("Eventuell wird irgendein Damage-Event nicht abgefangen!");
+							APLogger.warn("Eventuell wird irgendein Damage-Event nicht abgefangen! DamageCause: " + e.getCause().toString() + " | Damager: " + e.getDamager().getType().toString());
 						}
 					}
 					catch (Exception exception) { }
