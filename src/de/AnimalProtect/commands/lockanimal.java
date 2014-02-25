@@ -47,6 +47,11 @@ public class lockanimal implements CommandExecutor {
 				return true;
 			}
 			
+			if (entity.isDead()) {
+				player.sendMessage("§cFehler: Das ausgewählte Tier ist tot!");
+				return true;
+			}
+			
 			/* Prüfen ob das Tier bereits gelockt wurde */
 			if (list.containsEntity(entity)) { 
 				player.sendMessage("§cFehler: Das Tier ist bereits protected!");
