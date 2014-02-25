@@ -63,7 +63,7 @@ public class lockdebug implements CommandExecutor {
 			
 			cs.sendMessage("");
 			cs.sendMessage("EntityList-Size: [§7"+entities+" §fEntities] [§7"+players+" §fPlayers] [§7"+locks+" §fLocks]");
-			cs.sendMessage("Amount of failed queries: [§7" + MySQL.CrashedQueries.size() + "§f]");
+			cs.sendMessage("Amount of failed queries: [§7" + database.failedQueries + "§f]");
 			cs.sendMessage("Is plugin enabled: [§7" + plugin.isEnabled() + "§f]");
 			cs.sendMessage("Database: [NULL: §7"+dbnull+"§f] [Closed: §7"+dbclosed+"§f] [Valid: §7"+dbvalid+"§f]");
 		}
@@ -81,7 +81,7 @@ public class lockdebug implements CommandExecutor {
 			
 			cs.sendMessage("");
 			cs.sendMessage("EntityList-Size: ["+entities+" Entities] ["+players+" Players] ["+locks+" Locks]");
-			cs.sendMessage("Amount of failed queries: [" + MySQL.CrashedQueries.size() + "]");
+			cs.sendMessage("Amount of failed queries: [" + database.failedQueries + "]");
 			cs.sendMessage("Is plugin enabled: [" + plugin.isEnabled() + "]");
 			cs.sendMessage("Database: [NULL: "+dbnull+"] [Closed: "+dbclosed+"] [Valid: "+dbvalid+"]");
 		}

@@ -5,7 +5,6 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.ArrayList;
 import java.util.logging.Level;
 
 import org.bukkit.plugin.Plugin;
@@ -18,7 +17,7 @@ import de.AnimalProtect.utility.APLogger;
  * @author -_Husky_-
  * @author tips48
  */
-public class MySQL extends Database {
+public class MySQL {
     private final String user;
     private final String database;
     private final String password;
@@ -29,7 +28,7 @@ public class MySQL extends Database {
     private Connection connection;
     private Boolean debug;
     
-    public static ArrayList<String> CrashedQueries = new ArrayList<String>();
+    public Integer failedQueries = 0;
 
     /**
      * Creates a new MySQL instance
@@ -50,7 +49,7 @@ public class MySQL extends Database {
      *            debug
      */
     public MySQL(Plugin plugin, String hostname, String port, String database, String username, String password, Boolean debug) {
-        super(plugin);
+    	this.plugin = plugin;
         this.hostname = hostname;
         this.port = port;
         this.database = database;
@@ -64,7 +63,6 @@ public class MySQL extends Database {
     /**
      * Opens the MySQL-Connection
      */
-    @Override
     public Connection openConnection() {
         try {
             Class.forName("com.mysql.jdbc.Driver");
@@ -81,7 +79,6 @@ public class MySQL extends Database {
     /**
      * Checks if the connection is open. Returns null if not
      */
-    @Override
     public boolean checkConnection() {
     	try {
     		if (connection == null) { return false; }
@@ -96,7 +93,6 @@ public class MySQL extends Database {
     /**
      * Returns the connection
      */
-    @Override
     public Connection getConnection() {
         return connection;
     }
@@ -104,7 +100,6 @@ public class MySQL extends Database {
     /**
      * Closes the MySQL-Connection
      */
-    @Override
     public void closeConnection() {
         if (connection != null) {
             try {
@@ -343,6 +338,8 @@ public class MySQL extends Database {
 		
 		APLogger.warn("[Error/MySQL/noConnection] Warnung: Couldn't connect to the database.");
 		APLogger.warn("[Error/MySQL/noConnection] More Information: " + isNull + " " + isClosed + " " + isValid);
+		
+		failedQueries += 1;
 	}
 
 	private void error(String Source, String Info, Exception e) {
@@ -351,5 +348,7 @@ public class MySQL extends Database {
 		APLogger.warn("--- Exception Stacktrace ---");
 		e.printStackTrace();
 		APLogger.warn(" ");
+		
+		failedQueries += 1;
 	}
 }

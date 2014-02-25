@@ -1,9 +1,7 @@
 package de.AnimalProtect;
 
-import java.io.File;
 import java.sql.Connection;
 import java.sql.SQLException;
-import java.util.ArrayList;
 
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -43,10 +41,6 @@ public class Main extends JavaPlugin {
 		APLogger.info("> Loading Database...");
 		initializeDatabase();
 		
-		/* Das Crashfile importieren */
-		APLogger.info("> Loading Crashfile...");
-		initializeCrashfile();
-		
 		/* Die EntityList initialisieren */
 		APLogger.info("> Loading EntityList...");
 		list = new EntityList(this, false);
@@ -84,10 +78,6 @@ public class Main extends JavaPlugin {
 		if (database != null) { database.closeConnection(); }
 		if (connection != null) { try { connection.close(); } 
 		catch (SQLException e) { e.printStackTrace(); } }
-		
-		if (MySQL.CrashedQueries.size() != 0) {
-			new CrashfileObject(this, MySQL.CrashedQueries, "queries");
-		}
 		
 		this.list = null;
 		this.database = null;
@@ -162,29 +152,6 @@ public class Main extends JavaPlugin {
 						+ "horse_variant ENUM('NONE', 'HORSE', 'DONKEY', 'MULE', 'SKELETON_HORSE', 'UNDEAD_HORSE'));";
 				database.write(Query, false);
 			}
-		}
-	}
-	
-	private void initializeCrashfile() {
-		File f = new File(this.getDataFolder() + "/crashFiles/queries");
-		if(f.exists() && !f.isDirectory()) { 
-			CrashfileObject cfo = new CrashfileObject(this, "queries");
-			try {
-				@SuppressWarnings("unchecked")
-				ArrayList<String> queries = (ArrayList<String>)cfo.getObject();
-				if (database != null && database.checkConnection()) {
-					for (String query : queries) {
-						database.write(query, true);
-					}
-				}
-				else {
-					APLogger.info("Could not import crashed Queries!");
-					for (String query : queries) {
-						MySQL.CrashedQueries.add(query);
-					}
-				}
-			}
-			catch (Exception e) { }
 		}
 	}
 
