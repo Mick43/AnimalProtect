@@ -7,8 +7,6 @@ Description:
 
 Todo:
 ------
-- Beim EntityDeathEvent das Entity unlocken, falls der Killer der Owner ist.
-- Bei /locklimit anzeigen wie viele Locks man noch machen kann.
 - Den Befehl /lockrespawn bei den Argumenten benutzerfreundlicher machen.
 
 Ideen:
