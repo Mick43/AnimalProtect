@@ -21,7 +21,7 @@ commands:
       permission-message: You don't have permission.
    locklist:
       description: Listet alle Tiere die der Person gehoeren auf.
-      usage: Write /<command> [playername]
+      usage: Write /<command> [playername] [seite]
       permission: animalprotect.admin
       permission-message: You don't have permission.
    lockrespawn:

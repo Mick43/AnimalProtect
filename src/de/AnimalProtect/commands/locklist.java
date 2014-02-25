@@ -54,34 +54,39 @@ public class locklist implements CommandExecutor {
 					player = p.getName();
 				}
 				else {
-					cs.sendMessage("§cFehler: Es fehlen Argumente! (/locklist <seite> <name>)");
+					cs.sendMessage("§cFehler: Es fehlen Argumente! (/locklist <name> <seite>)");
 					return true;
 				}
 			}
 			else if (args.length == 1) {
-				try { page = Integer.parseInt(args[0]); }
-				catch (Exception e) {
-					cs.sendMessage("§cFehler: Die angegebene Seite ist keine Zahl!");
-					return true;
-				}
-				
-				if (cs instanceof Player) { 
-					Player p = (Player)cs;
-					player = p.getName();
+				/* Prüfen ob das Argument die Seitennummer oder der Spielername ist */
+				if (isNumber(args[0])) {
+					page = Integer.parseInt(args[0]);
+					
+					if (cs instanceof Player) { 
+						Player p = (Player)cs;
+						player = p.getName();
+					}
+					else {
+						cs.sendMessage("§cFehler: Es fehlen Argumente! (/locklist <name> <seite>)");
+						return true;
+					}
 				}
 				else {
-					cs.sendMessage("§cFehler: Es fehlen Argumente! (/locklist <seite> <name>)");
-					return true;
+					page = 1;
+					player = args[0];
 				}
 			}
 			else if (args.length == 2) {
-				try { page = Integer.parseInt(args[0]); }
-				catch (Exception e) {
-					cs.sendMessage("§cFehler: Die angegebene Seite ist keine Zahl!");
+				player = args[0];
+				
+				if (isNumber(args[1])) {
+					page = Integer.parseInt(args[1]);
+				}
+				else {
+					cs.sendMessage("§cFehler: Die angegebene Zahl ist keine Nummer! (/locklist <name> <seite>)");
 					return true;
 				}
-				
-				player = args[1];
 			}
 			else { cs.sendMessage("§cFehler: Zu viele Argumente angegeben! (/locklist <seite> <name>)"); return true; }
 			
@@ -150,5 +155,13 @@ public class locklist implements CommandExecutor {
 		}
 		cs.sendMessage("§cFehler: Plugin ist deaktiviert oder es besteht keine Datenbank-Verbindung");
 		return true;
+	}
+	
+	private boolean isNumber(String value) {
+		try {
+			Integer number = Integer.parseInt(value);
+			return true;
+		}
+		catch (Exception e) { return false; }
 	}
 }
