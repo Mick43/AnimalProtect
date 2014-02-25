@@ -45,10 +45,6 @@ public class DamageEventListener implements Listener {
 			/* Wenn es also keinen Owner gibt, dann wird die Methode abgebrochen.*/
 			if (owner == null || owner.isEmpty()) { return; }
 			
-			if (Main.DEBUGMODE) { 
-				APLogger.info("[DEBUG] An locked entity got damaged! Damager: " + damager.getType().toString());
-			}
-			
 			/* Jetzt die einzelnen Damager-Typen durchlaufen, um den wahren Damager herauszufinden. */
 			switch (damager.getType()) {
 			case PLAYER:
