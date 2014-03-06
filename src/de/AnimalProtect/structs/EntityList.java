@@ -426,11 +426,13 @@ public class EntityList {
 		
 		/* Erst nach dem EntityObject im RAM schauen */
 		/* Wenn es gefunden wird, dann entfernen.    */
+		EntityObject entity = null;
 		for (EntityObject e : entities.keySet()) {
 			if (e.getUniqueID().equals(id.toString())) {
-				entities.remove(e);
+				entity = e;
 			}
 		}
+		entities.remove(entity);
 		
 		/* Das Entity aus der reverseKeys-Liste entfernen */
 		if (reverseKeys.containsKey(id)) { reverseKeys.remove(id); }
