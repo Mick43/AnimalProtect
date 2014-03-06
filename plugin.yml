@@ -1,6 +1,6 @@
 name: AnimalProtect
 main: de.AnimalProtect.Main
-version: 1.0
+version: 1.1
 authors: [Fear837, Pingebam]
 website: www.craftolution.de
 commands:
