@@ -7,7 +7,7 @@ Description:
 
 Todo:
 ------
-- Den Befehl /lockrespawn bei den Argumenten benutzerfreundlicher machen.
+- Leer
 
 Ideen:
 ------
@@ -24,6 +24,7 @@ Datenbank-Struktur:
 
 Commands:
 ---------
+- `/ap <command>` - Eine �bersicht aller AnimalProtect-Befehle
 - `/lockanimal` - Protectet das ausgewählte Entity.
 - `/unlockanimal` - Entfernt die Protection des ausgewählten Entities. (TODO!) (Optional: <name><id>)
 - `/lockinfo` - Gibt Informationen über das ausgewählte Entity aus.
