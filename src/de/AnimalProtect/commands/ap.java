@@ -52,11 +52,13 @@ public class ap implements CommandExecutor {
 				{ new unlockanimal(plugin).onCommand(cs, cmd, label, newArgs); }
 				else if (args[0].equalsIgnoreCase("reload"))
 				{
-					if (args[1].equalsIgnoreCase("entitylist")) {
-						plugin.list.unload();
-						plugin.list.loadFromDatabase();
-						player.sendMessage("§aDie EntityList wurde erfolgreich neugeladen!");
-						return true;
+					if (args.length == 2) {
+						if (args[1].equalsIgnoreCase("entitylist")) {
+							plugin.list.unload();
+							plugin.list.loadFromDatabase();
+							player.sendMessage("§aDie EntityList wurde erfolgreich neugeladen!");
+							return true;
+						}
 					}
 					
 					try {
