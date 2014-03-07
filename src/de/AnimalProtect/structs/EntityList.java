@@ -440,7 +440,7 @@ public class EntityList {
 		/* Das Entity aus der ArrayList des Owners entfernen */
 		if (keys.containsKey(owner)) {
 			for (EntityObject e : keys.get(owner)) {
-				if (e.getUniqueID().equals(id)) {
+				if (e.getUniqueID().equalsIgnoreCase(id.toString())) {
 					keys.get(owner).remove(e);
 				}
 			}
