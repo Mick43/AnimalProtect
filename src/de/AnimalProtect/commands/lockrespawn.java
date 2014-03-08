@@ -163,7 +163,7 @@ public class lockrespawn implements CommandExecutor {
 				
 				String Query = "UPDATE ap_entities SET uuid='"+id+"', last_x="+x+", last_y="+y+", last_z="+z+" "
 						+ "WHERE id=" + object.getId();
-				database.write(Query, true);
+				database.execute(Query, true);
 				
 				APLogger.info("[TEMPDEBUG] Getting EntityObject from uuid: " + object.getUniqueID());
 				

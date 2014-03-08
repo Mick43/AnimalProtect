@@ -123,7 +123,7 @@ public class Main extends JavaPlugin {
 				Query = "CREATE TABLE IF NOT EXISTS ap_owners ("
 						+ "id INT AUTO_INCREMENT PRIMARY KEY, "
 						+ "name varchar(255));";
-				database.write(Query, false);
+				database.execute(Query, false);
 				
 				/* Erstelle die Tabelle 'ap_locks' */
 				Query = "CREATE TABLE IF NOT EXISTS ap_locks ("
@@ -131,7 +131,7 @@ public class Main extends JavaPlugin {
 						+ "owner_id INT, "
 						+ "entity_id INT, "
 						+ "created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP)";
-				database.write(Query, false);
+				database.execute(Query, false);
 				
 				/* Erstelle die Tabelle 'ap_entities' */
 				Query = "CREATE TABLE IF NOT EXISTS ap_entities ("
@@ -150,7 +150,7 @@ public class Main extends JavaPlugin {
 						+ "horse_jumpstrength DOUBLE, "
 						+ "horse_style TEXT, "
 						+ "horse_variant ENUM('NONE', 'HORSE', 'DONKEY', 'MULE', 'SKELETON_HORSE', 'UNDEAD_HORSE'));";
-				database.write(Query, false);
+				database.execute(Query, false);
 			}
 		}
 	}

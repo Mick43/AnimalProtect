@@ -62,7 +62,7 @@ public class DeathEventListener implements Listener {
 			}
 			
 			/* Der Mörder ist kein Spieler, also updaten */
-			database.write("UPDATE ap_entities SET deathcause='"+deathCause+"' WHERE uuid='"+event.getEntity().getUniqueId()+"';", true);
+			database.execute("UPDATE ap_entities SET deathcause='"+deathCause+"' WHERE uuid='"+event.getEntity().getUniqueId()+"';", true);
 			list.updateEntity(event.getEntity(), false);
 		}
 	}

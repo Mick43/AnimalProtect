@@ -5,6 +5,7 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.logging.Level;
 
 import org.bukkit.plugin.Plugin;
@@ -28,7 +29,7 @@ public class MySQL {
     private Connection connection;
     private Boolean debug;
     
-    public Integer failedQueries = 0;
+    public ArrayList<String> failedQueries;
 
     /**
      * Creates a new MySQL instance
@@ -58,6 +59,7 @@ public class MySQL {
         this.plugin = plugin;
         this.connection = null;
         this.debug = debug;
+        this.failedQueries = new ArrayList<String>();
     }
 
     /**
@@ -108,6 +110,28 @@ public class MySQL {
             	this.error("MySQL/closeConnection", "An error occured while closing the connection!", e);
             }
         }
+    }
+    
+    /**
+     * Creates a table with the given columns
+     * 
+	 * @param tableName
+	 *            How the table should be named
+	 * @param columns
+	 *            An array of the names of the columns.
+	 * @param log
+	 *            True, for Console-Output
+     */
+    public void createTable(String tableName, String[] columns, Boolean log) {
+    	String Query = "CREATE TABLE IF NOT EXISTS " + tableName + " (";
+    	
+    	for (String column : columns) {
+    		Query += column;
+    	}
+    	
+    	Query += ");";
+    	
+    	this.execute(Query, log);
     }
     
     /**
@@ -282,7 +306,7 @@ public class MySQL {
 	 * @param log
 	 *            A Boolean wether a message should show up in the console.  
 	 */
-	public boolean write(String Query, Boolean log)
+	public boolean execute(String Query, Boolean log)
 	{
 		/* Prüfen ob eine Datenbank-Verbindung besteht */
 		if (!checkConnection()) {
@@ -294,7 +318,7 @@ public class MySQL {
 			Statement statement = null;
 			
 			try { statement = connection.createStatement(); } 
-			catch (SQLException e1) { this.error("MySQL/write", "An error occured while creating the statement!", e1); }
+			catch (SQLException e1) { this.error("MySQL/execute", "An error occured while creating the statement!", e1); }
 			
 			try 
 			{
@@ -303,13 +327,16 @@ public class MySQL {
 				
 				/* Konsole benachrichtigen */
 				if (debug && log)
-				{ APLogger.info("[MySQL/write] Executing: | " + Query + " |"); }
+				{ APLogger.info("[MySQL/execute] Executing: | " + Query + " |"); }
 				
 				return true;
 			}
-			catch (SQLException e) { e.printStackTrace(); }
+			catch (SQLException e) { 
+				error("MySQL/execute", "Could not execute a Query.", e); 
+				failedQueries.add(Query);
+			}
 		} 
-		else { noConnection(); }
+		else { noConnection(); failedQueries.add(Query); }
 		
 		return false;
 	}
@@ -336,10 +363,8 @@ public class MySQL {
 			catch (SQLException e) { isValid = "[Valid: false]"; }
 		}
 		
-		APLogger.warn("[Error/MySQL/noConnection] Warnung: Couldn't connect to the database.");
+		APLogger.warn("[Error/MySQL/noConnection] Warning: Couldn't connect to the database.");
 		APLogger.warn("[Error/MySQL/noConnection] More Information: " + isNull + " " + isClosed + " " + isValid);
-		
-		failedQueries += 1;
 	}
 
 	private void error(String Source, String Info, Exception e) {
@@ -348,7 +373,5 @@ public class MySQL {
 		APLogger.warn("--- Exception Stacktrace ---");
 		e.printStackTrace();
 		APLogger.warn(" ");
-		
-		failedQueries += 1;
 	}
 }

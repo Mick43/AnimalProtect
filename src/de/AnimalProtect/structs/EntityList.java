@@ -377,13 +377,13 @@ public class EntityList {
 	    			+ ");";
 	    	
 	    	/* Die Query wird abgeschickt. */
-	    	database.write(Query, true);
+	    	database.execute(Query, true);
 	    	
 	    	/* Jetzt muss der Eintrag in 'ap_locks' erstellt werden. */
 	        Query = "INSERT INTO ap_locks (`owner_id`, `entity_id`) VALUES ("
 	    			+ "(" + players.get(player) + "), "
 	    			+ "(SELECT id FROM ap_entities WHERE uuid='" + uuid + "'));";
-	    	database.write(Query, true);
+	    	database.execute(Query, true);
 	    	
 	    	/* Zum Schluss wird das EntityObject erstellt und direkt im RAM eingetragen. */
 	    	EntityObject ent = new EntityObject(plugin, database, uuid, true);
@@ -448,9 +448,9 @@ public class EntityList {
 		
 		/* Jetzt das Entity aus der Datenbank löschen. */
 		String Query = "DELETE FROM ap_locks WHERE entity_id=(SELECT id FROM ap_entities WHERE uuid='" +id+ "') LIMIT 1;";
-		database.write(Query, true);
+		database.execute(Query, true);
 		Query = "DELETE FROM ap_entities WHERE uuid='"+id+"' LIMIT 1;";
-		database.write(Query, true);
+		database.execute(Query, true);
 		
 		this.lastActionSuccess = true;
 		return this;
@@ -573,7 +573,7 @@ public class EntityList {
 			 /* Der Spieler wurde nicht gefunden, weil result null ist. */
 			 /* Also wird er jetzt erstellt. */
 			 Query = "INSERT INTO ap_owners (`name`) VALUES ('" +player+ "');";
-			 database.write(Query, true);
+			 database.execute(Query, true);
 			 
 			 /* Jetzt schauen ob der Spieler im RAM ist, was er wahrscheinlich nicht */
 			 /* ist, weil er erst jetzt erstellt wurde. Wenn er nicht im RAM ist,    */
@@ -636,7 +636,7 @@ public class EntityList {
 		if (onlyLocation)
 		{
 			String query = "UPDATE ap_entities SET last_x="+x+", last_y="+y+", last_z="+z+" WHERE uuid='"+uuid+"';";
-			database.write(query, true);
+			database.execute(query, true);
 		}
 		/* Wenn nicht nur die Position vom Entity gespeichert werden soll, */
 		/* dann werden weitere Informationen vom Entity geladen.           */
@@ -676,7 +676,7 @@ public class EntityList {
 					+ "armor='"+armor+"', "
 					+ "color='"+color+"' "
 					+ "WHERE uuid='"+uuid+"';";
-			database.write(query, true);
+			database.execute(query, true);
 			
 			/* Das Entity im RAM aktualisieren */
 			for (EntityObject ent : entities.keySet()) {
