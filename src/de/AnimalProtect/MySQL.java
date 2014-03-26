@@ -320,14 +320,14 @@ public class MySQL {
 			try { statement = connection.createStatement(); } 
 			catch (SQLException e1) { this.error("MySQL/execute", "An error occured while creating the statement!", e1); }
 			
+			/* Konsole benachrichtigen */
+			if (debug && log)
+			{ APLogger.info("[MySQL/execute] Executing: | " + Query + " |"); }
+			
 			try 
 			{
 				/* Das Statement ausführen */
 				statement.executeUpdate(Query);
-				
-				/* Konsole benachrichtigen */
-				if (debug && log)
-				{ APLogger.info("[MySQL/execute] Executing: | " + Query + " |"); }
 				
 				return true;
 			}
