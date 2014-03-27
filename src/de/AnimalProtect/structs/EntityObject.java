@@ -87,7 +87,7 @@ public class EntityObject implements Comparable<Object> {
 				variant = result_Entity.getString("horse_variant");
 
 				ResultSet result_owner = database
-						.get("SELECT name FROM ap_owners WHERE id=(SELECT owner_id FROM ap_locks WHERE entity_id=(SELECT id FROM ap_entities WHERE uuid='"
+						.get("SELECT name FROM ap_owners WHERE id IN(SELECT owner_id FROM ap_locks WHERE entity_id IN(SELECT id FROM ap_entities WHERE uuid='"
 								+ uuid + "'));", true, false);
 				if (result_owner != null) {
 					try {
