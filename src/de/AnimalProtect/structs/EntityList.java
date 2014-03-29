@@ -283,6 +283,20 @@ public class EntityList {
 			return this;
 		}
 		
+		if (!players.containsKey(player)) {
+			String Query = " INSERT INTO ap_players (name) VALUES (' + playerName + ') ON DUPLICATE KEY UPDATE id = id;";
+			database.execute(Query, true);
+			
+			Integer id = (Integer) database.getValue("SELECT id FROM ap_owners WHERE name='"+player+";", "id", false);
+			if (id != null) {
+				players.put(player, id);
+			}
+			else {
+				APLogger.info("An Warning: An Error occured while inserting a player into the database!");
+				APLogger.info("More Information: Could not find the player in the database after inserting him.");
+			}
+		}
+		
 		/* Wenn das Entity nicht im RAM ist, soll erst */
 		/* geschaut werden ob es den Spieler bereits   */
 		/* in der Datenbank gibt und wie viele Tiere   */
