@@ -24,20 +24,13 @@ public class LoadSaveEventListener implements Listener {
 
 	@EventHandler
 	public void onPlayerJoin(PlayerJoinEvent event) {
-		if (plugin.isEnabled() && database.checkConnection()) {
-			list.connect(event.getPlayer().getName(), false, true);
-			APLogger.info("Loading player "
-							+ event.getPlayer().getName() + ". => "
-							+ (list.lastActionSucceeded() ? "Success."
-									: "Failed!"));
-		} else
-			try {
-				if (!database.checkConnection() || database.getConnection().isClosed()) {
-					if (event.getPlayer().hasPermission("animalprotect.admin")) {
-						event.getPlayer().sendMessage("§c[!] §7Warnung: Die Datenbankverbindung ist nicht aktiv!");
-					}
+		try {
+			if (!database.checkConnection() || database.getConnection().isClosed()) {
+				if (event.getPlayer().hasPermission("animalprotect.admin")) {
+					event.getPlayer().sendMessage("§c[!] §7Warnung: Die Datenbankverbindung ist nicht aktiv!");
 				}
 			}
+		}
 		catch (Exception e) { event.getPlayer().sendMessage("§c[!] §7Warnung: Die Datenbankverbindung ist nicht aktiv/null!"); }
 	}
 }

@@ -76,12 +76,6 @@ public class EntityList {
 		this.lastActionSuccess = false;
 		
 		loadFromDatabase();
-		
-		if (!empty) {
-  			for (Player player : plugin.getServer().getOnlinePlayers()) {
-  				connect(player.getName(), false, false);
-  			}
-  		}
 	}
 	
 	/**
@@ -253,16 +247,8 @@ public class EntityList {
 		if (keys.containsKey(player)) {
 			return keys.get(player);
 		}
-		else {
-			/* Spieler ist nicht im RAM, also wird er aus der DB geladen. */
-			connect(player, false, true);
-			ArrayList<EntityObject> list = keys.get(player);
-			
-			/* Wenn die ArrayList aus irgendeinem Grund null ist, wird sie leer erstellt. */
-			if (list == null) { list = new ArrayList<EntityObject>(); }
-			
-			return list;
-		}
+		
+		return null;
 	}
 	
 	/**
@@ -303,22 +289,13 @@ public class EntityList {
 		/* er bereits gelockt hat.                     */
 		Long entitySize = (Long) sizeOfEntities(player);
 		
-		/* Wenn der Spieler nicht in der DB ist, wird er hinzugefuegt. */
-		if (entitySize == 0) { connect(player, true, true); }
-		
-		/* Prüfen ob das connecten funktioniert hat */
-		if (entitySize == 0 && !this.lastActionSucceeded()) { 
-			APLogger.warn("Failed to lock an entity! Could not connect player to database!");
-			return this;
-		}
-		
 		/* Prüfen ob der Spieler bereits das Limit der Locks erreicht hat */
 		if (entitySize >= MAX_ENTITIES_FOR_PLAYER) { 
 			APLogger.info("Info: The player '"+player+"' has reached the MAX_ENTITIES_FOR_PLAYER limit!");
 			return this; 
 		}
 		
-		/* Jetzt wird das Entity un der Lock in die Datenbank eingetragen */
+		/* Jetzt wird das Entity und der Lock in die Datenbank eingetragen */
 		if (database != null && database.checkConnection()) {
 			/* Zuerst werden die Eigenschaften des Entities erstellt */
 			UUID uuid = entity.getUniqueId();
@@ -519,81 +496,6 @@ public class EntityList {
 		}
 		
 		APLogger.info("Loading finished! " +playerCount+ " players and "+entityCount+ " entities have been loaded.");
-	}
-	
-	/** Loads a player and his entities from the database into the RAM
-	 * 
-	 * @param player
-	 *            The name of the player.
-	 * @return EntityList after unlocking, if connecting failed, returns an
-	 *         unmodified version of the list.
-	 * @see de.Fear837.structs.EntityList.lastActionSucceeded()
-	 */
-	public EntityList connect(String player, boolean addPlayer, boolean log) {
-		this.lastActionSuccess = false;
-		
-		/* Schauen ob der Spieler bereits im RAM ist und schon Entities von ihm eingetragen sind */
-		if (keys.containsKey(player)) {
-			return this;
-		}
-		
-		/* Funktion abbrechen wenn keine Verbindung zur Datenbank besteht. */
-		if (database == null) { this.lastActionSuccess = false; }
-		if (!database.checkConnection()) { this.lastActionSuccess = false; }
-		
-		/* Nun alle Entities, die von dem Spieler gelockt wurden, aus der Datenbank laden. */
-		 String Query = "SELECT uuid FROM ap_entities "
-		 		+ "INNER JOIN ap_locks ON ap_entities.id = ap_locks.entity_id "
-		 		+ "INNER JOIN ap_owners ON ap_locks.owner_id=ap_owners.id "
-		 		+ "WHERE ap_owners.name='"+player+"';";
-		 ResultSet result = database.get(Query, false, log);
-		 
-		 /* Prüfen ob der Spieler gefunden wurde . */
-		 Integer rows = database.getResultSize(result);
-		 if (rows == 0) { result = null; }
-		 
-		 if (result != null) {
-			 /* Jedes Entity welches gefunden wurde, wird der Liste hinzugefuegt. */
-			 for (int i=0; i<rows; i++) {
-				 try {
-					 if (result.next()) {
-						 UUID uuid = UUID.fromString(result.getString("uuid"));
-						 
-						 EntityObject ent = new EntityObject(plugin, database, uuid, true);
-						 
-						 addToList(ent, false);
-					 }
-				 }
-				 catch (Exception e) { e.printStackTrace(); }
-			 }
-			 
-			 this.lastActionSuccess = true;
-		 }
-		 else if (addPlayer) {
-			 /* Der Spieler wurde nicht gefunden, weil result null ist. */
-			 /* Also wird er jetzt erstellt. */
-			 Query = "INSERT INTO ap_owners (`name`) VALUES ('" +player+ "');";
-			 database.execute(Query, true);
-			 
-			 /* Jetzt schauen ob der Spieler im RAM ist, was er wahrscheinlich nicht */
-			 /* ist, weil er erst jetzt erstellt wurde. Wenn er nicht im RAM ist,    */
-			 /* dann wird er der Liste im RAM hinzugefuegt.                          */
-			 if (!players.containsKey(player)) {
-				 Integer id = (Integer) database.getValue("SELECT id FROM ap_owners WHERE name='" + player + "';", "id", true);
-				 if (id != null) {
-					 players.put(player, id);
-					 keys.put(player, new ArrayList<EntityObject>());
-					 
-					 this.lastActionSuccess = true;
-				 }
-				 else {
-					 APLogger.warn("Warning: A player could not be added to the database!");
-					 APLogger.warn("More Infromation: The id of the player is null. [Name:"+player+"]");
-				 }
-			 }
-		 }
-		 
-		 return this;
 	}
 	
 	/**
