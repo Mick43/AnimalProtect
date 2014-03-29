@@ -3,6 +3,7 @@ package de.AnimalProtect.structs;
 import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.UUID;
 
 import org.bukkit.Material;
@@ -418,9 +419,10 @@ public class EntityList {
 		/* Erst nach dem EntityObject im RAM schauen */
 		/* Wenn es gefunden wird, dann entfernen.    */
 		EntityObject entity = null;
-		for (EntityObject e : entities.keySet()) {
-			if (e.getUniqueID().equals(id.toString())) {
-				entity = e;
+		for ( Map.Entry<EntityObject, Integer> e : entities.entrySet() ) { 
+			if(e.getValue().equals(id.toString())) { 
+				entity = e.getKey();
+				break;
 			}
 		}
 		entities.remove(entity);
