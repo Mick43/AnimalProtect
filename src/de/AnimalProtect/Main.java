@@ -122,21 +122,21 @@ public class Main extends JavaPlugin {
 				/* Erstelle die Tabelle 'ap_owners' */
 				Query = "CREATE TABLE IF NOT EXISTS ap_owners ("
 						+ "id INT AUTO_INCREMENT PRIMARY KEY, "
-						+ "name varchar(255));";
+						+ "name varchar(255) NOT NULL);";
 				database.execute(Query, false);
 				
 				/* Erstelle die Tabelle 'ap_locks' */
 				Query = "CREATE TABLE IF NOT EXISTS ap_locks ("
 						+ "id INT AUTO_INCREMENT PRIMARY KEY, "
-						+ "owner_id INT, "
-						+ "entity_id INT, "
+						+ "owner_id INT NOT NULL, "
+						+ "entity_id INT NOT NULL, "
 						+ "created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP)";
 				database.execute(Query, false);
 				
 				/* Erstelle die Tabelle 'ap_entities' */
 				Query = "CREATE TABLE IF NOT EXISTS ap_entities ("
 						+ "id INT AUTO_INCREMENT PRIMARY KEY, "
-						+ "uuid VARCHAR(40), "
+						+ "uuid VARCHAR(40) NOT NULL, "
 						+ "last_x SMALLINT(5) NOT NULL, "
 						+ "last_y SMALLINT(3) UNSIGNED NOT NULL, "
 						+ "last_z SMALLINT(5) NOT NULL, "
