@@ -288,7 +288,7 @@ public class EntityList {
 			String Query = " INSERT INTO ap_owners (name) VALUES ('"+ player +"') ON DUPLICATE KEY UPDATE id = id;";
 			database.execute(Query, true);
 			
-			Integer id = (Integer) database.getValue("SELECT id FROM ap_owners WHERE name='"+player+";", "id", false);
+			Integer id = (Integer) database.getValue("SELECT id FROM ap_owners WHERE name='"+player+"';", "id", false);
 			if (id != null) {
 				players.put(player, id);
 			}
