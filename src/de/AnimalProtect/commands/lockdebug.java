@@ -63,7 +63,7 @@ public class lockdebug implements CommandExecutor {
 			
 			cs.sendMessage("");
 			cs.sendMessage("EntityList-Size: [§7"+entities+" §fEntities] [§7"+players+" §fPlayers] [§7"+locks+" §fLocks]");
-			cs.sendMessage("Amount of failed queries: [§7" + database.failedQueries + "§f]");
+			cs.sendMessage("Amount of failed queries: [§7" + database.failedQueries.size() + "§f]");
 			cs.sendMessage("Is plugin enabled: [§7" + plugin.isEnabled() + "§f]");
 			cs.sendMessage("Database: [NULL: §7"+dbnull+"§f] [Closed: §7"+dbclosed+"§f] [Valid: §7"+dbvalid+"§f]");
 		}
