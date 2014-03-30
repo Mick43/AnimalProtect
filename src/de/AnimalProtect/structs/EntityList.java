@@ -295,6 +295,7 @@ public class EntityList {
 			else {
 				APLogger.info("An Warning: An Error occured while inserting a player into the database!");
 				APLogger.info("More Information: Could not find the player in the database after inserting him.");
+				return this;
 			}
 		}
 		
