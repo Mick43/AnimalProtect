@@ -94,7 +94,11 @@ public class locklist implements CommandExecutor {
 			entities = list.getEntities(player);
 			
 			/* Prüfen ob der Spieler jemals Entities protectet hat */
-			if (entities.isEmpty()) { cs.sendMessage("§cFehler: Der Spieler wurde nicht gefunden!"); return true; }
+			if (entities != null) {
+				if (entities.isEmpty()) { cs.sendMessage("§cFehler: Der Spieler wurde nicht gefunden!"); return true; }
+			}
+			else { cs.sendMessage("§cFehler: Der Spieler konnte nicht gefunden werden."); return true; }
+			
 			
 			/* Die Seitenanzahl ausrechnen */
 			Double pagesAsDouble = ((double)entities.size() / (double)10);
