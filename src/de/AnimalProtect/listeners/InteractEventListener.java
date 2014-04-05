@@ -7,14 +7,16 @@ import org.bukkit.Sound;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
 
 import craftoplugin.core.database.CraftoPlayer;
 import de.AnimalProtect.AnimalProtect;
 import de.AnimalProtect.Database;
+import de.AnimalProtect.Messenger;
 import de.AnimalProtect.structs.Animal;
 
-public class InteractEventListener {
+public class InteractEventListener implements Listener {
 	
 	private AnimalProtect plugin;
 	private Database database;
@@ -43,7 +45,7 @@ public class InteractEventListener {
 			
 			/* Prüfen ob das ausgewählte Tier bereits vom Spieler ausgewählt ist. */
 			if (selectedList.get(player) == entity) {
-				player.sendMessage("§eDu hast das Tier bereits ausgewählt!");
+				Messenger.sendMessage(player, "Du hast das Tier bereits ausgewählt!");
 				player.playSound(player.getLocation(), Sound.CLICK, 0.4f, 0.8f);
 				return;
 			}
@@ -55,31 +57,31 @@ public class InteractEventListener {
 			if (owner == null) {
 				switch (entity.getType()) {
 				case COW:
-					player.sendMessage("§eDu hast eine §6Kuh §eausgewählt. §7(/lockanimal um sie zu protecten.);");
+					Messenger.sendMessage(player, "Du hast eine §6Kuh §eausgewählt. §7(/lockanimal um sie zu protecten.);");
 					break;
 				case PIG:
-					player.sendMessage("§eDu hast ein §6Schwein §eausgewählt. §7(/lockanimal um es zu protecten.);");
+					Messenger.sendMessage(player, "Du hast ein §6Schwein §eausgewählt. §7(/lockanimal um es zu protecten.);");
 					break;
 				case CHICKEN:
-					player.sendMessage("§eDu hast ein §6Huhn §eausgewählt. §7(/lockanimal um es zu protecten.);");
+					Messenger.sendMessage(player, "Du hast ein §6Huhn §eausgewählt. §7(/lockanimal um es zu protecten.);");
 					break;
 				case HORSE:
-					player.sendMessage("§eDu hast ein §6Pferd §eausgewählt. §7(/lockanimal um es zu protecten.);");
+					Messenger.sendMessage(player, "Du hast ein §6Pferd §eausgewählt. §7(/lockanimal um es zu protecten.);");
 					break;
 				case WOLF:
-					player.sendMessage("§eDu hast einen §6Wolf §eausgewählt. §7(/lockanimal um ihn zu protecten.);");
+					Messenger.sendMessage(player, "Du hast einen §6Wolf §eausgewählt. §7(/lockanimal um ihn zu protecten.);");
 					break;
 				case SHEEP:
-					player.sendMessage("§eDu hast ein §6Schaf §eausgewählt. §7(/lockanimal um es zu protecten.);");
+					Messenger.sendMessage(player, "Du hast ein §6Schaf §eausgewählt. §7(/lockanimal um es zu protecten.);");
 					break;
 				default:
-					player.sendMessage("§eDu hast ein §6unbekanntes §eTier ausgewählt. §7(/lockanimal um es zu protecten.);");
+					Messenger.sendMessage(player, "Du hast ein §6unbekanntes §eTier ausgewählt. §7(/lockanimal um es zu protecten.);");
 					break;
 				}
 			}
 			/* Wenn das Tier protected ist, dann wird der Owner erwähnt. */
 			else { 
-				player.sendMessage("§eDu hast das Tier von §6"+owner+" §eausgewählt.");
+				Messenger.sendMessage(player, "Du hast das Tier von §6"+owner+" §eausgewählt.");
 				Animal animal = database.getAnimal(entity.getUniqueId().toString());
 				if (animal == null) { return; }
 				animal.updateAnimal(entity);
