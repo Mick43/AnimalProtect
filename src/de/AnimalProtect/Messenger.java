@@ -245,7 +245,7 @@ public class Messenger {
 	public static void messageStaff(String Message) {
 		Player[] players = Bukkit.getServer().getOnlinePlayers();
 		for (Player p : players) {
-			if (p.hasPermission("teamplugin.admin") || p.isOp()) {
+			if (p.hasPermission("craftoplugin.admin") || p.hasPermission("craftoplugin.moderator") || p.isOp()) {
 				p.sendMessage(Prefix + Message);
 			}
 		}
