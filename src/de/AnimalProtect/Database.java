@@ -4,6 +4,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.UUID;
 
 import org.bukkit.entity.Horse.Style;
 import org.bukkit.entity.Horse.Variant;
@@ -150,8 +151,38 @@ public class Database {
 		if (entities.containsKey(uuid)) {
 			return entities.get(uuid);
 		}
-		//TODO: de.AnimalProtect.Database.getAnimal(uuid);
 		return null;
+	}
+	
+	public ArrayList<Animal> getAnimals(String uuid) {
+		if (uuid == null) { return null; }
+		
+		if  (owners.containsKey(uuid)) {
+			return owners.get(CraftoPlayer.getPlayer(uuid));
+		}
+		
+		return null;
+	}
+	
+	public boolean containsAnimal(String uuid) {
+		if (uuid == null) { return false; }
+		if (module == null) { return false; }
+		
+		if (entities.containsKey(uuid)) {
+			return true;
+		}
+		
+		return false;
+	}
+	
+	public boolean containsPlayer(String uuid) {
+		if (uuid == null) { return false; }
+		
+		if (module.getDatabase().containsPlayer(UUID.fromString(uuid))) {
+			return true;
+		}
+		
+		return false;
 	}
 	
 	public boolean isConnected() {
