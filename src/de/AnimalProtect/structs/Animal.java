@@ -3,9 +3,17 @@ package de.AnimalProtect.structs;
 import java.sql.Timestamp;
 import java.util.Date;
 
+import org.bukkit.Material;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.EntityType;
+import org.bukkit.entity.Horse;
 import org.bukkit.entity.Horse.Style;
 import org.bukkit.entity.Horse.Variant;
+import org.bukkit.entity.LivingEntity;
+import org.bukkit.entity.Sheep;
+import org.bukkit.entity.Wolf;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
+import org.bukkit.inventory.ItemStack;
 
 import de.AnimalProtect.AnimalProtect;
 import de.AnimalProtect.Database;
@@ -89,6 +97,46 @@ public class Animal {
 			this.created_at = new Timestamp(new Date().getTime());
 			return true;
 		}
+		
+		return false;
+	}
+	
+	public boolean updateAnimal(Entity entity) {
+		if (entity == null) { return false; }
+		if (entity.getUniqueId().toString() != this.getUniqueId()) { return false; }
+		
+		this.last_x = entity.getLocation().getBlockX();
+		this.last_y = entity.getLocation().getBlockY();
+		this.last_z = entity.getLocation().getBlockZ();
+		this.alive = !entity.isDead();
+		
+		if (entity.getType().equals(EntityType.SHEEP))
+		{ Sheep sheep = (Sheep) entity; this.color = sheep.getColor().toString(); }
+		else if (entity.getType().equals(EntityType.HORSE)) {
+			Horse horse = (Horse) entity;
+			if (horse.getInventory().getArmor().equals(new ItemStack(Material.DIAMOND_BARDING))) {
+				this.armor = AnimalArmor.DIAMOND;
+			}
+			else if (horse.getInventory().getArmor().equals(new ItemStack(Material.GOLD_BARDING))) {
+				this.armor = AnimalArmor.GOLD;
+			}
+			else if (horse.getInventory().getArmor().equals(new ItemStack(Material.IRON_BARDING))) {
+				this.armor = AnimalArmor.IRON;
+			}
+			
+			this.color = horse.getColor().toString();
+		}
+		else if (entity.getType().equals(EntityType.WOLF)) {
+			Wolf wolf = (Wolf) entity;
+			this.color = wolf.getCollarColor().toString();
+		}
+		
+		try {
+			LivingEntity le = (LivingEntity) entity;
+			this.nametag = le.getCustomName();
+			return true;
+		}
+		catch (Exception e) { }
 		
 		return false;
 	}
