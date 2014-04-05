@@ -145,6 +145,11 @@ public class Database {
 	}
 	
 	public Animal getAnimal(String uuid) {
+		if (uuid == null) { return null; }
+		
+		if (entities.containsKey(uuid)) {
+			return entities.get(uuid);
+		}
 		//TODO: de.AnimalProtect.Database.getAnimal(uuid);
 		return null;
 	}
