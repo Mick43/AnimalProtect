@@ -1,4 +1,4 @@
-package de.AnimalProtect.listener;
+package de.AnimalProtectOld.listener;
 
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
@@ -8,9 +8,9 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.vehicle.VehicleEnterEvent;
 import org.bukkit.event.vehicle.VehicleExitEvent;
 
-import de.AnimalProtect.Main;
-import de.AnimalProtect.MySQL;
-import de.AnimalProtect.structs.EntityList;
+import de.AnimalProtectOld.Main;
+import de.AnimalProtectOld.MySQL;
+import de.AnimalProtectOld.structs.EntityList;
 
 public class VehicleEventListener implements Listener {
 	

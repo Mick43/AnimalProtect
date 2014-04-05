@@ -1,4 +1,4 @@
-package de.AnimalProtect.structs;
+package de.AnimalProtectOld.structs;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -6,8 +6,8 @@ import java.util.UUID;
 
 import org.bukkit.entity.Entity;
 
-import de.AnimalProtect.Main;
-import de.AnimalProtect.MySQL;
+import de.AnimalProtectOld.Main;
+import de.AnimalProtectOld.MySQL;
 
 public class EntityObject implements Comparable<Object> {
 

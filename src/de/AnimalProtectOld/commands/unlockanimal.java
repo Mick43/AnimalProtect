@@ -1,4 +1,4 @@
-package de.AnimalProtect.commands;
+package de.AnimalProtectOld.commands;
 
 import java.util.UUID;
 
@@ -9,12 +9,12 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 
-import de.AnimalProtect.Main;
-import de.AnimalProtect.MySQL;
-import de.AnimalProtect.listener.InteractEventListener;
-import de.AnimalProtect.structs.EntityList;
-import de.AnimalProtect.structs.EntityObject;
-import de.AnimalProtect.utility.APLogger;
+import de.AnimalProtectOld.Main;
+import de.AnimalProtectOld.MySQL;
+import de.AnimalProtectOld.listener.InteractEventListener;
+import de.AnimalProtectOld.structs.EntityList;
+import de.AnimalProtectOld.structs.EntityObject;
+import de.AnimalProtectOld.utility.APLogger;
 
 public class unlockanimal implements CommandExecutor {
 

@@ -1,4 +1,4 @@
-package de.AnimalProtect.commands;
+package de.AnimalProtectOld.commands;
 
 import java.util.ArrayList;
 
@@ -19,11 +19,11 @@ import org.bukkit.entity.Horse.Style;
 import org.bukkit.entity.Horse.Variant;
 import org.bukkit.inventory.ItemStack;
 
-import de.AnimalProtect.Main;
-import de.AnimalProtect.MySQL;
-import de.AnimalProtect.structs.EntityList;
-import de.AnimalProtect.structs.EntityObject;
-import de.AnimalProtect.utility.APLogger;
+import de.AnimalProtectOld.Main;
+import de.AnimalProtectOld.MySQL;
+import de.AnimalProtectOld.structs.EntityList;
+import de.AnimalProtectOld.structs.EntityObject;
+import de.AnimalProtectOld.utility.APLogger;
 
 public class lockrespawn implements CommandExecutor {
 

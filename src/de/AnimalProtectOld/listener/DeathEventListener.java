@@ -1,4 +1,4 @@
-package de.AnimalProtect.listener;
+package de.AnimalProtectOld.listener;
 
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
@@ -8,10 +8,10 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
 
-import de.AnimalProtect.Main;
-import de.AnimalProtect.MySQL;
-import de.AnimalProtect.structs.EntityList;
-import de.AnimalProtect.utility.APLogger;
+import de.AnimalProtectOld.Main;
+import de.AnimalProtectOld.MySQL;
+import de.AnimalProtectOld.structs.EntityList;
+import de.AnimalProtectOld.utility.APLogger;
 
 public class DeathEventListener implements Listener {
 	

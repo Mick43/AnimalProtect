@@ -1,4 +1,4 @@
-package de.AnimalProtect;
+package de.AnimalProtectOld;
 
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -6,10 +6,10 @@ import java.sql.SQLException;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import de.AnimalProtect.structs.EntityList;
-import de.AnimalProtect.commands.*;
-import de.AnimalProtect.listener.*;
-import de.AnimalProtect.utility.*;
+import de.AnimalProtectOld.commands.*;
+import de.AnimalProtectOld.listener.*;
+import de.AnimalProtectOld.structs.EntityList;
+import de.AnimalProtectOld.utility.*;
 
 public class Main extends JavaPlugin {
 	

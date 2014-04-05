@@ -1,12 +1,11 @@
-package de.AnimalProtect.listener;
+package de.AnimalProtectOld.listener;
 
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityTargetLivingEntityEvent;
 
-import de.AnimalProtect.Main;
-import de.AnimalProtect.MySQL;
-//import de.AnimalProtect.structs.EntityList;
+import de.AnimalProtectOld.Main;
+import de.AnimalProtectOld.MySQL;
 
 public class TargetEventListener implements Listener {
 

@@ -1,4 +1,4 @@
-package de.AnimalProtect.listener;
+package de.AnimalProtectOld.listener;
 
 import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Egg;
@@ -11,10 +11,10 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 
-import de.AnimalProtect.Main;
-import de.AnimalProtect.MySQL;
-import de.AnimalProtect.structs.EntityList;
-import de.AnimalProtect.utility.APLogger;
+import de.AnimalProtectOld.Main;
+import de.AnimalProtectOld.MySQL;
+import de.AnimalProtectOld.structs.EntityList;
+import de.AnimalProtectOld.utility.APLogger;
 
 public class DamageEventListener implements Listener {
 	

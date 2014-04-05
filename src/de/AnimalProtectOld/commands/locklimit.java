@@ -1,13 +1,13 @@
-package de.AnimalProtect.commands;
+package de.AnimalProtectOld.commands;
 
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import de.AnimalProtect.Main;
-import de.AnimalProtect.MySQL;
-import de.AnimalProtect.structs.EntityList;
+import de.AnimalProtectOld.Main;
+import de.AnimalProtectOld.MySQL;
+import de.AnimalProtectOld.structs.EntityList;
 
 public class locklimit implements CommandExecutor {
 	

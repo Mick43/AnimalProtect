@@ -1,11 +1,11 @@
-package de.AnimalProtect.listener;
+package de.AnimalProtectOld.listener;
 
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 
-import de.AnimalProtect.Main;
-import de.AnimalProtect.MySQL;
+import de.AnimalProtectOld.Main;
+import de.AnimalProtectOld.MySQL;
 
 public class LoadSaveEventListener implements Listener {
 	

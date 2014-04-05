@@ -1,4 +1,4 @@
-package de.AnimalProtect;
+package de.AnimalProtectOld;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -10,7 +10,7 @@ import java.util.logging.Level;
 
 import org.bukkit.plugin.Plugin;
 
-import de.AnimalProtect.utility.APLogger;
+import de.AnimalProtectOld.utility.APLogger;
 
 /**
  * Connects to and uses a MySQL database

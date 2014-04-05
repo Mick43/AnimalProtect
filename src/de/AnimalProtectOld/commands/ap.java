@@ -1,12 +1,12 @@
-package de.AnimalProtect.commands;
+package de.AnimalProtectOld.commands;
 
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import de.AnimalProtect.Main;
-import de.AnimalProtect.MySQL;
+import de.AnimalProtectOld.Main;
+import de.AnimalProtectOld.MySQL;
 
 public class ap implements CommandExecutor {
 	

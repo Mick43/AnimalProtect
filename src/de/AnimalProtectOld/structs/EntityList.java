@@ -1,4 +1,4 @@
-package de.AnimalProtect.structs;
+package de.AnimalProtectOld.structs;
 
 import java.sql.ResultSet;
 import java.util.ArrayList;
@@ -15,10 +15,10 @@ import org.bukkit.entity.Sheep;
 import org.bukkit.entity.Wolf;
 import org.bukkit.inventory.ItemStack;
 
-import de.AnimalProtect.Main;
-import de.AnimalProtect.MySQL;
-import de.AnimalProtect.utility.APLogger;
-import de.AnimalProtect.structs.EntityObject;
+import de.AnimalProtectOld.Main;
+import de.AnimalProtectOld.MySQL;
+import de.AnimalProtectOld.structs.EntityObject;
+import de.AnimalProtectOld.utility.APLogger;
 
 public class EntityList {
 	
