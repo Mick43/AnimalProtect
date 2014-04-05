@@ -31,7 +31,7 @@ public class lockinfo implements CommandExecutor {
 		if (plugin.isEnabled() && cs instanceof Player) {
 			/* Die Variablen initialisieren. */
 			Player player = (Player)cs;
-			Entity entity = InteractEventListener.getSelected(player);
+			Entity entity = InteractEventListener.getSelected(player.getUniqueId());
 			String owner = null;
 			
 			/* Prüfen ob der Spieler die Permission hat */

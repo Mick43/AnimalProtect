@@ -32,7 +32,7 @@ public class lockanimal implements CommandExecutor {
 		if (plugin.isEnabled() && cs instanceof Player) {
 			/* Variablen initialisieren */
 			Player player = (Player)cs;
-			Entity entity = InteractEventListener.getSelected(player);
+			Entity entity = InteractEventListener.getSelected(player.getUniqueId());
 			
 
 			/* Prüfen ob der Spieler die Permission hat */

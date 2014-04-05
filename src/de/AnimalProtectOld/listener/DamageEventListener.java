@@ -51,19 +51,19 @@ public class DamageEventListener implements Listener {
 				break;
 			case ARROW:
 				Arrow projectile1 = (Arrow)damager;
-				damager = projectile1.getShooter();
+				damager = (Entity) projectile1.getShooter();
 				break;
 			case EGG:
 				Egg projectile2 = (Egg)damager;
-				damager = projectile2.getShooter();
+				damager = (Entity) projectile2.getShooter();
 				break;
 			case SNOWBALL:
 				Snowball projectile3 = (Snowball)damager;
-				damager = projectile3.getShooter();
+				damager = (Entity) projectile3.getShooter();
 				break;
 			case SPLASH_POTION:
 				ThrownPotion projectile4 = (ThrownPotion)damager;
-				damager = projectile4.getShooter();
+				damager = (Entity) projectile4.getShooter();
 				break;
 			default:
 				if (Main.DEBUGMODE) { APLogger.info("[DEBUG] Unknown Damager detected! DamagerType: " +damager.getType().toString()); }

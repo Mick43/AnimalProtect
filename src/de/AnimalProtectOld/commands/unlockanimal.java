@@ -36,7 +36,7 @@ public class unlockanimal implements CommandExecutor {
 		if (plugin.isEnabled() && cs instanceof Player) {
 			/* Variablen initialisieren */
 			Player player = (Player)cs;
-			Entity entity = InteractEventListener.getSelected(player);
+			Entity entity = InteractEventListener.getSelected(player.getUniqueId());
 			
 			/* Argumente überprüfen */
 			if (args.length == 1) {
