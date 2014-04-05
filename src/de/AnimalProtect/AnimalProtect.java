@@ -45,4 +45,8 @@ public class AnimalProtect extends JavaPlugin {
 	public boolean isDebugging() {
 		return debugmode;
 	}
+	
+	public Database getDatenbank() {
+		return database;
+	}
 }
