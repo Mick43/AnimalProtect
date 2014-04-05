@@ -1,6 +1,7 @@
 package de.AnimalProtectOld.listener;
 
 import java.util.HashMap;
+import java.util.UUID;
 
 import org.bukkit.Sound;
 import org.bukkit.entity.Entity;
@@ -121,9 +122,9 @@ public class InteractEventListener implements Listener {
 		}
 	}
 	
-	public static Entity getSelected(Player player) {
-		if (selectedList.containsKey(player)) {
-			return selectedList.get(player);
+	public static Entity getSelected(UUID uuid) {
+		if (selectedList.containsKey(uuid)) {
+			return selectedList.get(uuid);
 		}
 		else { return null; }
 	}
