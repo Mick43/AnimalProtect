@@ -65,34 +65,6 @@ public class Animal {
 		return false;
 	}
 	
-	public boolean loadFromDatabase(Integer id) {
-		if (plugin == null) { return false; }
-		if (!plugin.getDatenbank().isConnected()) { return false; }
-		
-		Database database = plugin.getDatenbank();
-		Animal animal = database.getAnimal(id);
-		
-		if (animal != null) {
-			this.owner = animal.owner;
-			this.animaltype = animal.animaltype;
-			this.last_x = animal.last_x;
-			this.last_y = animal.last_y;
-			this.last_z = animal.last_z;
-			this.alive = animal.alive;
-			this.maxhp = animal.maxhp;
-			this.color = animal.color;
-			this.armor = animal.armor;
-			this.horse_jumpstrength = animal.horse_jumpstrength;
-			this.horse_style = animal.horse_style;
-			this.horse_variant = animal.horse_variant;
-			this.uuid = animal.uuid;
-			this.created_at = new Timestamp(new Date().getTime());
-			return true;
-		}
-		
-		return false;
-	}
-	
 	public boolean loadFromDatabase(String uuid) {
 		if (plugin == null) { return false; }
 		if (!plugin.getDatenbank().isConnected()) { return false; }
