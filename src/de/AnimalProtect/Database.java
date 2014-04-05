@@ -29,8 +29,9 @@ public class Database {
 	private final String password;
 	private final String port;
 	
-	private HashMap<String, Animal> entities;
-	private HashMap<CraftoPlayer, ArrayList<Animal>> owners;
+	private HashMap<String, Animal> entities; // Tier(UUID) <-> Tier
+	private HashMap<String, ArrayList<Animal>> keys; // Spieler(UUID) <-> Tiere
+	private HashMap<String, String> reverseKeys; // Tier(UUID) <-> Spieler(UUID)
 	
 	public Database(AnimalProtect plugin) {
 		this.plugin = plugin;
@@ -54,7 +55,7 @@ public class Database {
 		String[] columns = new String[17];
 		columns[0] = "id INT AUTO_INCREMENT PRIMARY KEY";
 		columns[1] = "owner INT(11) NOT NULL";
-		columns[2] = "animaltype ENUM('UNKNOWN', 'COW', 'CHICKEN', 'PIG', 'SHEEP', 'HORSE', 'WOLF') NOT NULL";
+		columns[2] = "animaltype ENUM('UNKNOWN', 'COW', 'CHICKEN', 'PIG', 'SHEEP', 'HORSE', 'WOLF', 'IRON_GOLEM', 'SNOWMAN', 'VILLAGER', 'OCELOT') NOT NULL";
 		columns[3] = "last_x SMALLINT(5) NOT NULL";
 		columns[4] = "last_y SMALLINT(3) UNSIGNED NOT NULL";
 		columns[5] = "last_z SMALLINT(5) NOT NULL";
@@ -70,7 +71,8 @@ public class Database {
 		columns[15] = "uuid CHAR(36) NOT NULL UNIQUE KEY";
 		columns[16] = "created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP";
 		
-		connection.createTable("ap_entities", columns, true);
+		this.connection.createTable("ap_entities", columns, true);
+		this.loadFromDatabase();
 	}
 	
 	private void loadFromDatabase() {
@@ -83,7 +85,7 @@ public class Database {
 			if (module == null) { return; }
 			
 			for(CraftoPlayer player : module.getDatabase().getPlayers()) {
-				this.owners.put(player, new ArrayList<Animal>());
+				this.keys.put(player.getUniqueId(), new ArrayList<Animal>());
 			}
 		}
 		
@@ -113,9 +115,10 @@ public class Database {
 					
 					CraftoPlayer owner = module.getDatabase().getPlayer(animal.getOwner());
 					if (owner != null) {
-						if (this.owners.containsKey(owner)) {
+						if (this.keys.containsKey(owner.getUniqueId())) {
 							entities.put(animal.getUniqueId(), animal);
-							owners.get(owner).add(animal);
+							reverseKeys.put(animal.getUniqueId(), owner.getUniqueId());
+							keys.get(owner.getUniqueId()).add(animal);
 						}
 						else { CraftoMessenger.warn("Warning: An animal could not be loaded because the owner is not in the owners hashmap!"); }
 					}
@@ -125,6 +128,12 @@ public class Database {
 			catch (SQLException e) {
 				Messenger.exception("Database.java", "Exception caught while trying to load every entity from the database.", e);
 			}
+		}
+	}
+	
+	public void connect() {
+		if (!isConnected()) {
+			connection.openConnection();
 		}
 	}
 	
@@ -154,11 +163,25 @@ public class Database {
 		return null;
 	}
 	
+	public CraftoPlayer getOwner(String uuid) {
+		if (uuid == null) { return null; }
+		
+		if (reverseKeys.containsKey(uuid)) {
+			CraftoPlayer player = CraftoPlayer.getPlayer(reverseKeys.get(uuid));
+			
+			if (player != null) {
+				return player;
+			}
+		}
+		
+		return null;
+	}
+	
 	public ArrayList<Animal> getAnimals(String uuid) {
 		if (uuid == null) { return null; }
 		
-		if  (owners.containsKey(uuid)) {
-			return owners.get(CraftoPlayer.getPlayer(uuid));
+		if  (keys.containsKey(uuid)) {
+			return keys.get(uuid);
 		}
 		
 		return null;
