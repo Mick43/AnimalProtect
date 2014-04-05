@@ -1,5 +1,7 @@
 package de.AnimalProtect;
 
-public class AnimalProtect {
+import org.bukkit.plugin.java.JavaPlugin;
+
+public class AnimalProtect extends JavaPlugin {
 
 }
