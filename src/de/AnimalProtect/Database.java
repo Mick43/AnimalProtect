@@ -137,7 +137,7 @@ public class Database {
 		}
 	}
 	
-	public boolean createAnimal(Animal animal) {
+	public boolean insertAnimal(Animal animal) {
 		String Query = "INSERT INTO ap_entities (`owner`, `animaltype`, `last_x`, `last_y`, `last_z`, `alive`, `nametag`, `maxhp`, "
 					 + "`deathcause`, `color`, `armor`, `horse_jumpstrength`, `horse_style`, `horse_variant`, `uuid`"
 					 + "VALUES ("+animal.getOwner()+", "+animal.getAnimaltype().toString()+", "+animal.getLast_x()+", "+animal.getLast_y()+", "

@@ -66,7 +66,7 @@ public class Animal {
 		if (!plugin.getDatenbank().isConnected()) { return false; }
 		
 		Database database = plugin.getDatenbank();
-		if (database.createAnimal(this)) {
+		if (database.insertAnimal(this)) {
 			return true;
 		}
 		
