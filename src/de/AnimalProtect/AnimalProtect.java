@@ -23,6 +23,12 @@ public class AnimalProtect extends JavaPlugin {
 		
 		/* Die Datenbank laden */
 		initializeDatabase();
+		
+		/* Die Listener initialisieren */
+		initializeListeners();
+		
+		/* Die Commands laden */
+		initializeCommands();
 	}
 	
 	@Override
@@ -46,6 +52,26 @@ public class AnimalProtect extends JavaPlugin {
 		Messenger.log(" Loading Database...");
 		
 		this.database = new Database(this);
+	}
+	
+	private void initializeListeners() {
+		// TODO: InitializeListeners
+	}
+	
+	private void initializeCommands() {
+		try {
+			this.getCommand("ap").setExecutor(null);
+			this.getCommand("lockanimal").setExecutor(null);
+			this.getCommand("unlockanimal").setExecutor(null);
+			this.getCommand("respawnanimal").setExecutor(null);
+			this.getCommand("listanimals").setExecutor(null);
+			this.getCommand("tpanimal").setExecutor(null);
+			this.getCommand("debuganimal").setExecutor(null);
+			this.getCommand("lockedanimals").setExecutor(null);
+		}
+		catch (Exception e) {
+			Messenger.exception("AnimalProtect/initializeCommands", "Failed to initialize some commands.", e);
+		}
 	}
 	
 	public boolean isDebugging() {
