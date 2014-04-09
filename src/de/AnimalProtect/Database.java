@@ -1,23 +1,49 @@
 package de.AnimalProtect;
 
+/* Java Imports */
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.UUID;
 
+/* Bukkit Imports */
 import org.bukkit.entity.Horse.Style;
 import org.bukkit.entity.Horse.Variant;
 
+/* CraftoPlugin Imports */
 import craftoplugin.core.CraftoMessenger;
 import craftoplugin.core.CraftoPlugin;
 import craftoplugin.core.database.CraftoPlayer;
 import craftoplugin.modules.general.GeneralModule;
+
+/* AnimalProtect Imports */
 import de.AnimalProtect.structs.Animal;
 import de.AnimalProtect.structs.AnimalArmor;
 import de.AnimalProtect.structs.AnimalType;
 
 public class Database {
+	
+	/* AnimalProtect  ---  Tabellenstruktur  ---  ap_entities
+	 * 
+	 * id                 - (INT)                   (AUTO_INCREMENT) (PRIMARY KEY)
+	 * owner              - (INT11)      (NOT NULL) 
+	 * animaltype         - (ENUM)       (NOT NULL) 
+	 * last_x             - (SMALLINT5)  (NOT NULL) 
+	 * last_y             - (SMALLINT3)  (NOT NULL) (UNSIGNED) 
+	 * last_z             - (SMALLINT5)  (NOT NULL) 
+	 * alive              - (BOOL)       (NOT NULL) 
+	 * nametag            - (VARCHAR255)
+	 * maxhp              - (FLOAT)
+	 * deathcause         - (ENUM)
+	 * color              - (VARCHAR40)  (NOT NULL) 
+	 * armor              - (ENUM)       (NOT NULL) 
+	 * horse_jumpstrength - (DOUBLE)     (NOT NULL) 
+	 * horse_style        - (ENUM)       (NOT NULL) 
+	 * horse_variant      - (ENUM)       (NOT NULL) 
+	 * uuid               - (CHAR36)     (NOT NULL) (UNIQUE KEY)
+	 * created_at         - (TIMESTAMP)             (DEFAULT CURRENT TIMESTAMP)
+	 */
 	
 	private AnimalProtect plugin;
 	private GeneralModule module;
@@ -33,6 +59,10 @@ public class Database {
 	private HashMap<String, ArrayList<Animal>> keys; // Spieler(UUID) <-> Tiere
 	private HashMap<String, String> reverseKeys; // Tier(UUID) <-> Spieler(UUID)
 	
+	/**
+	 * Erstellt eine Datenbank-Instanz von AnimalProtect
+	 * @param plugin - Das AnimalProtect-Plugin
+	 */
 	public Database(AnimalProtect plugin) {
 		this.plugin = plugin;
 		this.hostname = plugin.getConfig().getString("database.hostname");
@@ -82,7 +112,10 @@ public class Database {
 		if (CraftoPlugin.plugin.getModuleManager().containsModule("GeneralModule")) {
 			this.module = (GeneralModule) CraftoPlugin.plugin.getModuleManager().getModule("GeneralModule");
 			
-			if (module == null) { return; }
+			if (module == null) { 
+				CraftoMessenger.warn("Warning: Failed to load players from the GeneralModule! (Module is null)");
+				return; 
+			}
 			
 			for(CraftoPlayer player : module.getDatabase().getPlayers()) {
 				this.keys.put(player.getUniqueId(), new ArrayList<Animal>());
@@ -120,23 +153,32 @@ public class Database {
 							reverseKeys.put(animal.getUniqueId(), owner.getUniqueId());
 							keys.get(owner.getUniqueId()).add(animal);
 						}
-						else { CraftoMessenger.warn("Warning: An animal could not be loaded because the owner is not in the owners hashmap!"); }
+						else { CraftoMessenger.warn("Warning: An animal could not be loaded because the owner is not in the owners hashmap! (AnimalId: " +animal.getId()+ ") (OwnerId: " +owner.getId() +")"); }
 					}
-					else { CraftoMessenger.warn("Warning: An animal could not be loaded because the the owner does not exist!"); }
+					else { CraftoMessenger.warn("Warning: An animal could not be loaded because the the owner does not exist! (AnimalId: " +animal.getId()+ ")"); }
 				}
 			} 
 			catch (SQLException e) {
 				Messenger.exception("Database.java", "Exception caught while trying to load every entity from the database.", e);
 			}
 		}
+		else { CraftoMessenger.warn("Warning: Failed to load every entity from the database! (ResultSet is null)"); }
 	}
 	
+	/**
+	 * Startet die Verbindung zur Datenbank neu.
+	 */
 	public void connect() {
 		if (!isConnected()) {
 			connection.openConnection();
 		}
 	}
 	
+	/**
+	 * Fügt ein Tier der Datenbank hinzu, oder aktualisiert seine Werte.
+	 * @param animal - Das Tier welches aktualisiert/eingefügt werden soll.
+	 * @return True, falls die Aktion ohne Probleme funktioniert hat.
+	 */
 	public boolean insertAnimal(Animal animal) {
 		String Query = "INSERT INTO ap_entities (`owner`, `animaltype`, `last_x`, `last_y`, `last_z`, `alive`, `nametag`, `maxhp`, "
 					 + "`deathcause`, `color`, `armor`, `horse_jumpstrength`, `horse_style`, `horse_variant`, `uuid`"
@@ -154,6 +196,11 @@ public class Database {
 		return false;
 	}
 	
+	/**
+	 * Gibt das Animal mit der angegeben UniqueId zurück.
+	 * @param uuid - Die UniqueId, nach der gesucht wird.
+	 * @return Gibt das Animal wieder, oder null, falls keins gefunden wurde.
+	 */
 	public Animal getAnimal(String uuid) {
 		if (uuid == null) { return null; }
 		
@@ -163,6 +210,11 @@ public class Database {
 		return null;
 	}
 	
+	/**
+	 * Gibt den Owner des Tieres mit der angegeben UniqueId wieder
+	 * @param uuid - Die UniqueId, nach der gesucht wird.
+	 * @return Gibt den CraftoPlayer wieder, oder null, falls keiner gefunden wurde.
+	 */
 	public CraftoPlayer getOwner(String uuid) {
 		if (uuid == null) { return null; }
 		
@@ -177,6 +229,11 @@ public class Database {
 		return null;
 	}
 	
+	/**
+	 * Gibt alle Tiere, die dem Spieler mit der angegeben Id gehören wieder
+	 * @param uuid - Die UniqueId des Spielers
+	 * @return Gibt eine Liste der gesicherten Tiere zurück.
+	 */
 	public ArrayList<Animal> getAnimals(String uuid) {
 		if (uuid == null) { return null; }
 		
@@ -187,6 +244,11 @@ public class Database {
 		return null;
 	}
 	
+	/**
+	 * Sucht das Tier mit der angegebenen UniqueId.
+	 * @param uuid - Die UniqueId, nach der gesucht werden soll.
+	 * @return True, falls das Tier gefunden wurde.
+	 */
 	public boolean containsAnimal(String uuid) {
 		if (uuid == null) { return false; }
 		if (module == null) { return false; }
@@ -198,6 +260,11 @@ public class Database {
 		return false;
 	}
 	
+	/**
+	 * Sucht den Spieler mit der angegebenen UniqueId.
+	 * @param uuid - Die UniqueId, nach der gesucht werden soll.
+	 * @return True, falls der Spieler gefunden wurde.
+	 */
 	public boolean containsPlayer(String uuid) {
 		if (uuid == null) { return false; }
 		
@@ -208,6 +275,10 @@ public class Database {
 		return false;
 	}
 	
+	/**
+	 * Prüft, ob die Datenbank-Verbindung aktiv ist.
+	 * @return True, wenn die Verbindung steht.
+	 */
 	public boolean isConnected() {
 		if (connection == null) { return false; }
 		return connection.checkConnection();
