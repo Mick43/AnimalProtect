@@ -125,9 +125,12 @@ public class MySQL {
     	String Query = "CREATE TABLE IF NOT EXISTS " + tableName + " (";
     	
     	for (String column : columns) {
-    		Query += column;
-    		if (column != columns[columns.length-1]) {
-    			Query += ", ";
+    		if (column != "" && column != null) {
+    			Query += column;
+    			
+    			if (column != columns[columns.length-1]) {
+        			Query += ", ";
+        		}
     		}
     	}
     	
@@ -171,14 +174,14 @@ public class MySQL {
 		/* Das Statement erstellen */
 		try { statement = connection.createStatement(); } 
 		catch (SQLException e) {
-			this.error("MySQL/get", "Exception in 'statement = connection.createStatement()' ", e);
+			this.error("MySQL/get", "Exception caught while trying to create an statement!' ", e);
 			return null;
 		}
 		
 		/* Die Query ausführen */
 		try { res = statement.executeQuery(Query); } 
 		catch (SQLException e) {
-			this.error("MySQL/get", "Exception in 'statement = connection.createStatement()' ", e);
+			this.error("MySQL/get", "Exception caught while trying to execute a query!' ", e);
 			return null;
 		}
 		
@@ -186,7 +189,7 @@ public class MySQL {
 		if (next) {
 			try { if (!res.next()) { return null; } } 
 			catch (SQLException e) {
-				this.error("MySQL/get", "Exception in 'res.next()' ", e);
+				this.error("MySQL/get", "Exception caught while trying to run ResultSet.next!' ", e);
 				return null;
 			}
 		}
