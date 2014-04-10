@@ -183,11 +183,11 @@ public class Database {
 		String Query = "INSERT INTO ap_entities (`owner`, `animaltype`, `last_x`, `last_y`, `last_z`, `alive`, `nametag`, `maxhp`, "
 					 + "`deathcause`, `color`, `armor`, `horse_jumpstrength`, `horse_style`, `horse_variant`, `uuid`"
 					 + "VALUES ("+animal.getOwner()+", "+animal.getAnimaltype().toString()+", "+animal.getLast_x()+", "+animal.getLast_y()+", "
-					 		 + ""+animal.getLast_z()+", "+animal.getAlive()+", '"+animal.getNametag()+"', "+animal.getMaxhp()+", "
+					 		 + ""+animal.getLast_z()+", "+animal.isAlive()+", '"+animal.getNametag()+"', "+animal.getMaxhp()+", "
 					 		 + ""+animal.getDeathcause()+", '"+animal.getColor()+"', "+animal.getArmor()+", "+animal.getHorse_jumpstrength()+", "
 					 		 + ""+animal.getHorse_style()+", "+animal.getHorse_variant()+", '"+animal.getUniqueId()+"')"
 					 + "ON DUPLICATE KEY UPDATE owner="+animal.getOwner()+", last_x="+animal.getLast_x()+", last_y="+animal.getLast_y()+", last_z="+animal.getLast_z()+", "
-					 		+ "alive="+animal.getAlive()+", nametag='"+animal.getNametag()+"', deathcause='"+animal.getDeathcause().toString()+"', color='"+animal.getColor()+"', "
+					 		+ "alive="+animal.isAlive()+", nametag='"+animal.getNametag()+"', deathcause='"+animal.getDeathcause().toString()+"', color='"+animal.getColor()+"', "
 					 		+ "armor='"+animal.getArmor().toString()+"';";
 		
 		if(connection.execute(Query, true)) {

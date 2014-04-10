@@ -61,6 +61,11 @@ public class Animal {
 		this.created_at = new Timestamp(new Date().getTime());
 	}
 	
+	/**
+	 * Speichert alle Werte des Tieres in die Datenbank.
+	 * @param log - True, für Console-Output.
+	 * @return Gibt True aus, falls das Speichern geklappt hat.
+	 */
 	public boolean saveToDatabase(Boolean log) {
 		if (plugin == null) { return false; }
 		if (!plugin.getDatenbank().isConnected()) { return false; }
@@ -73,6 +78,11 @@ public class Animal {
 		return false;
 	}
 	
+	/**
+	 * Lädt das Tier mit der angegebenen UUID aus der Datenbank und speichert es in dieses Objekt.
+	 * @param uuid - Die UniqueId nach welcher in der Datenbank gesucht werden soll.
+	 * @return Gibt True aus, falls das Laden geklappt hat.
+	 */
 	public boolean loadFromDatabase(String uuid) {
 		if (plugin == null) { return false; }
 		if (!plugin.getDatenbank().isConnected()) { return false; }
@@ -101,6 +111,11 @@ public class Animal {
 		return false;
 	}
 	
+	/**
+	 * Aktualisiert alle Werte dieses Tieres.
+	 * @param entity - Das Entity, von dem die Werte genommen werden.
+	 * @return Gibt True aus, falls das Aktualisieren geklappt hat.
+	 */
 	public boolean updateAnimal(Entity entity) {
 		if (entity == null) { return false; }
 		if (entity.getUniqueId().toString() != this.getUniqueId()) { return false; }
@@ -142,205 +157,222 @@ public class Animal {
 	}
 	
 	/**
-	 * @return the id
+	 * @return Die Id des Tieres.
 	 */
 	public Integer getId() {
 		return id;
 	}
 	/**
-	 * @return the owner
+	 * @return Die CraftoPlayer-Id des Besitzers.
 	 */
 	public Integer getOwner() {
 		return owner;
 	}
 	/**
-	 * @return the animaltype
+	 * @return Der Typ des Tieres.
 	 */
 	public AnimalType getAnimaltype() {
 		return animaltype;
 	}
 	/**
-	 * @return the last_x
+	 * @return Die letzte bekannte x-Position
 	 */
 	public Integer getLast_x() {
 		return last_x;
 	}
 	/**
-	 * @return the last_y
+	 * @return Die letzte bekannte y-Position
 	 */
 	public Integer getLast_y() {
 		return last_y;
 	}
 	/**
-	 * @return the last_z
+	 * @return Die letzte bekannte z-Position
 	 */
 	public Integer getLast_z() {
 		return last_z;
 	}
 	/**
-	 * @return the alive
+	 * @return Gibt False aus, falls bekannt ist, dass das Tier tot ist.
 	 */
-	public Boolean getAlive() {
+	public Boolean isAlive() {
 		return alive;
 	}
 	/**
-	 * @return the nametag
+	 * @return Gibt den Nametag des Tieres aus.
 	 */
 	public String getNametag() {
 		return nametag;
 	}
 	/**
-	 * @return the maxhp
+	 * @return Die maximale HP des Tieres.
 	 */
 	public Float getMaxhp() {
 		return maxhp;
 	}
 	/**
-	 * @return the deathcause
+	 * @return Der Grund, warum das Tier getötet wurde.
 	 */
 	public DamageCause getDeathcause() {
 		return deathcause;
 	}
 	/**
-	 * @return the color
+	 * @return Die Farbe des Tieres.
 	 */
 	public String getColor() {
 		return color;
 	}
 	/**
-	 * @return the armor
+	 * @return Die Rüstung des Tieres.
 	 */
 	public AnimalArmor getArmor() {
 		return armor;
 	}
 	/**
-	 * @return the horse_jumpstrength
+	 * @return Die Sprungstärke des Pferdes.
 	 */
 	public Double getHorse_jumpstrength() {
 		return horse_jumpstrength;
 	}
 	/**
-	 * @return the horse_style
+	 * @return Der Style des Pferdes.
 	 */
 	public Style getHorse_style() {
 		return horse_style;
 	}
 	/**
-	 * @return the horse_variant
+	 * @return Die Variante des Pferdes
 	 */
 	public Variant getHorse_variant() {
 		return horse_variant;
 	}
 	/**
-	 * @return the uuid
+	 * @return Die UniqueId des Tieres.
 	 */
 	public String getUniqueId() {
 		return uuid;
 	}
 	/**
-	 * @return the created_at
+	 * @return Gibt aus, wann das Tier protected wurde.
 	 */
 	public Timestamp getCreated_at() {
 		return created_at;
 	}
 	/**
-	 * @param id the id to set
+	 * Setzt die Id auf den angegebenen Wert.
+	 * @param id - Die neue Id des Tieres.
 	 */
 	public void setId(Integer id) {
 		this.id = id;
 	}
 	/**
-	 * @param owner the owner to set
+	 * Ändert den Owner auf einen neuen Owner.
+	 * @param Die Id des neuen Owners.
 	 */
 	public void setOwner(Integer owner) {
 		this.owner = owner;
 	}
 	/**
-	 * @param animaltype the animaltype to set
+	 * Ändert den Typ des Tieres.
+	 * @param animaltype - Der neue AnimalType.
 	 */
 	public void setAnimaltype(AnimalType animaltype) {
 		this.animaltype = animaltype;
 	}
 	/**
-	 * @param last_x the last_x to set
+	 * Setzt die letzte bekannte X-Position auf den neuen Wert.
+	 * @param last_x - Die X-Koordinate
 	 */
 	public void setLast_x(Integer last_x) {
 		this.last_x = last_x;
 	}
 	/**
-	 * @param last_y the last_y to set
+	 * Setzt die letzte bekannte Y-Position auf den neuen Wert.
+	 * @param last_y - Die Y-Koordinate
 	 */
 	public void setLast_y(Integer last_y) {
 		this.last_y = last_y;
 	}
 	/**
-	 * @param last_z the last_z to set
+	 * Setzt die letzte bekannte Z-Position auf den neuen Wert.
+	 * @param last_z - Die Z-Koordinate
 	 */
 	public void setLast_z(Integer last_z) {
 		this.last_z = last_z;
 	}
 	/**
-	 * @param alive the alive to set
+	 * Ändert den Lebens-Status des Tieres.
+	 * @param alive - Der neue Status
 	 */
 	public void setAlive(Boolean alive) {
 		this.alive = alive;
 	}
 	/**
-	 * @param nametag the nametag to set
+	 * Ändert den Nametag des Tieres.
+	 * @param nametag - Der neue Nametag
 	 */
 	public void setNametag(String nametag) {
 		this.nametag = nametag;
 	}
 	/**
-	 * @param maxhp the maxhp to set
+	 * Ändert die maximale HP des Tieres.
+	 * @param maxhp - Die neuen maximalen HP.
 	 */
 	public void setMaxhp(Float maxhp) {
 		this.maxhp = maxhp;
 	}
 	/**
-	 * @param deathcause the deathcause to set
+	 * Ändert die Angabe, warum das Tier gestorben ist.
+	 * @param deathcause - der Todesgrund.
 	 */
 	public void setDeathcause(DamageCause deathcause) {
 		this.deathcause = deathcause;
 	}
 	/**
-	 * @param color the color to set
+	 * Ändert die Farbe des Tieres.
+	 * @param color - Die neue Farbe des Tieres.
 	 */
 	public void setColor(String color) {
 		this.color = color;
 	}
 	/**
-	 * @param armor the armor to set
+	 * Ändert die Rüstung des Tieres.
+	 * @param armor - Die neue Rüstung
 	 */
 	public void setArmor(AnimalArmor armor) {
 		this.armor = armor;
 	}
 	/**
-	 * @param horse_jumpstrength the horse_jumpstrength to set
+	 * Ändert die Sprungstärke des Pferdes.
+	 * @param horse_jumpstrength - Die neue Sprungstärke
 	 */
 	public void setHorse_jumpstrength(Double horse_jumpstrength) {
 		this.horse_jumpstrength = horse_jumpstrength;
 	}
 	/**
-	 * @param horse_style the horse_style to set
+	 * Ändert den Style des Pferdes.
+	 * @param horse_style - Der Style des Pferdes.
 	 */
 	public void setHorse_style(Style horse_style) {
 		this.horse_style = horse_style;
 	}
 	/**
-	 * @param horse_variant the horse_variant to set
+	 * Ändert die Variante des Pferdes.
+	 * @param horse_variant - Die Variante des Pferdes.
 	 */
 	public void setHorse_variant(Variant horse_variant) {
 		this.horse_variant = horse_variant;
 	}
 	/**
-	 * @param uuid the uuid to set
+	 * Ändert die UniqueId des Tieres.
+	 * @param uuid - Die neue UniqueId
 	 */
 	public void setUniqueId(String uuid) {
 		this.uuid = uuid;
 	}
 	/**
-	 * @param created_at the created_at to set
+	 * Setzt das Erstelldatum auf einen neuen Timestamp.
+	 * @param created_at - Das neue Erstelldatum
 	 */
 	public void setCreated_at(Timestamp created_at) {
 		this.created_at = created_at;
