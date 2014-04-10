@@ -276,10 +276,11 @@ public class Messenger {
 	public static void exception(String Source, String Information, Exception e) {
 		if (e == null) { return; }
 		
+		warn("------------------- "+ConsolePrefix+" Exception! ------------------");
 		warn("An Exception occured in animalprotect/" + Source);
 		warn("More Information: " + Information);
-		warn("---------- Exception Stacktrace ----------");
+		warn("------------------- Exception Stacktrace -------------------");
 		warn(e.getStackTrace().toString());
-		warn("------------------------------------------");
+		warn("----------------- Exception Stacktrace End -----------------");
 	}
 }

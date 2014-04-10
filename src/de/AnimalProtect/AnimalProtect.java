@@ -44,7 +44,7 @@ public class AnimalProtect extends JavaPlugin {
 			saveConfig();
 		}
 		catch (Exception e) { 
-			Messenger.warn("Failed to load the config file!");
+			Messenger.exception("AnimalProtect.java/initializeConfig", "Failed to load the config file!", e);
 		}
 	}
 	
@@ -70,7 +70,7 @@ public class AnimalProtect extends JavaPlugin {
 			this.getCommand("lockedanimals").setExecutor(null);
 		}
 		catch (Exception e) {
-			Messenger.exception("AnimalProtect/initializeCommands", "Failed to initialize some commands.", e);
+			Messenger.exception("AnimalProtect.java/initializeCommands", "Failed to initialize some commands.", e);
 		}
 	}
 	
