@@ -15,6 +15,7 @@ import org.bukkit.entity.Wolf;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.inventory.ItemStack;
 
+import craftoplugin.core.database.CraftoPlayer;
 import de.AnimalProtect.AnimalProtect;
 import de.AnimalProtect.Database;
 
@@ -40,7 +41,16 @@ public class Animal {
 	private String uuid;
 	private Timestamp created_at;
 	
-	public Animal(AnimalProtect plugin) { this.plugin = plugin; }
+	public Animal(AnimalProtect plugin) { 
+		this.plugin = plugin;
+		this.created_at = new Timestamp(new Date().getTime());
+	}
+	public Animal(AnimalProtect plugin, CraftoPlayer owner, Entity entity) { 
+		this.plugin = plugin;
+		this.owner = owner.getId();
+		this.created_at = new Timestamp(new Date().getTime());
+		this.updateAnimal(entity);
+	}
 	public Animal(AnimalProtect plugin, Integer owner, AnimalType animaltype, Integer last_x, Integer last_y, Integer last_z, Boolean alive, Float maxhp,
 				  String color, AnimalArmor armor, Double horse_jumpstrength, Style horse_style, Variant horse_variant, String uuid) {
 		
@@ -118,7 +128,6 @@ public class Animal {
 	 */
 	public boolean updateAnimal(Entity entity) {
 		if (entity == null) { return false; }
-		if (entity.getUniqueId().toString() != this.getUniqueId()) { return false; }
 		
 		this.last_x = entity.getLocation().getBlockX();
 		this.last_y = entity.getLocation().getBlockY();
