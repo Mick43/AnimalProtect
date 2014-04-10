@@ -13,10 +13,15 @@ public class AnimalProtect extends JavaPlugin {
 	private Database database;
 	private boolean debugmode;
 	
+	public static AnimalProtect plugin;
+	
 	@Override
 	public void onEnable() {
 		/* Konsole benachrichtigen */
 		Messenger.log("Initializing AnimalProtect...");
+		
+		/* Statische Instanz intialisieren */
+		AnimalProtect.plugin = this;
 		
 		/* Die Config laden */
 		initializeConfig();
