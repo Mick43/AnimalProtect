@@ -1,5 +1,6 @@
 package de.AnimalProtect;
 
+import java.util.UUID;
 import java.util.logging.Level;
 
 import org.bukkit.Bukkit;
@@ -43,6 +44,16 @@ public class Messenger {
      */
 	public static void warn(String message) {
 		Bukkit.getServer().getLogger().warning("["+ConsolePrefix+"] " + message);
+	}
+	
+	/**
+	 * Gibt eine wichtige Fehlermeldung in der Konsole aus.
+	 * 
+	 * @param message
+     *            Die auszugebende Nachricht.
+     */
+	public static void error(String message) {
+		Bukkit.getServer().getLogger().log(Level.SEVERE, "["+ConsolePrefix+"] " + message);
 	}
 	
 	/**
@@ -93,9 +104,11 @@ public class Messenger {
      *            Der Name des Spielers, an den die Nachricht geschickt wird.
 	 * @param message
      *            Die Nachricht, welche verschickt wird.
+     * @param prefix
+     *            Gibt an, ob vor der Nachricht der Prefix angegeben werden soll.
      */
 	public static void sendMessage(String playerName, String message, Boolean prefix) {
-		sendMessage(Bukkit.getServer().getPlayer(playerName), ChatColor.YELLOW + message, prefix);
+		sendMessage(Bukkit.getServer().getPlayer(playerName), message, prefix);
 	}
 	
 	/**
@@ -107,7 +120,33 @@ public class Messenger {
      *            Die Nachricht, welche verschickt wird.
      */
 	public static void sendMessage(String playerName, String message) {
-		sendMessage(Bukkit.getServer().getPlayer(playerName), ChatColor.YELLOW + message, false);
+		sendMessage(Bukkit.getServer().getPlayer(playerName), message, false);
+	}
+	
+	/**
+	 * Benachrichtigt einen bestimmten Spieler.
+	 * 
+	 * @param uniqueId
+     *            Der UniqueId des Spielers, an den die Nachricht geschickt wird.
+	 * @param message
+     *            Die Nachricht, welche verschickt wird.
+     * @param prefix
+     *            Gibt an, ob vor der Nachricht der Prefix angegeben werden soll.
+     */
+	public static void sendMessage(UUID uniqueId, String message, Boolean prefix) {
+		sendMessage(Bukkit.getServer().getPlayer(uniqueId), message, prefix);
+	}
+	
+	/**
+	 * Benachrichtigt einen bestimmten Spieler.
+	 * 
+	 * @param uniqueId
+     *            Der UniqueId des Spielers, an den die Nachricht geschickt wird.
+	 * @param message
+     *            Die Nachricht, welche verschickt wird.
+     */
+	public static void sendMessage(UUID uniqueId, String message) {
+		sendMessage(Bukkit.getServer().getPlayer(uniqueId), message, false);
 	}
 	
 	/**
@@ -124,7 +163,7 @@ public class Messenger {
 		if (cs == null) { return; }
 		
 		if (cs instanceof Player) {
-			sendMessage((Player)cs, ChatColor.YELLOW + message, prefix);
+			sendMessage((Player)cs, message, prefix);
 		}
 		else {
 			message = message.replaceAll("§0", "");
