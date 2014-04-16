@@ -175,6 +175,15 @@ public class Database {
 	}
 	
 	/**
+	 * Schließt die Verbindung zur Datenbank.
+	 */
+	public void closeConnection() {
+		if (isConnected()) {
+			connection.closeConnection();
+		}
+	}
+	
+	/**
 	 * Fügt ein Tier der Datenbank hinzu, oder aktualisiert seine Werte.
 	 * @param animal - Das Tier welches aktualisiert/eingefügt werden soll.
 	 * @return True, falls die Aktion ohne Probleme funktioniert hat.
