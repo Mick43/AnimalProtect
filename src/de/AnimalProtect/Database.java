@@ -71,7 +71,7 @@ public class Database {
 		this.password = plugin.getConfig().getString("database.password");
 		this.port = plugin.getConfig().getString("database.port");
 		
-		this.connection = new MySQL(plugin, hostname, port, dbname, username, password, plugin.isDebugging());
+		this.connection = new MySQL(plugin, hostname, port, dbname, username, password, AnimalProtect.isDebugging());
 		this.connection.openConnection();
 		
 		if (connection.checkConnection()) {

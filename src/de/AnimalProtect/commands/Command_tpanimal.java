@@ -31,8 +31,8 @@ public class Command_tpanimal implements CommandExecutor {
 	
 	public static void runCommand(CommandSender cs, String[] args) {
 		/* Datenbank-Verbindung aufbauen, falls nicht vorhanden. */
-		if (AnimalProtect.plugin.getDatenbank().isConnected())
-		{ AnimalProtect.plugin.getDatenbank().connect(); }
+		if (AnimalProtect.getDatenbank().isConnected())
+		{ AnimalProtect.getDatenbank().connect(); }
 		
 		if (!(cs instanceof Player)) {
 			Messenger.sendMessage(cs, "§cFehler: Um diesen Befehl auszuführen musst du ein Spieler sein.");
@@ -54,7 +54,7 @@ public class Command_tpanimal implements CommandExecutor {
 		if (player == null) { Messenger.sendMessage(cs, "§cFehler: Der Spieler konnte nicht gefunden werden."); return; }
 		if (!isNumber(args[1])) { Messenger.sendMessage(cs, "§cFehler: Die angegebene ID ist keine Zahl!"); return; }
 		
-		animal = AnimalProtect.plugin.getDatenbank().getAnimals(player.getUniqueId()).get(Integer.parseInt(args[1]));
+		animal = AnimalProtect.getDatenbank().getAnimals(player.getUniqueId()).get(Integer.parseInt(args[1]));
 		
 		if (animal == null) { Messenger.sendMessage(cs, "§cFehler: Das Tier konnte nicht gefunden werden."); return; }
 		

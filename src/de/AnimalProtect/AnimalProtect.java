@@ -23,8 +23,8 @@ import de.AnimalProtect.listeners.InteractEventListener;
 
 public class AnimalProtect extends JavaPlugin {
 	
-	private Database database;
-	private Boolean debugmode;
+	private static Database database;
+	private static Boolean debugmode;
 	
 	public static AnimalProtect plugin;
 	
@@ -51,7 +51,7 @@ public class AnimalProtect extends JavaPlugin {
 	
 	@Override
 	public void onDisable() {
-		this.getDatenbank().closeConnection();
+		AnimalProtect.getDatenbank().closeConnection();
 	}
 	
 	private void initializeConfig() {
@@ -61,7 +61,7 @@ public class AnimalProtect extends JavaPlugin {
 			getConfig().options().copyDefaults(true);
 			saveConfig();
 			
-			this.debugmode = getConfig().getBoolean("settings.debug-messages");
+			AnimalProtect.debugmode = getConfig().getBoolean("settings.debug-messages");
 		}
 		catch (Exception e) { 
 			Messenger.exception("AnimalProtect.java/initializeConfig", "Failed to load the config file!", e);
@@ -71,7 +71,7 @@ public class AnimalProtect extends JavaPlugin {
 	private void initializeDatabase() {
 		Messenger.log(" Loading Database...");
 		
-		this.database = new Database(this);
+		AnimalProtect.database = new Database(this);
 	}
 	
 	private void initializeListeners() {
@@ -94,11 +94,16 @@ public class AnimalProtect extends JavaPlugin {
 		}
 	}
 	
-	public boolean isDebugging() {
+	public static boolean isDebugging() {
 		return debugmode;
 	}
 	
-	public boolean isAnimal(Entity entity) {
+	/**
+	 * Gibt aus, ob das übergebene Entity ein Tier ist, welches man mit AnimalProtect sichern kann.
+	 * @param entity - Das Entity welches überprüft wird.
+	 * @return True, falls der EntityType ein AnimalType ist.
+	 */
+	public static boolean isAnimal(Entity entity) {
 		EntityType type = entity.getType();
 		if (type == EntityType.SHEEP
 		||  type == EntityType.PIG
@@ -114,11 +119,11 @@ public class AnimalProtect extends JavaPlugin {
 		return false;
 	}
 	
-	public Entity getSelectedAnimal(UUID uuid) {
+	public static Entity getSelectedAnimal(UUID uuid) {
 		return InteractEventListener.getSelected(uuid);
 	}
 	
-	public Database getDatenbank() {
+	public static Database getDatenbank() {
 		return database;
 	}
 }

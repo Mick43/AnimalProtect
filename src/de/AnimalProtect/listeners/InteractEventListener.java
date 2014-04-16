@@ -24,7 +24,7 @@ public class InteractEventListener implements Listener {
 	
 	public InteractEventListener(AnimalProtect plugin) {
 		this.plugin = plugin;
-		this.database = plugin.getDatenbank();
+		this.database = AnimalProtect.getDatenbank();
 	}
 	
 	@EventHandler
@@ -36,7 +36,7 @@ public class InteractEventListener implements Listener {
 			/* Wenn der Spieler nicht geduckt ist, dann wird returned. */
 			if (!event.getPlayer().isSneaking()) { return; }
 			/* Wenn das Entity kein Tier ist, dann wird returned. */
-			if (!plugin.isAnimal(event.getRightClicked())) { return; }
+			if (!AnimalProtect.isAnimal(event.getRightClicked())) { return; }
 			
 			/* Die Variablen werden initialisiert. */
 			Player player = event.getPlayer();

@@ -28,8 +28,8 @@ public class Command_lockanimal implements CommandExecutor {
 	
 	public static void runCommand(CommandSender cs, String[] args) {
 		/* Datenbank-Verbindung aufbauen, falls nicht vorhanden. */
-		if (AnimalProtect.plugin.getDatenbank().isConnected())
-		{ AnimalProtect.plugin.getDatenbank().connect(); }
+		if (AnimalProtect.getDatenbank().isConnected())
+		{ AnimalProtect.getDatenbank().connect(); }
 		
 		/* Prüfen ob der Sender ein Spieler ist */
 		if (!(cs instanceof Player)) {
@@ -40,7 +40,7 @@ public class Command_lockanimal implements CommandExecutor {
 		/* Variablen bereitstellen */
 		Player sender = (Player)cs;
 		CraftoPlayer player = CraftoPlayer.getPlayer(sender.getUniqueId());
-		Entity entity = AnimalProtect.plugin.getSelectedAnimal(sender.getUniqueId());
+		Entity entity = AnimalProtect.getSelectedAnimal(sender.getUniqueId());
 		
 		/* Variablen überprüfen */
 		if (entity == null) {
@@ -53,7 +53,7 @@ public class Command_lockanimal implements CommandExecutor {
 		}
 		
 		/* Das Animal-Objekt laden */
-		Animal animal = AnimalProtect.plugin.getDatenbank().getAnimal(entity.getUniqueId());
+		Animal animal = AnimalProtect.getDatenbank().getAnimal(entity.getUniqueId());
 		
 		if (animal != null) {
 			Messenger.sendMessage(cs, "§cFehler: Das Tier ist bereits protected!");

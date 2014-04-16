@@ -28,8 +28,8 @@ public class Command_unlockanimal implements CommandExecutor {
 	
 	public static void runCommand(CommandSender cs, String[] args) {
 		/* Datenbank-Verbindung aufbauen, falls nicht vorhanden. */
-		if (AnimalProtect.plugin.getDatenbank().isConnected())
-		{ AnimalProtect.plugin.getDatenbank().connect(); }
+		if (AnimalProtect.getDatenbank().isConnected())
+		{ AnimalProtect.getDatenbank().connect(); }
 		
 		/* Prüfen ob der Sender ein Spieler ist */
 		if (!(cs instanceof Player)) {
@@ -40,7 +40,7 @@ public class Command_unlockanimal implements CommandExecutor {
 		/* Variablen bereitstellen */
 		Player sender = (Player)cs;
 		CraftoPlayer player = CraftoPlayer.getPlayer(sender.getUniqueId());
-		Entity entity = AnimalProtect.plugin.getSelectedAnimal(sender.getUniqueId());
+		Entity entity = AnimalProtect.getSelectedAnimal(sender.getUniqueId());
 		
 		/* Variablen überprüfen */
 		if (entity == null) {
@@ -51,13 +51,13 @@ public class Command_unlockanimal implements CommandExecutor {
 			Messenger.sendMessage(cs, "§cFehler: Dein Spielerobjekt wurde nicht gefunden! Bitte kontaktiere einen Administrator.");
 		}
 		
-		Animal animal = AnimalProtect.plugin.getDatenbank().getAnimal(entity.getUniqueId());
+		Animal animal = AnimalProtect.getDatenbank().getAnimal(entity.getUniqueId());
 		
 		if (animal == null) {
 			Messenger.sendMessage(cs, "§cFehler: Das Tier ist nicht gesichert.");
 		}
 		else {
-			if (AnimalProtect.plugin.getDatenbank().unlockAnimal(animal)) 
+			if (AnimalProtect.getDatenbank().unlockAnimal(animal)) 
 			{ Messenger.sendMessage(cs, "§aDas Tier wurde erfolgreich entsichert."); }
 			else { Messenger.sendMessage(cs, "§cFehler: Das Tier konnte nicht entsichert werden."); }
 		}

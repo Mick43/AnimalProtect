@@ -28,17 +28,17 @@ public class Command_debuganimal implements CommandExecutor {
 			if (AnimalProtect.plugin.isEnabled()) { Messenger.messageList(cs, "Plugin aktiviert", "Ja"); }
 			else { Messenger.messageList(cs, "Plugin aktiviert", "Nein"); }
 			
-			Messenger.messageList(cs, "Gesicherte Tiere", "" + AnimalProtect.plugin.getDatenbank().getLockedAnimals());
+			Messenger.messageList(cs, "Gesicherte Tiere", "" + AnimalProtect.getDatenbank().getLockedAnimals());
 			
-			if (AnimalProtect.plugin.getDatenbank().isConnected())
+			if (AnimalProtect.getDatenbank().isConnected())
 			{ Messenger.messageList(cs, "Datenbank-Verbindung", "Aktiv"); }
 			else { Messenger.messageList(cs, "Datenbank-Verbindung", "Nicht aktiv"); }
 			
-			Messenger.messageList(cs, "Anzahl an fehlgeschlagenen Queries", ""+AnimalProtect.plugin.getDatenbank().getFailedQueries().size());
+			Messenger.messageList(cs, "Anzahl an fehlgeschlagenen Queries", ""+AnimalProtect.getDatenbank().getFailedQueries().size());
 		}
 		else {
 			if (isNumber(args[0])) {
-				Messenger.sendMessage(cs, "§7[§f"+AnimalProtect.plugin.getDatenbank().getFailedQueries().get(Integer.parseInt(args[0])) + "§7]");
+				Messenger.sendMessage(cs, "§7[§f"+AnimalProtect.getDatenbank().getFailedQueries().get(Integer.parseInt(args[0])) + "§7]");
 			}
 		}
 	}

@@ -33,8 +33,8 @@ public class Command_listanimals implements CommandExecutor {
 	
 	public static void runCommand(CommandSender cs, String[] args) {
 		/* Datenbank-Verbindung aufbauen, falls nicht vorhanden. */
-		if (AnimalProtect.plugin.getDatenbank().isConnected())
-		{ AnimalProtect.plugin.getDatenbank().connect(); }
+		if (AnimalProtect.getDatenbank().isConnected())
+		{ AnimalProtect.getDatenbank().connect(); }
 		
 		/* Variablen initialisieren */
 		CraftoPlayer cPlayer = null;
@@ -77,7 +77,7 @@ public class Command_listanimals implements CommandExecutor {
 		{ Messenger.sendMessage(cs, "§cFehler: Der Spieler konnte nicht gefunden werden!"); return; }
 		
 		/* Die Tiere des Spielers laden */
-		animals = AnimalProtect.plugin.getDatenbank().getAnimals(cPlayer.getUniqueId());
+		animals = AnimalProtect.getDatenbank().getAnimals(cPlayer.getUniqueId());
 		
 		if (animals == null || animals.isEmpty())
 		{ Messenger.sendMessage(cs, "§cFehler: Der Spieler hat noch keine Tiere gesichert!"); return; }

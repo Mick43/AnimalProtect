@@ -80,9 +80,9 @@ public class Animal {
 	 */
 	public boolean saveToDatabase(Boolean log) {
 		if (plugin == null) { return false; }
-		if (!plugin.getDatenbank().isConnected()) { return false; }
+		if (!AnimalProtect.getDatenbank().isConnected()) { return false; }
 		
-		Database database = plugin.getDatenbank();
+		Database database = AnimalProtect.getDatenbank();
 		if (database.insertAnimal(this)) {
 			return true;
 		}
@@ -97,9 +97,9 @@ public class Animal {
 	 */
 	public boolean loadFromDatabase(UUID uuid) {
 		if (plugin == null) { return false; }
-		if (!plugin.getDatenbank().isConnected()) { return false; }
+		if (!AnimalProtect.getDatenbank().isConnected()) { return false; }
 		
-		Database database = plugin.getDatenbank();
+		Database database = AnimalProtect.getDatenbank();
 		Animal animal = database.getAnimal(uuid);
 		
 		if (animal != null) {
