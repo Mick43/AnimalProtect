@@ -285,6 +285,22 @@ public class Database {
 	}
 	
 	/**
+	 * Gibt die aktuelle Anzahl der gesicherten Tiere wieder.
+	 * @return Die aktuelle Anzahl als Integer.
+	 */
+	public int getLockedAnimals() {
+		return this.entities.size();
+	}
+	
+	/**
+	 * Gibt alle fehlgeschlagenen Queries zurück.
+	 * @return Eine ArrayList<String> an Queries.
+	 */
+	public ArrayList<String> getFailedQueries() {
+		return this.connection.getFailedQueries();
+	}
+	
+	/**
 	 * Prüft, ob die Datenbank-Verbindung aktiv ist.
 	 * @return True, wenn die Verbindung steht.
 	 */
