@@ -17,7 +17,7 @@ public class Command_debuganimal implements CommandExecutor {
 	@Override
 	public boolean onCommand(CommandSender cs, Command cmd, String label, String[] args) {
 		if (!plugin.isEnabled()) { return false; }
-		//TODO: Command
+		
 		return true;
 	}
 }

@@ -5,47 +5,48 @@ authors: [Fear837, Pingebam]
 website: www.craftolution.de
 commands:
    lockanimal:
-      description: Sichert ein Entity in die Datenbank.
-      usage: Write /<command>
+      description: Sichert ein Tier vor anderen Spielern.
+      usage: Schreibe /lockanimal
       permission: animalprotect.protect
       permission-message: You don't have permission.
    unlockanimal:
-      description: Entsichert ein Entity aus der Datenbank.
-      usage: Write /<command>
+      description: Entsichert das Tier.
+      usage: Schreibe /unlockanimal
       permission: animalprotect.protect
       permission-message: You don't have permission.
    lockinfo:
-      description: Gibt Informationen ueber ein Entity.
-      usage: Write /<command>
+      description: Gibt Informationen uber das ausgewaehlte Tier aus.
+      usage: Schreibe /lockinfo
       permission: animalprotect.protect
       permission-message: You don't have permission.
    locklist:
       description: Listet alle Tiere die der Person gehoeren auf.
-      usage: Write /<command> [playername] [seite]
+      usage: Schreibe /locklist [playername] [seite]
       permission: animalprotect.admin
       permission-message: You don't have permission.
    lockrespawn:
       description: Spawnt das ausgewaehlte Tier neu.
-      usage: Write /<command> [owner] [id]
+      usage: Schreibe /lockrespawn [owner] [id]
       permission: animalprotect.admin
       permission-message: You don't have permission.
    locktp:
       description: Teleportiert dich zu einem Tier.
-      usage: Write /<command> [owner] [id]
+      usage: Schreibe /locktp [owner] [id]
       permission: animalprotect.admin
       permission-message: You don't have permission.
    lockdebug:
       description: Gibt Debug-Informationen ueber das Plugin aus.
-      usage: Write /<command>
+      usage: Schreibe /lockdebug
+      permission: animalprotect.admin
       permission-message: You don't have permission.
    locklimit:
       description: Gibt die Anzahl der Locks ueber einen Spieler aus.
-      usage: Write /<command> <name>
+      usage: Schreibe /locklimit <spieler>
       permission: animalprotect.protect
       permission-message: You don't have permission.
    ap:
       description: Gesamtuebersicht aller AnimalProtect-Befehle.
-      usage: Write /<command>
+      usage: Schreibe /ap <befehl>
       permission: animalprotect.protect
       permission-message: You don't have permission.
 permissions:
