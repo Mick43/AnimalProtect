@@ -12,7 +12,6 @@ import org.bukkit.entity.Horse.Style;
 import org.bukkit.entity.Horse.Variant;
 
 /* CraftoPlugin Imports */
-import craftoplugin.core.CraftoMessenger;
 import craftoplugin.core.CraftoPlugin;
 import craftoplugin.core.database.CraftoPlayer;
 import craftoplugin.modules.general.GeneralModule;
@@ -113,7 +112,7 @@ public class Database {
 			this.module = (GeneralModule) CraftoPlugin.plugin.getModuleManager().getModule("GeneralModule");
 			
 			if (module == null) { 
-				CraftoMessenger.warn("Warning: Failed to load players from the GeneralModule! (Module is null)");
+				Messenger.warn("Warning: Failed to load players from the GeneralModule! (Module is null)");
 				return; 
 			}
 			
@@ -153,16 +152,16 @@ public class Database {
 							reverseKeys.put(animal.getUniqueId(), owner.getUniqueId());
 							keys.get(owner.getUniqueId()).add(animal);
 						}
-						else { CraftoMessenger.warn("Warning: An animal could not be loaded because the owner is not in the owners hashmap! (AnimalId: " +animal.getId()+ ") (OwnerId: " +owner.getId() +")"); }
+						else { Messenger.warn("Warning: An animal could not be loaded because the owner is not in the owners hashmap! (AnimalId: " +animal.getId()+ ") (OwnerId: " +owner.getId() +")"); }
 					}
-					else { CraftoMessenger.warn("Warning: An animal could not be loaded because the the owner does not exist! (AnimalId: " +animal.getId()+ ")"); }
+					else { Messenger.warn("Warning: An animal could not be loaded because the the owner does not exist! (AnimalId: " +animal.getId()+ ")"); }
 				}
 			} 
 			catch (SQLException e) {
 				Messenger.exception("Database.java", "Exception caught while trying to load every entity from the database.", e);
 			}
 		}
-		else { CraftoMessenger.warn("Warning: Failed to load every entity from the database! (ResultSet is null)"); }
+		else { Messenger.warn("Warning: Failed to load every entity from the database! (ResultSet is null)"); }
 	}
 	
 	/**
