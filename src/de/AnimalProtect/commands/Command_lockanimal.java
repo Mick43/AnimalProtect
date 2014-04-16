@@ -10,7 +10,6 @@ import craftoplugin.core.CraftoMessenger;
 import craftoplugin.core.database.CraftoPlayer;
 import de.AnimalProtect.AnimalProtect;
 import de.AnimalProtect.structs.Animal;
-import de.AnimalProtect.structs.AnimalType;
 
 public class Command_lockanimal implements CommandExecutor {
 	

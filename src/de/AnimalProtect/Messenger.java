@@ -79,6 +79,10 @@ public class Messenger {
 	public static void sendMessage(Player player, String message, Boolean prefix) {
 		if (player == null) { return; }
 		
+		if (AnimalProtect.plugin.getConfig().contains("messages."+message.toUpperCase())) {
+			message = AnimalProtect.plugin.getConfig().getString("messages."+message.toUpperCase());
+		}
+		
 		if (prefix) { player.sendMessage(Prefix + " " + ChatColor.YELLOW + message); }
 		else { player.sendMessage(ChatColor.YELLOW + message); }
 	}
@@ -281,11 +285,16 @@ public class Messenger {
 	 * @param message
      *            Die Nachricht, welche verschickt wird.
      */
-	public static void messageStaff(String Message) {
+	public static void messageStaff(String message) {
 		Player[] players = Bukkit.getServer().getOnlinePlayers();
+		
+		if (AnimalProtect.plugin.getConfig().contains("messages."+message.toUpperCase())) {
+			message = AnimalProtect.plugin.getConfig().getString("messages."+message.toUpperCase());
+		}
+		
 		for (Player p : players) {
 			if (p.hasPermission("craftoplugin.admin") || p.hasPermission("craftoplugin.moderator") || p.isOp()) {
-				p.sendMessage(Prefix + Message);
+				p.sendMessage(Prefix + message);
 			}
 		}
 	}
@@ -298,6 +307,10 @@ public class Messenger {
      */
 	public static void debugMessage(String message) {
 		if (Debugging) {
+			if (AnimalProtect.plugin.getConfig().contains("messages."+message.toUpperCase())) {
+				message = AnimalProtect.plugin.getConfig().getString("messages."+message.toUpperCase());
+			}
+			
 			log("[DEBUG] " + message);
 		}
 	}

@@ -8,3 +8,5 @@ settings:
   max_entities_for_player: 25
   debug-messages: true
   worldname: 'Craftolution-de'
+messages:
+  LOCK_SUCCESS: '%aDas Tier wurde erfolgreich gesichert.'
