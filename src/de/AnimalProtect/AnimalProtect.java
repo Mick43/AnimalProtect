@@ -17,10 +17,13 @@ import de.AnimalProtect.commands.Command_lockedanimals;
 import de.AnimalProtect.commands.Command_respawnanimal;
 import de.AnimalProtect.commands.Command_tpanimal;
 import de.AnimalProtect.commands.Command_unlockanimal;
+import de.AnimalProtect.listeners.DeathEventListener;
 
 /* AnimalProtect - Listener Imports */
 import de.AnimalProtect.listeners.InteractEventListener;
 import de.AnimalProtect.listeners.DamageEventListener;
+import de.AnimalProtect.listeners.LeashEventListener;
+import de.AnimalProtect.listeners.VehicleEventListener;
 
 public class AnimalProtect extends JavaPlugin {
 	
@@ -56,7 +59,7 @@ public class AnimalProtect extends JavaPlugin {
 	}
 	
 	private void initializeConfig() {
-		Messenger.log("  Loading Config...");
+		Messenger.log("  Loading config...");
 		
 		try {
 			getConfig().options().copyDefaults(true);
@@ -70,23 +73,29 @@ public class AnimalProtect extends JavaPlugin {
 	}
 	
 	private void initializeDatabase() {
-		Messenger.log(" Loading Database...");
+		Messenger.log(" Loading database...");
 		
 		AnimalProtect.database = new Database(this);
 	}
 	
 	private void initializeListeners() {
+		Messenger.log(" Loading listeners...");
+		
 		try {
-			this.getServer().getPluginManager().registerEvents(new InteractEventListener(this), this);
 			this.getServer().getPluginManager().registerEvents(new DamageEventListener(this), this);
+			this.getServer().getPluginManager().registerEvents(new DeathEventListener(this), this);
+			this.getServer().getPluginManager().registerEvents(new InteractEventListener(this), this);
+			this.getServer().getPluginManager().registerEvents(new LeashEventListener(this), this);
+			this.getServer().getPluginManager().registerEvents(new VehicleEventListener(this), this);
 		}
 		catch (Exception e) {
-			
+			Messenger.exception("AnimalProtect.java/initializeListeners", "Failed to initialize some listeners!", e);
 		}
-		// TODO: InitializeListeners
 	}
 	
 	private void initializeCommands() {
+		Messenger.log(" Loading commands...");
+		
 		try {
 			this.getCommand("ap").setExecutor(new Command_AnimalProtect(this));
 			this.getCommand("debuganimal").setExecutor(new Command_debuganimal(this));
