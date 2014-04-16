@@ -1,8 +1,14 @@
 name: AnimalProtect
-main: de.AnimalProtect.Main
-version: 1.1
+main: de.AnimalProtect.AnimalProtect
+version: 1.2
+
+description: Bietet normalen Spielern auf einem Server an, Tiere vor anderen Spielern zu protecten.
 authors: [Fear837, Pingebam]
 website: www.craftolution.de
+loadbefore: [CraftoPlugin]
+depend: [CraftoPlugin]
+default-permission: animalprotect.protect
+
 commands:
    lockanimal:
       description: Sichert ein Tier vor anderen Spielern.
@@ -49,13 +55,15 @@ commands:
       usage: Schreibe /ap <befehl>
       permission: animalprotect.protect
       permission-message: You don't have permission.
+      aliases: [animalprotect]
+
 permissions:
   animalprotect.protect:
     default: true
-    description: desc.
+    description: Erlaubt dem Spieler allgemeine AnimalProtect-Befehle zu nutzen.
   animalprotect.bypass:
     default: false
-    description: desc.
+    description: Erlaubt dem Spieler alle Protections von Tieren zu umgehen.
   animalprotect.admin:
     default: false
-    description: desc.
+    description: Erlaubt dem Spieler alle Admin-Befehle von AnimalProtect zu nutzen.
