@@ -26,7 +26,7 @@ public class Command_AnimalProtect implements CommandExecutor {
 			
 			if (args.length < 1) { Command_AnimalProtect.Command_ShowHelp(cs, newArgs); }
 			else if (args[0].equalsIgnoreCase("help")) { Command_AnimalProtect.Command_ShowHelp(cs, newArgs); }
-			else if (args[0].equalsIgnoreCase("debuganimal")) { Command_debuganimal.runCommand(cs, newArgs); }
+			else if (args[0].equalsIgnoreCase("debuganimal")) { Command_animaldebug.runCommand(cs, newArgs); }
 			else if (args[0].equalsIgnoreCase("listanimals")) { Command_listanimals.runCommand(cs, newArgs); }
 			else if (args[0].equalsIgnoreCase("lockanimal")) { Command_lockanimal.runCommand(cs, newArgs); }
 			else if (args[0].equalsIgnoreCase("lockedanimals")) { Command_lockedanimals.runCommand(cs, newArgs); }

@@ -10,6 +10,12 @@ depend: [CraftoPlugin]
 default-permission: animalprotect.protect
 
 commands:
+   ap:
+      description: Gesamtuebersicht aller AnimalProtect-Befehle.
+      usage: Schreibe /ap <befehl>
+      permission: animalprotect.protect
+      permission-message: You don't have permission.
+      aliases: [animalprotect]
    lockanimal:
       description: Sichert ein Tier vor anderen Spielern.
       usage: Schreibe /lockanimal
@@ -20,47 +26,36 @@ commands:
       usage: Schreibe /unlockanimal
       permission: animalprotect.protect
       permission-message: You don't have permission.
-   lockinfo:
+   animalinfo:
       description: Gibt Informationen uber das ausgewaehlte Tier aus.
-      usage: Schreibe /lockinfo
+      usage: Schreibe /animalinfo
       permission: animalprotect.protect
       permission-message: You don't have permission.
-   locklist:
+   listanimals:
       description: Listet alle Tiere die der Person gehoeren auf.
-      usage: Schreibe /locklist [playername] [seite]
+      usage: Schreibe /listanimals [playername] [seite]
       permission: animalprotect.admin
       permission-message: You don't have permission.
-   lockrespawn:
+   respawnanimal:
       description: Spawnt das ausgewaehlte Tier neu.
-      usage: Schreibe /lockrespawn [owner] [id]
+      usage: Schreibe /respawnanimal [owner] [id]
       permission: animalprotect.admin
       permission-message: You don't have permission.
-   locktp:
+   tpanimal:
       description: Teleportiert dich zu einem Tier.
-      usage: Schreibe /locktp [owner] [id]
+      usage: Schreibe /tpanimal [owner] [id]
       permission: animalprotect.admin
       permission-message: You don't have permission.
-   lockdebug:
+   animaldebug:
       description: Gibt Debug-Informationen ueber das Plugin aus.
-      usage: Schreibe /lockdebug
+      usage: Schreibe /animaldebug
       permission: animalprotect.admin
       permission-message: You don't have permission.
-   locklimit:
+   lockedanimals:
       description: Gibt die Anzahl der Locks ueber einen Spieler aus.
-      usage: Schreibe /locklimit <spieler>
+      usage: Schreibe /lockedanimals <spieler>
       permission: animalprotect.protect
       permission-message: You don't have permission.
-   debuganimal:
-      description: Gibt Debug-Informationen ueber das Plugin aus.
-      usage: Schreibe /debuganimal
-      permission: animalprotect.admin
-      permission-message: You don't have permission.
-   ap:
-      description: Gesamtuebersicht aller AnimalProtect-Befehle.
-      usage: Schreibe /ap <befehl>
-      permission: animalprotect.protect
-      permission-message: You don't have permission.
-      aliases: [animalprotect]
 
 permissions:
   animalprotect.protect:

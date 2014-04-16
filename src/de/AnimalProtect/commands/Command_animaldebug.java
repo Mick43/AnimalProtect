@@ -7,18 +7,18 @@ import org.bukkit.command.CommandSender;
 import de.AnimalProtect.AnimalProtect;
 import de.AnimalProtect.Messenger;
 
-public class Command_debuganimal implements CommandExecutor {
+public class Command_animaldebug implements CommandExecutor {
 	
 	@SuppressWarnings("unused")
 	private AnimalProtect plugin;
 	
-	public Command_debuganimal(AnimalProtect plugin) {
+	public Command_animaldebug(AnimalProtect plugin) {
 		this.plugin = plugin;
 	}
 
 	@Override
 	public boolean onCommand(CommandSender cs, Command cmd, String label, String[] args) {
-		Command_debuganimal.runCommand(cs, args);
+		Command_animaldebug.runCommand(cs, args);
 		return true;
 	}
 	
