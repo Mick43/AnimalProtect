@@ -336,7 +336,7 @@ public class Messenger {
 		warn("Exception: " + e.getMessage());
 		warn("------------------- Exception Stacktrace -------------------");
 		for (StackTraceElement s : e.getStackTrace()) {
-			warn(" -> " +s.getClassName()+"."+s.getMethodName()+" -> Line:"+s.getLineNumber());
+			warn(" -> " +s.getClassName()+"."+s.getMethodName()+" -> Line: "+s.getLineNumber());
 		}
 		warn("----------------- Exception Stacktrace End -----------------");
 	}
