@@ -152,16 +152,18 @@ public class Database {
 							reverseKeys.put(animal.getUniqueId(), owner.getUniqueId());
 							keys.get(owner.getUniqueId()).add(animal);
 						}
-						else { Messenger.warn("Warning: An animal could not be loaded because the owner is not in the owners hashmap! (AnimalId: " +animal.getId()+ ") (OwnerId: " +owner.getId() +")"); }
+						else 
+						{ Messenger.warn("Warning: An animal could not be loaded because the owner is not in the owners hashmap! (AnimalId: " +animal.getId()+ ") (OwnerId: " +owner.getId() +")"); }
 					}
-					else { Messenger.warn("Warning: An animal could not be loaded because the the owner does not exist! (AnimalId: " +animal.getId()+ ")"); }
+					else 
+					{ Messenger.warn("Warning: An animal could not be loaded because the the owner does not exist! (AnimalId: " +animal.getId()+ ")"); }
 				}
-			} 
-			catch (SQLException e) {
-				Messenger.exception("Database.java", "Exception caught while trying to load every entity from the database.", e);
-			}
+			}  
+			catch (SQLException e) 
+			{ Messenger.exception("Database.java/loadFromDatabase", "Exception caught while trying to load every entity from the database.", e); }
 		}
-		else { Messenger.warn("Warning: Failed to load every entity from the database! (ResultSet is null)"); }
+		else 
+		{ Messenger.warn("Warning: Failed to load every entity from the database! (ResultSet is null)"); }
 	}
 	
 	/**
