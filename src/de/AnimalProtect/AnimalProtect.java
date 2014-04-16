@@ -62,7 +62,7 @@ public class AnimalProtect extends JavaPlugin {
 	}
 	
 	private void initializeConfig() {
-		Messenger.log("  Loading config...");
+		Messenger.log(" Loading config...");
 		
 		try {
 			getConfig().options().copyDefaults(true);
