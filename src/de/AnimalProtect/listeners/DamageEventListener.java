@@ -31,6 +31,8 @@ public class DamageEventListener implements Listener {
 	
 	@EventHandler
 	public void onEntityEvent(EntityDamageByEntityEvent event) {
+		if (!plugin.isEnabled() || event.isCancelled()) { return; }
+		
 		/* Datenbank-Verbindung aufbauen, falls nicht vorhanden. */
 		if (!database.isConnected()) { database.connect(); }
 		

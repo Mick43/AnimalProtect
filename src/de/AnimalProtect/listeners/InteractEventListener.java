@@ -29,6 +29,8 @@ public class InteractEventListener implements Listener {
 	
 	@EventHandler
 	public void onEntityEvent(PlayerInteractEntityEvent event) {
+		if (!plugin.isEnabled() || event.isCancelled()) { return; }
+		
 		/* Datenbank-Verbindung aufbauen, falls nicht vorhanden. */
 		if (!database.isConnected()) { database.connect(); }
 		
