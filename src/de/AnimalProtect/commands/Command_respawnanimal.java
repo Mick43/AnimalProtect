@@ -72,7 +72,7 @@ public class Command_respawnanimal implements CommandExecutor {
 		if (animal == null) { Messenger.sendMessage(cs, "§cFehler: Das angegebene Tier existiert nicht!"); return; }
 		
 		Entity entity = null;
-		entity = player.getWorld().spawnEntity(player.getLocation(), EntityType.valueOf(animal.getAnimaltype().toString()));
+		entity = player.getWorld().spawnEntity(player.getLocation(), animal.getAnimaltype().getEntity());
 		
 		if (entity == null)
 		{ Messenger.sendMessage(cs, "§cFehler: Das Tier konnte nicht respawned werden!"); return; }
