@@ -30,6 +30,7 @@ public class Command_tpanimal implements CommandExecutor {
 	}
 	
 	public static void runCommand(CommandSender cs, String[] args) {
+		/* Datenbank-Verbindung aufbauen, falls nicht vorhanden. */
 		if (AnimalProtect.plugin.getDatenbank().isConnected())
 		{ AnimalProtect.plugin.getDatenbank().connect(); }
 		

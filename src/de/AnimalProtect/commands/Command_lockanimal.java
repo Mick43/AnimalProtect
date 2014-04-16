@@ -23,7 +23,6 @@ public class Command_lockanimal implements CommandExecutor {
 	public boolean onCommand(CommandSender cs, Command cmd, String label, String[] args) {
 		if (!plugin.isEnabled()) { return false; }
 		if (cmd.getName().equalsIgnoreCase("lockanimal")) { Command_lockanimal.runCommand(cs, args); }
-		
 		return true;
 	}
 	
