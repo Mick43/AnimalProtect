@@ -3,12 +3,10 @@ package de.AnimalProtect;
 /* Java Imports */
 import java.util.UUID;
 
-
 /* Bukkit Imports */
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.plugin.java.JavaPlugin;
-
 
 /* AnimalProtect - Command Imports */
 import de.AnimalProtect.commands.Command_AnimalProtect;

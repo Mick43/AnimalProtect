@@ -1,10 +1,12 @@
 package de.AnimalProtect.listeners;
 
+/* Bukkit Imports */
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.PlayerLeashEntityEvent;
 import org.bukkit.event.player.PlayerUnleashEntityEvent;
 
+/* AnimalProtect Imports */
 import de.AnimalProtect.AnimalProtect;
 import de.AnimalProtect.Database;
 

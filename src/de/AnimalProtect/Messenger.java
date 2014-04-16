@@ -1,8 +1,10 @@
 package de.AnimalProtect;
 
+/* Java Imports */
 import java.util.UUID;
 import java.util.logging.Level;
 
+/* Bukkit Imports */
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;

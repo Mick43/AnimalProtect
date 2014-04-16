@@ -1,9 +1,11 @@
 package de.AnimalProtect.structs;
 
+/* Java Imports */
 import java.sql.Timestamp;
 import java.util.Date;
 import java.util.UUID;
 
+/* Bukkit Imports */
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Entity;
@@ -17,7 +19,10 @@ import org.bukkit.entity.Wolf;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.inventory.ItemStack;
 
+/* CraftoPlugin Imports */
 import craftoplugin.core.database.CraftoPlayer;
+
+/* AnimalProtect Imports */
 import de.AnimalProtect.AnimalProtect;
 import de.AnimalProtect.Database;
 

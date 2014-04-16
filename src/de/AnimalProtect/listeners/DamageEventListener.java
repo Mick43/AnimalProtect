@@ -1,5 +1,6 @@
 package de.AnimalProtect.listeners;
 
+/* Bukkit Imports */
 import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Egg;
 import org.bukkit.entity.Entity;
@@ -14,7 +15,10 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 
+/* CraftoPlugin Imports */
 import craftoplugin.core.database.CraftoPlayer;
+
+/* AnimalProtect Imports */
 import de.AnimalProtect.AnimalProtect;
 import de.AnimalProtect.Database;
 import de.AnimalProtect.Messenger;

@@ -1,18 +1,16 @@
 package de.AnimalProtect.listeners;
 
-/* Bukkit Imports */
+/* Java Imports */
 import java.util.HashMap;
 import java.util.UUID;
 
+/* Bukkit Imports */
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.vehicle.VehicleEnterEvent;
 import org.bukkit.event.vehicle.VehicleExitEvent;
-
-
-
 
 /* AnimalProtect Imports */
 import de.AnimalProtect.AnimalProtect;

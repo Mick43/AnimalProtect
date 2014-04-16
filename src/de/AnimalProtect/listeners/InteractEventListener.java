@@ -1,8 +1,10 @@
 package de.AnimalProtect.listeners;
 
+/* Java Imports */
 import java.util.HashMap;
 import java.util.UUID;
 
+/* Bukkit Imports */
 import org.bukkit.Sound;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
@@ -10,7 +12,10 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
 
+/* CraftoPlugin Imports */
 import craftoplugin.core.database.CraftoPlayer;
+
+/* AnimalProtect Imports */
 import de.AnimalProtect.AnimalProtect;
 import de.AnimalProtect.Database;
 import de.AnimalProtect.Messenger;
