@@ -330,14 +330,14 @@ public class Messenger {
 	public static void exception(String Source, String Information, Exception e) {
 		if (e == null) { return; }
 		
-		warn("------------------- "+ConsolePrefix+" Exception! ------------------");
+		warn("---------------------------- "+ConsolePrefix+" Exception! ------------------------");
 		warn("An Exception occured in animalprotect/" + Source);
 		warn("More Information: " + Information);
-		warn("Exception: " + e.getMessage());
-		warn("------------------- Exception Stacktrace -------------------");
+		warn("Exception: " + e.getClass().getName());
+		warn("---------------------------- Exception Stacktrace ----------------------------");
 		for (StackTraceElement s : e.getStackTrace()) {
 			warn(" -> " +s.getClassName()+"."+s.getMethodName()+" -> Line: "+s.getLineNumber());
 		}
-		warn("----------------- Exception Stacktrace End -----------------");
+		warn("-------------------------- Exception Stacktrace End --------------------------");
 	}
 }
