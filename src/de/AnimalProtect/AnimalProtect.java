@@ -94,6 +94,10 @@ public class AnimalProtect extends JavaPlugin {
 		}
 	}
 	
+	/**
+	 * Gibt aus, ob das Plugin im Debug-Modus ist, oder nicht.
+	 * @return True, falls Debugging aktiviert ist.
+	 */
 	public static boolean isDebugging() {
 		return debugmode;
 	}
@@ -119,10 +123,19 @@ public class AnimalProtect extends JavaPlugin {
 		return false;
 	}
 	
+	/**
+	 * Gibt das Entity zurück, welches von dem Spieler ausgewählt wurde.
+	 * @param uuid - Die UniqueID des Spielers.
+	 * @return Das Entity, welches ausgewählt wurde, oder null, falls keins ausgewählt wurde.
+	 */
 	public static Entity getSelectedAnimal(UUID uuid) {
 		return InteractEventListener.getSelected(uuid);
 	}
 	
+	/**
+	 * Gibt die Datenbank von AnimalProtect wieder.
+	 * @return Das Database-Objekt von AnimalProtect.
+	 */
 	public static Database getDatenbank() {
 		return database;
 	}
