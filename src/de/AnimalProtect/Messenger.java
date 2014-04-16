@@ -333,8 +333,11 @@ public class Messenger {
 		warn("------------------- "+ConsolePrefix+" Exception! ------------------");
 		warn("An Exception occured in animalprotect/" + Source);
 		warn("More Information: " + Information);
+		warn("Exception: " + e.getMessage());
 		warn("------------------- Exception Stacktrace -------------------");
-		warn(e.getStackTrace().toString());
+		for (StackTraceElement s : e.getStackTrace()) {
+			warn(" -> " +s.getClassName()+"."+s.getMethodName()+" -> Line:"+s.getLineNumber());
+		}
 		warn("----------------- Exception Stacktrace End -----------------");
 	}
 }
