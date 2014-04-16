@@ -50,6 +50,11 @@ commands:
       usage: Schreibe /locklimit <spieler>
       permission: animalprotect.protect
       permission-message: You don't have permission.
+   debuganimal:
+      description: Gibt Debug-Informationen ueber das Plugin aus.
+      usage: Schreibe /debuganimal
+      permission: animalprotect.admin
+      permission-message: You don't have permission.
    ap:
       description: Gesamtuebersicht aller AnimalProtect-Befehle.
       usage: Schreibe /ap <befehl>
