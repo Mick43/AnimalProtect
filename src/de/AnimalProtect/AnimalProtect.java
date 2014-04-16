@@ -11,7 +11,7 @@ import de.AnimalProtect.listeners.InteractEventListener;
 public class AnimalProtect extends JavaPlugin {
 	
 	private Database database;
-	private boolean debugmode;
+	private Boolean debugmode;
 	
 	public static AnimalProtect plugin;
 	
@@ -47,6 +47,8 @@ public class AnimalProtect extends JavaPlugin {
 		try {
 			getConfig().options().copyDefaults(true);
 			saveConfig();
+			
+			this.debugmode = getConfig().getBoolean("settings.debug-messages");
 		}
 		catch (Exception e) { 
 			Messenger.exception("AnimalProtect.java/initializeConfig", "Failed to load the config file!", e);
