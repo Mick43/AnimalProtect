@@ -38,7 +38,7 @@ public class AnimalProtect extends JavaPlugin {
 	
 	@Override
 	public void onDisable() {
-		
+		this.getDatenbank().closeConnection();
 	}
 	
 	private void initializeConfig() {
