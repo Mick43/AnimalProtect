@@ -2,6 +2,7 @@ package de.AnimalProtect.structs;
 
 import java.sql.Timestamp;
 import java.util.Date;
+import java.util.UUID;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -94,7 +95,7 @@ public class Animal {
 	 * @param uuid - Die UniqueId nach welcher in der Datenbank gesucht werden soll.
 	 * @return Gibt True aus, falls das Laden geklappt hat.
 	 */
-	public boolean loadFromDatabase(String uuid) {
+	public boolean loadFromDatabase(UUID uuid) {
 		if (plugin == null) { return false; }
 		if (!plugin.getDatenbank().isConnected()) { return false; }
 		

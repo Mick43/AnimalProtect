@@ -82,7 +82,7 @@ public class InteractEventListener implements Listener {
 			/* Wenn das Tier protected ist, dann wird der Owner erwähnt. */
 			else { 
 				Messenger.sendMessage(player, "Du hast das Tier von §6"+owner+" §eausgewählt.");
-				Animal animal = database.getAnimal(entity.getUniqueId().toString());
+				Animal animal = database.getAnimal(entity.getUniqueId());
 				if (animal == null) { return; }
 				animal.updateAnimal(entity);
 				animal.saveToDatabase(true);

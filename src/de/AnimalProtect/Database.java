@@ -220,11 +220,11 @@ public class Database {
 	 * @param uuid - Die UniqueId, nach der gesucht wird.
 	 * @return Gibt das Animal wieder, oder null, falls keins gefunden wurde.
 	 */
-	public Animal getAnimal(String uuid) {
+	public Animal getAnimal(UUID uuid) {
 		if (uuid == null) { return null; }
 		
-		if (entities.containsKey(uuid)) {
-			return entities.get(uuid);
+		if (entities.containsKey(uuid.toString())) {
+			return entities.get(uuid.toString());
 		}
 		return null;
 	}
