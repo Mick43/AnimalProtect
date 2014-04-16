@@ -18,11 +18,11 @@ public class Command_debuganimal implements CommandExecutor {
 
 	@Override
 	public boolean onCommand(CommandSender cs, Command cmd, String label, String[] args) {
-		Command_debuganimal.command(cs, args);
+		Command_debuganimal.runCommand(cs, args);
 		return true;
 	}
 	
-	public static void command(CommandSender cs, String[] args) {
+	public static void runCommand(CommandSender cs, String[] args) {
 		if (args.length == 0) {
 			Messenger.messageHeader(cs, "Debug-Informationen:");
 			if (AnimalProtect.plugin.isEnabled()) { Messenger.messageList(cs, "Plugin aktiviert", "Ja"); }

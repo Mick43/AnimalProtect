@@ -27,11 +27,11 @@ public class Command_listanimals implements CommandExecutor {
 	@Override
 	public boolean onCommand(CommandSender cs, Command cmd, String label, String[] args) {
 		if (!plugin.isEnabled()) { return true; }
-		Command_listanimals.Command(cs, args);
+		Command_listanimals.runCommand(cs, args);
 		return true;
 	}
 	
-	public static void Command(CommandSender cs, String[] args) {
+	public static void runCommand(CommandSender cs, String[] args) {
 		/* Datenbank-Verbindung aufbauen, falls nicht vorhanden. */
 		if (AnimalProtect.plugin.getDatenbank().isConnected())
 		{ AnimalProtect.plugin.getDatenbank().connect(); }
