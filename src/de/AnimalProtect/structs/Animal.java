@@ -3,6 +3,7 @@ package de.AnimalProtect.structs;
 import java.sql.Timestamp;
 import java.util.Date;
 
+import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
@@ -206,6 +207,10 @@ public class Animal {
 	 */
 	public Boolean isAlive() {
 		return alive;
+	}
+	public String isAliveAsString() {
+		if (alive) { return ChatColor.GREEN + "ALIVE"; }
+		else { return ChatColor.RED + "MISSING"; }
 	}
 	/**
 	 * @return Gibt den Nametag des Tieres aus.
