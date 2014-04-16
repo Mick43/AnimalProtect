@@ -27,6 +27,10 @@ public class Command_lockedanimals implements CommandExecutor {
 	}
 	
 	public static void runCommand(CommandSender cs, String[] args) {
+		/* Datenbank-Verbindung aufbauen, falls nicht vorhanden. */
+		if (AnimalProtect.plugin.getDatenbank().isConnected())
+		{ AnimalProtect.plugin.getDatenbank().connect(); }
+		
 		CraftoPlayer player = null;
 		if (args.length == 0) {
 			if (cs instanceof Player) {

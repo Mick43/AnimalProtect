@@ -130,6 +130,7 @@ public class Animal {
 	public boolean updateAnimal(Entity entity) {
 		if (entity == null) { return false; }
 		
+		this.uuid = entity.getUniqueId().toString();
 		this.last_x = entity.getLocation().getBlockX();
 		this.last_y = entity.getLocation().getBlockY();
 		this.last_z = entity.getLocation().getBlockZ();

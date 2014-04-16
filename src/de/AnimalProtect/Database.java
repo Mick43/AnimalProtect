@@ -206,6 +206,16 @@ public class Database {
 	}
 	
 	/**
+	 * 
+	 * @param animal
+	 * @return
+	 */
+	public boolean unlockAnimal(Animal animal) {
+		//TOOD: unlockAnimal
+		return false;
+	}
+	
+	/**
 	 * Gibt das Animal mit der angegeben UniqueId zurück.
 	 * @param uuid - Die UniqueId, nach der gesucht wird.
 	 * @return Gibt das Animal wieder, oder null, falls keins gefunden wurde.
