@@ -54,9 +54,9 @@ public class Database {
 	private final String password;
 	private final String port;
 	
-	private HashMap<String, Animal> entities; // Tier(UUID) <-> Tier
-	private HashMap<String, ArrayList<Animal>> keys; // Spieler(UUID) <-> Tiere
-	private HashMap<String, String> reverseKeys; // Tier(UUID) <-> Spieler(UUID)
+	private HashMap<UUID, Animal> entities; // Tier(UUID) <-> Tier
+	private HashMap<UUID, ArrayList<Animal>> keys; // Spieler(UUID) <-> Tiere
+	private HashMap<UUID, UUID> reverseKeys; // Tier(UUID) <-> Spieler(UUID)
 	
 	/**
 	 * Erstellt eine Datenbank-Instanz von AnimalProtect
@@ -142,7 +142,7 @@ public class Database {
 					animal.setHorse_jumpstrength(result.getDouble("horse_jumpstrength"));
 					animal.setHorse_style(Style.valueOf(result.getString("horse_style")));
 					animal.setHorse_variant(Variant.valueOf(result.getString("horse_variant")));
-					animal.setUniqueId(result.getString("uuid"));
+					animal.setUniqueId(UUID.fromString(result.getString("uuid")));
 					animal.setCreated_at(result.getTimestamp("created_at"));
 					
 					CraftoPlayer owner = module.getDatabase().getPlayer(animal.getOwner());
@@ -233,7 +233,7 @@ public class Database {
 	 * @param uuid - Die UniqueId, nach der gesucht wird.
 	 * @return Gibt den CraftoPlayer wieder, oder null, falls keiner gefunden wurde.
 	 */
-	public CraftoPlayer getOwner(String uuid) {
+	public CraftoPlayer getOwner(UUID uuid) {
 		if (uuid == null) { return null; }
 		
 		if (reverseKeys.containsKey(uuid)) {
@@ -252,7 +252,7 @@ public class Database {
 	 * @param uuid - Die UniqueId des Spielers
 	 * @return Gibt eine Liste der gesicherten Tiere zurück.
 	 */
-	public ArrayList<Animal> getAnimals(String uuid) {
+	public ArrayList<Animal> getAnimals(UUID uuid) {
 		if (uuid == null) { return null; }
 		
 		if  (keys.containsKey(uuid)) {
@@ -267,7 +267,7 @@ public class Database {
 	 * @param uuid - Die UniqueId, nach der gesucht werden soll.
 	 * @return True, falls das Tier gefunden wurde.
 	 */
-	public boolean containsAnimal(String uuid) {
+	public boolean containsAnimal(UUID uuid) {
 		if (uuid == null) { return false; }
 		if (module == null) { return false; }
 		
@@ -283,10 +283,10 @@ public class Database {
 	 * @param uuid - Die UniqueId, nach der gesucht werden soll.
 	 * @return True, falls der Spieler gefunden wurde.
 	 */
-	public boolean containsPlayer(String uuid) {
+	public boolean containsPlayer(UUID uuid) {
 		if (uuid == null) { return false; }
 		
-		if (module.getDatabase().containsPlayer(UUID.fromString(uuid))) {
+		if (module.getDatabase().containsPlayer(uuid)) {
 			return true;
 		}
 		

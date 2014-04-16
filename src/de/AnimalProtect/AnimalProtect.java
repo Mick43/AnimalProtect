@@ -3,10 +3,12 @@ package de.AnimalProtect;
 /* Java Imports */
 import java.util.UUID;
 
+
 /* Bukkit Imports */
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.plugin.java.JavaPlugin;
+
 
 /* AnimalProtect - Command Imports */
 import de.AnimalProtect.commands.Command_AnimalProtect;
@@ -20,6 +22,7 @@ import de.AnimalProtect.commands.Command_unlockanimal;
 
 /* AnimalProtect - Listener Imports */
 import de.AnimalProtect.listeners.InteractEventListener;
+import de.AnimalProtect.listeners.DamageEventListener;
 
 public class AnimalProtect extends JavaPlugin {
 	
@@ -75,6 +78,13 @@ public class AnimalProtect extends JavaPlugin {
 	}
 	
 	private void initializeListeners() {
+		try {
+			this.getServer().getPluginManager().registerEvents(new InteractEventListener(this), this);
+			this.getServer().getPluginManager().registerEvents(new DamageEventListener(this), this);
+		}
+		catch (Exception e) {
+			
+		}
 		// TODO: InitializeListeners
 	}
 	

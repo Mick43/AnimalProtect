@@ -51,7 +51,7 @@ public class InteractEventListener implements Listener {
 			}
 			
 			/* Den Owner des Entities festlegen, null falls Entity nicht locked. */
-			owner = database.getOwner(entity.getUniqueId().toString());
+			owner = database.getOwner(entity.getUniqueId());
 			
 			/* Wenn das Tier nicht gelockt ist, dann wird der Owner nicht erwähnt. */
 			if (owner == null) {

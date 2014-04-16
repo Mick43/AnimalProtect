@@ -40,7 +40,7 @@ public class Animal {
 	private Double horse_jumpstrength;
 	private Style horse_style;
 	private Variant horse_variant; 
-	private String uuid;
+	private UUID uuid;
 	private Timestamp created_at;
 	
 	public Animal(AnimalProtect plugin) { 
@@ -54,7 +54,7 @@ public class Animal {
 		this.updateAnimal(entity);
 	}
 	public Animal(AnimalProtect plugin, Integer owner, AnimalType animaltype, Integer last_x, Integer last_y, Integer last_z, Boolean alive, Float maxhp,
-				  String color, AnimalArmor armor, Double horse_jumpstrength, Style horse_style, Variant horse_variant, String uuid) {
+				  String color, AnimalArmor armor, Double horse_jumpstrength, Style horse_style, Variant horse_variant, UUID uuid) {
 		
 		this.plugin = plugin;
 		this.owner = owner;
@@ -131,7 +131,7 @@ public class Animal {
 	public boolean updateAnimal(Entity entity) {
 		if (entity == null) { return false; }
 		
-		this.uuid = entity.getUniqueId().toString();
+		this.uuid = entity.getUniqueId();
 		this.last_x = entity.getLocation().getBlockX();
 		this.last_y = entity.getLocation().getBlockY();
 		this.last_z = entity.getLocation().getBlockZ();
@@ -265,7 +265,7 @@ public class Animal {
 	/**
 	 * @return Die UniqueId des Tieres.
 	 */
-	public String getUniqueId() {
+	public UUID getUniqueId() {
 		return uuid;
 	}
 	/**
@@ -383,7 +383,7 @@ public class Animal {
 	 * Ändert die UniqueId des Tieres.
 	 * @param uuid - Die neue UniqueId
 	 */
-	public void setUniqueId(String uuid) {
+	public void setUniqueId(UUID uuid) {
 		this.uuid = uuid;
 	}
 	/**

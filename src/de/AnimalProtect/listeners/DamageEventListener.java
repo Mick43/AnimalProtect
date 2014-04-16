@@ -40,7 +40,7 @@ public class DamageEventListener implements Listener {
 			/* Erst die Variablen bereit stellen, die später genutzt werden. */
 			Entity entity = event.getEntity();
 			Entity damager = event.getDamager();
-			CraftoPlayer owner = database.getOwner(entity.getUniqueId().toString());
+			CraftoPlayer owner = database.getOwner(entity.getUniqueId());
 			
 			/* Wenn es keinen Owner gibt, dann ist das Tier auch nicht protected */
 			/* Wenn es also keinen Owner gibt, dann wird die Methode abgebrochen.*/
@@ -95,7 +95,7 @@ public class DamageEventListener implements Listener {
 			/* dann wird überprüft ob der Spieler das darf */
 			if (damager instanceof Player) { 
 				Player player = (Player)damager;
-				if (!player.hasPermission("animalprotect.bypass") && !player.getUniqueId().toString().equalsIgnoreCase(owner.getUniqueId())) {
+				if (!player.hasPermission("animalprotect.bypass") && !player.getUniqueId().equals(owner.getUniqueId())) {
 					event.setCancelled(true);
 					Messenger.sendMessage(player, "Dieses Tier ist von §6" +owner.getName()+ " §egesichert!");
 				}
