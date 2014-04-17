@@ -209,7 +209,18 @@ public class Database {
 						 		 + "armor='"+animal.getArmor().toString()+"';";
 			
 			/* Query ausführen und das Ergebnis returnen */
-			if(connection.execute(Query, true)) { return true;  }
+			if(connection.execute(Query, true)) { 
+				CraftoPlayer owner = CraftoPlayer.getPlayer(animal.getOwner());
+				if (owner != null && keys.containsKey(owner.getUniqueId())) {
+					/* Den HashMaps hinzufügen */					
+					entities.put(animal.getUniqueId(), animal);
+					reverseKeys.put(animal.getUniqueId(), owner.getUniqueId());
+					keys.get(owner.getUniqueId()).add(animal);
+				}
+				else { Messenger.error("Warning: Failed to insert an animal because the owner does not exist. (AnimalUUID="+animal.getUniqueId().toString()+")"); }
+
+				return true; 
+			}
 		}
 		catch (Exception e) { Messenger.exception("Database.java/insertAnimal", "An Error occured while trying to insert an entity.", e); }
 		
@@ -250,7 +261,7 @@ public class Database {
 					reverseKeys.put(animal.getUniqueId(), owner.getUniqueId());
 					keys.get(owner.getUniqueId()).add(animal);
 				}
-				else { Messenger.error("Warning: Failed to update an animal because the owner does not exist."); }
+				else { Messenger.error("Warning: Failed to update an animal because the owner does not exist. (AnimalId="+animal.getId()+")"); }
 
 				return true; 
 			}
