@@ -12,7 +12,7 @@ import org.bukkit.entity.Player;
 
 public class Messenger {
 	
-	private static String Prefix = ChatColor.RESET + "" + ChatColor.AQUA + "AnimalProtect //";
+	private static String Prefix = ChatColor.RESET + "" + ChatColor.DARK_AQUA + "AnimalProtect //";
 	private static String ConsolePrefix = "AnimalProtect";
 	private static Boolean Debugging = true;
 	
