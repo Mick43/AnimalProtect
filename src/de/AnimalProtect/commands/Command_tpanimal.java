@@ -35,12 +35,12 @@ public class Command_tpanimal implements CommandExecutor {
 		{ plugin.getDatenbank().connect(); }
 		
 		if (!(cs instanceof Player)) {
-			Messenger.sendMessage(cs, "§cFehler: Um diesen Befehl auszuführen musst du ein Spieler sein.");
+			Messenger.sendMessage(cs, "SENDER_NOT_PLAYER");
 			return;
 		}
 		
 		if (args.length < 2) {
-			Messenger.sendMessage(cs, "§cFehler: Es wurden zu wenig Argumente angegeben!");
+			Messenger.sendMessage(cs, "TOO_FEW_ARGUMENTS");
 			return;
 		}
 		
@@ -51,14 +51,14 @@ public class Command_tpanimal implements CommandExecutor {
 		if (isUUID(args[0])) { player = CraftoPlayer.getPlayer(UUID.fromString(args[0])); }
 		else { player = CraftoPlayer.getPlayer(args[0]); }
 		
-		if (player == null) { Messenger.sendMessage(cs, "§cFehler: Der Spieler konnte nicht gefunden werden."); return; }
-		if (!isNumber(args[1])) { Messenger.sendMessage(cs, "§cFehler: Die angegebene ID ist keine Zahl!"); return; }
+		if (player == null) { Messenger.sendMessage(cs, "PLAYER_NOT_FOUND"); return; }
+		if (!isNumber(args[1])) { Messenger.sendMessage(cs, "ID_NOT_NUMBER"); return; }
 		if (plugin.getDatenbank().getAnimals(player.getUniqueId()).size() <= Integer.parseInt(args[1]))
-		{ Messenger.sendMessage(cs, "§cFehler: Das angegebene Tier existiert nicht."); return; }
+		{ Messenger.sendMessage(cs, "ANIMAL_NOT_FOUND"); return; }
 		
 		animal = plugin.getDatenbank().getAnimals(player.getUniqueId()).get(Integer.parseInt(args[1]));
 		
-		if (animal == null) { Messenger.sendMessage(cs, "§cFehler: Das Tier konnte nicht gefunden werden."); return; }
+		if (animal == null) { Messenger.sendMessage(cs, "ANIMAL_NOT_FOUND"); return; }
 		
 		Location loc = new Location(sender.getWorld(), animal.getLast_x(), animal.getLast_y(), animal.getLast_z());
 		

@@ -48,7 +48,7 @@ public class Command_lockanimal implements CommandExecutor {
 			return;
 		}
 		else if (player == null) {
-			Messenger.sendMessage(cs, "PLAYER_NOT_FOUND");
+			Messenger.sendMessage(cs, "PLAYEROBJECT_NOT_FOUND");
 			return;
 		}
 		
@@ -56,7 +56,7 @@ public class Command_lockanimal implements CommandExecutor {
 		Animal animal = plugin.getDatenbank().getAnimal(entity.getUniqueId());
 		
 		if (animal != null) {
-			Messenger.sendMessage(cs, "ALREADY_PROTECTED");
+			Messenger.sendMessage(cs, "ANIMAL_ALREADY_PROTECTED");
 			return;
 		}
 		else {

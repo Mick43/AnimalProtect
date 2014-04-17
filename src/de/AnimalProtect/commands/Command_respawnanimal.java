@@ -46,12 +46,12 @@ public class Command_respawnanimal implements CommandExecutor {
 		{ plugin.getDatenbank().connect(); }
 		
 		if (!(cs instanceof Player)) {
-			Messenger.sendMessage(cs, "§cFehler: Dieser Befehl kann nur von einem Spieler ausgeführt werden!");
+			Messenger.sendMessage(cs, "SENDER_NOT_PLAYER");
 			return;
 		}
 		
 		if (args.length < 2) {
-			Messenger.sendMessage(cs, "§cFehler: Es wurden zu wenig Argumente angegeben!"); 
+			Messenger.sendMessage(cs, "TOO_FEW_ARGUMENTS"); 
 			return;
 		}
 		
@@ -64,21 +64,21 @@ public class Command_respawnanimal implements CommandExecutor {
 		if (isUUID(args[0])) { cPlayer = CraftoPlayer.getPlayer(UUID.fromString(args[0])); }
 		else { cPlayer = CraftoPlayer.getPlayer(args[0]); }
 		
-		if (cPlayer == null) { Messenger.sendMessage(cs, "§cFehler: Der Spieler konnte nicht gefunden werden!"); return; }
+		if (cPlayer == null) { Messenger.sendMessage(cs, "PLAYER_NOT_FOUND"); return; }
 		
 		if (isNumber(args[1])) { animalId = Integer.parseInt(args[1]); }
-		else { Messenger.sendMessage(cs, "§cFehler: Die angegebene ID des Tieres ist keine Zahl!"); return; }
+		else { Messenger.sendMessage(cs, "ID_NOT_NUMBER"); return; }
 		
 		animal = plugin.getDatenbank().getAnimals(cPlayer.getUniqueId()).get(animalId);
 		
-		if (animal == null) { Messenger.sendMessage(cs, "§cFehler: Das angegebene Tier existiert nicht!"); return; }
+		if (animal == null) { Messenger.sendMessage(cs, "ANIMAL_NOT_FOUND"); return; }
 		
 		Entity entity = null;
 		entity = player.getWorld().spawnEntity(player.getLocation(), animal.getAnimaltype().getEntity());
 		oldUUID = animal.getUniqueId();
 		
 		if (entity == null)
-		{ Messenger.sendMessage(cs, "§cFehler: Das Tier konnte nicht respawned werden!"); return; }
+		{ Messenger.sendMessage(cs, "ANIMAL_NOT_RESPAWNED"); return; }
 		
 		LivingEntity livingEntity = (LivingEntity) entity;
 		livingEntity.setCustomName(animal.getNametag());
@@ -115,9 +115,9 @@ public class Command_respawnanimal implements CommandExecutor {
 		/* Das Tier updaten und sichern */
 		animal.updateAnimal(entity);
 		if (plugin.getDatenbank().updateAnimal(animal.getId(), animal, oldUUID)) {
-			Messenger.sendMessage(cs, "§aDas Tier wurde erfolgreich respawned.");
+			Messenger.sendMessage(cs, "ANIMAL_RESPAWNED");
 		}
-		else { Messenger.sendMessage(cs, "§cFehler: Das Tier konnte nicht komplett respawned werden!"); }
+		else { Messenger.sendMessage(cs, "ANIMAL_NOT_RESPAWNED"); }
 	}
 	
 	private static boolean isNumber(String value) {

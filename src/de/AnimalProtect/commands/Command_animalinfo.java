@@ -48,7 +48,7 @@ public class Command_animalinfo implements CommandExecutor {
 			return;
 		}
 		else if (player == null) {
-			Messenger.sendMessage(cs, "PLAYER_NOT_FOUND");
+			Messenger.sendMessage(cs, "PLAYEROBJECT_NOT_FOUND");
 			return;
 		}
 		
@@ -60,12 +60,12 @@ public class Command_animalinfo implements CommandExecutor {
 			if (owner != null)
 			{ Messenger.sendMessage(sender, "§eDas Tier wurde von §6"+owner.getName()+"§e gesichert."); }
 			else { 
-				Messenger.sendMessage(cs, "OWNER_UNKNOWN");
+				Messenger.sendMessage(cs, "ANIMAL_OWNER_UNKNOWN");
 				Messenger.error("Error: Failed to find the owner of an entity! (Command_animalinfo.java/runCommand) (AnimalId="+animal.getId()+")");
 			}
 		}
 		else {
-			Messenger.sendMessage(sender, "NOT_PROTECTED");
+			Messenger.sendMessage(sender, "ANIMAL_NOT_PROTECTED");
 		}
 	}
 }

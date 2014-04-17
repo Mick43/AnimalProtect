@@ -55,7 +55,7 @@ public class Command_listanimals implements CommandExecutor {
 				
 				if (cs instanceof Player) 
 				{ cPlayer = CraftoPlayer.getPlayer(cs.getName()); }
-				else { Messenger.sendMessage(cs, "§cFehler: Es wurde kein Spieler angegeben!"); return; }
+				else { Messenger.sendMessage(cs, "NO_GIVEN_PLAYER"); return; }
 			}
 			else { 
 				if (isUUID(args[0])) { cPlayer = CraftoPlayer.getPlayer(UUID.fromString(args[0])); }
@@ -68,19 +68,19 @@ public class Command_listanimals implements CommandExecutor {
 			
 			if (isNumber(args[1])) 
 			{ page = Integer.parseInt(args[1]);  }
-			else { Messenger.sendMessage(cs, "§cFehler: Die angegebene Seite ist keine Zahl!"); return; }
+			else { Messenger.sendMessage(cs, "PAGE_NOT_NUMBER"); return; }
 		}
-		else { Messenger.sendMessage(cs, "§cFehler: Zu viele Argumente angegeben!"); return; }
+		else { Messenger.sendMessage(cs, "TOO_MANY_ARGUMENTS"); return; }
 		
 		/* Prüfen ob der Spieler gefunden wurde */
 		if (cPlayer.getId() == null)
-		{ Messenger.sendMessage(cs, "§cFehler: Der Spieler konnte nicht gefunden werden!"); return; }
+		{ Messenger.sendMessage(cs, "PLAYER_NOT_FOUND"); return; }
 		
 		/* Die Tiere des Spielers laden */
 		animals = plugin.getDatenbank().getAnimals(cPlayer.getUniqueId());
 		
 		if (animals == null || animals.isEmpty())
-		{ Messenger.sendMessage(cs, "§cFehler: Der Spieler hat noch keine Tiere gesichert!"); return; }
+		{ Messenger.sendMessage(cs, "PLAYER_NO_LOCKS"); return; }
 		
 		/* Die Seitenanzahl ausrechnen */
 		Double pagesAsDouble = ((double)animals.size() / (double)10);
@@ -88,9 +88,9 @@ public class Command_listanimals implements CommandExecutor {
 		
 		/* Seitenangabe überprüfen */
 		if (pages == 0)
-		{ Messenger.sendMessage(cs, "§eDer Spieler hat noch keine Tiere gesichert."); return; }
+		{ Messenger.sendMessage(cs, "PLAYER_NO_LOCKS"); return; }
 		else if (page > pages)
-		{ Messenger.sendMessage(cs, "§cFehler: Die angegebene Seite existiert nicht!"); return; }
+		{ Messenger.sendMessage(cs, "PAGE_NOT_EXIST"); return; }
 		
 		/* Listenanfang schicken */
 		Messenger.sendMessage(cs, "§e--------- §fListe der Tiere von "+cPlayer.getName()+" ("+page+"/"+pages+") §e---------");

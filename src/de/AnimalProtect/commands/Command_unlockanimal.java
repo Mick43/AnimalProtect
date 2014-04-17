@@ -33,7 +33,7 @@ public class Command_unlockanimal implements CommandExecutor {
 		
 		/* Prüfen ob der Sender ein Spieler ist */
 		if (!(cs instanceof Player)) {
-			Messenger.sendMessage(cs, "§cFehler: Dieser Befehl kann nur von einem Spieler ausgeführt werden.");
+			Messenger.sendMessage(cs, "SENDER_NOT_PLAYER");
 			return;
 		}
 		
@@ -44,22 +44,22 @@ public class Command_unlockanimal implements CommandExecutor {
 		
 		/* Variablen überprüfen */
 		if (entity == null) {
-			Messenger.sendMessage(cs, "§cFehler: Du hast zurzeit noch kein Tier ausgewählt!");
+			Messenger.sendMessage(cs, "SELECTED_NONE");
 			return;
 		}
 		else if (player == null) {
-			Messenger.sendMessage(cs, "§cFehler: Dein Spielerobjekt wurde nicht gefunden! Bitte kontaktiere einen Administrator.");
+			Messenger.sendMessage(cs, "PLAYEROBJECT_NOT_FOUND");
 		}
 		
 		Animal animal = plugin.getDatenbank().getAnimal(entity.getUniqueId());
 		
 		if (animal == null) {
-			Messenger.sendMessage(cs, "§cFehler: Das Tier ist nicht gesichert.");
+			Messenger.sendMessage(cs, "ANIMAL_NOT_FOUND");
 		}
 		else {
 			if (plugin.getDatenbank().unlockAnimal(animal)) 
-			{ Messenger.sendMessage(cs, "§aDas Tier wurde erfolgreich entsichert."); }
-			else { Messenger.sendMessage(cs, "§cFehler: Das Tier konnte nicht entsichert werden."); }
+			{ Messenger.sendMessage(cs, "ANIMAL_SUCESS_UNPROTECT"); }
+			else { Messenger.sendMessage(cs, "ANIMAL_FAILED_UNPROTECT"); }
 		}
 	}
 }

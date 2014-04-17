@@ -36,7 +36,7 @@ public class Command_lockedanimals implements CommandExecutor {
 			if (cs instanceof Player) {
 				player = CraftoPlayer.getPlayer(((Player)cs).getUniqueId());
 			}
-			else { Messenger.sendMessage(cs, "§cFehler: Es wurde kein Spieler angegeben!"); }
+			else { Messenger.sendMessage(cs, "NO_GIVEN_PLAYER"); }
 		}
 		else if (args.length == 1) {
 			if (isUUID(args[0])) {
@@ -44,9 +44,9 @@ public class Command_lockedanimals implements CommandExecutor {
 			}
 			else { player = CraftoPlayer.getPlayer(args[0]); }
 		}
-		else { Messenger.sendMessage(cs, "§cFehler: Zu viele Argumente angegeben!"); }
+		else { Messenger.sendMessage(cs, "TOO_MANY_ARGUMENTS"); }
 		
-		if (player == null) { Messenger.sendMessage(cs, "§cFehler: Der Spieler konnte nicht gefunden werden!"); }
+		if (player == null) { Messenger.sendMessage(cs, "PLAYER_NOT_FOUND"); }
 		
 		Integer count = plugin.getDatenbank().getAnimals(player.getUniqueId()).size();
 		if (cs.getName().equalsIgnoreCase(player.getName())) {
