@@ -233,7 +233,7 @@ public class Database {
 					     + "`nametag`='"+animal.getNametag()+"',`maxhp`="+animal.getMaxhp()+",`deathcause`='"+animal.getDeathcauseToString()+"',"
 					     + "`color`='"+animal.getColorToString()+"',`armor`='"+animal.getArmor()+"', "
 					     + "`horse_jumpstrength`="+animal.getHorse_jumpstrength()+",`horse_style`='"+animal.getHorse_styleToString()+"',"
-					     + "`horse_variant`="+animal.getHorse_variantToString()+",`uuid`="+animal.getUniqueId().toString()+""
+					     + "`horse_variant`='"+animal.getHorse_variantToString()+"',`uuid`='"+animal.getUniqueId().toString()+"'"
 					     + " WHERE id="+id+";";
 			
 			/* Query ausführen und das Ergebnis returnen */
