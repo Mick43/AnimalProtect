@@ -139,6 +139,7 @@ public class Animal {
 		this.last_y = entity.getLocation().getBlockY();
 		this.last_z = entity.getLocation().getBlockZ();
 		this.alive = !entity.isDead();
+		this.animaltype = AnimalType.valueOf(entity.getType().toString());
 		
 		if (entity.getType().equals(EntityType.SHEEP))
 		{ Sheep sheep = (Sheep) entity; this.color = sheep.getColor().toString(); }
