@@ -209,7 +209,7 @@ public class Database {
 						 		 + "armor='"+animal.getArmor().toString()+"';";
 			
 			/* Query ausführen und das Ergebnis returnen */
-			if(connection.execute(Query, true)) { return true; }
+			if(connection.execute(Query, true)) { return true;  }
 		}
 		catch (Exception e) { Messenger.exception("Database.java/insertAnimal", "An Error occured while trying to insert an entity.", e); }
 		
@@ -220,9 +220,10 @@ public class Database {
 	 * Updatet alle Eigenschaften des Entities in der Datenbank.
 	 * @param id - Die Id des Entities.
 	 * @param animal - Das Animal-Objekt, von dem alle Eigenschaften genommen werden.
+	 * @param oldUniqueId - Die alte UniqueId des Tieres.
 	 * @return True, falls das Updaten erfolgreich war.
 	 */
-	public boolean updateAnimal(Integer id, Animal animal) {
+	public boolean updateAnimal(Integer id, Animal animal, UUID oldUniqueId) {
 		if (id == null) { return false; }
 		
 		try {
@@ -237,7 +238,22 @@ public class Database {
 					     + " WHERE id="+id+";";
 			
 			/* Query ausführen und das Ergebnis returnen */
-			if(connection.execute(Query, true)) { return true; }
+			if(connection.execute(Query, true)) {
+				CraftoPlayer owner = CraftoPlayer.getPlayer(animal.getOwner());
+				if (owner != null && keys.containsKey(owner.getUniqueId())) {
+					/* HashMaps updaten */
+					entities.remove(oldUniqueId);
+					reverseKeys.remove(oldUniqueId);
+					keys.get(owner.getUniqueId()).remove(animal);
+					
+					entities.put(animal.getUniqueId(), animal);
+					reverseKeys.put(animal.getUniqueId(), owner.getUniqueId());
+					keys.get(owner.getUniqueId()).add(animal);
+				}
+				else { Messenger.error("Warning: Failed to update an animal because the owner does not exist."); }
+
+				return true; 
+			}
 		}
 		catch (Exception e) { Messenger.exception("Database.java/updateAnimal", "An Error occured while trying to update an entity.", e); }
 		

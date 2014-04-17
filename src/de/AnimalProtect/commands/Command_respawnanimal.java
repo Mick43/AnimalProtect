@@ -59,6 +59,7 @@ public class Command_respawnanimal implements CommandExecutor {
 		CraftoPlayer cPlayer = null;
 		Integer animalId = null;
 		Animal animal = null;
+		UUID oldUUID = null;
 		
 		if (isUUID(args[0])) { cPlayer = CraftoPlayer.getPlayer(UUID.fromString(args[0])); }
 		else { cPlayer = CraftoPlayer.getPlayer(args[0]); }
@@ -74,6 +75,7 @@ public class Command_respawnanimal implements CommandExecutor {
 		
 		Entity entity = null;
 		entity = player.getWorld().spawnEntity(player.getLocation(), animal.getAnimaltype().getEntity());
+		oldUUID = animal.getUniqueId();
 		
 		if (entity == null)
 		{ Messenger.sendMessage(cs, "§cFehler: Das Tier konnte nicht respawned werden!"); return; }
@@ -112,7 +114,7 @@ public class Command_respawnanimal implements CommandExecutor {
 				
 		/* Das Tier updaten und sichern */
 		animal.updateAnimal(entity);
-		if (plugin.getDatenbank().updateAnimal(animal.getId(), animal)) {
+		if (plugin.getDatenbank().updateAnimal(animal.getId(), animal, oldUUID)) {
 			Messenger.sendMessage(cs, "§aDas Tier wurde erfolgreich respawned.");
 		}
 		else { Messenger.sendMessage(cs, "§cFehler: Das Tier konnte nicht komplett respawned werden!"); }
