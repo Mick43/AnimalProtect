@@ -31,6 +31,8 @@ public class InteractEventListener implements Listener {
 	public InteractEventListener(AnimalProtect plugin) {
 		this.plugin = plugin;
 		this.database = plugin.getDatenbank();
+		this.selectedList = new HashMap<UUID, Entity>();
+		this.selectedTime = new HashMap<UUID, Long>();
 	}
 	
 	@EventHandler
