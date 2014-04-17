@@ -21,8 +21,11 @@ public class Command_AnimalProtect implements CommandExecutor {
 		if (!plugin.isEnabled()) { return false; }
 		
 		if (cmd.getName().equalsIgnoreCase("ap") || cmd.getName().equalsIgnoreCase("animalprotect")) { /*  /ap <args0>  */
-			String[] newArgs = new String[args.length-1];
-			for (int i=0; i<newArgs.length; i++) { newArgs[i] = args[i+1]; }
+			String[] newArgs = args;
+			if (args.length > 0) {
+				newArgs = new String[args.length-1];
+				for (int i=0; i<newArgs.length; i++) { newArgs[i] = args[i+1]; }
+			}
 			
 			if (args.length < 1) { Command_AnimalProtect.Command_ShowHelp(cs, newArgs); }
 			else if (args[0].equalsIgnoreCase("help")) { Command_AnimalProtect.Command_ShowHelp(cs, newArgs); }
