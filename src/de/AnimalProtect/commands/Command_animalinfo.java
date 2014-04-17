@@ -15,7 +15,7 @@ public class Command_animalinfo implements CommandExecutor {
 
 	private static AnimalProtect plugin;
 	
-	public Command_animalinfo(AnimalProtect animalProtect) {
+	public Command_animalinfo(AnimalProtect plugin) {
 		Command_animalinfo.plugin = plugin;
 	}
 
