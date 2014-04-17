@@ -299,8 +299,8 @@ public class Database {
 	public Animal getAnimal(UUID uuid) {
 		if (uuid == null) { return null; }
 		
-		if (entities.containsKey(uuid.toString())) {
-			return entities.get(uuid.toString());
+		if (entities.containsKey(uuid)) {
+			return entities.get(uuid);
 		}
 		return null;
 	}

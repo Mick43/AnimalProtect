@@ -106,7 +106,10 @@ public class InteractEventListener implements Listener {
 				Messenger.sendMessage(player, "Du hast das Tier von §6"+owner.getName()+" §eausgewählt.");
 				
 				/* Wenn seit dem letzten Select keine 30 Sekunden vergangen sind */
-				if (selectedTime.get(entity.getUniqueId()) + 30000 > System.currentTimeMillis()) { return; }
+				if (selectedTime.get(entity.getUniqueId()) + 30000 > System.currentTimeMillis()) { 
+					player.playSound(player.getLocation(), Sound.CLICK, 0.75f, 0.8f); 
+					return; 
+				}
 				
 				/* Es sind 30 Sekunden vergangen, also wird das Tier geupdated */
 				Animal animal = database.getAnimal(entity.getUniqueId());
