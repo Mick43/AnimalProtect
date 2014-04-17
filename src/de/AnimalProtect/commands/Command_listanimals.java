@@ -18,10 +18,10 @@ import de.AnimalProtect.structs.Animal;
 
 public class Command_listanimals implements CommandExecutor {
 	
-	private AnimalProtect plugin;
+	private static AnimalProtect plugin;
 	
 	public Command_listanimals(AnimalProtect plugin) {
-		this.plugin = plugin;
+		Command_listanimals.plugin = plugin;
 	}
 
 	@Override
@@ -33,8 +33,8 @@ public class Command_listanimals implements CommandExecutor {
 	
 	public static void runCommand(CommandSender cs, String[] args) {
 		/* Datenbank-Verbindung aufbauen, falls nicht vorhanden. */
-		if (AnimalProtect.getDatenbank().isConnected())
-		{ AnimalProtect.getDatenbank().connect(); }
+		if (plugin.getDatenbank().isConnected())
+		{ plugin.getDatenbank().connect(); }
 		
 		/* Variablen initialisieren */
 		CraftoPlayer cPlayer = null;
@@ -77,7 +77,7 @@ public class Command_listanimals implements CommandExecutor {
 		{ Messenger.sendMessage(cs, "§cFehler: Der Spieler konnte nicht gefunden werden!"); return; }
 		
 		/* Die Tiere des Spielers laden */
-		animals = AnimalProtect.getDatenbank().getAnimals(cPlayer.getUniqueId());
+		animals = plugin.getDatenbank().getAnimals(cPlayer.getUniqueId());
 		
 		if (animals == null || animals.isEmpty())
 		{ Messenger.sendMessage(cs, "§cFehler: Der Spieler hat noch keine Tiere gesichert!"); return; }

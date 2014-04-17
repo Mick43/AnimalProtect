@@ -16,10 +16,10 @@ import de.AnimalProtect.structs.Animal;
 
 public class Command_tpanimal implements CommandExecutor {
 	
-	private AnimalProtect plugin;
+	private static AnimalProtect plugin;
 	
 	public Command_tpanimal(AnimalProtect plugin) {
-		this.plugin = plugin;
+		Command_tpanimal.plugin = plugin;
 	}
 
 	@Override
@@ -31,8 +31,8 @@ public class Command_tpanimal implements CommandExecutor {
 	
 	public static void runCommand(CommandSender cs, String[] args) {
 		/* Datenbank-Verbindung aufbauen, falls nicht vorhanden. */
-		if (AnimalProtect.getDatenbank().isConnected())
-		{ AnimalProtect.getDatenbank().connect(); }
+		if (plugin.getDatenbank().isConnected())
+		{ plugin.getDatenbank().connect(); }
 		
 		if (!(cs instanceof Player)) {
 			Messenger.sendMessage(cs, "§cFehler: Um diesen Befehl auszuführen musst du ein Spieler sein.");
@@ -54,7 +54,7 @@ public class Command_tpanimal implements CommandExecutor {
 		if (player == null) { Messenger.sendMessage(cs, "§cFehler: Der Spieler konnte nicht gefunden werden."); return; }
 		if (!isNumber(args[1])) { Messenger.sendMessage(cs, "§cFehler: Die angegebene ID ist keine Zahl!"); return; }
 		
-		animal = AnimalProtect.getDatenbank().getAnimals(player.getUniqueId()).get(Integer.parseInt(args[1]));
+		animal = plugin.getDatenbank().getAnimals(player.getUniqueId()).get(Integer.parseInt(args[1]));
 		
 		if (animal == null) { Messenger.sendMessage(cs, "§cFehler: Das Tier konnte nicht gefunden werden."); return; }
 		

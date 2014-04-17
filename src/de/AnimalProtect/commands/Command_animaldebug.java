@@ -9,11 +9,10 @@ import de.AnimalProtect.Messenger;
 
 public class Command_animaldebug implements CommandExecutor {
 	
-	@SuppressWarnings("unused")
-	private AnimalProtect plugin;
+	private static AnimalProtect plugin;
 	
 	public Command_animaldebug(AnimalProtect plugin) {
-		this.plugin = plugin;
+		Command_animaldebug.plugin = plugin;
 	}
 
 	@Override
@@ -28,17 +27,17 @@ public class Command_animaldebug implements CommandExecutor {
 			if (AnimalProtect.plugin.isEnabled()) { Messenger.messageList(cs, "Plugin aktiviert", "Ja"); }
 			else { Messenger.messageList(cs, "Plugin aktiviert", "Nein"); }
 			
-			Messenger.messageList(cs, "Gesicherte Tiere", "" + AnimalProtect.getDatenbank().getLockedAnimals());
+			Messenger.messageList(cs, "Gesicherte Tiere", "" + plugin.getDatenbank().getLockedAnimals());
 			
-			if (AnimalProtect.getDatenbank().isConnected())
+			if (plugin.getDatenbank().isConnected())
 			{ Messenger.messageList(cs, "Datenbank-Verbindung", "Aktiv"); }
 			else { Messenger.messageList(cs, "Datenbank-Verbindung", "Nicht aktiv"); }
 			
-			Messenger.messageList(cs, "Anzahl an fehlgeschlagenen Queries", ""+AnimalProtect.getDatenbank().getFailedQueries().size());
+			Messenger.messageList(cs, "Anzahl an fehlgeschlagenen Queries", ""+plugin.getDatenbank().getFailedQueries().size());
 		}
 		else {
 			if (isNumber(args[0])) {
-				Messenger.sendMessage(cs, "§7[§f"+AnimalProtect.getDatenbank().getFailedQueries().get(Integer.parseInt(args[0])) + "§7]");
+				Messenger.sendMessage(cs, "§7[§f"+plugin.getDatenbank().getFailedQueries().get(Integer.parseInt(args[0])) + "§7]");
 			}
 		}
 	}

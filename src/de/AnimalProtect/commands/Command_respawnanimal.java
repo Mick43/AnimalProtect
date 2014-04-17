@@ -26,10 +26,10 @@ import de.AnimalProtect.structs.AnimalArmor;
 
 public class Command_respawnanimal implements CommandExecutor {
 	
-	private AnimalProtect plugin;
+	private static AnimalProtect plugin;
 	
 	public Command_respawnanimal(AnimalProtect plugin) {
-		this.plugin = plugin;
+		Command_respawnanimal.plugin = plugin;
 	}
 
 	@Override
@@ -41,8 +41,8 @@ public class Command_respawnanimal implements CommandExecutor {
 	
 	public static void runCommand(CommandSender cs, String[] args) {
 		/* Datenbank-Verbindung aufbauen, falls nicht vorhanden. */
-		if (AnimalProtect.getDatenbank().isConnected())
-		{ AnimalProtect.getDatenbank().connect(); }
+		if (plugin.getDatenbank().isConnected())
+		{ plugin.getDatenbank().connect(); }
 		
 		if (!(cs instanceof Player)) {
 			Messenger.sendMessage(cs, "§cFehler: Dieser Befehl kann nur von einem Spieler ausgeführt werden!");
@@ -67,7 +67,7 @@ public class Command_respawnanimal implements CommandExecutor {
 		if (isNumber(args[1])) { animalId = Integer.parseInt(args[1]); }
 		else { Messenger.sendMessage(cs, "§cFehler: Die angegebene ID des Tieres ist keine Zahl!"); return; }
 		
-		animal = AnimalProtect.getDatenbank().getAnimals(cPlayer.getUniqueId()).get(animalId);
+		animal = plugin.getDatenbank().getAnimals(cPlayer.getUniqueId()).get(animalId);
 		
 		if (animal == null) { Messenger.sendMessage(cs, "§cFehler: Das angegebene Tier existiert nicht!"); return; }
 		
@@ -110,7 +110,7 @@ public class Command_respawnanimal implements CommandExecutor {
 		}
 		
 		/* Die Protection entfernen */
-		AnimalProtect.getDatenbank().unlockAnimal(animal);
+		plugin.getDatenbank().unlockAnimal(animal);
 		
 		/* Das Tier updaten und sichern */
 		animal.updateAnimal(entity);

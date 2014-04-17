@@ -30,7 +30,7 @@ public class DamageEventListener implements Listener {
 	
 	public DamageEventListener(AnimalProtect plugin) {
 		this.plugin = plugin;
-		this.database = AnimalProtect.getDatenbank();
+		this.database = plugin.getDatenbank();
 	}
 	
 	@EventHandler
@@ -40,7 +40,7 @@ public class DamageEventListener implements Listener {
 		/* Datenbank-Verbindung aufbauen, falls nicht vorhanden. */
 		if (!database.isConnected()) { database.connect(); }
 		
-		if (!AnimalProtect.isAnimal(event.getEntity())) { return; }
+		if (!plugin.isAnimal(event.getEntity())) { return; }
 		
 		/* Erst die Variablen bereit stellen, die später genutzt werden. */
 		Entity entity = event.getEntity();

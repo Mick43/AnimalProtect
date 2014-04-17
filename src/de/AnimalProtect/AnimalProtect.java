@@ -30,8 +30,8 @@ import de.AnimalProtect.listeners.VehicleEventListener;
 
 public class AnimalProtect extends JavaPlugin {
 	
-	private static Database database;
-	private static Boolean debugmode;
+	private Database database;
+	private Boolean debugmode;
 	
 	public static AnimalProtect plugin;
 	
@@ -58,7 +58,7 @@ public class AnimalProtect extends JavaPlugin {
 	
 	@Override
 	public void onDisable() {
-		AnimalProtect.getDatenbank().closeConnection();
+		this.getDatenbank().closeConnection();
 	}
 	
 	private void initializeConfig() {
@@ -68,7 +68,7 @@ public class AnimalProtect extends JavaPlugin {
 			getConfig().options().copyDefaults(true);
 			saveConfig();
 			
-			AnimalProtect.debugmode = getConfig().getBoolean("settings.debug-messages");
+			this.debugmode = getConfig().getBoolean("settings.debug-messages");
 		}
 		catch (Exception e) { 
 			Messenger.exception("AnimalProtect.java/initializeConfig", "Failed to load the config file!", e);
@@ -78,7 +78,7 @@ public class AnimalProtect extends JavaPlugin {
 	private void initializeDatabase() {
 		Messenger.log(" Loading database...");
 		
-		AnimalProtect.database = new Database(this);
+		this.database = new Database(this);
 	}
 	
 	private void initializeListeners() {
@@ -118,7 +118,7 @@ public class AnimalProtect extends JavaPlugin {
 	 * Gibt aus, ob das Plugin im Debug-Modus ist, oder nicht.
 	 * @return True, falls Debugging aktiviert ist.
 	 */
-	public static boolean isDebugging() {
+	public boolean isDebugging() {
 		return debugmode;
 	}
 	
@@ -127,7 +127,7 @@ public class AnimalProtect extends JavaPlugin {
 	 * @param entity - Das Entity welches überprüft wird.
 	 * @return True, falls der EntityType ein AnimalType ist.
 	 */
-	public static boolean isAnimal(Entity entity) {
+	public boolean isAnimal(Entity entity) {
 		EntityType type = entity.getType();
 		if (type == EntityType.SHEEP
 		||  type == EntityType.PIG
@@ -148,7 +148,7 @@ public class AnimalProtect extends JavaPlugin {
 	 * @param uuid - Die UniqueID des Spielers.
 	 * @return Das Entity, welches ausgewählt wurde, oder null, falls keins ausgewählt wurde.
 	 */
-	public static Entity getSelectedAnimal(UUID uuid) {
+	public Entity getSelectedAnimal(UUID uuid) {
 		return InteractEventListener.getSelected(uuid);
 	}
 	
@@ -156,7 +156,7 @@ public class AnimalProtect extends JavaPlugin {
 	 * Gibt die Datenbank von AnimalProtect wieder.
 	 * @return Das Database-Objekt von AnimalProtect.
 	 */
-	public static Database getDatenbank() {
+	public Database getDatenbank() {
 		return database;
 	}
 }

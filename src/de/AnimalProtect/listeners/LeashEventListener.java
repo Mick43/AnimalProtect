@@ -17,7 +17,7 @@ public class LeashEventListener implements Listener {
 	
 	public LeashEventListener(AnimalProtect plugin) {
 		this.plugin = plugin;
-		this.database = AnimalProtect.getDatenbank();
+		this.database = plugin.getDatenbank();
 	}
 	
 	@EventHandler
@@ -28,7 +28,7 @@ public class LeashEventListener implements Listener {
 		if (!database.isConnected()) { database.connect(); }
 		
 		/* Prüfen ob das Entity ein Tier ist */
-		if (!AnimalProtect.isAnimal(event.getEntity())) { return; }
+		if (!plugin.isAnimal(event.getEntity())) { return; }
 		
 		/* Prüfen ob das Entity gesichert wurde */
 		if (database.containsAnimal(event.getEntity().getUniqueId())) { return; }
@@ -50,7 +50,7 @@ public class LeashEventListener implements Listener {
 		if (!database.isConnected()) { database.connect(); }
 		
 		/* Prüfen ob das Entity ein Tier ist */
-		if (!AnimalProtect.isAnimal(event.getEntity())) { return; }
+		if (!plugin.isAnimal(event.getEntity())) { return; }
 		
 		/* Prüfen ob das Entity gesichert wurde */
 		if (database.containsAnimal(event.getEntity().getUniqueId())) { return; }

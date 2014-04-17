@@ -26,7 +26,7 @@ public class VehicleEventListener implements Listener {
 	
 	public VehicleEventListener(AnimalProtect plugin) {
 		this.plugin = plugin;
-		this.database = AnimalProtect.getDatenbank();
+		this.database = plugin.getDatenbank();
 		this.exitedAnimals = new HashMap<UUID, Long>();
 	}
 	
@@ -38,7 +38,7 @@ public class VehicleEventListener implements Listener {
 		if (!database.isConnected()) { database.connect(); }
 		
 		/* Prüfen ob das Entity ein Tier ist */
-		if (!AnimalProtect.isAnimal(event.getVehicle())) { return; }
+		if (!plugin.isAnimal(event.getVehicle())) { return; }
 		
 		/* Prüfen ob das Entity, welches auf das Tier steigt, ein Spieler ist */
 		if (!(event.getEntered() instanceof Player)) { return; }
@@ -67,7 +67,7 @@ public class VehicleEventListener implements Listener {
 		if (!database.isConnected()) { database.connect(); }
 		
 		/* Prüfen ob das Entity ein Tier ist */
-		if (!AnimalProtect.isAnimal(event.getVehicle())) { return; }
+		if (!plugin.isAnimal(event.getVehicle())) { return; }
 		
 		/* Prüfen ob das Tier gesichert ist */
 		if (!database.containsAnimal(event.getVehicle().getUniqueId())) { return; }

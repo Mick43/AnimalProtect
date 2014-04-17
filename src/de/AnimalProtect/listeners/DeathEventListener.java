@@ -21,7 +21,7 @@ public class DeathEventListener implements Listener {
 	
 	public DeathEventListener(AnimalProtect plugin) {
 		this.plugin = plugin;
-		this.database = AnimalProtect.getDatenbank();
+		this.database = plugin.getDatenbank();
 	}
 	
 	@EventHandler
@@ -32,7 +32,7 @@ public class DeathEventListener implements Listener {
 		/* Datenbank-Verbindung aufbauen, falls nicht vorhanden. */
 		if (!database.isConnected()) { database.connect(); }
 		
-		if (AnimalProtect.getDatenbank().containsAnimal(event.getEntity().getUniqueId())) {
+		if (plugin.getDatenbank().containsAnimal(event.getEntity().getUniqueId())) {
 			/* Variablen bereitstellen */
 			EntityDamageByEntityEvent damageEvent = null;
 			Entity entity = event.getEntity();
