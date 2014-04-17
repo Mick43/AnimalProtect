@@ -65,22 +65,34 @@ public class InteractEventListener implements Listener {
 			if (owner == null) {
 				switch (entity.getType()) {
 				case COW:
-					Messenger.sendMessage(player, "Du hast eine §6Kuh §eausgewählt. §7(/lockanimal um sie zu protecten.);");
+					Messenger.sendMessage(player, "Du hast eine §6Kuh §eausgewählt. §7(/lockanimal um sie zu protecten.)");
 					break;
 				case PIG:
-					Messenger.sendMessage(player, "Du hast ein §6Schwein §eausgewählt. §7(/lockanimal um es zu protecten.);");
+					Messenger.sendMessage(player, "Du hast ein §6Schwein §eausgewählt. §7(/lockanimal um es zu protecten.)");
 					break;
 				case CHICKEN:
-					Messenger.sendMessage(player, "Du hast ein §6Huhn §eausgewählt. §7(/lockanimal um es zu protecten.);");
+					Messenger.sendMessage(player, "Du hast ein §6Huhn §eausgewählt. §7(/lockanimal um es zu protecten.)");
 					break;
 				case HORSE:
-					Messenger.sendMessage(player, "Du hast ein §6Pferd §eausgewählt. §7(/lockanimal um es zu protecten.);");
+					Messenger.sendMessage(player, "Du hast ein §6Pferd §eausgewählt. §7(/lockanimal um es zu protecten.)");
 					break;
 				case WOLF:
-					Messenger.sendMessage(player, "Du hast einen §6Wolf §eausgewählt. §7(/lockanimal um ihn zu protecten.);");
+					Messenger.sendMessage(player, "Du hast einen §6Wolf §eausgewählt. §7(/lockanimal um ihn zu protecten.)");
 					break;
 				case SHEEP:
-					Messenger.sendMessage(player, "Du hast ein §6Schaf §eausgewählt. §7(/lockanimal um es zu protecten.);");
+					Messenger.sendMessage(player, "Du hast ein §6Schaf §eausgewählt. §7(/lockanimal um es zu protecten.)");
+					break;
+				case IRON_GOLEM:
+					Messenger.sendMessage(player, "Du hast einen §6Iron Golem §eausgewählt. §7(/lockanimal um ihn zu protecten.)");
+					break;
+				case SNOWMAN:
+					Messenger.sendMessage(player, "Du hast einen §6Schneemann §eausgewählt. §7(/lockanimal um ihn zu protecten.)");
+					break;
+				case VILLAGER:
+					Messenger.sendMessage(player, "Du hast einen §6Villager §eausgewählt. §7(/lockanimal um ihn zu protecten.)");
+					break;
+				case OCELOT:
+					Messenger.sendMessage(player, "Du hast einen §6Ozelot §eausgewählt. §7(/lockanimal um ihn zu protecten.)");
 					break;
 				default:
 					Messenger.sendMessage(player, "Du hast ein §6unbekanntes §eTier ausgewählt. §7(/lockanimal um es zu protecten.);");
