@@ -53,6 +53,8 @@ public class Command_tpanimal implements CommandExecutor {
 		
 		if (player == null) { Messenger.sendMessage(cs, "§cFehler: Der Spieler konnte nicht gefunden werden."); return; }
 		if (!isNumber(args[1])) { Messenger.sendMessage(cs, "§cFehler: Die angegebene ID ist keine Zahl!"); return; }
+		if (plugin.getDatenbank().getAnimals(player.getUniqueId()).size() <= Integer.parseInt(args[1]))
+		{ Messenger.sendMessage(cs, "§cFehler: Das angegebene Tier existiert nicht."); return; }
 		
 		animal = plugin.getDatenbank().getAnimals(player.getUniqueId()).get(Integer.parseInt(args[1]));
 		
@@ -67,7 +69,7 @@ public class Command_tpanimal implements CommandExecutor {
 		}
 		
 		sender.teleport(loc);
-		Messenger.sendMessage(cs, "§eDu hast dich zu den Koordinaten §6"+loc.getX()+"§e, §6"+loc.getY()+"§e, §6"+loc.getZ()+"§e teleportiert.");
+		Messenger.sendMessage(cs, "§eDu hast dich zu den Koordinaten §6"+loc.getBlockX()+"§e, §6"+loc.getBlockY()+"§e, §6"+loc.getBlockZ()+"§e teleportiert.");
 	}
 	
 	private static boolean isUUID(String value) {
