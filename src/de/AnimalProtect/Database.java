@@ -190,6 +190,7 @@ public class Database {
 	 * @return True, falls die Aktion ohne Probleme funktioniert hat.
 	 */
 	public boolean insertAnimal(Animal animal) {
+		/* Query zum updaten/inserten aufbauen */
 		String Query = "INSERT INTO ap_entities (`owner`, `animaltype`, `last_x`, `last_y`, `last_z`, `alive`, `nametag`, `maxhp`, "
 					 + "`deathcause`, `color`, `armor`, `horse_jumpstrength`, `horse_style`, `horse_variant`, `uuid`"
 					 + "VALUES ("+animal.getOwner()+", "+animal.getAnimaltype().toString()+", "+animal.getLast_x()+", "+animal.getLast_y()+", "
@@ -197,12 +198,11 @@ public class Database {
 					 		 + ""+animal.getDeathcause()+", '"+animal.getColor()+"', "+animal.getArmor()+", "+animal.getHorse_jumpstrength()+", "
 					 		 + ""+animal.getHorse_style()+", "+animal.getHorse_variant()+", '"+animal.getUniqueId()+"')"
 					 + "ON DUPLICATE KEY UPDATE owner="+animal.getOwner()+", last_x="+animal.getLast_x()+", last_y="+animal.getLast_y()+", last_z="+animal.getLast_z()+", "
-					 		+ "alive="+animal.isAlive()+", nametag='"+animal.getNametag()+"', deathcause='"+animal.getDeathcause().toString()+"', color='"+animal.getColor()+"', "
-					 		+ "armor='"+animal.getArmor().toString()+"';";
+					 		 + "alive="+animal.isAlive()+", nametag='"+animal.getNametag()+"', deathcause='"+animal.getDeathcause().toString()+"', color='"+animal.getColor()+"', "
+					 		 + "armor='"+animal.getArmor().toString()+"';";
 		
-		if(connection.execute(Query, true)) {
-			return true;
-		}
+		/* Query ausführen und das Ergebnis returnen */
+		if(connection.execute(Query, true)) { return true; }
 		return false;
 	}
 	
