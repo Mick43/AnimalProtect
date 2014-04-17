@@ -83,6 +83,7 @@ public class Messenger {
 		
 		if (AnimalProtect.plugin.getConfig().contains("messages."+message.toUpperCase())) {
 			message = AnimalProtect.plugin.getConfig().getString("messages."+message.toUpperCase());
+			message = message.replaceAll("%", "§");
 		}
 		
 		if (prefix) { player.sendMessage(Prefix + " " + ChatColor.YELLOW + message); }
