@@ -140,7 +140,7 @@ public class Animal {
 		this.last_z = entity.getLocation().getBlockZ();
 		this.alive = !entity.isDead();
 		this.animaltype = AnimalType.valueOf(entity.getType().toString());
-		this.deathcause = DamageCause.CUSTOM;
+		this.deathcause = null;
 		
 		if (entity.getType().equals(EntityType.SHEEP)) { 
 			Sheep sheep = (Sheep) entity; 
@@ -247,9 +247,23 @@ public class Animal {
 		return deathcause;
 	}
 	/**
+	 * @return Der Grund, warum das Tier getötet wurde.
+	 */
+	public String getDeathcauseToString() {
+		if (deathcause == null) { return "NONE"; }
+		return deathcause.toString();
+	}
+	/**
 	 * @return Die Farbe des Tieres.
 	 */
 	public String getColor() {
+		return color;
+	}
+	/**
+	 * @return Die Farbe des Tieres.
+	 */
+	public String getColorToString() {
+		if (color == null) { return ""; }
 		return color;
 	}
 	/**
@@ -273,7 +287,7 @@ public class Animal {
 	/**
 	 * @return Der Style des Pferdes
 	 */
-	public String getHorse_styleAsString() {
+	public String getHorse_styleToString() {
 		if (horse_style == null) { return "NONE"; }
 		else { return horse_style.toString(); }
 	}
@@ -286,7 +300,7 @@ public class Animal {
 	/**
 	 * @return Die Variante des Pferdes
 	 */
-	public String getHorse_variantAsString() {
+	public String getHorse_variantToString() {
 		if (horse_variant == null) { return "NONE"; }
 		else { return horse_variant.toString(); }
 	}

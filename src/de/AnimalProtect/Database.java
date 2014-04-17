@@ -202,10 +202,10 @@ public class Database {
 						 + "`deathcause`, `color`, `armor`, `horse_jumpstrength`, `horse_style`, `horse_variant`, `uuid`) "
 						 + "VALUES ("+animal.getOwner()+", '"+animal.getAnimaltype().toString()+"', "+animal.getLast_x()+", "+animal.getLast_y()+", "
 						 		 + ""+animal.getLast_z()+", "+animal.isAlive()+", '"+animal.getNametag()+"', "+animal.getMaxhp()+", "
-						 		 + "'"+animal.getDeathcause()+"', '"+animal.getColor()+"', '"+animal.getArmor()+"', "+animal.getHorse_jumpstrength()+", "
-						 		 + "'"+animal.getHorse_styleAsString()+"', '"+animal.getHorse_variantAsString()+"', '"+animal.getUniqueId()+"')"
+						 		 + "'"+animal.getDeathcauseToString()+"', '"+animal.getColorToString()+"', '"+animal.getArmor()+"', "+animal.getHorse_jumpstrength()+", "
+						 		 + "'"+animal.getHorse_styleToString()+"', '"+animal.getHorse_variantToString()+"', '"+animal.getUniqueId()+"')"
 						 + "ON DUPLICATE KEY UPDATE owner="+animal.getOwner()+", last_x="+animal.getLast_x()+", last_y="+animal.getLast_y()+", last_z="+animal.getLast_z()+", "
-						 		 + "alive="+animal.isAlive()+", nametag='"+animal.getNametag()+"', deathcause='"+animal.getDeathcause()+"', color='"+animal.getColor()+"', "
+						 		 + "alive="+animal.isAlive()+", nametag='"+animal.getNametag()+"', deathcause='"+animal.getDeathcauseToString()+"', color='"+animal.getColorToString()+"', "
 						 		 + "armor='"+animal.getArmor().toString()+"';";
 			
 			/* Query ausführen und das Ergebnis returnen */
