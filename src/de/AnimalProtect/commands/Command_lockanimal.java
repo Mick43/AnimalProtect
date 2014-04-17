@@ -21,7 +21,7 @@ public class Command_lockanimal implements CommandExecutor {
 
 	@Override
 	public boolean onCommand(CommandSender cs, Command cmd, String label, String[] args) {
-		if (!plugin.isEnabled()) { return false; }
+		if (!plugin.isEnabled()) { return true; }
 		if (cmd.getName().equalsIgnoreCase("lockanimal")) { Command_lockanimal.runCommand(cs, args); }
 		return true;
 	}
@@ -33,7 +33,7 @@ public class Command_lockanimal implements CommandExecutor {
 		
 		/* Prüfen ob der Sender ein Spieler ist */
 		if (!(cs instanceof Player)) {
-			Messenger.sendMessage(cs, "§cFehler: Dieser Befehl kann nur von einem Spieler ausgeführt werden!");
+			Messenger.sendMessage(cs, "SENDER_NOT_PLAYER");
 			return;
 		}
 		
@@ -44,11 +44,11 @@ public class Command_lockanimal implements CommandExecutor {
 		
 		/* Variablen überprüfen */
 		if (entity == null) {
-			Messenger.sendMessage(cs, "§cFehler: Du hast zurzeit noch kein Tier ausgewählt!");
+			Messenger.sendMessage(cs, "SELECTED_NONE");
 			return;
 		}
 		else if (player == null) {
-			Messenger.sendMessage(cs, "§cFehler: Dein Spielerobjekt wurde nicht gefunden! Bitte kontaktiere einen Administrator.");
+			Messenger.sendMessage(cs, "PLAYER_NOT_FOUND");
 			return;
 		}
 		
@@ -56,7 +56,7 @@ public class Command_lockanimal implements CommandExecutor {
 		Animal animal = plugin.getDatenbank().getAnimal(entity.getUniqueId());
 		
 		if (animal != null) {
-			Messenger.sendMessage(cs, "§cFehler: Das Tier ist bereits protected!");
+			Messenger.sendMessage(cs, "ALREADY_PROTECTED");
 			return;
 		}
 		else {

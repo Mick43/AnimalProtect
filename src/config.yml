@@ -12,4 +12,9 @@ messages:
   LOCK_SUCCESS: '%aDas Tier wurde erfolgreich gesichert.'
   LOCK_FAILED: '%cFehler: Das Tier konnte nicht gesichert werden.'
   MAX_LOCKS_EXCEEDED: '%cFehler: Du hast das Limit an Tier-Protections erreicht. (Maximal 50)'
-  
+  SENDER_NOT_PLAYER: '%cFehler: Dieser Befehl kann nur von einem Spieler ausgefuehrt werden.'
+  PLAYER_NOT_FOUND: '%cFehler: Dein Spielerobjekt wurde nicht gefunden! Bitte kontaktiere einen Administrator.'
+  SELECTED_NONE: '%cFehler: Du hast zurzeit noch kein Tier ausgewaehlt!'
+  ALREADY_PROTECTED: '%cFehler: Das Tier ist bereits protected!'
+  NOT_PROTECTED: '%eDieses Tier ist nicht protected.'
+  OWNER_UNKNOWN: '%cFehler: Der Besitzer dieses Tieres ist unbekannt.'
