@@ -39,6 +39,10 @@ public class InteractEventListener implements Listener {
 	public void onEntityEvent(PlayerInteractEntityEvent event) {
 		if (!plugin.isEnabled() || event.isCancelled()) { return; }
 		
+		/* Prüfen ob die HashMaps null sind */
+		if (InteractEventListener.selectedList == null) { InteractEventListener.selectedList = new HashMap<UUID, Entity>(); }
+		if (InteractEventListener.selectedTime == null) { InteractEventListener.selectedTime = new HashMap<UUID, Long>(); }
+		
 		/* Datenbank-Verbindung aufbauen, falls nicht vorhanden. */
 		if (!database.isConnected()) { database.connect(); }
 		
@@ -54,7 +58,7 @@ public class InteractEventListener implements Listener {
 			CraftoPlayer owner = null;
 			
 			/* Prüfen ob das ausgewählte Tier bereits vom Spieler ausgewählt ist. */
-			if (selectedList.containsKey(player.getUniqueId()) && selectedList.get(player.getUniqueId()).equals(entity)) {
+			if (InteractEventListener.selectedList.containsKey(player.getUniqueId()) && InteractEventListener.selectedList.get(player.getUniqueId()).equals(entity)) {
 				Messenger.sendMessage(player, "Du hast das Tier bereits ausgewählt!");
 				player.playSound(player.getLocation(), Sound.CLICK, 0.4f, 0.8f);
 				return;
@@ -105,17 +109,14 @@ public class InteractEventListener implements Listener {
 			else {
 				Messenger.sendMessage(player, "Du hast das Tier von §6"+owner.getName()+" §eausgewählt.");
 				
-				/* Wenn seit dem letzten Select keine 30 Sekunden vergangen sind */
-				if (selectedTime.get(entity.getUniqueId()) + 30000 > System.currentTimeMillis()) { 
-					player.playSound(player.getLocation(), Sound.CLICK, 0.75f, 0.8f); 
-					return; 
+				/* Wenn seit dem letzten Select 30 Sekunden vergangen sind */
+				if (InteractEventListener.selectedTime.get(entity.getUniqueId()) + 60000 < System.currentTimeMillis()) { //TODO: NULLPOINTER
+					Animal animal = database.getAnimal(entity.getUniqueId());
+					if (animal != null) { 
+						animal.updateAnimal(entity);
+						animal.saveToDatabase(true);
+					}
 				}
-				
-				/* Es sind 30 Sekunden vergangen, also wird das Tier geupdated */
-				Animal animal = database.getAnimal(entity.getUniqueId());
-				if (animal == null) { return; }
-				animal.updateAnimal(entity);
-				animal.saveToDatabase(true);
 			}
 			
 			/* Zum Schluss wird bei dem Spieler noch ein Sound abgespielt und sein zuletzt ausgewähltes Tier wird gespeichert. */
@@ -125,19 +126,19 @@ public class InteractEventListener implements Listener {
 	}
 	
 	private void addSelected(UUID uuid, Entity entity) {
-		if (!selectedList.containsKey(uuid)) {
-			selectedList.put(uuid, entity);
-			selectedTime.put(entity.getUniqueId(), System.currentTimeMillis());
+		if (!InteractEventListener.selectedList.containsKey(uuid)) {
+			InteractEventListener.selectedList.put(uuid, entity);
+			InteractEventListener.selectedTime.put(entity.getUniqueId(), System.currentTimeMillis());
 		}
 		else {
-			selectedList.put(uuid, entity);
-			selectedTime.put(entity.getUniqueId(), System.currentTimeMillis());
+			InteractEventListener.selectedList.put(uuid, entity);
+			InteractEventListener.selectedTime.put(entity.getUniqueId(), System.currentTimeMillis());
 		}
 	}
 	
 	public static Entity getSelected(UUID uuid) {
-		if (selectedList.containsKey(uuid)) {
-			return selectedList.get(uuid);
+		if (InteractEventListener.selectedList.containsKey(uuid)) {
+			return InteractEventListener.selectedList.get(uuid);
 		}
 		else { return null; }
 	}
