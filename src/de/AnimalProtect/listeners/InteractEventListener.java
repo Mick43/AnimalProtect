@@ -54,7 +54,7 @@ public class InteractEventListener implements Listener {
 			CraftoPlayer owner = null;
 			
 			/* Prüfen ob das ausgewählte Tier bereits vom Spieler ausgewählt ist. */
-			if (selectedList.get(player.getUniqueId()).equals(entity)) {
+			if (selectedList.containsKey(player.getUniqueId()) && selectedList.get(player.getUniqueId()).equals(entity)) {
 				Messenger.sendMessage(player, "Du hast das Tier bereits ausgewählt!");
 				player.playSound(player.getLocation(), Sound.CLICK, 0.4f, 0.8f);
 				return;
