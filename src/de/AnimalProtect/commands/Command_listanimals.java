@@ -132,8 +132,7 @@ public class Command_listanimals implements CommandExecutor {
 	}
 	
 	private static boolean isUUID(String value) {
-		return false;
-		//TODO: isUUID!
+		return value.matches(".*-.*-.*-.*-.*");
 	}
 	
 	private static boolean isNumber(String value) {

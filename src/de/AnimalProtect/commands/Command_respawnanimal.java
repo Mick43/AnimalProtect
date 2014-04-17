@@ -130,7 +130,6 @@ public class Command_respawnanimal implements CommandExecutor {
 	}
 	
 	private static boolean isUUID(String value) {
-		//TODO: isUUID
-		return false;
+		return value.matches(".*-.*-.*-.*-.*");
 	}
 }

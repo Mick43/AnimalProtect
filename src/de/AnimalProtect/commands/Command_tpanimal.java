@@ -73,8 +73,7 @@ public class Command_tpanimal implements CommandExecutor {
 	}
 	
 	private static boolean isUUID(String value) {
-		//TODO: isUUID
-		return false;
+		return value.matches(".*-.*-.*-.*-.*");
 	}
 	
 	private static boolean isNumber(String value) {

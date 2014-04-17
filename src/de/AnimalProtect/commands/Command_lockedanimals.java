@@ -56,7 +56,6 @@ public class Command_lockedanimals implements CommandExecutor {
 	}
 	
 	private static boolean isUUID(String value) {
-		//TODO: isUUID
-		return false;
+		return value.matches(".*-.*-.*-.*-.*");
 	}
 }
