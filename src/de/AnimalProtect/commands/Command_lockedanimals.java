@@ -52,7 +52,7 @@ public class Command_lockedanimals implements CommandExecutor {
 		if (cs.getName().equalsIgnoreCase(player.getName())) {
 			Messenger.sendMessage(cs, "Du hast insgesamt §6"+count+"§e Tiere gesichert.");
 		}
-		else { Messenger.sendMessage(cs, "Der Spieler §6"+player.getName()+"§e hat insgesamt "+count+" Tiere gesichert."); }
+		else { Messenger.sendMessage(cs, "Der Spieler §6"+player.getName()+"§e hat insgesamt "+count+" von §6"+plugin.getConfig().getInt("settings.max_entities_for_player")+"§e Tiere gesichert."); }
 	}
 	
 	private static boolean isUUID(String value) {
