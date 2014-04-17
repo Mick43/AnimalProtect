@@ -141,6 +141,7 @@ public class Animal {
 		this.alive = !entity.isDead();
 		this.animaltype = AnimalType.valueOf(entity.getType().toString());
 		this.deathcause = null;
+		this.nametag = "";
 		
 		if (entity.getType().equals(EntityType.SHEEP)) { 
 			Sheep sheep = (Sheep) entity; 
@@ -232,12 +233,14 @@ public class Animal {
 	 * @return Gibt den Nametag des Tieres aus.
 	 */
 	public String getNametag() {
+		if (nametag == null) { return ""; }
 		return nametag;
 	}
 	/**
 	 * @return Die maximale HP des Tieres.
 	 */
 	public Double getMaxhp() {
+		if (maxhp == null) { return 0.0; }
 		return maxhp;
 	}
 	/**
