@@ -33,7 +33,7 @@ public class Database {
 	 * last_z             - (SMALLINT5)  (NOT NULL) 
 	 * alive              - (BOOL)       (NOT NULL) 
 	 * nametag            - (VARCHAR255)
-	 * maxhp              - (FLOAT)
+	 * maxhp              - (DOUBLE)
 	 * deathcause         - (ENUM)
 	 * color              - (VARCHAR40)  (NOT NULL) 
 	 * armor              - (ENUM)       (NOT NULL) 
@@ -94,13 +94,13 @@ public class Database {
 		columns[5] = "last_z SMALLINT(5) NOT NULL";
 		columns[6] = "alive BOOL NOT NULL";
 		columns[7] = "nametag VARCHAR(255)";
-		columns[8] = "maxhp FLOAT";
-		columns[9] = "deathcause ENUM('NULL', 'CUSTOM', 'CONTACT', 'ENTITY_ATTACK', 'PROJECTILE', 'SUFFOCATION', 'FALL', 'FIRE', 'FIRE_TICK', 'MELTING', 'LAVA', 'DROWNING', 'BLOCK_EXPLOSION', 'ENTITY_EXPLOSION', 'VOID', 'LIGHTNING', 'SUICIDE', 'STARVATION', 'POISON', 'MAGIC', 'WITHER', 'FALLING_BLOCK', 'THORNS')";
+		columns[8] = "maxhp DOUBLE";
+		columns[9] = "deathcause ENUM('NONE', 'CUSTOM', 'CONTACT', 'ENTITY_ATTACK', 'PROJECTILE', 'SUFFOCATION', 'FALL', 'FIRE', 'FIRE_TICK', 'MELTING', 'LAVA', 'DROWNING', 'BLOCK_EXPLOSION', 'ENTITY_EXPLOSION', 'VOID', 'LIGHTNING', 'SUICIDE', 'STARVATION', 'POISON', 'MAGIC', 'WITHER', 'FALLING_BLOCK', 'THORNS')";
 		columns[10] = "color VARCHAR(40) NOT NULL";
 		columns[11] = "armor ENUM('UNKNOWN', 'DIAMOND','GOLD','IRON') NOT NULL";
 		columns[12] = "horse_jumpstrength DOUBLE NOT NULL";
-		columns[13] = "horse_style ENUM('NULL', 'WHITE', 'WHITEFIELD', 'WHITE_DOTS', 'BLACK_DOTS')";
-		columns[14] = "horse_variant ENUM('NULL', 'HORSE', 'DONKEY', 'MULE', 'UNDEAD_HORSE', 'SKELETON_HORSE')";
+		columns[13] = "horse_style ENUM('NONE', 'WHITE', 'WHITEFIELD', 'WHITE_DOTS', 'BLACK_DOTS')";
+		columns[14] = "horse_variant ENUM('NONE', 'HORSE', 'DONKEY', 'MULE', 'UNDEAD_HORSE', 'SKELETON_HORSE')";
 		columns[15] = "uuid CHAR(36) NOT NULL UNIQUE KEY";
 		columns[16] = "created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP";
 		
@@ -140,7 +140,7 @@ public class Database {
 					animal.setLast_y(result.getInt("last_y"));
 					animal.setLast_z(result.getInt("last_z"));
 					animal.setAlive(result.getBoolean("alive"));
-					animal.setMaxhp(result.getFloat("maxhp"));
+					animal.setMaxhp(result.getDouble("maxhp"));
 					animal.setColor(result.getString("color"));
 					animal.setArmor(AnimalArmor.valueOf(result.getString("armor")));
 					animal.setHorse_jumpstrength(result.getDouble("horse_jumpstrength"));
@@ -203,7 +203,7 @@ public class Database {
 						 + "VALUES ("+animal.getOwner()+", '"+animal.getAnimaltype().toString()+"', "+animal.getLast_x()+", "+animal.getLast_y()+", "
 						 		 + ""+animal.getLast_z()+", "+animal.isAlive()+", '"+animal.getNametag()+"', "+animal.getMaxhp()+", "
 						 		 + "'"+animal.getDeathcause()+"', '"+animal.getColor()+"', '"+animal.getArmor()+"', "+animal.getHorse_jumpstrength()+", "
-						 		 + "'"+animal.getHorse_style()+"', '"+animal.getHorse_variant()+"', '"+animal.getUniqueId()+"')"
+						 		 + "'"+animal.getHorse_styleAsString()+"', '"+animal.getHorse_variantAsString()+"', '"+animal.getUniqueId()+"')"
 						 + "ON DUPLICATE KEY UPDATE owner="+animal.getOwner()+", last_x="+animal.getLast_x()+", last_y="+animal.getLast_y()+", last_z="+animal.getLast_z()+", "
 						 		 + "alive="+animal.isAlive()+", nametag='"+animal.getNametag()+"', deathcause='"+animal.getDeathcause()+"', color='"+animal.getColor()+"', "
 						 		 + "armor='"+animal.getArmor().toString()+"';";

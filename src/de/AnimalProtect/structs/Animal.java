@@ -38,7 +38,7 @@ public class Animal {
 	private Integer last_z;
 	private Boolean alive;
 	private String nametag;
-	private Float maxhp;
+	private Double maxhp;
 	private DamageCause deathcause;
 	private String color;
 	private AnimalArmor armor;
@@ -58,7 +58,7 @@ public class Animal {
 		this.created_at = new Timestamp(new Date().getTime());
 		this.updateAnimal(entity);
 	}
-	public Animal(AnimalProtect plugin, Integer owner, AnimalType animaltype, Integer last_x, Integer last_y, Integer last_z, Boolean alive, Float maxhp,
+	public Animal(AnimalProtect plugin, Integer owner, AnimalType animaltype, Integer last_x, Integer last_y, Integer last_z, Boolean alive, Double maxhp,
 				  String color, AnimalArmor armor, Double horse_jumpstrength, Style horse_style, Variant horse_variant, UUID uuid) {
 		
 		this.plugin = plugin;
@@ -145,8 +145,6 @@ public class Animal {
 		if (entity.getType().equals(EntityType.SHEEP)) { 
 			Sheep sheep = (Sheep) entity; 
 			this.color = sheep.getColor().toString(); 
-			this.horse_jumpstrength = 0.0;
-			this.armor = AnimalArmor.UNKNOWN;
 		}
 		else if (entity.getType().equals(EntityType.HORSE)) {
 			Horse horse = (Horse) entity;
@@ -161,23 +159,22 @@ public class Animal {
 			}
 			
 			this.color = horse.getColor().toString();
+			this.maxhp = horse.getMaxHealth();
 			this.horse_jumpstrength = horse.getJumpStrength();
 		}
 		else if (entity.getType().equals(EntityType.WOLF)) {
 			Wolf wolf = (Wolf) entity;
 			this.color = wolf.getCollarColor().toString();
-			this.horse_jumpstrength = 0.0;
-			this.armor = AnimalArmor.UNKNOWN;
-		}
-		else {
-			this.horse_jumpstrength = 0.0;
-			this.armor = AnimalArmor.UNKNOWN;
 		}
 		
 		try {
 			LivingEntity le = (LivingEntity) entity;
 			this.nametag = le.getCustomName();
-						
+			
+			if (armor == null) { this.armor = AnimalArmor.UNKNOWN; }
+			if (maxhp == null) { this.maxhp = le.getMaxHealth(); }
+			if (horse_jumpstrength == null) { this.horse_jumpstrength = 0.0; }
+			
 			return true;
 		}
 		catch (Exception e) { }
@@ -240,7 +237,7 @@ public class Animal {
 	/**
 	 * @return Die maximale HP des Tieres.
 	 */
-	public Float getMaxhp() {
+	public Double getMaxhp() {
 		return maxhp;
 	}
 	/**
@@ -274,10 +271,24 @@ public class Animal {
 		return horse_style;
 	}
 	/**
+	 * @return Der Style des Pferdes
+	 */
+	public String getHorse_styleAsString() {
+		if (horse_style == null) { return "NONE"; }
+		else { return horse_style.toString(); }
+	}
+	/**
 	 * @return Die Variante des Pferdes
 	 */
 	public Variant getHorse_variant() {
 		return horse_variant;
+	}
+	/**
+	 * @return Die Variante des Pferdes
+	 */
+	public String getHorse_variantAsString() {
+		if (horse_variant == null) { return "NONE"; }
+		else { return horse_variant.toString(); }
 	}
 	/**
 	 * @return Die UniqueId des Tieres.
@@ -351,7 +362,7 @@ public class Animal {
 	 * Ändert die maximale HP des Tieres.
 	 * @param maxhp - Die neuen maximalen HP.
 	 */
-	public void setMaxhp(Float maxhp) {
+	public void setMaxhp(Double maxhp) {
 		this.maxhp = maxhp;
 	}
 	/**
