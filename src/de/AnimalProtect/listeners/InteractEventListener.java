@@ -26,6 +26,7 @@ public class InteractEventListener implements Listener {
 	private AnimalProtect plugin;
 	private Database database;
 	private static HashMap<UUID, Entity> selectedList;
+	private static HashMap<UUID, Long> selectedTime;
 	
 	public InteractEventListener(AnimalProtect plugin) {
 		this.plugin = plugin;
@@ -51,7 +52,7 @@ public class InteractEventListener implements Listener {
 			CraftoPlayer owner = null;
 			
 			/* Prüfen ob das ausgewählte Tier bereits vom Spieler ausgewählt ist. */
-			if (selectedList.get(player) == entity) {
+			if (selectedList.get(player.getUniqueId()).equals(entity)) {
 				Messenger.sendMessage(player, "Du hast das Tier bereits ausgewählt!");
 				player.playSound(player.getLocation(), Sound.CLICK, 0.4f, 0.8f);
 				return;
@@ -87,8 +88,13 @@ public class InteractEventListener implements Listener {
 				}
 			}
 			/* Wenn das Tier protected ist, dann wird der Owner erwähnt. */
-			else { 
+			else {
 				Messenger.sendMessage(player, "Du hast das Tier von §6"+owner+" §eausgewählt.");
+				
+				/* Wenn seit dem letzten Select keine 30 Sekunden vergangen sind */
+				if (selectedTime.get(entity.getUniqueId()) + 30000 > System.currentTimeMillis()) { return; }
+				
+				/* Es sind 30 Sekunden vergangen, also wird das Tier geupdated */
 				Animal animal = database.getAnimal(entity.getUniqueId());
 				if (animal == null) { return; }
 				animal.updateAnimal(entity);
@@ -104,10 +110,11 @@ public class InteractEventListener implements Listener {
 	private void addSelected(UUID uuid, Entity entity) {
 		if (!selectedList.containsKey(uuid)) {
 			selectedList.put(uuid, entity);
+			selectedTime.put(entity.getUniqueId(), System.currentTimeMillis());
 		}
 		else {
-			selectedList.remove(uuid);
 			selectedList.put(uuid, entity);
+			selectedTime.put(entity.getUniqueId(), System.currentTimeMillis());
 		}
 	}
 	
