@@ -40,7 +40,7 @@ public class Command_listanimals implements CommandExecutor {
 		CraftoPlayer cPlayer = null;
 		Integer page = 1;
 		Integer pages = 1;
-		World world = Bukkit.getServer().getWorld(AnimalProtect.plugin.getConfig().getString("settings.world"));
+		World world = Bukkit.getServer().getWorlds().get(0);
 		ArrayList<Animal> animals = null;
 		
 		/* Argumente überprüfen */
@@ -93,7 +93,7 @@ public class Command_listanimals implements CommandExecutor {
 		{ Messenger.sendMessage(cs, "§cFehler: Die angegebene Seite existiert nicht!"); return; }
 		
 		/* Listenanfang schicken */
-		Messenger.sendMessage(cs, "§e--------- §fListe der Tiere von "+cPlayer.getName()+" ("+page+"/"+pages+")");
+		Messenger.sendMessage(cs, "§e--------- §fListe der Tiere von "+cPlayer.getName()+" ("+page+"/"+pages+") §e---------");
 		Messenger.sendMessage(cs, "§7§oInsgesamte Anzahl an Tieren: " +animals.size());
 		
 		for (int i=page*10-10; i<page*10 && i<animals.size(); i++) {
@@ -123,8 +123,8 @@ public class Command_listanimals implements CommandExecutor {
 			Message += "[§6" +x+ "§e";
 			Message += ", §6" +y+ "§e";
 			Message += ", §6" +z+ "§e] ";
-			Message += "['§6"+animal.getNametag()+"§e']";
-			Message += "["+animal.isAliveAsString()+"]";
+			Message += "['§6"+animal.getNametag()+"§e'] ";
+			Message += "["+animal.isAliveAsString()+"§e]";
 			
 			Messenger.sendMessage(cs, Message);
 		}
