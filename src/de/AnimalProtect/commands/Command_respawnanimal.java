@@ -109,14 +109,12 @@ public class Command_respawnanimal implements CommandExecutor {
 			Wolf wolf = (Wolf) entity;
 			wolf.setCollarColor(DyeColor.valueOf(animal.getColor()));
 		}
-		
-		/* Die Protection entfernen */
-		plugin.getDatenbank().unlockAnimal(animal);
-		
+				
 		/* Das Tier updaten und sichern */
 		animal.updateAnimal(entity);
-		if (animal.saveToDatabase(true))
-		{ Messenger.sendMessage(cs, "§aDas Tier wurde erfolgreich respawned."); }
+		if (plugin.getDatenbank().updateAnimal(animal.getId(), animal)) {
+			Messenger.sendMessage(cs, "§aDas Tier wurde erfolgreich respawned.");
+		}
 		else { Messenger.sendMessage(cs, "§cFehler: Das Tier konnte nicht komplett respawned werden!"); }
 	}
 	

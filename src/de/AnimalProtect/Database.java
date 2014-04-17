@@ -217,6 +217,34 @@ public class Database {
 	}
 	
 	/**
+	 * Updatet alle Eigenschaften des Entities in der Datenbank.
+	 * @param id - Die Id des Entities.
+	 * @param animal - Das Animal-Objekt, von dem alle Eigenschaften genommen werden.
+	 * @return True, falls das Updaten erfolgreich war.
+	 */
+	public boolean updateAnimal(Integer id, Animal animal) {
+		if (id == null) { return false; }
+		
+		try {
+			/* Query zum updaten/inserten aufbauen */
+			String Query = "UPDATE `ap_entities` "
+					     + "SET `owner`="+animal.getOwner()+",`animaltype`='"+animal.getAnimaltype()+"',`last_x`="+animal.getLast_x()+","
+					     + "`last_y`="+animal.getLast_y()+",`last_z`="+animal.getLast_z()+", `alive`="+animal.isAlive()+","
+					     + "`nametag`='"+animal.getNametag()+"',`maxhp`="+animal.getMaxhp()+",`deathcause`='"+animal.getDeathcauseToString()+"',"
+					     + "`color`='"+animal.getColorToString()+"',`armor`='"+animal.getArmor()+"', "
+					     + "`horse_jumpstrength`="+animal.getHorse_jumpstrength()+",`horse_style`='"+animal.getHorse_styleToString()+"',"
+					     + "`horse_variant`="+animal.getHorse_variantToString()+",`uuid`="+animal.getUniqueId().toString()+""
+					     + " WHERE id="+id+";";
+			
+			/* Query ausführen und das Ergebnis returnen */
+			if(connection.execute(Query, true)) { return true; }
+		}
+		catch (Exception e) { Messenger.exception("Database.java/updateAnimal", "An Error occured while trying to update an entity.", e); }
+		
+		return false;
+	}
+	
+	/**
 	 * 
 	 * @param animal
 	 * @return
@@ -231,7 +259,7 @@ public class Database {
 			/* Query ausführen und das Ergebnis returnen */
 			if(connection.execute(Query, true)) { return true; }
 		}
-		catch (Exception e) { Messenger.exception("Database.java/unlockAnimal", "An Error occured while trying to insert an entity.", e); }
+		catch (Exception e) { Messenger.exception("Database.java/unlockAnimal", "An Error occured while trying to unlock an entity.", e); }
 		
 		return false;
 	}
