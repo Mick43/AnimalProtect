@@ -140,9 +140,14 @@ public class Animal {
 		this.last_z = entity.getLocation().getBlockZ();
 		this.alive = !entity.isDead();
 		this.animaltype = AnimalType.valueOf(entity.getType().toString());
+		this.deathcause = DamageCause.CUSTOM;
 		
-		if (entity.getType().equals(EntityType.SHEEP))
-		{ Sheep sheep = (Sheep) entity; this.color = sheep.getColor().toString(); }
+		if (entity.getType().equals(EntityType.SHEEP)) { 
+			Sheep sheep = (Sheep) entity; 
+			this.color = sheep.getColor().toString(); 
+			this.horse_jumpstrength = 0.0;
+			this.armor = AnimalArmor.UNKNOWN;
+		}
 		else if (entity.getType().equals(EntityType.HORSE)) {
 			Horse horse = (Horse) entity;
 			if (horse.getInventory().getArmor().equals(new ItemStack(Material.DIAMOND_BARDING))) {
@@ -156,15 +161,23 @@ public class Animal {
 			}
 			
 			this.color = horse.getColor().toString();
+			this.horse_jumpstrength = horse.getJumpStrength();
 		}
 		else if (entity.getType().equals(EntityType.WOLF)) {
 			Wolf wolf = (Wolf) entity;
 			this.color = wolf.getCollarColor().toString();
+			this.horse_jumpstrength = 0.0;
+			this.armor = AnimalArmor.UNKNOWN;
+		}
+		else {
+			this.horse_jumpstrength = 0.0;
+			this.armor = AnimalArmor.UNKNOWN;
 		}
 		
 		try {
 			LivingEntity le = (LivingEntity) entity;
 			this.nametag = le.getCustomName();
+						
 			return true;
 		}
 		catch (Exception e) { }

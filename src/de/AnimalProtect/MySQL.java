@@ -377,10 +377,17 @@ public class MySQL {
 	}
 
 	private void error(String Source, String Info, Exception e) {
-		plugin.getLogger().warning("["+Source+"] An error has occurred while interacting with the database.");
-		plugin.getLogger().warning("["+Source+"] More Information: " + Info);
-		plugin.getLogger().warning("------------ Exception Stacktrace ------------");
-		e.printStackTrace();
-		plugin.getLogger().warning("------------ Exception Stacktrace ------------");
+		if (e == null) { return; }
+		
+		plugin.getLogger().warning("---------------------------- "+plugin.getName()+" Exception! ------------------------");
+		plugin.getLogger().warning("An Exception occured in animalprotect/" + Source);
+		plugin.getLogger().warning("More Information: " + Info);
+		plugin.getLogger().warning("Exception: " + e.getClass().getName());
+		if (e.getMessage() != null) { plugin.getLogger().warning("Description: " + e.getMessage()); }
+		plugin.getLogger().warning("---------------------------- Exception Stacktrace ----------------------------");
+		for (StackTraceElement s : e.getStackTrace()) {
+			plugin.getLogger().warning(" -> " +s.getClassName()+"."+s.getMethodName()+" -> Line: "+s.getLineNumber());
+		}
+		plugin.getLogger().warning("-------------------------- Exception Stacktrace End --------------------------");
 	}
 }
