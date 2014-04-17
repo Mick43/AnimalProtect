@@ -10,3 +10,6 @@ settings:
   worldname: 'Craftolution-de'
 messages:
   LOCK_SUCCESS: '%aDas Tier wurde erfolgreich gesichert.'
+  LOCK_FAILED: '%cFehler: Das Tier konnte nicht gesichert werden.'
+  MAX_LOCKS_EXCEEDED: '%cFehler: Du hast das Limit an Tier-Protections erreicht. (Maximal 50)'
+  
