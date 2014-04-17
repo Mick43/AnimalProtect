@@ -222,7 +222,17 @@ public class Database {
 	 * @return
 	 */
 	public boolean unlockAnimal(Animal animal) {
-		//TOOD: unlockAnimal
+		if (animal == null) { return false; }
+		
+		try {
+			/* Query zum updaten/inserten aufbauen */
+			String Query = "DELETE FROM `ap_entities` WHERE id="+animal.getId()+";";
+			
+			/* Query ausführen und das Ergebnis returnen */
+			if(connection.execute(Query, true)) { return true; }
+		}
+		catch (Exception e) { Messenger.exception("Database.java/unlockAnimal", "An Error occured while trying to insert an entity.", e); }
+		
 		return false;
 	}
 	
