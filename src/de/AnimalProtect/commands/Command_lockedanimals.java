@@ -50,9 +50,9 @@ public class Command_lockedanimals implements CommandExecutor {
 		
 		Integer count = plugin.getDatenbank().getAnimals(player.getUniqueId()).size();
 		if (cs.getName().equalsIgnoreCase(player.getName())) {
-			Messenger.sendMessage(cs, "Du hast insgesamt §6"+count+"§e Tiere gesichert.");
+			Messenger.sendMessage(cs, "Du hast insgesamt §6"+count+"§e von §6"+plugin.getConfig().getInt("settings.max_entities_for_player")+"§e Tieren gesichert.");
 		}
-		else { Messenger.sendMessage(cs, "Der Spieler §6"+player.getName()+"§e hat insgesamt "+count+" von §6"+plugin.getConfig().getInt("settings.max_entities_for_player")+"§e Tiere gesichert."); }
+		else { Messenger.sendMessage(cs, "Der Spieler §6"+player.getName()+"§e hat insgesamt §6"+count+"§e von §6"+plugin.getConfig().getInt("settings.max_entities_for_player")+"§e Tieren gesichert."); }
 	}
 	
 	private static boolean isUUID(String value) {
