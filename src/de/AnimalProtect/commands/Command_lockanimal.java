@@ -60,10 +60,13 @@ public class Command_lockanimal implements CommandExecutor {
 			return;
 		}
 		else {
-			animal = new Animal(AnimalProtect.plugin, player, entity);
-			if(animal.saveToDatabase(true)) 
-			{ Messenger.sendMessage(cs, "§aDas Tier wurde erfolgreich gesichert!"); }
-			else { Messenger.sendMessage(cs, "§cFehler: Das Tier konnte nicht gesichert werden!"); }
+			if (plugin.getDatenbank().getAnimals(player.getUniqueId()).size() <= plugin.getConfig().getInt("settings.max_entities_for_player")) {
+				animal = new Animal(AnimalProtect.plugin, player, entity);
+				if(animal.saveToDatabase(true)) 
+				{ Messenger.sendMessage(cs, "LOCK_SUCCESS"); }
+				else { Messenger.sendMessage(cs, "LOCK_FAILED"); }
+			}
+			else { Messenger.sendMessage(cs, "MAX_LOCKS_EXCEEDED"); }
 		}
 	}
 }
