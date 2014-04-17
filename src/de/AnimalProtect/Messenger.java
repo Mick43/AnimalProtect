@@ -279,7 +279,7 @@ public class Messenger {
 	public static void messageList(CommandSender cs, String key, String value) {
 		if (cs == null || key == null || value == null) { return; }
 		
-		sendMessage(cs, ChatColor.RESET + "- " + key + ": " + ChatColor.GRAY + value, true);
+		sendMessage(cs, ChatColor.RESET + "- " + key + ": " + ChatColor.GRAY + value, false);
 	}
 	
 	/**
