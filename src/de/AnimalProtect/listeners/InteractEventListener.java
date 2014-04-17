@@ -103,7 +103,7 @@ public class InteractEventListener implements Listener {
 			}
 			/* Wenn das Tier protected ist, dann wird der Owner erwähnt. */
 			else {
-				Messenger.sendMessage(player, "Du hast das Tier von §6"+owner+" §eausgewählt.");
+				Messenger.sendMessage(player, "Du hast das Tier von §6"+owner.getName()+" §eausgewählt.");
 				
 				/* Wenn seit dem letzten Select keine 30 Sekunden vergangen sind */
 				if (selectedTime.get(entity.getUniqueId()) + 30000 > System.currentTimeMillis()) { return; }
