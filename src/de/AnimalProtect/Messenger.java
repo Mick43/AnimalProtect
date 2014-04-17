@@ -80,16 +80,13 @@ public class Messenger {
      */
 	public static void sendMessage(Player player, String message, Boolean prefix) {
 		if (player == null) { return; }
-		log("SUCHE...");
 		
 		String tempMessage = AnimalProtect.plugin.getConfig().getString("messages."+message.toUpperCase());
 		if (tempMessage != null) {
-			log("GEFUNDEN: " + message.toUpperCase());
 			tempMessage = tempMessage.replaceAll("%", "§");
 			message = tempMessage;
 		}
 		
-		log("SENDEN...");
 		if (prefix) { player.sendMessage(Prefix + " " + ChatColor.YELLOW + message); }
 		else { player.sendMessage(ChatColor.YELLOW + message); }
 	}
@@ -105,7 +102,7 @@ public class Messenger {
 	public static void sendMessage(Player player, String message) {
 		if (player == null) { return; }
 		
-		sendMessage(player, ChatColor.YELLOW + message, false);
+		sendMessage(player, message, false);
 	}
 	
 	/**
@@ -212,7 +209,6 @@ public class Messenger {
 			
 			String tempMessage = AnimalProtect.plugin.getConfig().getString("messages."+message.toUpperCase());
 			if (tempMessage != null) {
-				log("GEFUNDEN: " + message.toUpperCase());
 				tempMessage = tempMessage.replaceAll("%", "§");
 				message = tempMessage;
 			}
@@ -233,7 +229,7 @@ public class Messenger {
 	public static void sendMessage(CommandSender cs, String message) {
 		if (cs == null || message == null) { return; }
 		
-		sendMessage(cs, ChatColor.YELLOW + message, false);
+		sendMessage(cs, message, false);
 	}
 	
 	/**
