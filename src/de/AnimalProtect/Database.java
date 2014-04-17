@@ -70,6 +70,10 @@ public class Database {
 		this.password = plugin.getConfig().getString("database.password");
 		this.port = plugin.getConfig().getString("database.port");
 		
+		this.entities = new HashMap<UUID, Animal>();
+		this.keys = new HashMap<UUID, ArrayList<Animal>>();
+		this.reverseKeys = new HashMap<UUID, UUID>();
+		
 		this.connection = new MySQL(plugin, hostname, port, dbname, username, password, plugin.isDebugging());
 		this.connection.openConnection();
 		
