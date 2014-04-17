@@ -16,6 +16,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.entity.Sheep;
 import org.bukkit.entity.Wolf;
 import org.bukkit.entity.Horse.Color;
+import org.bukkit.entity.Horse.Variant;
 import org.bukkit.inventory.ItemStack;
 
 import craftoplugin.core.database.CraftoPlayer;
@@ -97,7 +98,7 @@ public class Command_respawnanimal implements CommandExecutor {
 			}
 			
 			horse.setColor(Color.valueOf(animal.getColor()));
-			horse.setVariant(animal.getHorse_variant());
+			horse.setVariant(Variant.valueOf(animal.getHorse_variant().toString()));
 			horse.setStyle(animal.getHorse_style());
 			horse.setMaxHealth(animal.getMaxhp());
 			horse.setJumpStrength(animal.getHorse_jumpstrength());

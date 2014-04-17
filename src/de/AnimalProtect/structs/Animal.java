@@ -12,7 +12,6 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Horse;
 import org.bukkit.entity.Horse.Style;
-import org.bukkit.entity.Horse.Variant;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Sheep;
 import org.bukkit.entity.Wolf;
@@ -44,7 +43,7 @@ public class Animal {
 	private AnimalArmor armor;
 	private Double horse_jumpstrength;
 	private Style horse_style;
-	private Variant horse_variant; 
+	private AnimalVariant horse_variant; 
 	private UUID uuid;
 	private Timestamp created_at;
 	
@@ -59,7 +58,7 @@ public class Animal {
 		this.updateAnimal(entity);
 	}
 	public Animal(AnimalProtect plugin, Integer owner, AnimalType animaltype, Integer last_x, Integer last_y, Integer last_z, Boolean alive, Double maxhp,
-				  String color, AnimalArmor armor, Double horse_jumpstrength, Style horse_style, Variant horse_variant, UUID uuid) {
+				  String color, AnimalArmor armor, Double horse_jumpstrength, Style horse_style, AnimalVariant horse_variant, UUID uuid) {
 		
 		this.plugin = plugin;
 		this.owner = owner;
@@ -142,6 +141,10 @@ public class Animal {
 		this.animaltype = AnimalType.valueOf(entity.getType().toString());
 		this.deathcause = null;
 		this.nametag = "";
+		this.armor = AnimalArmor.UNKNOWN;
+		this.maxhp = 0.0;
+		this.horse_jumpstrength = 0.0;
+		this.horse_style = Style.NONE;
 		
 		if (entity.getType().equals(EntityType.SHEEP)) { 
 			Sheep sheep = (Sheep) entity; 
@@ -159,6 +162,8 @@ public class Animal {
 				this.armor = AnimalArmor.IRON;
 			}
 			
+			this.horse_style = horse.getStyle();
+			this.horse_variant = AnimalVariant.valueOf(horse.getVariant().toString());
 			this.color = horse.getColor().toString();
 			this.maxhp = horse.getMaxHealth();
 			this.horse_jumpstrength = horse.getJumpStrength();
@@ -171,10 +176,7 @@ public class Animal {
 		try {
 			LivingEntity le = (LivingEntity) entity;
 			this.nametag = le.getCustomName();
-			
-			if (armor == null) { this.armor = AnimalArmor.UNKNOWN; }
 			if (maxhp == null) { this.maxhp = le.getMaxHealth(); }
-			if (horse_jumpstrength == null) { this.horse_jumpstrength = 0.0; }
 			
 			return true;
 		}
@@ -297,7 +299,7 @@ public class Animal {
 	/**
 	 * @return Die Variante des Pferdes
 	 */
-	public Variant getHorse_variant() {
+	public AnimalVariant getHorse_variant() {
 		return horse_variant;
 	}
 	/**
@@ -421,7 +423,7 @@ public class Animal {
 	 * Ändert die Variante des Pferdes.
 	 * @param horse_variant - Die Variante des Pferdes.
 	 */
-	public void setHorse_variant(Variant horse_variant) {
+	public void setHorse_variant(AnimalVariant horse_variant) {
 		this.horse_variant = horse_variant;
 	}
 	/**

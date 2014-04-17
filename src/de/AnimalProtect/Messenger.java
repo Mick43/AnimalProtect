@@ -80,12 +80,16 @@ public class Messenger {
      */
 	public static void sendMessage(Player player, String message, Boolean prefix) {
 		if (player == null) { return; }
+		log("SUCHE...");
 		
-		if (AnimalProtect.plugin.getConfig().contains("messages."+message.toUpperCase())) {
-			message = AnimalProtect.plugin.getConfig().getString("messages."+message.toUpperCase());
-			message = message.replaceAll("%", "§");
+		String tempMessage = AnimalProtect.plugin.getConfig().getString("messages."+message.toUpperCase());
+		if (tempMessage != null) {
+			log("GEFUNDEN: " + message.toUpperCase());
+			tempMessage = tempMessage.replaceAll("%", "§");
+			message = tempMessage;
 		}
 		
+		log("SENDEN...");
 		if (prefix) { player.sendMessage(Prefix + " " + ChatColor.YELLOW + message); }
 		else { player.sendMessage(ChatColor.YELLOW + message); }
 	}
@@ -205,6 +209,14 @@ public class Messenger {
 			message = message.replaceAll("§M", "");
 			message = message.replaceAll("§N", "");
 			message = message.replaceAll("§R", "");
+			
+			String tempMessage = AnimalProtect.plugin.getConfig().getString("messages."+message.toUpperCase());
+			if (tempMessage != null) {
+				log("GEFUNDEN: " + message.toUpperCase());
+				tempMessage = tempMessage.replaceAll("%", "§");
+				message = tempMessage;
+			}
+			
 			if (prefix) { cs.sendMessage(ConsolePrefix + " // " + message); }
 			else { cs.sendMessage(message); }
 		}
@@ -310,8 +322,10 @@ public class Messenger {
      */
 	public static void debugMessage(String message) {
 		if (Debugging) {
-			if (AnimalProtect.plugin.getConfig().contains("messages."+message.toUpperCase())) {
-				message = AnimalProtect.plugin.getConfig().getString("messages."+message.toUpperCase());
+			String tempMessage = AnimalProtect.plugin.getConfig().getString("messages."+message.toUpperCase());
+			if (tempMessage != null) {
+				tempMessage = tempMessage.replaceAll("%", "§");
+				message = tempMessage;
 			}
 			
 			log("[DEBUG] " + message);
@@ -337,7 +351,7 @@ public class Messenger {
 		warn("Exception: " + e.getClass().getName());
 		warn("---------------------------- Exception Stacktrace ----------------------------");
 		for (StackTraceElement s : e.getStackTrace()) {
-			warn(" -> " +s.getClassName()+"."+s.getMethodName()+" -> Line: "+s.getLineNumber());
+			warn(" -> " +s.getClassName()+"/"+s.getMethodName()+"() -> Line: "+s.getLineNumber());
 		}
 		warn("-------------------------- Exception Stacktrace End --------------------------");
 	}

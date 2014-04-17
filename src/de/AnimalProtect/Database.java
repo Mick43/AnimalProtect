@@ -9,7 +9,6 @@ import java.util.UUID;
 
 /* Bukkit Imports */
 import org.bukkit.entity.Horse.Style;
-import org.bukkit.entity.Horse.Variant;
 
 /* CraftoPlugin Imports */
 import craftoplugin.core.CraftoPlugin;
@@ -20,6 +19,7 @@ import craftoplugin.modules.general.GeneralModule;
 import de.AnimalProtect.structs.Animal;
 import de.AnimalProtect.structs.AnimalArmor;
 import de.AnimalProtect.structs.AnimalType;
+import de.AnimalProtect.structs.AnimalVariant;
 
 public class Database {
 	
@@ -145,7 +145,7 @@ public class Database {
 					animal.setArmor(AnimalArmor.valueOf(result.getString("armor")));
 					animal.setHorse_jumpstrength(result.getDouble("horse_jumpstrength"));
 					animal.setHorse_style(Style.valueOf(result.getString("horse_style")));
-					animal.setHorse_variant(Variant.valueOf(result.getString("horse_variant")));
+					animal.setHorse_variant(AnimalVariant.valueOf(result.getString("horse_variant")));
 					animal.setUniqueId(UUID.fromString(result.getString("uuid")));
 					animal.setCreated_at(result.getTimestamp("created_at"));
 					
