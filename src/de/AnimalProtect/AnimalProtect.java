@@ -54,6 +54,9 @@ public class AnimalProtect extends JavaPlugin {
 		
 		/* Die Commands laden */
 		initializeCommands();
+		
+		/* Konsole benachrichtigen */
+		Messenger.log("AnimalProtect has been enabled!");
 	}
 	
 	@Override
@@ -62,7 +65,7 @@ public class AnimalProtect extends JavaPlugin {
 	}
 	
 	private void initializeConfig() {
-		Messenger.log(" Loading config...");
+		Messenger.log("Loading config...");
 		
 		try {
 			getConfig().options().copyDefaults(true);
@@ -76,13 +79,13 @@ public class AnimalProtect extends JavaPlugin {
 	}
 	
 	private void initializeDatabase() {
-		Messenger.log(" Loading database...");
+		Messenger.log("Loading database...");
 		
 		this.database = new Database(this);
 	}
 	
 	private void initializeListeners() {
-		Messenger.log(" Loading listeners...");
+		Messenger.log("Loading listeners...");
 		
 		try {
 			this.getServer().getPluginManager().registerEvents(new DamageEventListener(this), this);
@@ -97,7 +100,7 @@ public class AnimalProtect extends JavaPlugin {
 	}
 	
 	private void initializeCommands() {
-		Messenger.log(" Loading commands...");
+		Messenger.log("Loading commands...");
 		
 		try {
 			this.getCommand("ap").setExecutor(new Command_AnimalProtect(this));
