@@ -1,7 +1,6 @@
 package de.AnimalProtect.commands;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.UUID;
 
 import org.bukkit.Bukkit;
@@ -102,7 +101,7 @@ public class Command_respawnanimal implements CommandExecutor {
 				if (foundAnimal == null) { continue; }
 				
 				if (foundAnimal.isAlive() && !foundEntities.contains(foundAnimal.getUniqueId())) {
-					Command_respawnanimal.respawnAnimal(animal, cPlayer, player, true, locationFlag);
+					Command_respawnanimal.respawnAnimal(foundAnimal, cPlayer, player, true, locationFlag);
 				}
 			}
 		}
