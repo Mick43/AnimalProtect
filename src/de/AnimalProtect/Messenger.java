@@ -66,6 +66,23 @@ public class Messenger {
      */
 	public static void broadcast(String message) {
 		Bukkit.getServer().broadcastMessage(message);
+	}			
+	
+	
+	/**
+	 * Sendet einem CommandSender die Überschrift für eine Hilfe-Liste
+	 * 
+	 * @param cs
+     *            Der CommandSender, an den die Überschrift geschickt wird.
+	 * @param message
+     *            Die Überschrift, ohne Farbcodes!
+	 */
+	public static void help(CommandSender cs, String message) {
+		String title = ChatColor.YELLOW + "---------- " + ChatColor.WHITE + message + ChatColor.YELLOW + " ";
+		for (int i=0; i<18-message.length()+20; i++) {
+			title += "-";
+		}
+		sendMessage(cs, title);
 	}
 	
 	/**

@@ -1,6 +1,5 @@
 package de.AnimalProtect.commands;
 
-import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -42,6 +41,8 @@ public class Command_AnimalProtect implements CommandExecutor {
 	}
 	
 	public static void Command_ShowHelp(CommandSender cs, String[] args) {
-		Bukkit.getServer().dispatchCommand(cs, "help animalprotect");
+		Messenger.help(cs, "AnimalProtect Help (1/2)");
+		Messenger.help(cs, "Help: Index (1/38)");
+		Messenger.help(cs, "CraftoPlugin Help (1/2)");
 	}
 }
