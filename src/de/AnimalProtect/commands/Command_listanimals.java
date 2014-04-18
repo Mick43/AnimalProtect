@@ -101,6 +101,9 @@ public class Command_listanimals implements CommandExecutor {
 			Integer x = animal.getLast_x();
 			Integer y = animal.getLast_y();
 			Integer z = animal.getLast_z();
+			String status = animal.isAliveAsString(); // ALIVE // DEAD
+			Boolean found = false;
+			
 			if (world != null) {
 				for (Entity entity : world.getEntities()) {
 					if (entity.getUniqueId().equals(animal.getUniqueId())) {
@@ -109,14 +112,19 @@ public class Command_listanimals implements CommandExecutor {
 							y = entity.getLocation().getBlockY();
 							z = entity.getLocation().getBlockZ();
 							animal.setAlive(true);
+							status = "§aALIVE";
 						}
 						else if (animal.isAlive()) {
 							animal.setAlive(false);
 							animal.saveToDatabase(true);
+							status = "§cDEAD";
 						}
+						found = true;
 					}
 				}
 			}
+			
+			if (!found && animal.isAlive()) { status = "§cMISSING"; }
 			
 			String Message = "["+i+"] ";
 			Message += animal.getAnimaltype() + " - ";
@@ -124,7 +132,7 @@ public class Command_listanimals implements CommandExecutor {
 			Message += ", §6" +y+ "§e";
 			Message += ", §6" +z+ "§e] ";
 			Message += "['§6"+animal.getNametag()+"§e'] ";
-			Message += "["+animal.isAliveAsString()+"§e]";
+			Message += "["+status+"§e]";
 			
 			Messenger.sendMessage(cs, Message);
 		}
