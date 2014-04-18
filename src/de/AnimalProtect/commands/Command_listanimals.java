@@ -1,6 +1,7 @@
 package de.AnimalProtect.commands;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.UUID;
 
 import org.bukkit.Bukkit;
@@ -96,6 +97,11 @@ public class Command_listanimals implements CommandExecutor {
 		Messenger.sendMessage(cs, "§e--------- §fListe der Tiere von "+cPlayer.getName()+" ("+page+"/"+pages+") §e---------");
 		Messenger.sendMessage(cs, "§7§oInsgesamte Anzahl an Tieren: " +animals.size());
 		
+		HashMap<UUID, Entity> entities = new HashMap<UUID, Entity>();
+		for (Entity entity : Bukkit.getServer().getWorlds().get(0).getEntities()) {
+			entities.put(entity.getUniqueId(), entity);
+		}
+		
 		for (int i=page*10-10; i<page*10 && i<animals.size(); i++) {
 			Animal animal = animals.get(i);
 			Integer x = animal.getLast_x();
@@ -104,24 +110,21 @@ public class Command_listanimals implements CommandExecutor {
 			String status = animal.isAliveAsString(); // ALIVE // DEAD
 			Boolean found = false;
 			
-			if (world != null) {
-				for (Entity entity : world.getEntities()) {
-					if (entity.getUniqueId().equals(animal.getUniqueId())) {
-						if (!entity.isDead()) {
-							x = entity.getLocation().getBlockX();
-							y = entity.getLocation().getBlockY();
-							z = entity.getLocation().getBlockZ();
-							animal.setAlive(true);
-							status = "§aALIVE";
-						}
-						else if (animal.isAlive()) {
-							animal.setAlive(false);
-							animal.saveToDatabase(true);
-							status = "§cDEAD";
-						}
-						found = true;
-					}
+			if (entities.containsKey(animal.getUniqueId())) {
+				Entity entity = entities.get(animal.getUniqueId());
+				if (!entity.isDead()) {
+					x = entity.getLocation().getBlockX();
+					y = entity.getLocation().getBlockY();
+					z = entity.getLocation().getBlockZ();
+					animal.setAlive(true);
+					status = "§aALIVE";
 				}
+				else if (animal.isAlive()) {
+					animal.setAlive(false);
+					animal.saveToDatabase(true);
+					status = "§cDEAD";
+				}
+				found = true;
 			}
 			
 			if (!found && animal.isAlive()) { status = "§cMISSING"; }
