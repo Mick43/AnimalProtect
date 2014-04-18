@@ -109,14 +109,17 @@ public class InteractEventListener implements Listener {
 			else {
 				Messenger.sendMessage(player, "Du hast das Tier von §6"+owner.getName()+" §eausgewählt.");
 				
-				/* Wenn seit dem letzten Select 30 Sekunden vergangen sind */
-				if (InteractEventListener.selectedTime.get(entity.getUniqueId()) + 60000 < System.currentTimeMillis()) { //TODO: NULLPOINTER
-					Animal animal = database.getAnimal(entity.getUniqueId());
-					if (animal != null) { 
-						animal.updateAnimal(entity);
-						animal.saveToDatabase(true);
+				try {
+					/* Wenn seit dem letzten Select 30 Sekunden vergangen sind */
+					if (InteractEventListener.selectedTime.get(entity.getUniqueId()) + 60000 < System.currentTimeMillis()) { //TODO: NULLPOINTER
+						Animal animal = database.getAnimal(entity.getUniqueId());
+						if (animal != null) { 
+							animal.updateAnimal(entity);
+							animal.saveToDatabase(true);
+						}
 					}
 				}
+				catch (Exception e) { Messenger.exception("InteractEventListener.onEntityEvent", "NullPointerException :(", e); }
 			}
 			
 			/* Zum Schluss wird bei dem Spieler noch ein Sound abgespielt und sein zuletzt ausgewähltes Tier wird gespeichert. */
