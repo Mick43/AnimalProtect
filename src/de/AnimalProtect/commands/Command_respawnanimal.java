@@ -1,9 +1,12 @@
 package de.AnimalProtect.commands;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.UUID;
 
 import org.bukkit.Bukkit;
 import org.bukkit.DyeColor;
+import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -40,7 +43,7 @@ public class Command_respawnanimal implements CommandExecutor {
 		return true;
 	}
 	
-	public static void runCommand(CommandSender cs, String[] args) {
+	public static void runCommand(CommandSender cs, String[] args) { // respawnanimal <name> <id> <flags>
 		/* Datenbank-Verbindung aufbauen, falls nicht vorhanden. */
 		if (plugin.getDatenbank().isConnected())
 		{ plugin.getDatenbank().connect(); }
@@ -59,7 +62,8 @@ public class Command_respawnanimal implements CommandExecutor {
 		CraftoPlayer cPlayer = null;
 		Integer animalId = null;
 		Animal animal = null;
-		UUID oldUUID = null;
+		Boolean onlyMissing = false;
+		Boolean locationFlag = false;
 		
 		if (isUUID(args[0])) { cPlayer = CraftoPlayer.getPlayer(UUID.fromString(args[0])); }
 		else { cPlayer = CraftoPlayer.getPlayer(args[0]); }
@@ -73,12 +77,50 @@ public class Command_respawnanimal implements CommandExecutor {
 		
 		if (animal == null) { Messenger.sendMessage(cs, "ANIMAL_NOT_FOUND"); return; }
 		
+		if (args.length > 2) {
+			for (String s : args) {
+				if (s.equalsIgnoreCase("-missing")) {
+					onlyMissing = true;
+				}
+				else if (s.equalsIgnoreCase("-location")) {
+					locationFlag = true;
+				}
+			}
+		}
+		
+		if (!onlyMissing) {
+			Command_respawnanimal.respawnAnimal(animal, cPlayer, player, true, locationFlag);
+		}
+		else {
+			ArrayList<UUID> foundEntities = new ArrayList<UUID>();
+			for (Entity entity : player.getWorld().getEntities()) {
+				if (!entity.isDead()) { foundEntities.add(entity.getUniqueId()); }
+			}
+			
+			for (int i=animalId; i<plugin.getDatenbank().getAnimals(cPlayer.getUniqueId()).size(); i++) {
+				Animal foundAnimal = plugin.getDatenbank().getAnimals(cPlayer.getUniqueId()).get(i);
+				if (foundAnimal == null) { continue; }
+				
+				if (foundAnimal.isAlive() && !foundEntities.contains(foundAnimal.getUniqueId())) {
+					Command_respawnanimal.respawnAnimal(animal, cPlayer, player, true, locationFlag);
+				}
+			}
+		}
+	}
+	
+	public static boolean respawnAnimal(Animal animal, CraftoPlayer owner, Player sender, Boolean response, Boolean locationFlag) {
 		Entity entity = null;
-		entity = player.getWorld().spawnEntity(player.getLocation(), animal.getAnimaltype().getEntity());
-		oldUUID = animal.getUniqueId();
+				
+		if (locationFlag) { 
+			Location loc = new Location(sender.getWorld(), animal.getLast_x(), animal.getLast_y(), animal.getLast_z());
+			entity = sender.getWorld().spawnEntity(loc, animal.getAnimaltype().getEntity());
+		}
+		else { entity = sender.getWorld().spawnEntity(sender.getLocation(), animal.getAnimaltype().getEntity()); }
+		
+		UUID oldUUID = animal.getUniqueId();
 		
 		if (entity == null)
-		{ Messenger.sendMessage(cs, "ANIMAL_NOT_RESPAWNED"); return; }
+		{ Messenger.sendMessage(sender, "ANIMAL_NOT_RESPAWNED"); return false; }
 		
 		LivingEntity livingEntity = (LivingEntity) entity;
 		livingEntity.setCustomName(animal.getNametag());
@@ -104,20 +146,23 @@ public class Command_respawnanimal implements CommandExecutor {
 			horse.setStyle(animal.getHorse_style());
 			horse.setMaxHealth(animal.getMaxhp());
 			horse.setJumpStrength(animal.getHorse_jumpstrength());
-			horse.setOwner(Bukkit.getServer().getOfflinePlayer(cPlayer.getUniqueId()));
+			horse.setOwner(Bukkit.getServer().getOfflinePlayer(owner.getUniqueId()));
 			horse.setTamed(true);
 		}
 		else if (livingEntity.getType().equals(EntityType.WOLF)) {
 			Wolf wolf = (Wolf) entity;
 			wolf.setCollarColor(DyeColor.valueOf(animal.getColor()));
 		}
-				
+		
 		/* Das Tier updaten und sichern */
 		animal.updateAnimal(entity);
 		if (plugin.getDatenbank().updateAnimal(animal.getId(), animal, oldUUID)) {
-			Messenger.sendMessage(cs, "ANIMAL_RESPAWNED");
+			if (response) { Messenger.sendMessage(sender, "ANIMAL_RESPAWNED"); }
+			return true;
 		}
-		else { Messenger.sendMessage(cs, "ANIMAL_NOT_RESPAWNED"); }
+		else { Messenger.sendMessage(sender, "ANIMAL_NOT_RESPAWNED"); }
+		
+		return false;
 	}
 	
 	private static boolean isNumber(String value) {
