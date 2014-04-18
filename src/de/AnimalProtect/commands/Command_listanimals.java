@@ -92,7 +92,7 @@ public class Command_listanimals implements CommandExecutor {
 		{ Messenger.sendMessage(cs, "PAGE_NOT_EXIST"); return; }
 		
 		/* Listenanfang schicken */
-		Messenger.sendMessage(cs, "§e--------- §fListe der Tiere von "+cPlayer.getName()+" ("+page+"/"+pages+") §e---------");
+		Messenger.help(cs, "Liste der Tiere von "+cPlayer.getName()+" ("+page+"/"+pages+")");
 		Messenger.sendMessage(cs, "§7§oInsgesamte Anzahl an Tieren: " +animals.size());
 		
 		HashMap<UUID, Entity> entities = new HashMap<UUID, Entity>();
