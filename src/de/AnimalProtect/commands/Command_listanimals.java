@@ -5,7 +5,6 @@ import java.util.HashMap;
 import java.util.UUID;
 
 import org.bukkit.Bukkit;
-import org.bukkit.World;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -41,7 +40,6 @@ public class Command_listanimals implements CommandExecutor {
 		CraftoPlayer cPlayer = null;
 		Integer page = 1;
 		Integer pages = 1;
-		World world = Bukkit.getServer().getWorlds().get(0);
 		ArrayList<Animal> animals = null;
 		
 		/* Argumente überprüfen */
