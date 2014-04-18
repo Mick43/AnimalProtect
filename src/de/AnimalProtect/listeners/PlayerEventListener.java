@@ -31,7 +31,7 @@ public class PlayerEventListener implements Listener {
 	}
 	
 	public boolean isAdmin(Player player) {
-		if (player.hasPermission("animalprotect.admin") || player.hasPermission("craftoplugin.admin"))
+		if (player.hasPermission("animalprotect.admin") || player.hasPermission("craftoplugin.admin") || player.isOp())
 		{ return true; }
 		return false;
 	}
