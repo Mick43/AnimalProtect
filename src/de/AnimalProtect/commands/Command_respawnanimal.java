@@ -134,7 +134,7 @@ public class Command_respawnanimal implements CommandExecutor {
 			
 			if (animal == null) { Messenger.sendMessage(cs, "ANIMAL_NOT_FOUND"); return; }
 			else if (missingFlag && isMissing(animal, foundEntities)) { Command_respawnanimal.respawnAnimal(animal, cOwner, sender, true, locationFlag); }
-			else { Command_respawnanimal.respawnAnimal(animal, cOwner, sender, true, locationFlag); }
+			else if (!missingFlag) { Command_respawnanimal.respawnAnimal(animal, cOwner, sender, true, locationFlag); }
 		}
 		else if (startFlag && !endFlag) {
 			for (int i=start; i<plugin.getDatenbank().getAnimals(cOwner.getUniqueId()).size(); i++) { 
