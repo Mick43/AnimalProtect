@@ -54,9 +54,9 @@ public class Database {
 	private final String password;
 	private final String port;
 	
-	private HashMap<UUID, Animal> entities; // Tier(UUID) <-> Tier
-	private HashMap<UUID, ArrayList<Animal>> keys; // Spieler(UUID) <-> Tiere
-	private HashMap<UUID, UUID> reverseKeys; // Tier(UUID) <-> Spieler(UUID)
+	private HashMap<UUID, Animal> entities;        // Tier(UUID)    <-> Tier
+	private HashMap<UUID, ArrayList<Animal>> keys; // Spieler(UUID) <-> List<Tiere>
+	private HashMap<UUID, UUID> reverseKeys;       // Tier(UUID)    <-> Spieler(UUID)
 	
 	/**
 	 * Erstellt eine Datenbank-Instanz von AnimalProtect
@@ -204,9 +204,9 @@ public class Database {
 						 		 + ""+animal.getLast_z()+", "+animal.isAlive()+", '"+animal.getNametag()+"', "+animal.getMaxhp()+", "
 						 		 + "'"+animal.getDeathcauseToString()+"', '"+animal.getColorToString()+"', '"+animal.getArmor()+"', "+animal.getHorse_jumpstrength()+", "
 						 		 + "'"+animal.getHorse_styleToString()+"', '"+animal.getHorse_variantToString()+"', '"+animal.getUniqueId()+"')"
-						 + "ON DUPLICATE KEY UPDATE owner="+animal.getOwner()+", last_x="+animal.getLast_x()+", last_y="+animal.getLast_y()+", last_z="+animal.getLast_z()+", "
-						 		 + "alive="+animal.isAlive()+", nametag='"+animal.getNametag()+"', deathcause='"+animal.getDeathcauseToString()+"', color='"+animal.getColorToString()+"', "
-						 		 + "armor='"+animal.getArmor().toString()+"';";
+						 + "ON DUPLICATE KEY UPDATE owner="+animal.getOwner()+", last_x="+animal.getLast_x()+", last_y="+animal.getLast_y()+", "
+						 		 + "last_z="+animal.getLast_z()+", alive="+animal.isAlive()+", nametag='"+animal.getNametag()+"', "
+						 		 + "deathcause='"+animal.getDeathcauseToString()+"', color='"+animal.getColorToString()+"', armor='"+animal.getArmor().toString()+"';";
 			
 			/* Query ausführen und das Ergebnis returnen */
 			if(connection.execute(Query, true)) { 
