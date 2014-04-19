@@ -28,6 +28,7 @@ messages:
   PAGE_NOT_EXIST: '%cFehler: Die angegebene Seite existiert nicht.'
   PAGE_NOT_NUMBER: '%cFehler: Die angegebene Seite ist keine Zahl.'
   ID_NOT_NUMBER: '%cFehler: Die angegebene ID ist keine Zahl!'
+  START_NOT_NUMBER: '%cFehler: Die angegebene Start-ID ist keine Zahl!'
   START_FLAG_ALREADY: '%cFehler: Die ID-Flag kann nicht gesetzt werden, wenn die Start-Flag bereits gesetzt wurde.'
   ID_FLAG_ALREADY: '%cFehler: Die Start- und die End-Flag koennen nicht gesetzt werden, wenn die ID-Flag bereits festgelegt wurde.'
   ENDFLAG_TOO_HIGH: '%cFehler: Die angegebene End-Flag ist zu hoch.'

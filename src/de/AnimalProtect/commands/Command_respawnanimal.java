@@ -74,8 +74,8 @@ public class Command_respawnanimal implements CommandExecutor {
 			if (s.startsWith("p:")) {
 				owner = s.substring(2, s.length());
 			}
-			else if (s.startsWith("-id:")) {
-				if (isNumber(s.substring(5, s.length()))) {
+			else if (s.startsWith("id:")) {
+				if (isNumber(s.substring(3, s.length()))) {
 					if (!startFlag) {
 						start = Integer.parseInt(s.substring(3, s.length()));
 						end = start;
@@ -87,10 +87,10 @@ public class Command_respawnanimal implements CommandExecutor {
 				}
 				else { Messenger.sendMessage(cs, "ID_NOT_NUMBER"); return; }
 			}
-			else if (s.startsWith("-start:")) {
+			else if (s.startsWith("start:")) {
 				if (!idFlag) {
-					if (isNumber(s.substring(7, s.length()))) {
-						start = Integer.parseInt(s.substring(3, s.length()));
+					if (isNumber(s.substring(6, s.length()))) {
+						start = Integer.parseInt(s.substring(6, s.length()));
 						startFlag = true;
 						idFlag = false;
 					}
@@ -98,9 +98,9 @@ public class Command_respawnanimal implements CommandExecutor {
 				}
 				else { Messenger.sendMessage(cs, "ID_FLAG_ALREADY"); return; }
 			}
-			else if (s.startsWith("-end:")) {
+			else if (s.startsWith("end:")) {
 				if (!idFlag) {
-					if (isNumber(s.substring(5, s.length()))) {
+					if (isNumber(s.substring(4, s.length()))) {
 						end = Integer.parseInt(s.substring(4, s.length()));
 						endFlag = true;
 						idFlag = false;
