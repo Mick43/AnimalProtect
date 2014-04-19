@@ -25,7 +25,7 @@ public class Database {
 	
 	/* AnimalProtect  ---  Tabellenstruktur  ---  ap_entities
 	 * 
-	 * id                 - (INT)                   (AUTO_INCREMENT) (PRIMARY KEY)
+	 * id                 - (INT)                   (PRIMARY KEY) (AUTO_INCREMENT)
 	 * owner              - (INT11)      (NOT NULL) 
 	 * animaltype         - (ENUM)       (NOT NULL) 
 	 * last_x             - (SMALLINT5)  (NOT NULL) 
