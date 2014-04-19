@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.UUID;
 
 import org.bukkit.Bukkit;
+import org.bukkit.Chunk;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -123,6 +124,27 @@ public class Command_listanimals implements CommandExecutor {
 					status = "§cDEAD";
 				}
 				found = true;
+			}
+			else {
+				Bukkit.getServer().getWorlds().get(0).loadChunk(animal.getLast_x(), animal.getLast_z());
+				Chunk chunk = Bukkit.getServer().getWorlds().get(0).getChunkAt(animal.getLast_x(), animal.getLast_z());
+				for (Entity entity : chunk.getEntities()) {
+					if (entity.getUniqueId().equals(animal.getUniqueId())) {
+						if (!entity.isDead()) {
+							x = entity.getLocation().getBlockX();
+							y = entity.getLocation().getBlockY();
+							z = entity.getLocation().getBlockZ();
+							animal.setAlive(true);
+							status = "§aALIVE";
+						}
+						else if (animal.isAlive()) {
+							animal.setAlive(false);
+							animal.saveToDatabase(true);
+							status = "§cDEAD";
+						}
+						found = true;
+					}
+				}
 			}
 			
 			if (!found && animal.isAlive()) { status = "§cMISSING"; }
