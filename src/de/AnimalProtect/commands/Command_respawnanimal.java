@@ -75,7 +75,7 @@ public class Command_respawnanimal implements CommandExecutor {
 				owner = s.substring(2, s.length());
 			}
 			else if (s.startsWith("-id:")) {
-				if (isNumber(s.substring(4, s.length()))) {
+				if (isNumber(s.substring(5, s.length()))) {
 					if (!startFlag) {
 						start = Integer.parseInt(s.substring(3, s.length()));
 						end = start;
@@ -115,6 +115,8 @@ public class Command_respawnanimal implements CommandExecutor {
 				locationFlag = true;
 			}
 		}
+		
+		Messenger.broadcast("start:"+start+" / end:"+end+" / missing:"+missingFlag+" / location:"+locationFlag+" / idFlag="+idFlag+ " / startFlag:"+startFlag+" / endflag:"+endFlag);
 		
 		/* Den angegebenen Spieler ermitteln */
 		if (isUUID(args[0])) { cOwner = CraftoPlayer.getPlayer(UUID.fromString(owner)); }
