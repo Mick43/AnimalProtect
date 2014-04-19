@@ -176,7 +176,7 @@ public class Animal {
 		try {
 			LivingEntity le = (LivingEntity) entity;
 			this.nametag = le.getCustomName();
-			if (maxhp == null) { this.maxhp = le.getMaxHealth(); }
+			if (maxhp == 0.0) { this.maxhp = le.getMaxHealth(); }
 			
 			return true;
 		}
