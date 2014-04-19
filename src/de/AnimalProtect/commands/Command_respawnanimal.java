@@ -57,54 +57,123 @@ public class Command_respawnanimal implements CommandExecutor {
 			return;
 		}
 		
-		Player player = (Player)cs;
-		CraftoPlayer cPlayer = null;
-		Integer animalId = null;
-		Animal animal = null;
-		Boolean onlyMissing = false;
+		/* Variablen bereitstellen */
+		Player sender = (Player)cs;
+		CraftoPlayer cOwner = null;
+		String owner = null;
+		Integer start = null;
+		Integer end = null;
+		Boolean idFlag = false;
+		Boolean startFlag = false;
+		Boolean endFlag = false;
+		Boolean missingFlag = false;
 		Boolean locationFlag = false;
 		
-		if (isUUID(args[0])) { cPlayer = CraftoPlayer.getPlayer(UUID.fromString(args[0])); }
-		else { cPlayer = CraftoPlayer.getPlayer(args[0]); }
-		
-		if (cPlayer == null) { Messenger.sendMessage(cs, "PLAYER_NOT_FOUND"); return; }
-		
-		if (isNumber(args[1])) { animalId = Integer.parseInt(args[1]); }
-		else { Messenger.sendMessage(cs, "ID_NOT_NUMBER"); return; }
-		
-		animal = plugin.getDatenbank().getAnimals(cPlayer.getUniqueId()).get(animalId);
-		
-		if (animal == null) { Messenger.sendMessage(cs, "ANIMAL_NOT_FOUND"); return; }
-		
-		if (args.length > 2) {
-			for (String s : args) {
-				if (s.equalsIgnoreCase("-missing")) {
-					onlyMissing = true;
+		/* Die Flags ermitteln */
+		for (String s : args) {
+			if (s.startsWith("p:")) {
+				owner = s.substring(2, s.length());
+			}
+			else if (s.startsWith("-id:")) {
+				if (isNumber(s.substring(4, s.length()))) {
+					if (!startFlag) {
+						start = Integer.parseInt(s.substring(3, s.length()));
+						end = start;
+						startFlag = false;
+						endFlag = false;
+						idFlag = true;
+					}
+					else { Messenger.sendMessage(cs, "START_FLAG_ALREADY"); return; }
 				}
-				else if (s.equalsIgnoreCase("-location")) {
-					locationFlag = true;
+				else { Messenger.sendMessage(cs, "ID_NOT_NUMBER"); return; }
+			}
+			else if (s.startsWith("-start:")) {
+				if (!idFlag) {
+					if (isNumber(s.substring(7, s.length()))) {
+						start = Integer.parseInt(s.substring(3, s.length()));
+						startFlag = true;
+						idFlag = false;
+					}
+					else { Messenger.sendMessage(cs, "START_NOT_NUMBER"); return; }
 				}
+				else { Messenger.sendMessage(cs, "ID_FLAG_ALREADY"); return; }
+			}
+			else if (s.startsWith("-end:")) {
+				if (!idFlag) {
+					if (isNumber(s.substring(5, s.length()))) {
+						end = Integer.parseInt(s.substring(4, s.length()));
+						endFlag = true;
+						idFlag = false;
+					}
+				}
+				else { Messenger.sendMessage(cs, "ID_FLAG_ALREADY"); return; }
+			}
+			else if (s.startsWith("-missing")) {
+				missingFlag = true;
+			}
+			else if (s.startsWith("-location")) {
+				locationFlag = true;
 			}
 		}
 		
-		if (!onlyMissing) {
-			Command_respawnanimal.respawnAnimal(animal, cPlayer, player, true, locationFlag);
+		/* Den angegebenen Spieler ermitteln */
+		if (isUUID(args[0])) { cOwner = CraftoPlayer.getPlayer(UUID.fromString(owner)); }
+		else { cOwner = CraftoPlayer.getPlayer(owner); }
+		
+		if (cOwner == null) { Messenger.sendMessage(cs, "PLAYER_NOT_FOUND"); return; }
+		
+		/* Alle Entities in eine ArrayList speichern, damit wir sie später für isMissing() haben */
+		ArrayList<UUID> foundEntities = new ArrayList<UUID>();
+		for (Entity entity : sender.getWorld().getEntities()) {
+			if (!entity.isDead()) { foundEntities.add(entity.getUniqueId()); }
 		}
-		else {
-			ArrayList<UUID> foundEntities = new ArrayList<UUID>();
-			for (Entity entity : player.getWorld().getEntities()) {
-				if (!entity.isDead()) { foundEntities.add(entity.getUniqueId()); }
-			}
+		
+		/* Alle Flags durchgehen */
+		if (idFlag) {
+			Animal animal = plugin.getDatenbank().getAnimals(cOwner.getUniqueId()).get(start);
 			
-			for (int i=animalId; i<plugin.getDatenbank().getAnimals(cPlayer.getUniqueId()).size(); i++) {
-				Animal foundAnimal = plugin.getDatenbank().getAnimals(cPlayer.getUniqueId()).get(i);
+			if (animal == null) { Messenger.sendMessage(cs, "ANIMAL_NOT_FOUND"); return; }
+			else if (missingFlag && isMissing(animal, foundEntities)) { Command_respawnanimal.respawnAnimal(animal, cOwner, sender, true, locationFlag); }
+			else { Command_respawnanimal.respawnAnimal(animal, cOwner, sender, true, locationFlag); }
+		}
+		else if (startFlag && !endFlag) {
+			for (int i=start; i<plugin.getDatenbank().getAnimals(cOwner.getUniqueId()).size(); i++) { 
+				Animal foundAnimal = plugin.getDatenbank().getAnimals(cOwner.getUniqueId()).get(i);
 				if (foundAnimal == null) { continue; }
 				
-				if (foundAnimal.isAlive() && !foundEntities.contains(foundAnimal.getUniqueId())) {
-					Command_respawnanimal.respawnAnimal(foundAnimal, cPlayer, player, true, locationFlag);
+				if(missingFlag && isMissing(foundAnimal, foundEntities)) {
+					Command_respawnanimal.respawnAnimal(foundAnimal, cOwner, sender, true, locationFlag);
+				}
+				else if (!missingFlag) {
+					Command_respawnanimal.respawnAnimal(foundAnimal, cOwner, sender, true, locationFlag);
 				}
 			}
 		}
+		else if  (startFlag && endFlag) {
+			if (end > plugin.getDatenbank().getAnimals(cOwner.getUniqueId()).size()) {
+				Messenger.sendMessage(cs, "ENDFLAG_TOO_HIGH");
+			}
+			else {
+				for (int i=start; i<end; i++) {
+					Animal foundAnimal = plugin.getDatenbank().getAnimals(cOwner.getUniqueId()).get(i);
+					if (foundAnimal == null) { continue; }
+					
+					if(missingFlag && isMissing(foundAnimal, foundEntities)) {
+						Command_respawnanimal.respawnAnimal(foundAnimal, cOwner, sender, true, locationFlag);
+					}
+					else if (!missingFlag) {
+						Command_respawnanimal.respawnAnimal(foundAnimal, cOwner, sender, true, locationFlag);
+					}
+				}
+			}
+		}
+	}
+		
+	public static boolean isMissing(Animal animal, ArrayList<UUID> entities) {
+		if (animal.isAlive() && !entities.contains(animal.getUniqueId())) {
+			return true;
+		}
+		return false;
 	}
 	
 	public static boolean respawnAnimal(Animal animal, CraftoPlayer owner, Player sender, Boolean response, Boolean locationFlag) {

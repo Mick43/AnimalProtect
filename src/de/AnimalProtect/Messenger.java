@@ -191,6 +191,12 @@ public class Messenger {
 			sendMessage((Player)cs, message, prefix);
 		}
 		else {
+			String tempMessage = AnimalProtect.plugin.getConfig().getString("messages."+message.toUpperCase());
+			if (tempMessage != null) {
+				tempMessage = tempMessage.replaceAll("%", "§");
+				message = tempMessage;
+			}
+			
 			message = message.replaceAll("§0", "");
 			message = message.replaceAll("§1", "");
 			message = message.replaceAll("§2", "");
@@ -223,12 +229,6 @@ public class Messenger {
 			message = message.replaceAll("§M", "");
 			message = message.replaceAll("§N", "");
 			message = message.replaceAll("§R", "");
-			
-			String tempMessage = AnimalProtect.plugin.getConfig().getString("messages."+message.toUpperCase());
-			if (tempMessage != null) {
-				tempMessage = tempMessage.replaceAll("%", "§");
-				message = tempMessage;
-			}
 			
 			if (prefix) { cs.sendMessage(ConsolePrefix + " // " + message); }
 			else { cs.sendMessage(message); }

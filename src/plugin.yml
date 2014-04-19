@@ -31,32 +31,37 @@ commands:
       usage: Schreibe /animalinfo
       permission: animalprotect.protect
       permission-message: You don't have permission.
+      aliases: [lockinfo]
    listanimals:
       description: Listet alle Tiere die der Person gehoeren auf.
       usage: Schreibe /listanimals [playername] [seite]
       permission: animalprotect.admin
       permission-message: You don't have permission.
+      aliases: [locklist]
    respawnanimal:
       description: Spawnt das ausgewaehlte Tier neu.
       usage: Schreibe /respawnanimal [owner] [id]
       permission: animalprotect.admin
       permission-message: You don't have permission.
+      aliases: [lockrespawn]
    tpanimal:
       description: Teleportiert dich zu einem Tier.
       usage: Schreibe /tpanimal [owner] [id]
       permission: animalprotect.admin
       permission-message: You don't have permission.
+      aliases: [locktp]
    animaldebug:
       description: Gibt Debug-Informationen ueber das Plugin aus.
       usage: Schreibe /animaldebug
       permission: animalprotect.admin
       permission-message: You don't have permission.
+      aliases: [lockdebug]
    lockedanimals:
       description: Gibt die Anzahl der Locks ueber einen Spieler aus.
       usage: Schreibe /lockedanimals <spieler>
       permission: animalprotect.protect
       permission-message: You don't have permission.
-
+      aliases: [locklimit]
 permissions:
   animalprotect.protect:
     default: true
