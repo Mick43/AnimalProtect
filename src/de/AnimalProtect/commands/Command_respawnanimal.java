@@ -115,9 +115,7 @@ public class Command_respawnanimal implements CommandExecutor {
 				locationFlag = true;
 			}
 		}
-		
-		Messenger.broadcast("start:"+start+" / end:"+end+" / missing:"+missingFlag+" / location:"+locationFlag+" / idFlag="+idFlag+ " / startFlag:"+startFlag+" / endflag:"+endFlag);
-		
+				
 		/* Den angegebenen Spieler ermitteln */
 		if (isUUID(args[0])) { cOwner = CraftoPlayer.getPlayer(UUID.fromString(owner)); }
 		else { cOwner = CraftoPlayer.getPlayer(owner); }
