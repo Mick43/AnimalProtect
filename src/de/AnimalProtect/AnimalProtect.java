@@ -28,6 +28,12 @@ import de.AnimalProtect.listeners.DamageEventListener;
 import de.AnimalProtect.listeners.LeashEventListener;
 import de.AnimalProtect.listeners.VehicleEventListener;
 
+/**
+ * Das AnimalProtect Plugin
+ * 
+ * @author Fear837, Pingebam
+ * @version 1.2
+ */
 public class AnimalProtect extends JavaPlugin {
 	
 	private Database database;

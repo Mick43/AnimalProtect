@@ -281,9 +281,9 @@ public class Database {
 	}
 	
 	/**
-	 * 
-	 * @param animal
-	 * @return
+	 * Entsichert ein Tier und löscht es aus der Datenbank
+	 * @param animal - Das Animal-Objekt
+	 * @return True, falls das entsichern ohne Probleme geklappt hat.
 	 */
 	public boolean unlockAnimal(Animal animal) {
 		if (animal == null) { return false; }
