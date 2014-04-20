@@ -33,6 +33,7 @@ public class Command_AnimalProtect implements CommandExecutor {
 			else if (args[0].equalsIgnoreCase("listanimals")) { Command_listanimals.runCommand(cs, newArgs); }
 			else if (args[0].equalsIgnoreCase("lockanimal")) { Command_lockanimal.runCommand(cs, newArgs); }
 			else if (args[0].equalsIgnoreCase("lockedanimals")) { Command_lockedanimals.runCommand(cs, newArgs); }
+			else if (args[0].equalsIgnoreCase("animalinfo")) { Command_animalinfo.runCommand(cs, newArgs); }
 			else if (args[0].equalsIgnoreCase("respawnanimal")) { Command_respawnanimal.runCommand(cs, newArgs); }
 			else if (args[0].equalsIgnoreCase("tpanimal")) { Command_tpanimal.runCommand(cs, newArgs); }
 			else if (args[0].equalsIgnoreCase("unlockanimal")) { Command_unlockanimal.runCommand(cs, newArgs); }
@@ -40,6 +41,7 @@ public class Command_AnimalProtect implements CommandExecutor {
 			else if (args[0].equalsIgnoreCase("list")) { Command_listanimals.runCommand(cs, newArgs); }
 			else if (args[0].equalsIgnoreCase("lock")) { Command_lockanimal.runCommand(cs, newArgs); }
 			else if (args[0].equalsIgnoreCase("limit")) { Command_lockedanimals.runCommand(cs, newArgs); }
+			else if (args[0].equalsIgnoreCase("info")) { Command_animalinfo.runCommand(cs, newArgs); }
 			else if (args[0].equalsIgnoreCase("respawn")) { Command_respawnanimal.runCommand(cs, newArgs); }
 			else if (args[0].equalsIgnoreCase("tp")) { Command_tpanimal.runCommand(cs, newArgs); }
 			else if (args[0].equalsIgnoreCase("unlock")) { Command_unlockanimal.runCommand(cs, newArgs); }
@@ -57,6 +59,7 @@ public class Command_AnimalProtect implements CommandExecutor {
 			if (hasPerm(cs, "animalprotect.protect")) { Messenger.sendMessage(cs, "§6/ap unlock: §f" + AnimalProtect.plugin.getCommand("unlockanimal").getDescription());   }
 			if (hasPerm(cs, "animalprotect.admin"))   { Messenger.sendMessage(cs, "§6/ap list: §f" + AnimalProtect.plugin.getCommand("listanimals").getDescription());      }
 			if (hasPerm(cs, "animalprotect.protect")) { Messenger.sendMessage(cs, "§6/ap limit: §f" + AnimalProtect.plugin.getCommand("lockedanimals").getDescription());   }
+			if (hasPerm(cs, "animalprotect.protect")) { Messenger.sendMessage(cs, "§6/ap info: §f" + AnimalProtect.plugin.getCommand("animalinfo").getDescription());   	}
 			if (hasPerm(cs, "animalprotect.admin"))   { Messenger.sendMessage(cs, "§6/ap respawn: §f" + AnimalProtect.plugin.getCommand("respawnanimal").getDescription()); }
 			if (hasPerm(cs, "animalprotect.admin"))   { Messenger.sendMessage(cs, "§6/ap tp: §f" + AnimalProtect.plugin.getCommand("tpanimal").getDescription());           }
 			if (hasPerm(cs, "animalprotect.admin"))   { Messenger.sendMessage(cs, "§6/ap debug: §f" + AnimalProtect.plugin.getCommand("animaldebug").getDescription());     }
