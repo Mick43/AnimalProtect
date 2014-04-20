@@ -111,7 +111,7 @@ public class InteractEventListener implements Listener {
 				
 				try {
 					/* Wenn seit dem letzten Select 30 Sekunden vergangen sind */
-					if (InteractEventListener.selectedTime.get(player.getUniqueId()) + 60000 < System.currentTimeMillis()) { //TODO: NULLPOINTER
+					if (InteractEventListener.selectedTime.get(player.getUniqueId()) + 60000 < System.currentTimeMillis()) {
 						Animal animal = database.getAnimal(entity.getUniqueId());
 						if (animal != null) { 
 							animal.updateAnimal(entity);
