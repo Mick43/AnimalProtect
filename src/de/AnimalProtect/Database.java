@@ -83,100 +83,109 @@ public class Database {
 	}
 	
 	private void createTable() {
-		if (!isConnected()) { return; }
-		
-		String[] columns = new String[17];
-		columns[0] = "id INT AUTO_INCREMENT PRIMARY KEY";
-		columns[1] = "owner INT(11) NOT NULL";
-		columns[2] = "animaltype ENUM('UNKNOWN', 'COW', 'CHICKEN', 'PIG', 'SHEEP', 'HORSE', 'WOLF', 'IRON_GOLEM', 'SNOWMAN', 'VILLAGER', 'OCELOT') NOT NULL";
-		columns[3] = "last_x SMALLINT(5) NOT NULL";
-		columns[4] = "last_y SMALLINT(3) UNSIGNED NOT NULL";
-		columns[5] = "last_z SMALLINT(5) NOT NULL";
-		columns[6] = "alive BOOL NOT NULL";
-		columns[7] = "nametag VARCHAR(255) NOT NULL";
-		columns[8] = "maxhp DOUBLE NOT NULL";
-		columns[9] = "deathcause ENUM('NONE', 'CUSTOM', 'CONTACT', 'ENTITY_ATTACK', 'PROJECTILE', 'SUFFOCATION', 'FALL', 'FIRE', 'FIRE_TICK', 'MELTING', 'LAVA', 'DROWNING', 'BLOCK_EXPLOSION', 'ENTITY_EXPLOSION', 'VOID', 'LIGHTNING', 'SUICIDE', 'STARVATION', 'POISON', 'MAGIC', 'WITHER', 'FALLING_BLOCK', 'THORNS') NOT NULL";
-		columns[10] = "color VARCHAR(40) NOT NULL";
-		columns[11] = "armor ENUM('UNKNOWN', 'DIAMOND','GOLD','IRON') NOT NULL";
-		columns[12] = "horse_jumpstrength DOUBLE NOT NULL";
-		columns[13] = "horse_style ENUM('NONE', 'WHITE', 'WHITEFIELD', 'WHITE_DOTS', 'BLACK_DOTS') NOT NULL";
-		columns[14] = "horse_variant ENUM('NONE', 'HORSE', 'DONKEY', 'MULE', 'UNDEAD_HORSE', 'SKELETON_HORSE') NOT NULL";
-		columns[15] = "uuid CHAR(36) NOT NULL UNIQUE KEY";
-		columns[16] = "created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL";
-		
-		this.connection.createTable("ap_entities", columns, true);
-		this.loadFromDatabase();
+		try {
+			if (!isConnected()) { return; }
+			
+			String[] columns = new String[17];
+			columns[0] = "id INT AUTO_INCREMENT PRIMARY KEY";
+			columns[1] = "owner INT(11) NOT NULL";
+			columns[2] = "animaltype ENUM('UNKNOWN', 'COW', 'CHICKEN', 'PIG', 'SHEEP', 'HORSE', 'WOLF', 'IRON_GOLEM', 'SNOWMAN', 'VILLAGER', 'OCELOT') NOT NULL";
+			columns[3] = "last_x SMALLINT(5) NOT NULL";
+			columns[4] = "last_y SMALLINT(3) UNSIGNED NOT NULL";
+			columns[5] = "last_z SMALLINT(5) NOT NULL";
+			columns[6] = "alive BOOL NOT NULL";
+			columns[7] = "nametag VARCHAR(255) NOT NULL";
+			columns[8] = "maxhp DOUBLE NOT NULL";
+			columns[9] = "deathcause ENUM('NONE', 'CUSTOM', 'CONTACT', 'ENTITY_ATTACK', 'PROJECTILE', 'SUFFOCATION', 'FALL', 'FIRE', 'FIRE_TICK', 'MELTING', 'LAVA', 'DROWNING', 'BLOCK_EXPLOSION', 'ENTITY_EXPLOSION', 'VOID', 'LIGHTNING', 'SUICIDE', 'STARVATION', 'POISON', 'MAGIC', 'WITHER', 'FALLING_BLOCK', 'THORNS') NOT NULL";
+			columns[10] = "color VARCHAR(40) NOT NULL";
+			columns[11] = "armor ENUM('UNKNOWN', 'DIAMOND','GOLD','IRON') NOT NULL";
+			columns[12] = "horse_jumpstrength DOUBLE NOT NULL";
+			columns[13] = "horse_style ENUM('NONE', 'WHITE', 'WHITEFIELD', 'WHITE_DOTS', 'BLACK_DOTS') NOT NULL";
+			columns[14] = "horse_variant ENUM('NONE', 'HORSE', 'DONKEY', 'MULE', 'UNDEAD_HORSE', 'SKELETON_HORSE') NOT NULL";
+			columns[15] = "uuid CHAR(36) NOT NULL UNIQUE KEY";
+			columns[16] = "created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL";
+			
+			this.connection.createTable("ap_entities", columns, true);
+			this.loadFromDatabase();
+		}
+		catch (Exception e) { Messenger.exception("Database/createTable", "An exception occured in de.AnimalProtect.Database.createTabel()", e); }
 	}
 	
 	private void loadFromDatabase() {
-		if (!isConnected()) { return; }
-		
-		/* Als erstes die CraftoPlayer's laden */
-		if (CraftoPlugin.plugin.getModuleManager().containsModule("GeneralModule")) {
-			this.module = (GeneralModule) CraftoPlugin.plugin.getModuleManager().getModule("GeneralModule");
+		try {
+			if (!isConnected()) { return; }
 			
-			if (module == null) { 
-				Messenger.warn("Warning: Failed to load players from the GeneralModule! (Module is null)");
-				return; 
+			/* Als erstes die CraftoPlayer's laden */
+			if (CraftoPlugin.plugin.getModuleManager().containsModule("GeneralModule")) {
+				this.module = (GeneralModule) CraftoPlugin.plugin.getModuleManager().getModule("GeneralModule");
+				
+				if (module == null) { 
+					Messenger.warn("Warning: Failed to load players from the GeneralModule! (Module is null)");
+					return; 
+				}
+				
+				for(CraftoPlayer player : module.getDatabase().getPlayers()) {
+					this.keys.put(player.getUniqueId(), new ArrayList<Animal>());
+				}
 			}
 			
-			for(CraftoPlayer player : module.getDatabase().getPlayers()) {
-				this.keys.put(player.getUniqueId(), new ArrayList<Animal>());
-			}
-		}
-		
-		
-		/* Dann die Tiere laden */
-		ResultSet result = connection.getResult("SELECT * FROM ap_entities", false, true);
-		
-		if (result != null) { 
-			try {
-				while (result.next()) {
-					Animal animal = new Animal(plugin);
-					animal.setId(result.getInt("id"));
-					animal.setOwner(result.getInt("owner"));
-					animal.setAnimaltype(AnimalType.valueOf(result.getString("animaltype")));
-					animal.setLast_x(result.getInt("last_x"));
-					animal.setLast_y(result.getInt("last_y"));
-					animal.setLast_z(result.getInt("last_z"));
-					animal.setAlive(result.getBoolean("alive"));
-					animal.setMaxhp(result.getDouble("maxhp"));
-					animal.setColor(result.getString("color"));
-					animal.setArmor(AnimalArmor.valueOf(result.getString("armor")));
-					animal.setHorse_jumpstrength(result.getDouble("horse_jumpstrength"));
-					animal.setHorse_style(Style.valueOf(result.getString("horse_style")));
-					animal.setHorse_variant(AnimalVariant.valueOf(result.getString("horse_variant")));
-					animal.setUniqueId(UUID.fromString(result.getString("uuid")));
-					animal.setCreated_at(result.getTimestamp("created_at"));
-					
-					CraftoPlayer owner = module.getDatabase().getPlayer(animal.getOwner());
-					if (owner != null) {
-						if (this.keys.containsKey(owner.getUniqueId())) {
-							entities.put(animal.getUniqueId(), animal);
-							reverseKeys.put(animal.getUniqueId(), owner.getUniqueId());
-							keys.get(owner.getUniqueId()).add(animal);
+			
+			/* Dann die Tiere laden */
+			ResultSet result = connection.getResult("SELECT * FROM ap_entities", false, true);
+			
+			if (result != null) { 
+				try {
+					while (result.next()) {
+						Animal animal = new Animal(plugin);
+						animal.setId(result.getInt("id"));
+						animal.setOwner(result.getInt("owner"));
+						animal.setAnimaltype(AnimalType.valueOf(result.getString("animaltype")));
+						animal.setLast_x(result.getInt("last_x"));
+						animal.setLast_y(result.getInt("last_y"));
+						animal.setLast_z(result.getInt("last_z"));
+						animal.setAlive(result.getBoolean("alive"));
+						animal.setMaxhp(result.getDouble("maxhp"));
+						animal.setColor(result.getString("color"));
+						animal.setArmor(AnimalArmor.valueOf(result.getString("armor")));
+						animal.setHorse_jumpstrength(result.getDouble("horse_jumpstrength"));
+						animal.setHorse_style(Style.valueOf(result.getString("horse_style")));
+						animal.setHorse_variant(AnimalVariant.valueOf(result.getString("horse_variant")));
+						animal.setUniqueId(UUID.fromString(result.getString("uuid")));
+						animal.setCreated_at(result.getTimestamp("created_at"));
+						
+						CraftoPlayer owner = module.getDatabase().getPlayer(animal.getOwner());
+						if (owner != null) {
+							if (this.keys.containsKey(owner.getUniqueId())) {
+								entities.put(animal.getUniqueId(), animal);
+								reverseKeys.put(animal.getUniqueId(), owner.getUniqueId());
+								keys.get(owner.getUniqueId()).add(animal);
+							}
+							else 
+							{ Messenger.warn("Warning: An animal could not be loaded because the owner is not in the owners hashmap! (AnimalId: " +animal.getId()+ ") (OwnerId: " +owner.getId() +")"); }
 						}
 						else 
-						{ Messenger.warn("Warning: An animal could not be loaded because the owner is not in the owners hashmap! (AnimalId: " +animal.getId()+ ") (OwnerId: " +owner.getId() +")"); }
+						{ Messenger.warn("Warning: An animal could not be loaded because the the owner does not exist! (AnimalId: " +animal.getId()+ ")"); }
 					}
-					else 
-					{ Messenger.warn("Warning: An animal could not be loaded because the the owner does not exist! (AnimalId: " +animal.getId()+ ")"); }
-				}
-			}  
-			catch (SQLException e) 
-			{ Messenger.exception("Database.java/loadFromDatabase", "Exception caught while trying to load every entity from the database.", e); }
+				}  
+				catch (SQLException e) 
+				{ Messenger.exception("Database.java/loadFromDatabase", "Exception caught while trying to load every entity from the database.", e); }
+			}
+			else 
+			{ Messenger.warn("Warning: Failed to load every entity from the database! (ResultSet is null)"); }
 		}
-		else 
-		{ Messenger.warn("Warning: Failed to load every entity from the database! (ResultSet is null)"); }
+		catch (Exception e) { Messenger.exception("Database/loadFromDatabase", "An exception occured in de.AnimalProtect.Database.loadFromDatabase()", e); }
 	}
 	
 	/**
 	 * Startet die Verbindung zur Datenbank neu.
 	 */
 	public void connect() {
-		if (!isConnected()) {
-			connection.openConnection();
+		try {
+			if (!isConnected()) {
+				connection.openConnection();
+			}
 		}
+		catch (Exception e) { Messenger.exception("Database/connect", "An exception occured in de.AnimalProtect.Database.connect()", e); }
 	}
 	
 	/**
