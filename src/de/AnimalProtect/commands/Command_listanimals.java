@@ -149,7 +149,7 @@ public class Command_listanimals implements CommandExecutor {
 			
 			if (!found && animal.isAlive()) { status = "§cMISSING"; }
 			
-			String Message = "["+i+"] ";
+			String Message = "§6"+i+". §e";
 			Message += animal.getAnimaltype() + " - ";
 			Message += "[§6" +x+ "§e";
 			Message += ", §6" +y+ "§e";
