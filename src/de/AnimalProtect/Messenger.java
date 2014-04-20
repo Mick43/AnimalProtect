@@ -132,6 +132,7 @@ public class Messenger {
      * @param prefix
      *            Gibt an, ob vor der Nachricht der Prefix angegeben werden soll.
      */
+	@SuppressWarnings("deprecation")
 	public static void sendMessage(String playerName, String message, Boolean prefix) {
 		sendMessage(Bukkit.getServer().getPlayer(playerName), message, prefix);
 	}
@@ -144,6 +145,7 @@ public class Messenger {
 	 * @param message
      *            Die Nachricht, welche verschickt wird.
      */
+	@SuppressWarnings("deprecation")
 	public static void sendMessage(String playerName, String message) {
 		sendMessage(Bukkit.getServer().getPlayer(playerName), message, false);
 	}
