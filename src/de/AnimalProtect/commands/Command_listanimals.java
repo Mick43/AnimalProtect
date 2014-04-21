@@ -163,6 +163,7 @@ public class Command_listanimals implements CommandExecutor {
 	}
 	
 	private static boolean isUUID(String value) {
+		if (value.length() != 36) { return false; }
 		return value.matches(".*-.*-.*-.*-.*");
 	}
 	
