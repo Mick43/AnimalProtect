@@ -23,26 +23,26 @@ import de.AnimalProtect.structs.AnimalVariant;
 
 public class Database {
 	
-	/* AnimalProtect  ---  Tabellenstruktur  ---  ap_entities
-	 * 
-	 * id                 - (INT)                   (PRIMARY KEY) (AUTO_INCREMENT)
-	 * owner              - (INT11)      (NOT NULL) 
-	 * animaltype         - (ENUM)       (NOT NULL) 
-	 * last_x             - (SMALLINT5)  (NOT NULL) 
-	 * last_y             - (SMALLINT3)  (NOT NULL) (UNSIGNED) 
-	 * last_z             - (SMALLINT5)  (NOT NULL) 
-	 * alive              - (BOOL)       (NOT NULL) 
-	 * nametag            - (VARCHAR255) (NOT NULL) 
-	 * maxhp              - (DOUBLE)     (NOT NULL) 
-	 * deathcause         - (ENUM)       (NOT NULL) 
-	 * color              - (VARCHAR40)  (NOT NULL) 
-	 * armor              - (ENUM)       (NOT NULL) 
-	 * horse_jumpstrength - (DOUBLE)     (NOT NULL) 
-	 * horse_style        - (ENUM)       (NOT NULL) 
-	 * horse_variant      - (ENUM)       (NOT NULL) 
-	 * uuid               - (CHAR36)     (NOT NULL) (UNIQUE KEY)
-	 * created_at         - (TIMESTAMP)  (NOT NULL) (DEFAULT CURRENT TIMESTAMP)
-	 */
+   /* AnimalProtect  ---  Tabellenstruktur  ---  ap_entities
+	* 
+	* id                 - (INT)                   (PRIMARY KEY) (AUTO_INCREMENT)
+	* owner              - (INT11)      (NOT NULL) 
+	* animaltype         - (ENUM)       (NOT NULL) 
+	* last_x             - (SMALLINT5)  (NOT NULL) 
+	* last_y             - (SMALLINT3)  (NOT NULL) (UNSIGNED) 
+	* last_z             - (SMALLINT5)  (NOT NULL) 
+	* alive              - (BOOL)       (NOT NULL) 
+	* nametag            - (VARCHAR255) (NOT NULL) 
+	* maxhp              - (DOUBLE)     (NOT NULL) 
+	* deathcause         - (ENUM)       (NOT NULL) 
+	* color              - (VARCHAR40)  (NOT NULL) 
+	* armor              - (ENUM)       (NOT NULL) 
+	* horse_jumpstrength - (DOUBLE)     (NOT NULL) 
+	* horse_style        - (ENUM)       (NOT NULL) 
+	* horse_variant      - (ENUM)       (NOT NULL) 
+	* uuid               - (CHAR36)     (NOT NULL) (UNIQUE KEY)
+	* created_at         - (TIMESTAMP)  (NOT NULL) (DEFAULT CURRENT TIMESTAMP)
+	*/
 	
 	private AnimalProtect plugin;
 	private GeneralModule module;
