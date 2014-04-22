@@ -6,6 +6,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 
+import craftoplugin.core.CraftoMessenger;
 import craftoplugin.core.database.CraftoPlayer;
 import de.AnimalProtect.AnimalProtect;
 import de.AnimalProtect.Messenger;
@@ -60,13 +61,19 @@ public class Command_lockanimal implements CommandExecutor {
 			return;
 		}
 		else {
-			if (plugin.getDatenbank().getAnimals(player.getUniqueId()).size() <= plugin.getConfig().getInt("settings.max_entities_for_player")) {
-				animal = new Animal(AnimalProtect.plugin, player, entity);
-				if(animal.saveToDatabase(true)) 
-				{ Messenger.sendMessage(cs, "LOCK_SUCCESS"); }
-				else { Messenger.sendMessage(cs, "LOCK_FAILED"); }
+			try {
+				if (plugin.getDatenbank().getAnimals(player.getUniqueId()).size() <= plugin.getConfig().getInt("settings.max_entities_for_player")) {
+					animal = new Animal(AnimalProtect.plugin, player, entity);
+					if(animal.saveToDatabase(true)) 
+					{ Messenger.sendMessage(cs, "LOCK_SUCCESS"); }
+					else { Messenger.sendMessage(cs, "LOCK_FAILED"); }
+				}
+				else { Messenger.sendMessage(cs, "MAX_LOCKS_EXCEEDED"); }
 			}
-			else { Messenger.sendMessage(cs, "MAX_LOCKS_EXCEEDED"); }
+			catch (Exception e) {
+				CraftoMessenger.exception("Command_lockanimal/runCommand", "No Information available.", e);
+				Messenger.sendMessage(cs, "LOCK_FAILED");
+			}
 		}
 	}
 }

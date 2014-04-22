@@ -336,7 +336,7 @@ public class Messenger {
      *            Die Nachricht die in der Konsole ausgegeben wird.
      */
 	public static void debugMessage(String message) {
-		if (Debugging) {
+		if (Debugging && AnimalProtect.plugin.isDebugging()) {
 			String tempMessage = AnimalProtect.plugin.getConfig().getString("messages."+message.toUpperCase());
 			if (tempMessage != null) {
 				tempMessage = tempMessage.replaceAll("%", "§");

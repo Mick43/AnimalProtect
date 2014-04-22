@@ -218,7 +218,7 @@ public class Database {
 						 		 + "deathcause='"+animal.getDeathcauseToString()+"', color='"+animal.getColorToString()+"', armor='"+animal.getArmor().toString()+"';";
 			
 			/* Query ausführen und das Ergebnis returnen */
-			if(connection.execute(Query, true)) { 
+			if(connection.execute(Query, plugin.isDebugging())) { 
 				CraftoPlayer owner = CraftoPlayer.getPlayer(animal.getOwner());
 				if (owner != null && keys.containsKey(owner.getUniqueId())) {
 					/* Den HashMaps hinzufügen */					
@@ -258,7 +258,7 @@ public class Database {
 					     + " WHERE id="+id+";";
 			
 			/* Query ausführen und das Ergebnis returnen */
-			if(connection.execute(Query, true)) {
+			if(connection.execute(Query, plugin.isDebugging())) {
 				CraftoPlayer owner = CraftoPlayer.getPlayer(animal.getOwner());
 				if (owner != null && keys.containsKey(owner.getUniqueId())) {
 					/* HashMaps updaten */
@@ -293,7 +293,7 @@ public class Database {
 			String Query = "DELETE FROM `ap_entities` WHERE id="+animal.getId()+";";
 			
 			/* Query ausführen und das Ergebnis returnen */
-			if(connection.execute(Query, true)) {
+			if(connection.execute(Query, plugin.isDebugging())) {
 				CraftoPlayer owner = CraftoPlayer.getPlayer(animal.getOwner());
 				if (owner != null && keys.containsKey(owner.getUniqueId())) {
 					/* HashMaps updaten */
