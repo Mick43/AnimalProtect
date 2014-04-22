@@ -2,34 +2,43 @@ AnimalProtect
 =============
 
 Description:
-
-
+---------
+Bietet normalen Spielern auf einem Server an, Tiere vor anderen Spielern zu protecten.
 
 Todo:
-------
-- Leer
-
-Ideen:
-------
-- Bei jedem Pferde-Inventar-Event mit der Prism-API eine costum Action in die Queue schreiben.
-(Somit werden Entity-Inventar-Sachen wieder geloggt und Prism muss nicht die DB mit item-inserts vollspammen)
-- Wenn keine Verbindung zur Datenbank besteht, evtl. die Querys in eine Datei schreiben, die dann beim
-  n√§chsten Start gelesen wird und bei der dann alle Querys ausgef√ºhrt werden.
+---------
+- AnimalProtect 1.2 testen
 
 Datenbank-Struktur:
 ---------
-- ap_owners: `id`, `name`
-- ap_locks: `id`, `entity_id`, `owner_id`
-- ap_entities: `id`, `uuid`, `last_x`, `last_y`, `last_z`, `animaltype`, `nametag`, `maxhp`, `alive`, `deathcause`, `color`, `armor`, `horse_jumpstrength`, `horse_style`, `horse_variant`
+ ## |         Name       |      Typ     | Null | Standard
+----|--------------------|--------------|------|----------
+ 01 | id                 | int(11)      | Nein | kein(e)
+ 02 | owner              | int(11)      | Nein | kein(e)
+ 03 | animaltype         | enum(..)     | Nein | kein(e)
+ 04 | last_x             | smallint(5)  | Nein | kein(e)
+ 05 | last_y             | smallint(3)  | Nein | kein(e)
+ 06 | last_z             | smallint(5)  | Nein | kein(e)
+ 07 | alive              | tinyint(1)   | Nein | kein(e)
+ 08 | nametag            | varchar(255) | Nein | kein(e)
+ 09 | maxhp              | double       | Nein | kein(e)
+ 10 | deathcause         | enum(..)     | Nein | kein(e)
+ 11 | color              | varchar(40)  | Nein | kein(e)
+ 12 | armor              | enum(..)     | Nein | kein(e)
+ 13 | horse_jumpstrength | double       | Nein | kein(e)
+ 14 | horse_style        |enum(..)      | Nein | kein(e)
+ 15 | horse_variant      | enum(..)     | Nein | kein(e)
+ 16 | uuid               | char(36)     | Nein | kein(e)
+ 17 | created_at         | timestamp    | Nein | CURRENT_TIMESTAMP
 
 Commands:
 ---------
-- `/ap <command>` - Eine ‹bersicht aller AnimalProtect-Befehle
-- `/lockanimal` - Protectet das ausgew√§hlte Entity.
-- `/unlockanimal` - Entfernt die Protection des ausgew√§hlten Entities. (TODO!) (Optional: <name><id>)
-- `/lockinfo` - Gibt Informationen √ºber das ausgew√§hlte Entity aus.
-- `/locklist <name>` - Listet alle gelockten Tiere eines Spielers auf. (Optional: <name>)
-- `/locklimit <name>` - Sagt dir, wie viele Spieler du noch locken kannst. (Optional: <name>)
-- `/locktp <id> <owner>` - Teleportiert dich zu dem angegebenen Entity. (Optional: <owner>)
-- `/lockrespawn <id> <owner>` - Respawnt ein Entity in der Welt neu. (Optional: <owner>)
-- `/lockdebug` - Gibt DEBUG-Informationen √ºber das Plugin selber aus.
+- `/ap <command>` - ‹bersicht aller AnimalProtect-Kommandos
+- `/lockanimal` - Sichert das ausgew‰hlte Tier vor anderen Spielern.
+- `/unlockanimal`- Entsichert das ausgew‰hlte Tier.
+- `/animalinfo` - Gibt Informationen ¸ber das ausgew‰hlte Tier aus.
+- `/listanimals` - Listet alle gesicherten Tiere eines Spielers auf.
+- `/respawnanimal` - Respawnt das angegebene Tier.
+- `/tpanimal` - Teleportiert den Sender zu dem angegebenen Tier.
+- `/animaldebug` - Gibt Debug-Informationen ¸ber das Plugin aus.
+- `/lockedanimals` - Gibt die Anzahl der Locks eines Spielers an.
