@@ -10,8 +10,6 @@ import java.util.logging.Level;
 
 import org.bukkit.plugin.Plugin;
 
-import de.AnimalProtect.utility.APLogger;
-
 /**
  * Connects to and uses a MySQL database
  * 
@@ -29,7 +27,7 @@ public class MySQL {
     private Connection connection;
     private Boolean debug;
     
-    public ArrayList<String> failedQueries;
+    private ArrayList<String> failedQueries;
 
     /**
      * Creates a new MySQL instance
@@ -68,13 +66,14 @@ public class MySQL {
     public Connection openConnection() {
         try {
             Class.forName("com.mysql.jdbc.Driver");
-            APLogger.info("[MySQL/openConnection] Connecting to jdbc:mysql://" + this.hostname + ":" + this.port + "/" + this.database + " ...");
+            plugin.getLogger().info("[MySQL/openConnection] Connecting to jdbc:mysql://" + this.hostname + ":" + this.port + "/" + this.database + " ...");
             connection = DriverManager.getConnection("jdbc:mysql://" + this.hostname + ":" + this.port + "/" + this.database, this.user, this.password);
-        } catch (SQLException e) {
-            plugin.getLogger().log(Level.SEVERE, "[MySQL] Could not connect to MySQL server! because: " + e.getMessage());
-        } catch (ClassNotFoundException e) {
-            plugin.getLogger().log(Level.SEVERE, "[MySQL] JDBC Driver not found!");
-        }
+        } 
+        catch (SQLException e)
+        { plugin.getLogger().log(Level.SEVERE, "[MySQL] Could not connect to MySQL server! because: " + e.getMessage()); } 
+        catch (ClassNotFoundException e)
+        { plugin.getLogger().log(Level.SEVERE, "[MySQL] JDBC Driver not found!"); }
+        
         return connection;
     }
 
@@ -126,7 +125,13 @@ public class MySQL {
     	String Query = "CREATE TABLE IF NOT EXISTS " + tableName + " (";
     	
     	for (String column : columns) {
-    		Query += column;
+    		if (column != "" && column != null) {
+    			Query += column;
+    			
+    			if (column != columns[columns.length-1]) {
+        			Query += ", ";
+        		}
+    		}
     	}
     	
     	Query += ");";
@@ -144,7 +149,7 @@ public class MySQL {
 	 * @param log
 	 *            True, for Console-Output
 	 */
-	public ResultSet get(String Query, boolean next, boolean log)
+	public ResultSet getResult(String Query, boolean next, boolean log)
 	{
 		/* Prüfen ob die MySQL-Verbindung besteht. */
 		/* Wenn nicht, dann neu connecten.         */
@@ -163,20 +168,20 @@ public class MySQL {
 		
 		/* In der Konsole Informationen ausgeben */
 		if (debug && log) {
-			APLogger.info("[MySQL/get] Executing: | " + Query + " |");
+			plugin.getLogger().info("[MySQL/get] Executing: | " + Query + " |");
 		}
 		
 		/* Das Statement erstellen */
 		try { statement = connection.createStatement(); } 
 		catch (SQLException e) {
-			this.error("MySQL/get", "Exception in 'statement = connection.createStatement()' ", e);
+			this.error("MySQL/get", "Exception caught while trying to create an statement!' ", e);
 			return null;
 		}
 		
 		/* Die Query ausführen */
 		try { res = statement.executeQuery(Query); } 
 		catch (SQLException e) {
-			this.error("MySQL/get", "Exception in 'statement = connection.createStatement()' ", e);
+			this.error("MySQL/get", "Exception caught while trying to execute a query!' ", e);
 			return null;
 		}
 		
@@ -184,7 +189,7 @@ public class MySQL {
 		if (next) {
 			try { if (!res.next()) { return null; } } 
 			catch (SQLException e) {
-				this.error("MySQL/get", "Exception in 'res.next()' ", e);
+				this.error("MySQL/get", "Exception caught while trying to run ResultSet.next!' ", e);
 				return null;
 			}
 		}
@@ -260,7 +265,7 @@ public class MySQL {
 	 * @return Returns an Object
 	 */
 	public Object getValue(String Query, String columnLabel, Boolean log) {
-		ResultSet result = get(Query, true, log);
+		ResultSet result = getResult(Query, true, log);
 		
 		if (result == null) { return null; }
 		
@@ -285,7 +290,7 @@ public class MySQL {
 	 * @return Returns an Object
 	 */
 	public Object getValue(String Query, int columnID, Boolean log) {
-		ResultSet result = get(Query, true, log);
+		ResultSet result = getResult(Query, true, log);
 		
 		if (result == null) { return null; }
 		
@@ -322,7 +327,7 @@ public class MySQL {
 			
 			/* Konsole benachrichtigen */
 			if (debug && log)
-			{ APLogger.info("[MySQL/execute] Executing: | " + Query + " |"); }
+			{ plugin.getLogger().info("[MySQL/execute] Executing: | " + Query + " |"); }
 			
 			try 
 			{
@@ -339,6 +344,10 @@ public class MySQL {
 		else { noConnection(); failedQueries.add(Query); }
 		
 		return false;
+	}
+	
+	public ArrayList<String> getFailedQueries() {
+		return this.failedQueries;
 	}
 	
 	private void noConnection() {
@@ -363,15 +372,22 @@ public class MySQL {
 			catch (SQLException e) { isValid = "[Valid: false]"; }
 		}
 		
-		APLogger.warn("[Error/MySQL/noConnection] Warning: Couldn't connect to the database.");
-		APLogger.warn("[Error/MySQL/noConnection] More Information: " + isNull + " " + isClosed + " " + isValid);
+		plugin.getLogger().warning("[Error/MySQL/noConnection] Warning: Couldn't connect to the database.");
+		plugin.getLogger().warning("[Error/MySQL/noConnection] More Information: " + isNull + " " + isClosed + " " + isValid);
 	}
 
 	private void error(String Source, String Info, Exception e) {
-		APLogger.warn("["+Source+"] An error has occurred while interacting with the database.");
-		APLogger.warn("["+Source+"] More Information: " + Info);
-		APLogger.warn("--- Exception Stacktrace ---");
-		e.printStackTrace();
-		APLogger.warn(" ");
+		if (e == null) { return; }
+		
+		plugin.getLogger().warning("---------------------------- "+plugin.getName()+" Exception! ------------------------");
+		plugin.getLogger().warning("An Exception occured in animalprotect/" + Source);
+		plugin.getLogger().warning("More Information: " + Info);
+		plugin.getLogger().warning("Exception: " + e.getClass().getName());
+		if (e.getMessage() != null) { plugin.getLogger().warning("Description: " + e.getMessage()); }
+		plugin.getLogger().warning("---------------------------- Exception Stacktrace ----------------------------");
+		for (StackTraceElement s : e.getStackTrace()) {
+			plugin.getLogger().warning(" -> " +s.getClassName()+"."+s.getMethodName()+" -> Line: "+s.getLineNumber());
+		}
+		plugin.getLogger().warning("-------------------------- Exception Stacktrace End --------------------------");
 	}
 }

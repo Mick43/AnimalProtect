@@ -1,0 +1,52 @@
+database:
+  hostname: 'localhost'
+  username: 'username'
+  password: 'password'
+  dbname: 'localhost'
+  port: '3306'
+settings:
+  max_entities_for_player: 25
+  debug-messages: true
+messages:
+  LOCK_SUCCESS: '%aDas Tier wurde erfolgreich gesichert.'
+  LOCK_FAILED: '%cFehler: Das Tier konnte nicht gesichert werden.'
+  MAX_LOCKS_EXCEEDED: '%cFehler: Du hast das Limit an Tier-Protections erreicht. (Maximal 50)'
+  SENDER_NOT_PLAYER: '%cFehler: Dieser Befehl kann nur von einem Spieler ausgefuehrt werden.'
+  PLAYEROBJECT_NOT_FOUND: '%cFehler: Dein Spielerobjekt wurde nicht gefunden! Bitte kontaktiere einen Administrator.'
+  PLAYER_NOT_FOUND: '%cFehler: Der angegebene Spieler konnte nicht gefunden werden.'
+  PLAYER_NO_LOCKS: '%cFehler: Der Spieler hat noch keine Tiere gesichert.'
+  
+  ANIMAL_ALREADY_PROTECTED: '%cFehler: Das Tier ist bereits protected!'
+  ANIMAL_NOT_PROTECTED: '%eDieses Tier ist nicht protected.'
+  ANIMAL_OWNER_UNKNOWN: '%cFehler: Der Besitzer dieses Tieres ist unbekannt.'
+  ANIMAL_NOT_FOUND: '%cFehler: Das angegebene Tier konnte nicht gefunden werden.'
+  ANIMAL_NOT_RESPAWNED: '%cFehler: Das Tier konnte nicht respawned werden.'
+  ANIMAL_RESPAWNED: '%aDas Tier wurde erfolgreich respawned.'
+  ANIMAL_SUCESS_UNPROTECT: '%aDas Tier wurde erfolgreich entsichert.'
+  ANIMAL_FAILED_UNPROTECT: '%cFehler: Das Tier konnte nicht entsichert werden.'
+  
+  PAGE_NOT_EXIST: '%cFehler: Die angegebene Seite existiert nicht.'
+  PAGE_NOT_NUMBER: '%cFehler: Die angegebene Seite ist keine Zahl.'
+  ID_NOT_NUMBER: '%cFehler: Die angegebene ID ist keine Zahl!'
+  START_NOT_NUMBER: '%cFehler: Die angegebene Start-ID ist keine Zahl!'
+  START_FLAG_ALREADY: '%cFehler: Die ID-Flag kann nicht gesetzt werden, wenn die Start-Flag bereits gesetzt wurde.'
+  ID_FLAG_ALREADY: '%cFehler: Die Start- und die End-Flag koennen nicht gesetzt werden, wenn die ID-Flag bereits festgelegt wurde.'
+  ENDFLAG_TOO_HIGH: '%cFehler: Die angegebene End-Flag ist zu hoch.'
+  
+  NO_GIVEN_PLAYER: '%cFehler: Es wurde kein Spieler angegeben!'
+  TOO_FEW_ARGUMENTS: '%cFehler: Es wurden zu wenig Argumente angegeben.'
+  TOO_MANY_ARGUMENTS: '%cFehler: Es wurden zu viele Argumente angegeben.'
+  
+  SELECTED_ALREADY: '%eDu hast das Tier bereits ausgewählt!'
+  SELECTED_NONE: '%cFehler: Du hast zurzeit noch kein Tier ausgewaehlt!'
+  SELECTED_COW: 'Du hast eine %6Kuh %eausgewählt. %7(/lockanimal um sie zu protecten.)'
+  SELECTED_PIG: 'Du hast ein %6Schwein %eausgewählt. %7(/lockanimal um es zu protecten.)'
+  SELECTED_CHICKEN: 'Du hast ein %6Huhn %eausgewählt. %7(/lockanimal um es zu protecten.)'
+  SELECTED_HORSE: 'Du hast ein %6Pferd %eausgewählt. %7(/lockanimal um es zu protecten.)'
+  SELECTED_WOLF: 'Du hast einen %6Wolf %eausgewählt. %7(/lockanimal um ihn zu protecten.)'
+  SELECTED_SHEEP: 'Du hast ein %6Schaf %eausgewählt. %7(/lockanimal um es zu protecten.)'
+  SELECTED_IRONGOLEM: 'Du hast einen %6Iron Golem %eausgewählt. %7(/lockanimal um ihn zu protecten.)'
+  SELECTED_SNOWMAN: 'Du hast einen %6Schneemann %eausgewählt. %7(/lockanimal um ihn zu protecten.)'
+  SELECTED_VILLAGER: 'Du hast einen %6Villager %eausgewählt. %7(/lockanimal um ihn zu protecten.)'
+  SELECTED_OCELOT: 'Du hast einen %6Ozelot %eausgewählt. %7(/lockanimal um ihn zu protecten.)'
+  SELECTED_UNKNOWN: 'Du hast ein %6unbekanntes %eTier ausgewählt. %7(/lockanimal um es zu protecten.)'
