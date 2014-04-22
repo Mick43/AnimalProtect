@@ -293,7 +293,16 @@ public class Database {
 			String Query = "DELETE FROM `ap_entities` WHERE id="+animal.getId()+";";
 			
 			/* Query ausführen und das Ergebnis returnen */
-			if(connection.execute(Query, true)) { return true; }
+			if(connection.execute(Query, true)) {
+				CraftoPlayer owner = CraftoPlayer.getPlayer(animal.getOwner());
+				if (owner != null && keys.containsKey(owner.getUniqueId())) {
+					/* HashMaps updaten */
+					entities.remove(animal.getUniqueId());
+					reverseKeys.remove(animal.getUniqueId());
+					keys.get(owner.getUniqueId()).remove(animal);
+				}
+				return true; 
+			}
 		}
 		catch (Exception e) { Messenger.exception("Database.java/unlockAnimal", "An Error occured while trying to unlock an entity.", e); }
 		
