@@ -9,6 +9,10 @@ public enum AnimalType {
 	PIG ("Pig", EntityType.PIG),
 	SHEEP ("Sheep", EntityType.SHEEP),
 	HORSE ("Horse", EntityType.HORSE),
+	IRON_GOLEM ("IronGolem", EntityType.IRON_GOLEM),
+	SNOWMAN ("Snowman", EntityType.SNOWMAN),
+	VILLAGER ("Villager", EntityType.VILLAGER),
+	OCELOT ("Ocelot", EntityType.OCELOT),
 	WOLF ("Wolf", EntityType.WOLF);
 	
 	private String name;
