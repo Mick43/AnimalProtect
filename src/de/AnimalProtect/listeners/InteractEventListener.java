@@ -59,7 +59,7 @@ public class InteractEventListener implements Listener {
 			
 			/* Prüfen ob das ausgewählte Tier bereits vom Spieler ausgewählt ist. */
 			if (InteractEventListener.selectedList.containsKey(player.getUniqueId()) && InteractEventListener.selectedList.get(player.getUniqueId()).equals(entity)) {
-				Messenger.sendMessage(player, "Du hast das Tier bereits ausgewählt!");
+				Messenger.sendMessage(player, "SELECTED_ALREADY");
 				player.playSound(player.getLocation(), Sound.CLICK, 0.4f, 0.8f);
 				return;
 			}
@@ -119,7 +119,7 @@ public class InteractEventListener implements Listener {
 						}
 					}
 				}
-				catch (Exception e) { Messenger.exception("InteractEventListener.onEntityEvent", "NullPointerException :(", e); }
+				catch (Exception e) { Messenger.exception("InteractEventListener.onEntityEvent", "Exception :(", e); }
 			}
 			
 			/* Zum Schluss wird bei dem Spieler noch ein Sound abgespielt und sein zuletzt ausgewähltes Tier wird gespeichert. */

@@ -37,6 +37,7 @@ messages:
   TOO_FEW_ARGUMENTS: '%cFehler: Es wurden zu wenig Argumente angegeben.'
   TOO_MANY_ARGUMENTS: '%cFehler: Es wurden zu viele Argumente angegeben.'
   
+  SELECTED_ALREADY: '%eDu hast das Tier bereits ausgewählt!'
   SELECTED_NONE: '%cFehler: Du hast zurzeit noch kein Tier ausgewaehlt!'
   SELECTED_COW: 'Du hast eine %6Kuh %eausgewählt. %7(/lockanimal um sie zu protecten.)'
   SELECTED_PIG: 'Du hast ein %6Schwein %eausgewählt. %7(/lockanimal um es zu protecten.)'
