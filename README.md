@@ -26,7 +26,7 @@ Datenbank-Struktur:
  11 | color              | varchar(40)  | Nein | kein(e)
  12 | armor              | enum(..)     | Nein | kein(e)
  13 | horse_jumpstrength | double       | Nein | kein(e)
- 14 | horse_style        |enum(..)      | Nein | kein(e)
+ 14 | horse_style        | enum(..)     | Nein | kein(e)
  15 | horse_variant      | enum(..)     | Nein | kein(e)
  16 | uuid               | char(36)     | Nein | kein(e)
  17 | created_at         | timestamp    | Nein | CURRENT_TIMESTAMP
