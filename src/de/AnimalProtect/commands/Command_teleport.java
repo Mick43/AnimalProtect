@@ -14,18 +14,18 @@ import de.AnimalProtect.AnimalProtect;
 import de.AnimalProtect.Messenger;
 import de.AnimalProtect.structs.Animal;
 
-public class Command_tpanimal implements CommandExecutor {
+public class Command_teleport implements CommandExecutor {
 	
 	private static AnimalProtect plugin;
 	
-	public Command_tpanimal(AnimalProtect plugin) {
-		Command_tpanimal.plugin = plugin;
+	public Command_teleport(AnimalProtect plugin) {
+		Command_teleport.plugin = plugin;
 	}
 
 	@Override
 	public boolean onCommand(CommandSender cs, Command cmd, String label, String[] args) {
 		if (!plugin.isEnabled()) { return false; }
-		Command_tpanimal.runCommand(cs, args);
+		Command_teleport.runCommand(cs, args);
 		return true;
 	}
 	

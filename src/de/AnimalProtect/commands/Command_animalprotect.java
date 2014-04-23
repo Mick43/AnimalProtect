@@ -8,11 +8,11 @@ import org.bukkit.entity.Player;
 import de.AnimalProtect.AnimalProtect;
 import de.AnimalProtect.Messenger;
 
-public class Command_AnimalProtect implements CommandExecutor {
+public class Command_animalprotect implements CommandExecutor {
 	
 	private AnimalProtect plugin;
 	
-	public Command_AnimalProtect(AnimalProtect plugin) {
+	public Command_animalprotect(AnimalProtect plugin) {
 		this.plugin = plugin;
 	}
 
@@ -27,24 +27,24 @@ public class Command_AnimalProtect implements CommandExecutor {
 				for (int i=0; i<newArgs.length; i++) { newArgs[i] = args[i+1]; }
 			}
 			
-			if (args.length < 1) { Command_AnimalProtect.Command_ShowHelp(cs, newArgs); }
-			else if (args[0].equalsIgnoreCase("help")) { Command_AnimalProtect.Command_ShowHelp(cs, newArgs); }
-			else if (args[0].equalsIgnoreCase("animaldebug")) { Command_animaldebug.runCommand(cs, newArgs); }
-			else if (args[0].equalsIgnoreCase("listanimals")) { Command_listanimals.runCommand(cs, newArgs); }
-			else if (args[0].equalsIgnoreCase("lockanimal")) { Command_lockanimal.runCommand(cs, newArgs); }
-			else if (args[0].equalsIgnoreCase("lockedanimals")) { Command_lockedanimals.runCommand(cs, newArgs); }
-			else if (args[0].equalsIgnoreCase("animalinfo")) { Command_animalinfo.runCommand(cs, newArgs); }
-			else if (args[0].equalsIgnoreCase("respawnanimal")) { Command_respawnanimal.runCommand(cs, newArgs); }
-			else if (args[0].equalsIgnoreCase("tpanimal")) { Command_tpanimal.runCommand(cs, newArgs); }
-			else if (args[0].equalsIgnoreCase("unlockanimal")) { Command_unlockanimal.runCommand(cs, newArgs); }
-			else if (args[0].equalsIgnoreCase("debug")) { Command_animaldebug.runCommand(cs, newArgs); }
-			else if (args[0].equalsIgnoreCase("list")) { Command_listanimals.runCommand(cs, newArgs); }
-			else if (args[0].equalsIgnoreCase("lock")) { Command_lockanimal.runCommand(cs, newArgs); }
-			else if (args[0].equalsIgnoreCase("limit")) { Command_lockedanimals.runCommand(cs, newArgs); }
-			else if (args[0].equalsIgnoreCase("info")) { Command_animalinfo.runCommand(cs, newArgs); }
-			else if (args[0].equalsIgnoreCase("respawn")) { Command_respawnanimal.runCommand(cs, newArgs); }
-			else if (args[0].equalsIgnoreCase("tp")) { Command_tpanimal.runCommand(cs, newArgs); }
-			else if (args[0].equalsIgnoreCase("unlock")) { Command_unlockanimal.runCommand(cs, newArgs); }
+			if (args.length < 1) { Command_animalprotect.Command_ShowHelp(cs, newArgs); }
+			else if (args[0].equalsIgnoreCase("help")) { Command_animalprotect.Command_ShowHelp(cs, newArgs); }
+			else if (args[0].equalsIgnoreCase("animaldebug")) { Command_debug.runCommand(cs, newArgs); }
+			else if (args[0].equalsIgnoreCase("listanimals")) { Command_list.runCommand(cs, newArgs); }
+			else if (args[0].equalsIgnoreCase("lockanimal")) { Command_lock.runCommand(cs, newArgs); }
+			else if (args[0].equalsIgnoreCase("lockedanimals")) { Command_limit.runCommand(cs, newArgs); }
+			else if (args[0].equalsIgnoreCase("animalinfo")) { Command_info.runCommand(cs, newArgs); }
+			else if (args[0].equalsIgnoreCase("respawnanimal")) { Command_respawn.runCommand(cs, newArgs); }
+			else if (args[0].equalsIgnoreCase("tpanimal")) { Command_teleport.runCommand(cs, newArgs); }
+			else if (args[0].equalsIgnoreCase("unlockanimal")) { Command_unlock.runCommand(cs, newArgs); }
+			else if (args[0].equalsIgnoreCase("debug")) { Command_debug.runCommand(cs, newArgs); }
+			else if (args[0].equalsIgnoreCase("list")) { Command_list.runCommand(cs, newArgs); }
+			else if (args[0].equalsIgnoreCase("lock")) { Command_lock.runCommand(cs, newArgs); }
+			else if (args[0].equalsIgnoreCase("limit")) { Command_limit.runCommand(cs, newArgs); }
+			else if (args[0].equalsIgnoreCase("info")) { Command_info.runCommand(cs, newArgs); }
+			else if (args[0].equalsIgnoreCase("respawn")) { Command_respawn.runCommand(cs, newArgs); }
+			else if (args[0].equalsIgnoreCase("tp")) { Command_teleport.runCommand(cs, newArgs); }
+			else if (args[0].equalsIgnoreCase("unlock")) { Command_unlock.runCommand(cs, newArgs); }
 			else { Messenger.sendMessage(cs, "§cUnbekannter Befehl. (Schreibe /ap help für eine Übersicht aller Kommandos.)"); }
 		}
 		return true;

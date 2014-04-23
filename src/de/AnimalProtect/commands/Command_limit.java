@@ -11,18 +11,18 @@ import craftoplugin.core.database.CraftoPlayer;
 import de.AnimalProtect.AnimalProtect;
 import de.AnimalProtect.Messenger;
 
-public class Command_lockedanimals implements CommandExecutor {
+public class Command_limit implements CommandExecutor {
 	
 	private static AnimalProtect plugin;
 	
-	public Command_lockedanimals(AnimalProtect plugin) {
-		Command_lockedanimals.plugin = plugin;
+	public Command_limit(AnimalProtect plugin) {
+		Command_limit.plugin = plugin;
 	}
 
 	@Override
 	public boolean onCommand(CommandSender cs, Command cmd, String label, String[] args) {
 		if (!plugin.isEnabled()) { return false; }
-		Command_lockedanimals.runCommand(cs, args);
+		Command_limit.runCommand(cs, args);
 		return true;
 	}
 	

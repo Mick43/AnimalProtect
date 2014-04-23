@@ -17,18 +17,18 @@ import de.AnimalProtect.AnimalProtect;
 import de.AnimalProtect.Messenger;
 import de.AnimalProtect.structs.Animal;
 
-public class Command_listanimals implements CommandExecutor {
+public class Command_list implements CommandExecutor {
 	
 	private static AnimalProtect plugin;
 	
-	public Command_listanimals(AnimalProtect plugin) {
-		Command_listanimals.plugin = plugin;
+	public Command_list(AnimalProtect plugin) {
+		Command_list.plugin = plugin;
 	}
 
 	@Override
 	public boolean onCommand(CommandSender cs, Command cmd, String label, String[] args) {
 		if (!plugin.isEnabled()) { return true; }
-		Command_listanimals.runCommand(cs, args);
+		Command_list.runCommand(cs, args);
 		return true;
 	}
 	

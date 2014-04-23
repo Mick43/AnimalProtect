@@ -7,17 +7,17 @@ import org.bukkit.command.CommandSender;
 import de.AnimalProtect.AnimalProtect;
 import de.AnimalProtect.Messenger;
 
-public class Command_animaldebug implements CommandExecutor {
+public class Command_debug implements CommandExecutor {
 	
 	private static AnimalProtect plugin;
 	
-	public Command_animaldebug(AnimalProtect plugin) {
-		Command_animaldebug.plugin = plugin;
+	public Command_debug(AnimalProtect plugin) {
+		Command_debug.plugin = plugin;
 	}
 
 	@Override
 	public boolean onCommand(CommandSender cs, Command cmd, String label, String[] args) {
-		Command_animaldebug.runCommand(cs, args);
+		Command_debug.runCommand(cs, args);
 		return true;
 	}
 	

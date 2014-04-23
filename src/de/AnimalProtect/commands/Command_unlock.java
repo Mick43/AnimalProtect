@@ -6,24 +6,23 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 
-import craftoplugin.core.CraftoMessenger;
 import craftoplugin.core.database.CraftoPlayer;
 import de.AnimalProtect.AnimalProtect;
 import de.AnimalProtect.Messenger;
 import de.AnimalProtect.structs.Animal;
 
-public class Command_lockanimal implements CommandExecutor {
+public class Command_unlock implements CommandExecutor {
 	
 	private static AnimalProtect plugin;
 	
-	public Command_lockanimal(AnimalProtect plugin) {
-		Command_lockanimal.plugin = plugin;
+	public Command_unlock(AnimalProtect plugin) {
+		Command_unlock.plugin = plugin;
 	}
 
 	@Override
 	public boolean onCommand(CommandSender cs, Command cmd, String label, String[] args) {
-		if (!plugin.isEnabled()) { return true; }
-		if (cmd.getName().equalsIgnoreCase("lockanimal")) { Command_lockanimal.runCommand(cs, args); }
+		if (!plugin.isEnabled()) { return false; }
+		Command_unlock.runCommand(cs, args);
 		return true;
 	}
 	
@@ -50,30 +49,17 @@ public class Command_lockanimal implements CommandExecutor {
 		}
 		else if (player == null) {
 			Messenger.sendMessage(cs, "PLAYEROBJECT_NOT_FOUND");
-			return;
 		}
 		
-		/* Das Animal-Objekt laden */
 		Animal animal = plugin.getDatenbank().getAnimal(entity.getUniqueId());
 		
-		if (animal != null) {
-			Messenger.sendMessage(cs, "ANIMAL_ALREADY_PROTECTED");
-			return;
+		if (animal == null) {
+			Messenger.sendMessage(cs, "ANIMAL_NOT_FOUND");
 		}
 		else {
-			try {
-				if (plugin.getDatenbank().getAnimals(player.getUniqueId()).size() <= plugin.getConfig().getInt("settings.max_entities_for_player")) {
-					animal = new Animal(AnimalProtect.plugin, player, entity);
-					if(animal.saveToDatabase(true)) 
-					{ Messenger.sendMessage(cs, "LOCK_SUCCESS"); }
-					else { Messenger.sendMessage(cs, "LOCK_FAILED"); }
-				}
-				else { Messenger.sendMessage(cs, "MAX_LOCKS_EXCEEDED"); }
-			}
-			catch (Exception e) {
-				CraftoMessenger.exception("Command_lockanimal/runCommand", "No Information available.", e);
-				Messenger.sendMessage(cs, "LOCK_FAILED");
-			}
+			if (plugin.getDatenbank().unlockAnimal(animal)) 
+			{ Messenger.sendMessage(cs, "ANIMAL_SUCESS_UNPROTECT"); }
+			else { Messenger.sendMessage(cs, "ANIMAL_FAILED_UNPROTECT"); }
 		}
 	}
 }

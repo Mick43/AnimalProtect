@@ -27,18 +27,18 @@ import de.AnimalProtect.Messenger;
 import de.AnimalProtect.structs.Animal;
 import de.AnimalProtect.structs.AnimalArmor;
 
-public class Command_respawnanimal implements CommandExecutor {
+public class Command_respawn implements CommandExecutor {
 	
 	private static AnimalProtect plugin;
 	
-	public Command_respawnanimal(AnimalProtect plugin) {
-		Command_respawnanimal.plugin = plugin;
+	public Command_respawn(AnimalProtect plugin) {
+		Command_respawn.plugin = plugin;
 	}
 
 	@Override
 	public boolean onCommand(CommandSender cs, Command cmd, String label, String[] args) {
 		if (!plugin.isEnabled()) { return true; }
-		Command_respawnanimal.runCommand(cs, args);
+		Command_respawn.runCommand(cs, args);
 		return true;
 	}
 	
@@ -133,8 +133,8 @@ public class Command_respawnanimal implements CommandExecutor {
 			Animal animal = plugin.getDatenbank().getAnimals(cOwner.getUniqueId()).get(start);
 			
 			if (animal == null) { Messenger.sendMessage(cs, "ANIMAL_NOT_FOUND"); return; }
-			else if (missingFlag && isMissing(animal, foundEntities)) { Command_respawnanimal.respawnAnimal(animal, cOwner, sender, true, locationFlag); }
-			else if (!missingFlag) { Command_respawnanimal.respawnAnimal(animal, cOwner, sender, true, locationFlag); }
+			else if (missingFlag && isMissing(animal, foundEntities)) { Command_respawn.respawnAnimal(animal, cOwner, sender, true, locationFlag); }
+			else if (!missingFlag) { Command_respawn.respawnAnimal(animal, cOwner, sender, true, locationFlag); }
 		}
 		else if (startFlag && !endFlag) {
 			for (int i=start; i<plugin.getDatenbank().getAnimals(cOwner.getUniqueId()).size(); i++) { 
@@ -142,10 +142,10 @@ public class Command_respawnanimal implements CommandExecutor {
 				if (foundAnimal == null) { continue; }
 				
 				if(missingFlag && isMissing(foundAnimal, foundEntities)) {
-					Command_respawnanimal.respawnAnimal(foundAnimal, cOwner, sender, true, locationFlag);
+					Command_respawn.respawnAnimal(foundAnimal, cOwner, sender, true, locationFlag);
 				}
 				else if (!missingFlag) {
-					Command_respawnanimal.respawnAnimal(foundAnimal, cOwner, sender, true, locationFlag);
+					Command_respawn.respawnAnimal(foundAnimal, cOwner, sender, true, locationFlag);
 				}
 			}
 		}
@@ -159,10 +159,10 @@ public class Command_respawnanimal implements CommandExecutor {
 					if (foundAnimal == null) { continue; }
 					
 					if(missingFlag && isMissing(foundAnimal, foundEntities)) {
-						Command_respawnanimal.respawnAnimal(foundAnimal, cOwner, sender, true, locationFlag);
+						Command_respawn.respawnAnimal(foundAnimal, cOwner, sender, true, locationFlag);
 					}
 					else if (!missingFlag) {
-						Command_respawnanimal.respawnAnimal(foundAnimal, cOwner, sender, true, locationFlag);
+						Command_respawn.respawnAnimal(foundAnimal, cOwner, sender, true, locationFlag);
 					}
 				}
 			}

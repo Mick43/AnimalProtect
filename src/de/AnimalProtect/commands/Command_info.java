@@ -11,18 +11,18 @@ import de.AnimalProtect.AnimalProtect;
 import de.AnimalProtect.Messenger;
 import de.AnimalProtect.structs.Animal;
 
-public class Command_animalinfo implements CommandExecutor {
+public class Command_info implements CommandExecutor {
 
 	private static AnimalProtect plugin;
 	
-	public Command_animalinfo(AnimalProtect plugin) {
-		Command_animalinfo.plugin = plugin;
+	public Command_info(AnimalProtect plugin) {
+		Command_info.plugin = plugin;
 	}
 
 	@Override
 	public boolean onCommand(CommandSender cs, Command cmd, String label, String[] args) {
 		if (!plugin.isEnabled()) { return true; }
-		Command_animalinfo.runCommand(cs, args);
+		Command_info.runCommand(cs, args);
 		return true;
 	}
 
