@@ -194,6 +194,9 @@ public class Database {
 	public void closeConnection() {
 		if (isConnected()) {
 			connection.closeConnection();
+			this.entities.clear();
+			this.keys.clear();
+			this.reverseKeys.clear();
 		}
 	}
 	

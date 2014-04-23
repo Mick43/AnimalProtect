@@ -141,6 +141,15 @@ public class InteractEventListener implements Listener {
 		}
 	}
 	
+	public static void clearSelections() {
+		if (InteractEventListener.selectedList != null) { 
+			InteractEventListener.selectedList.clear();
+		}
+		if (InteractEventListener.selectedTime != null) {
+			InteractEventListener.selectedTime.clear();
+		}
+	}
+	
 	public static Entity getSelected(UUID uuid) {
 		if (InteractEventListener.selectedList.containsKey(uuid)) {
 			return InteractEventListener.selectedList.get(uuid);

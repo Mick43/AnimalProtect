@@ -3,12 +3,10 @@ package de.AnimalProtect;
 /* Java Imports */
 import java.util.UUID;
 
-
 /* Bukkit Imports */
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.plugin.java.JavaPlugin;
-
 
 /* AnimalProtect - Command Imports */
 import de.AnimalProtect.commands.Command_AnimalProtect;
@@ -44,7 +42,7 @@ public class AnimalProtect extends JavaPlugin {
 	@Override
 	public void onEnable() {
 		/* Konsole benachrichtigen */
-		Messenger.log("Initializing AnimalProtect...");
+		Messenger.log("Initializing AnimalProtect v" + getDescription().getVersion() + " ...");
 		
 		/* Statische Instanz intialisieren */
 		AnimalProtect.plugin = this;
@@ -62,12 +60,13 @@ public class AnimalProtect extends JavaPlugin {
 		initializeCommands();
 		
 		/* Konsole benachrichtigen */
-		Messenger.log("AnimalProtect has been enabled!");
+		Messenger.log("AnimalProtect v" + getDescription().getVersion() + " has been enabled!");
 	}
 	
 	@Override
 	public void onDisable() {
 		this.getDatenbank().closeConnection();
+		InteractEventListener.clearSelections();
 	}
 	
 	private void initializeConfig() {
