@@ -98,11 +98,8 @@ public class Messenger {
 	public static void sendMessage(Player player, String message, Boolean prefix) {
 		if (player == null) { return; }
 		
-		String tempMessage = AnimalProtect.plugin.getConfig().getString("messages."+message.toUpperCase());
-		if (tempMessage != null) {
-			tempMessage = tempMessage.replaceAll("%", "§");
-			message = tempMessage;
-		}
+		String parsedMessage = parse(message);
+		if (parsedMessage != null) { message = parsedMessage; }
 		
 		if (prefix) { player.sendMessage(Prefix + " " + ChatColor.YELLOW + message); }
 		else { player.sendMessage(ChatColor.YELLOW + message); }
@@ -193,11 +190,8 @@ public class Messenger {
 			sendMessage((Player)cs, message, prefix);
 		}
 		else {
-			String tempMessage = AnimalProtect.plugin.getConfig().getString("messages."+message.toUpperCase());
-			if (tempMessage != null) {
-				tempMessage = tempMessage.replaceAll("%", "§");
-				message = tempMessage;
-			}
+			String parsedMessage = parse(message);
+			if (parsedMessage != null) { message = parsedMessage; }
 			
 			message = message.replaceAll("§0", "");
 			message = message.replaceAll("§1", "");
@@ -318,9 +312,8 @@ public class Messenger {
 	public static void messageStaff(String message) {
 		Player[] players = Bukkit.getServer().getOnlinePlayers();
 		
-		if (AnimalProtect.plugin.getConfig().contains("messages."+message.toUpperCase())) {
-			message = AnimalProtect.plugin.getConfig().getString("messages."+message.toUpperCase());
-		}
+		String parsedMessage = parse(message);
+		if (parsedMessage != null) { message = parsedMessage; }
 		
 		for (Player p : players) {
 			if (p.hasPermission("craftoplugin.admin") || p.hasPermission("craftoplugin.moderator") || p.isOp()) {
@@ -337,14 +330,27 @@ public class Messenger {
      */
 	public static void debugMessage(String message) {
 		if (Debugging && AnimalProtect.plugin.isDebugging()) {
-			String tempMessage = AnimalProtect.plugin.getConfig().getString("messages."+message.toUpperCase());
-			if (tempMessage != null) {
-				tempMessage = tempMessage.replaceAll("%", "§");
-				message = tempMessage;
-			}
+			String parsedMessage = parse(message);
+			if (parsedMessage != null) { message = parsedMessage; }
 			
 			log("[DEBUG] " + message);
 		}
+	}
+	
+	public static String parse(String message) {
+		String tempMessage = AnimalProtect.plugin.getConfig().getString("messages."+message.toUpperCase());
+		if (tempMessage != null) {
+			tempMessage = tempMessage.replaceAll("%", "§");
+			tempMessage = tempMessage.replaceAll("ae", "ä");
+			tempMessage = tempMessage.replaceAll("oe", "ö");
+			tempMessage = tempMessage.replaceAll("ue", "ü");
+			tempMessage = tempMessage.replaceAll("(ae)", "ae");
+			tempMessage = tempMessage.replaceAll("(oe)", "oe");
+			tempMessage = tempMessage.replaceAll("(ue)", "ue");
+			message = tempMessage;
+		}
+		
+		return tempMessage;
 	}
 	
 	/**
