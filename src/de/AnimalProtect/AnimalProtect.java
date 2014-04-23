@@ -66,6 +66,7 @@ public class AnimalProtect extends JavaPlugin {
 	@Override
 	public void onDisable() {
 		this.getDatenbank().closeConnection();
+		this.getDatenbank().clear();
 		InteractEventListener.clearSelections();
 	}
 	
@@ -120,6 +121,20 @@ public class AnimalProtect extends JavaPlugin {
 		catch (Exception e) {
 			Messenger.exception("AnimalProtect.java/initializeCommands", "Failed to initialize some commands.", e);
 		}
+	}
+	
+	/**
+	 * Lädt die komplette Datenbank von AnimalProtect neu in den RAM.
+	 */
+	public void reloadDatabase() {
+		this.initializeDatabase();
+	}
+	
+	/**
+	 * Lädt die Config neu.
+	 */
+	public void reloadConfig() {
+		this.initializeConfig();
 	}
 	
 	/**

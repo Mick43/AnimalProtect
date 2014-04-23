@@ -33,6 +33,8 @@ messages:
   ID_FLAG_ALREADY: '%cFehler: Die Start- und die End-Flag koennen nicht gesetzt werden, wenn die ID-Flag bereits festgelegt wurde.'
   ENDFLAG_TOO_HIGH: '%cFehler: Die angegebene End-Flag ist zu hoch.'
   
+  UNKNOWN_COMMAND: '%cUnbekannter Befehl. (Schreibe /ap help für eine Uebersicht aller Kommandos.)'
+  NO_PERMISSION: '%cYou dont have permission.'
   NO_GIVEN_PLAYER: '%cFehler: Es wurde kein Spieler angegeben!'
   TOO_FEW_ARGUMENTS: '%cFehler: Es wurden zu wenig Argumente angegeben.'
   TOO_MANY_ARGUMENTS: '%cFehler: Es wurden zu viele Argumente angegeben.'

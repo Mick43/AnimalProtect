@@ -194,10 +194,16 @@ public class Database {
 	public void closeConnection() {
 		if (isConnected()) {
 			connection.closeConnection();
-			this.entities.clear();
-			this.keys.clear();
-			this.reverseKeys.clear();
 		}
+	}
+	
+	/**
+	 * Leert alle Einträge im RAM.
+	 */
+	public void clear() {
+		this.entities.clear();
+		this.keys.clear();
+		this.reverseKeys.clear();
 	}
 	
 	/**

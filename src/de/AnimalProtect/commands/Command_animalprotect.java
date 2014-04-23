@@ -1,5 +1,6 @@
 package de.AnimalProtect.commands;
 
+import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -45,7 +46,8 @@ public class Command_animalprotect implements CommandExecutor {
 			else if (args[0].equalsIgnoreCase("respawn")) { Command_respawn.runCommand(cs, newArgs); }
 			else if (args[0].equalsIgnoreCase("tp")) { Command_teleport.runCommand(cs, newArgs); }
 			else if (args[0].equalsIgnoreCase("unlock")) { Command_unlock.runCommand(cs, newArgs); }
-			else { Messenger.sendMessage(cs, "§cUnbekannter Befehl. (Schreibe /ap help für eine Übersicht aller Kommandos.)"); }
+			else if (args[0].equalsIgnoreCase("reload")) { Command_animalprotect.Command_Reload(cs, newArgs); }
+			else { Messenger.sendMessage(cs, "UNKNOWN_COMMAND"); }
 		}
 		return true;
 	}
@@ -63,11 +65,35 @@ public class Command_animalprotect implements CommandExecutor {
 			if (hasPerm(cs, "animalprotect.admin"))   { Messenger.sendMessage(cs, "§6/ap respawn: §f" + AnimalProtect.plugin.getCommand("respawnanimal").getDescription()); }
 			if (hasPerm(cs, "animalprotect.admin"))   { Messenger.sendMessage(cs, "§6/ap tp: §f" + AnimalProtect.plugin.getCommand("tpanimal").getDescription());           }
 			if (hasPerm(cs, "animalprotect.admin"))   { Messenger.sendMessage(cs, "§6/ap debug: §f" + AnimalProtect.plugin.getCommand("animaldebug").getDescription());     }
+			if (hasPerm(cs, "animalprotect.admin"))   { Messenger.sendMessage(cs, "§6/ap reload: §f" + "Lädt das gesamte Plugin neu.");                                     }
 		}
 		catch (Exception e) {
 			Messenger.sendMessage(cs, "§cDie Hilfe von AnimalProtect ist zurzeit nicht verfügbar.");
 			Messenger.exception("Command_AnimalProtect/Command_ShowHelp", "Caught an exception while trying to show someone the help page.", e);
 		}
+	}
+	
+	public static void Command_Reload(CommandSender cs, String[] args) {
+		if (cs.hasPermission("animalprotect.admin")) {
+			if (args.length == 0) {
+				Bukkit.getServer().getPluginManager().disablePlugin(AnimalProtect.plugin);
+				Bukkit.getServer().getPluginManager().enablePlugin(AnimalProtect.plugin);
+			}
+			else if (args.length == 1) {
+				if (args[0].equalsIgnoreCase("config")) {
+					AnimalProtect.plugin.reloadConfig();
+				}
+				else if (args[0].equalsIgnoreCase("database")) {
+					AnimalProtect.plugin.reloadDatabase();
+				}
+				else if (args[0].equalsIgnoreCase("connection")) {
+					AnimalProtect.plugin.getDatenbank().closeConnection();
+					AnimalProtect.plugin.getDatenbank().connect();
+				}
+			}
+			else if (args.length > 1) { Messenger.sendMessage(cs, "TOO_MANY_ARGUMENTS"); }
+		}
+		else { Messenger.sendMessage(cs, "NO_PERMISSION"); }
 	}
 	
 	private static boolean hasPerm(CommandSender cs, String permission) {
