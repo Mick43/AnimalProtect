@@ -209,10 +209,12 @@ public class Messenger {
 			message = message.replaceAll("§d", "");
 			message = message.replaceAll("§e", "");
 			message = message.replaceAll("§f", "");
-			message = message.replaceAll("§f", "");
-			message = message.replaceAll("§f", "");
-			message = message.replaceAll("§f", "");
-			message = message.replaceAll("§f", "");
+			message = message.replaceAll("§o", "");
+			message = message.replaceAll("§l", "");
+			message = message.replaceAll("§k", "");
+			message = message.replaceAll("§m", "");
+			message = message.replaceAll("§n", "");
+			message = message.replaceAll("§r", "");
 			message = message.replaceAll("§A", "");
 			message = message.replaceAll("§B", "");
 			message = message.replaceAll("§C", "");
