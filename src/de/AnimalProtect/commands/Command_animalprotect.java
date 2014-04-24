@@ -54,8 +54,8 @@ public class Command_animalprotect implements CommandExecutor {
 	
 	public static void Command_ShowHelp(CommandSender cs, String[] args) {
 		try {
-			Messenger.help(cs, "AnimalProtect Help (1/1)");
-			Messenger.sendMessage(cs, "§7§oEine Übersicht aller AnimalProtect-Kommandos");
+			Messenger.help(cs, "HELP_HEADER");
+			Messenger.sendMessage(cs, "HELP_DESC");
 			if (hasPerm(cs, "animalprotect.protect")) { Messenger.sendMessage(cs, "§6/ap help: §fRuft diese Hilfe auf."); }
 			if (hasPerm(cs, "animalprotect.protect")) { Messenger.sendMessage(cs, "§6/ap lock: §f" + AnimalProtect.plugin.getCommand("lockanimal").getDescription());       }
 			if (hasPerm(cs, "animalprotect.protect")) { Messenger.sendMessage(cs, "§6/ap unlock: §f" + AnimalProtect.plugin.getCommand("unlockanimal").getDescription());   }
@@ -68,7 +68,7 @@ public class Command_animalprotect implements CommandExecutor {
 			if (hasPerm(cs, "animalprotect.admin"))   { Messenger.sendMessage(cs, "§6/ap reload: §f" + "Lädt das gesamte Plugin neu.");                                     }
 		}
 		catch (Exception e) {
-			Messenger.sendMessage(cs, "§cDie Hilfe von AnimalProtect ist zurzeit nicht verfügbar.");
+			Messenger.sendMessage(cs, "HELP_NOT_AVAILABLE");
 			Messenger.exception("Command_AnimalProtect/Command_ShowHelp", "Caught an exception while trying to show someone the help page.", e);
 		}
 	}

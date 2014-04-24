@@ -78,6 +78,9 @@ public class Messenger {
      *            Die Überschrift, ohne Farbcodes!
 	 */
 	public static void help(CommandSender cs, String message) {
+		String parsedMessage = parse(message);
+		if (parsedMessage != null) { message = parsedMessage; }
+		
 		String title = ChatColor.YELLOW + "---------- " + ChatColor.WHITE + message + ChatColor.YELLOW + " ";
 		for (int i=0; i<18-message.length()+20; i++) {
 			title += "-";

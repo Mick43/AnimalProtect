@@ -39,6 +39,10 @@ messages:
   TOO_FEW_ARGUMENTS: '%cFehler: Es wurden zu wenig Argumente angegeben.'
   TOO_MANY_ARGUMENTS: '%cFehler: Es wurden zu viele Argumente angegeben.'
   
+  HELP_HEADER: 'AnimalProtect Help (1/1)'
+  HELP_DESC: '%7%oEine Übersicht aller AnimalProtect-Kommandos'
+  HELP_NOT_AVAILABLE: '%cDie Hilfe von AnimalProtect ist zurzeit nicht verfügbar.'
+  
   RELOAD_SUCCESS_PLUGIN: '%aDas Plugin wurde erfolgreich neu geladen.'
   RELOAD_SUCCESS_CONFIG: '%aDie Config wurde erfolgreich neu geladen.'
   RELOAD_SUCCESS_DATABASE: '%aDie Datenbank von AnimalProtect wurde erfolgreich neu geladen.'
