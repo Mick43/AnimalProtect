@@ -31,7 +31,7 @@ public class LeashEventListener implements Listener {
 		if (!plugin.isAnimal(event.getEntity())) { return; }
 		
 		/* Prüfen ob das Entity gesichert wurde */
-		if (database.containsAnimal(event.getEntity().getUniqueId())) { return; }
+		if (!database.containsAnimal(event.getEntity().getUniqueId())) { return; }
 		
 		/* Prüfen ob der Spieler die 'AnimalProtect-Bypass'-Permission hat */
 		if (event.getPlayer().hasPermission("animalprotect.bypass")) { return; }
@@ -53,7 +53,7 @@ public class LeashEventListener implements Listener {
 		if (!plugin.isAnimal(event.getEntity())) { return; }
 		
 		/* Prüfen ob das Entity gesichert wurde */
-		if (database.containsAnimal(event.getEntity().getUniqueId())) { return; }
+		if (!database.containsAnimal(event.getEntity().getUniqueId())) { return; }
 		
 		/* Prüfen ob der Spieler die 'AnimalProtect-Bypass'-Permission hat */
 		if (event.getPlayer().hasPermission("animalprotect.bypass")) { return; }
