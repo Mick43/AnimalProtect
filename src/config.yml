@@ -39,6 +39,13 @@ messages:
   TOO_FEW_ARGUMENTS: '%cFehler: Es wurden zu wenig Argumente angegeben.'
   TOO_MANY_ARGUMENTS: '%cFehler: Es wurden zu viele Argumente angegeben.'
   
+  RELOAD_SUCCESS_PLUGIN: '%aDas Plugin wurde erfolgreich neu geladen.'
+  RELOAD_SUCCESS_CONFIG: '%aDie Config wurde erfolgreich neu geladen.'
+  RELOAD_SUCCESS_DATABASE: '%aDie Datenbank von AnimalProtect wurde erfolgreich neu geladen.'
+  RELOAD_SUCCESS_CONNECTION: '%aDie Verbindung zur Datenbank wurde neu aufgebaut.'
+  RELOAD_FAILED_DATABASE: '%cFehler: Die Datenbank konnte nicht neu geladen werden.'
+  RELOAD_FAILED_CONNECTION: '&cFehler: Es konnte keine Verbindung zur Datenbank hergestellt werden.'
+  
   SELECTED_ALREADY: '%eDu hast das Tier bereits ausgewaehlt!'
   SELECTED_NONE: '%cFehler: Du hast zurzeit noch kein Tier ausgewaehlt!'
   SELECTED_COW: 'Du hast eine %6Kuh %eausgewaehlt. %7(/lockanimal um sie zu protecten.)'

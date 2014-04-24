@@ -78,17 +78,29 @@ public class Command_animalprotect implements CommandExecutor {
 			if (args.length == 0) {
 				Bukkit.getServer().getPluginManager().disablePlugin(AnimalProtect.plugin);
 				Bukkit.getServer().getPluginManager().enablePlugin(AnimalProtect.plugin);
+				
+				Messenger.sendMessage(cs, "RELOAD_SUCCESS_PLUGIN");
 			}
 			else if (args.length == 1) {
 				if (args[0].equalsIgnoreCase("config")) {
 					AnimalProtect.plugin.reloadConfig();
+					
+					Messenger.sendMessage(cs, "RELOAD_SUCCESS_CONFIG");
 				}
 				else if (args[0].equalsIgnoreCase("database")) {
 					AnimalProtect.plugin.reloadDatabase();
+					
+					if (AnimalProtect.plugin.getDatenbank().isConnected()) 
+					{ Messenger.sendMessage(cs, "RELOAD_SUCCESS_DATABASE"); }
+					else { Messenger.sendMessage(cs, "RELOAD_FAILED_DATABASE"); }
 				}
 				else if (args[0].equalsIgnoreCase("connection")) {
 					AnimalProtect.plugin.getDatenbank().closeConnection();
 					AnimalProtect.plugin.getDatenbank().connect();
+					
+					if (AnimalProtect.plugin.getDatenbank().isConnected()) 
+					{ Messenger.sendMessage(cs, "RELOAD_SUCCESS_CONNECTION"); }
+					else { Messenger.sendMessage(cs, "RELOAD_FAILED_CONNECTION"); }
 				}
 			}
 			else if (args.length > 1) { Messenger.sendMessage(cs, "TOO_MANY_ARGUMENTS"); }
