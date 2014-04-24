@@ -105,7 +105,7 @@ public class Database {
 			columns[15] = "uuid CHAR(36) NOT NULL UNIQUE KEY";
 			columns[16] = "created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL";
 			
-			this.connection.createTable("ap_entities", columns, true);
+			this.connection.createTable("ap_entities", columns, false);
 			this.loadFromDatabase();
 		}
 		catch (Exception e) { Messenger.exception("Database/createTable", "An exception occured in de.AnimalProtect.Database.createTabel()", e); }
@@ -131,7 +131,7 @@ public class Database {
 			
 			
 			/* Dann die Tiere laden */
-			ResultSet result = connection.getResult("SELECT * FROM ap_entities", false, true);
+			ResultSet result = connection.getResult("SELECT * FROM ap_entities", false, false);
 			
 			if (result != null) { 
 				try {
