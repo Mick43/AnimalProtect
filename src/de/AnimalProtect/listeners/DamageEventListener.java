@@ -82,7 +82,6 @@ public class DamageEventListener implements Listener {
 		case PRIMED_TNT:
 			TNTPrimed tnt = (TNTPrimed)damager;
 			damager = (Entity) tnt.getSource();
-			Messenger.broadcast("DAMAGER=PRIMED_TNT! source="+tnt.getSource().getType().toString());
 			break;
 		case FISHING_HOOK:
 			Fish fishingHook = (Fish)damager;
