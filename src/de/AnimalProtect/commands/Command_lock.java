@@ -1,5 +1,7 @@
 package de.AnimalProtect.commands;
 
+import org.bukkit.Effect;
+import org.bukkit.Sound;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -64,8 +66,16 @@ public class Command_lock implements CommandExecutor {
 			try {
 				if (plugin.getDatenbank().getAnimals(player.getUniqueId()).size() <= plugin.getConfig().getInt("settings.max_entities_for_player")) {
 					animal = new Animal(AnimalProtect.plugin, player, entity);
-					if(animal.saveToDatabase(true)) 
-					{ Messenger.sendMessage(cs, "LOCK_SUCCESS"); }
+					if(animal.saveToDatabase(true)) { 
+						Messenger.sendMessage(cs, "LOCK_SUCCESS"); 
+						entity.getWorld().playEffect(entity.getLocation(), Effect.SMOKE, 100);
+						entity.getWorld().playEffect(entity.getLocation(), Effect.SMOKE, 100);
+						entity.getWorld().playEffect(entity.getLocation(), Effect.SMOKE, 100);
+						entity.getWorld().playSound(entity.getLocation(), Sound.CLICK, 0.5f, 1.75f);
+						entity.getWorld().playSound(entity.getLocation(), Sound.CLICK, 0.5f, 1.75f);
+						entity.getWorld().playSound(entity.getLocation(), Sound.CLICK, 0.5f, 1.75f);
+						sender.playSound(sender.getLocation(), Sound.CLICK, 0.75f, 1.75f);
+					}
 					else { Messenger.sendMessage(cs, "LOCK_FAILED"); }
 				}
 				else { Messenger.sendMessage(cs, "MAX_LOCKS_EXCEEDED"); }
