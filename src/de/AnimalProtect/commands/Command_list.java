@@ -47,7 +47,7 @@ public class Command_list implements CommandExecutor {
 		if (args.length == 0) { /*  /listanimals  */
 			if (cs instanceof Player) 
 			{ cPlayer = CraftoPlayer.getPlayer(cs.getName()); }
-			else { Messenger.sendMessage(cs, "§cFehler: Es fehlen Argumente! (/locklist <spieler> <seite>)"); return; }
+			else { Messenger.sendMessage(cs, "TOO_FEW_ARGUMENTS"); return; }
 		}
 		else if (args.length == 1) { /*  /listanimals <args[0]>  */
 			if (isNumber(args[0])) { 
@@ -116,12 +116,12 @@ public class Command_list implements CommandExecutor {
 					y = entity.getLocation().getBlockY();
 					z = entity.getLocation().getBlockZ();
 					animal.setAlive(true);
-					status = "§aALIVE";
+					status = Messenger.parseMessage("ANIMAL_ALIVE"); // "§aALIVE";
 				}
 				else if (animal.isAlive()) {
 					animal.setAlive(false);
 					animal.saveToDatabase(true);
-					status = "§cDEAD";
+					status = Messenger.parseMessage("ANIMAL_DEAD"); // "§cDEAD";
 				}
 				found = true;
 			}
@@ -135,19 +135,19 @@ public class Command_list implements CommandExecutor {
 							y = entity.getLocation().getBlockY();
 							z = entity.getLocation().getBlockZ();
 							animal.setAlive(true);
-							status = "§aALIVE";
+							status = Messenger.parseMessage("ANIMAL_ALIVE"); // "§aALIVE";
 						}
 						else if (animal.isAlive()) {
 							animal.setAlive(false);
 							animal.saveToDatabase(true);
-							status = "§cDEAD";
+							status = Messenger.parseMessage("ANIMAL_DEAD"); // "§cDEAD";
 						}
 						found = true;
 					}
 				}
 			}
 			
-			if (!found && animal.isAlive()) { status = "§cMISSING"; }
+			if (!found && animal.isAlive()) { status = Messenger.parseMessage("ANIMAL_MISSING"); } // "§cMISSING";
 			
 			String Message = "§6"+i+". §e";
 			Message += animal.getAnimaltype() + " - ";

@@ -24,6 +24,9 @@ messages:
   ANIMAL_RESPAWNED: '%aDas Tier wurde erfolgreich respawned.'
   ANIMAL_SUCESS_UNPROTECT: '%aDas Tier wurde erfolgreich entsichert.'
   ANIMAL_FAILED_UNPROTECT: '%cFehler: Das Tier konnte nicht entsichert werden.'
+  ANIMAL_ALIVE: '%aALIVE'
+  ANIMAL_DEAD: '%cDEAD'
+  ANIMAL_MISSING: '%cMISSING'
   
   PAGE_NOT_EXIST: '%cFehler: Die angegebene Seite existiert nicht.'
   PAGE_NOT_NUMBER: '%cFehler: Die angegebene Seite ist keine Zahl.'
