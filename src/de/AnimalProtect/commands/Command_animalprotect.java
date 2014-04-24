@@ -83,7 +83,7 @@ public class Command_animalprotect implements CommandExecutor {
 			}
 			else if (args.length == 1) {
 				if (args[0].equalsIgnoreCase("config")) {
-					AnimalProtect.plugin.reloadConfig();
+					AnimalProtect.plugin.reloadSettings();
 					
 					Messenger.sendMessage(cs, "RELOAD_SUCCESS_CONFIG");
 				}

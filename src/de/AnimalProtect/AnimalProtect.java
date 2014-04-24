@@ -42,7 +42,7 @@ public class AnimalProtect extends JavaPlugin {
 	@Override
 	public void onEnable() {
 		/* Konsole benachrichtigen */
-		Messenger.log("Initializing AnimalProtect v" + getDescription().getVersion() + " ...");
+		Messenger.log("Initializing AnimalProtect...");
 		
 		/* Statische Instanz intialisieren */
 		AnimalProtect.plugin = this;
@@ -127,13 +127,15 @@ public class AnimalProtect extends JavaPlugin {
 	 * Lädt die komplette Datenbank von AnimalProtect neu in den RAM.
 	 */
 	public void reloadDatabase() {
+		this.getDatenbank().closeConnection();
+		this.getDatenbank().clear();
 		this.initializeDatabase();
 	}
 	
 	/**
 	 * Lädt die Config neu.
 	 */
-	public void reloadConfig() {
+	public void reloadSettings() {
 		this.initializeConfig();
 	}
 	
