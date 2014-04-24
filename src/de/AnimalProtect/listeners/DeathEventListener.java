@@ -26,45 +26,48 @@ public class DeathEventListener implements Listener {
 	
 	@EventHandler
 	public void onEntityDeath(EntityDeathEvent event) {
-		/* Prüfen ob das Plugin aktiviert ist */
-		if (!plugin.isEnabled()) { return; }
-		
-		/* Datenbank-Verbindung aufbauen, falls nicht vorhanden. */
-		if (!database.isConnected()) { database.connect(); }
-		
-		if (plugin.getDatenbank().containsAnimal(event.getEntity().getUniqueId())) {
-			/* Variablen bereitstellen */
-			EntityDamageByEntityEvent damageEvent = null;
-			Entity entity = event.getEntity();
-			Player damager = null;
+		try {
+			/* Prüfen ob das Plugin aktiviert ist */
+			if (!plugin.isEnabled()) { return; }
 			
-			/* Prüfen ob das Tier ermordet wurde */
-			try { damageEvent = (EntityDamageByEntityEvent) event.getEntity().getLastDamageCause(); }
-			catch (Exception exception) { }
+			/* Datenbank-Verbindung aufbauen, falls nicht vorhanden. */
+			if (!database.isConnected()) { database.connect(); }
 			
-			/* Prüfen ob der Mörder ein Spieler ist */
-			if (damageEvent != null)
-			{ 
-				if (damageEvent.getDamager() instanceof Player)  {
-					damager = (Player) damageEvent.getDamager();
-					
-					/* Prüfen ob der Mörder der Owner ist */
-					if (database.getOwner(entity.getUniqueId()).getUniqueId().equals(damager.getUniqueId())) {
-						Animal animal = database.getAnimal(entity.getUniqueId());
-						database.unlockAnimal(animal);
-						return;
-					}
-					else {
-						Messenger.error("Warnung: Ein gesichertes Entity wurde von einem Spieler, der nicht der Owner ist, getötet.");
-						Messenger.error("Weitere Informationen: DamageCause="+damageEvent.getCause().toString()+ ", Damager="+damager.getName());
+			if (plugin.getDatenbank().containsAnimal(event.getEntity().getUniqueId())) {
+				/* Variablen bereitstellen */
+				EntityDamageByEntityEvent damageEvent = null;
+				Entity entity = event.getEntity();
+				Player damager = null;
+				
+				/* Prüfen ob das Tier ermordet wurde */
+				try { damageEvent = (EntityDamageByEntityEvent) event.getEntity().getLastDamageCause(); }
+				catch (Exception exception) { }
+				
+				/* Prüfen ob der Mörder ein Spieler ist */
+				if (damageEvent != null)
+				{ 
+					if (damageEvent.getDamager() instanceof Player)  {
+						damager = (Player) damageEvent.getDamager();
+						
+						/* Prüfen ob der Mörder der Owner ist */
+						if (database.getOwner(entity.getUniqueId()).getUniqueId().equals(damager.getUniqueId())) {
+							Animal animal = database.getAnimal(entity.getUniqueId());
+							database.unlockAnimal(animal);
+							return;
+						}
+						else {
+							Messenger.error("Warnung: Ein gesichertes Entity wurde von einem Spieler, der nicht der Owner ist, getötet.");
+							Messenger.error("Weitere Informationen: DamageCause="+damageEvent.getCause().toString()+ ", Damager="+damager.getName());
+						}
 					}
 				}
+				
+				/* Der Mörder ist kein Spieler, also wird das Tier geupdated */
+				Animal animal = database.getAnimal(entity.getUniqueId());
+				animal.updateAnimal(entity);
+				animal.saveToDatabase(true);
 			}
-			
-			/* Der Mörder ist kein Spieler, also wird das Tier geupdated */
-			Animal animal = database.getAnimal(entity.getUniqueId());
-			animal.updateAnimal(entity);
-			animal.saveToDatabase(true);
 		}
+		catch (Exception e) { Messenger.exception("DeathEventListener/onEntityDeath", "Unknown Exception.", e); }
 	}
 }

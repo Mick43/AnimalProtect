@@ -6,6 +6,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 
+
 /* AnimalProtect Imports */
 import de.AnimalProtect.AnimalProtect;
 import de.AnimalProtect.Database;
@@ -23,11 +24,14 @@ public class PlayerEventListener implements Listener {
 	
 	@EventHandler
 	public void onPlayerJoin(PlayerJoinEvent event) {
-		if (!plugin.isEnabled()) { return; }
-		
-		if (isAdmin(event.getPlayer()) && !database.isConnected()) {
-			Messenger.sendMessage(event.getPlayer(), "§c[!] §7Warnung: AnimalProtect konnte keine Verbindung zur Datenbank herstellen!");
+		try {
+			if (!plugin.isEnabled()) { return; }
+			
+			if (isAdmin(event.getPlayer()) && !database.isConnected()) {
+				Messenger.sendMessage(event.getPlayer(), "§c[!] §7Warnung: AnimalProtect konnte keine Verbindung zur Datenbank herstellen!");
+			}
 		}
+		catch (Exception e) { Messenger.exception("PlayerEventListener/onPlayerJoin", "Unknown Exception.", e); }
 	}
 	
 	public boolean isAdmin(Player player) {
