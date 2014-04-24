@@ -78,7 +78,7 @@ public class Messenger {
      *            Die Überschrift, ohne Farbcodes!
 	 */
 	public static void help(CommandSender cs, String message) {
-		String parsedMessage = parse(message);
+		String parsedMessage = parseMessage(message);
 		if (parsedMessage != null) { message = parsedMessage; }
 		
 		String title = ChatColor.YELLOW + "---------- " + ChatColor.WHITE + message + ChatColor.YELLOW + " ";
@@ -101,7 +101,7 @@ public class Messenger {
 	public static void sendMessage(Player player, String message, Boolean prefix) {
 		if (player == null) { return; }
 		
-		String parsedMessage = parse(message);
+		String parsedMessage = parseMessage(message);
 		if (parsedMessage != null) { message = parsedMessage; }
 		
 		if (prefix) { player.sendMessage(Prefix + " " + ChatColor.YELLOW + message); }
@@ -193,7 +193,7 @@ public class Messenger {
 			sendMessage((Player)cs, message, prefix);
 		}
 		else {
-			String parsedMessage = parse(message);
+			String parsedMessage = parseMessage(message);
 			if (parsedMessage != null) { message = parsedMessage; }
 			
 			message = message.replaceAll("§0", "");
@@ -317,7 +317,7 @@ public class Messenger {
 	public static void messageStaff(String message) {
 		Player[] players = Bukkit.getServer().getOnlinePlayers();
 		
-		String parsedMessage = parse(message);
+		String parsedMessage = parseMessage(message);
 		if (parsedMessage != null) { message = parsedMessage; }
 		
 		for (Player p : players) {
@@ -335,14 +335,14 @@ public class Messenger {
      */
 	public static void debugMessage(String message) {
 		if (Debugging && AnimalProtect.plugin.isDebugging()) {
-			String parsedMessage = parse(message);
+			String parsedMessage = parseMessage(message);
 			if (parsedMessage != null) { message = parsedMessage; }
 			
 			log("[DEBUG] " + message);
 		}
 	}
 	
-	public static String parse(String message) {
+	public static String parseMessage(String message) {
 		String tempMessage = AnimalProtect.plugin.getConfig().getString("messages."+message.toUpperCase());
 		if (tempMessage != null) {
 			tempMessage = tempMessage.replaceAll("%", "§");
@@ -355,7 +355,7 @@ public class Messenger {
 			message = tempMessage;
 		}
 		
-		return tempMessage;
+		return message;
 	}
 	
 	/**
