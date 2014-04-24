@@ -78,6 +78,8 @@ public class VehicleEventListener implements Listener {
 				Animal animal = database.getAnimal(event.getVehicle().getUniqueId());
 				animal.updateAnimal(event.getVehicle());
 				animal.saveToDatabase(true);
+				
+				exitedAnimals.put(event.getVehicle().getUniqueId(), System.currentTimeMillis());
 			}
 		}
 		else { exitedAnimals.put(event.getVehicle().getUniqueId(), System.currentTimeMillis()); }
