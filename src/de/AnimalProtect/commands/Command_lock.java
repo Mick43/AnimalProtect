@@ -97,9 +97,9 @@ public class Command_lock implements CommandExecutor {
 						animal = new Animal(AnimalProtect.plugin, player, entity);
 						if(animal.saveToDatabase(true)) { 
 							Messenger.sendMessage(cs, "LOCK_SUCCESS"); 
-							entity.getWorld().playEffect(entity.getLocation(), Effect.SMOKE, 100);
-							entity.getWorld().playEffect(entity.getLocation(), Effect.SMOKE, 100);
-							entity.getWorld().playEffect(entity.getLocation(), Effect.SMOKE, 100);
+							entity.getWorld().playEffect(entity.getLocation(), Effect.SMOKE, 31);
+							entity.getWorld().playEffect(entity.getLocation(), Effect.SMOKE, 31);
+							entity.getWorld().playEffect(entity.getLocation(), Effect.SMOKE, 31);
 							entity.getWorld().playSound(entity.getLocation(), Sound.CLICK, 0.5f, 1.75f);
 							entity.getWorld().playSound(entity.getLocation(), Sound.CLICK, 0.5f, 1.75f);
 							entity.getWorld().playSound(entity.getLocation(), Sound.CLICK, 0.5f, 1.75f);
