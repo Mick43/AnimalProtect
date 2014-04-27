@@ -116,18 +116,12 @@ public class Database {
 			if (!isConnected()) { return; }
 			
 			/* Als erstes die CraftoPlayer's laden */
-			if (CraftoPlugin.plugin.getModuleManager().containsModule("GeneralModule")) {
-				this.module = (GeneralModule) CraftoPlugin.plugin.getModuleManager().getModule("GeneralModule");
-				
-				if (module == null) { 
-					Messenger.warn("Warning: Failed to load players from the GeneralModule! (Module is null)");
-					return; 
-				}
-				
-				for(CraftoPlayer player : module.getDatabase().getPlayers()) {
+			if (CraftoPlugin.plugin.getDatenbank().isConnected() && CraftoPlugin.plugin.getDatenbank().getPlayerCount() > 0) {
+				for(CraftoPlayer player : CraftoPlugin.plugin.getDatenbank().getPlayers()) {
 					this.keys.put(player.getUniqueId(), new ArrayList<Animal>());
 				}
 			}
+			else { Messenger.log("Warning: Failed to load players from the Database! (CraftoPlugin isnt connected)"); return; }
 			
 			
 			/* Dann die Tiere laden */
@@ -153,7 +147,7 @@ public class Database {
 						animal.setUniqueId(UUID.fromString(result.getString("uuid")));
 						animal.setCreated_at(result.getTimestamp("created_at"));
 						
-						CraftoPlayer owner = module.getDatabase().getPlayer(animal.getOwner());
+						CraftoPlayer owner = CraftoPlugin.plugin.getDatenbank().getPlayer(animal.getOwner());
 						if (owner != null) {
 							if (this.keys.containsKey(owner.getUniqueId())) {
 								entities.put(animal.getUniqueId(), animal);
@@ -390,7 +384,7 @@ public class Database {
 	public boolean containsPlayer(UUID uuid) {
 		if (uuid == null) { return false; }
 		
-		if (module.getDatabase().containsPlayer(uuid)) {
+		if (CraftoPlugin.plugin.getDatenbank().containsPlayer(uuid)) {
 			return true;
 		}
 		
