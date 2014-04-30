@@ -1,6 +1,7 @@
 package de.AnimalProtect.commands;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.UUID;
 
@@ -85,6 +86,8 @@ public class Command_list implements CommandExecutor {
 		/* Die Seitenanzahl ausrechnen */
 		Double pagesAsDouble = ((double)animals.size() / (double)10);
 		pages = (int) Math.ceil(pagesAsDouble);
+		
+		Collections.sort(animals);
 		
 		/* Seitenangabe überprüfen */
 		if (pages == 0)

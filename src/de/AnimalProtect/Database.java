@@ -4,11 +4,14 @@ package de.AnimalProtect;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.UUID;
 
+
 /* Bukkit Imports */
 import org.bukkit.entity.Horse.Style;
+
 
 /* CraftoPlugin Imports */
 import craftoplugin.core.CraftoPlugin;
@@ -352,7 +355,9 @@ public class Database {
 		if (uuid == null) { return null; }
 		
 		if  (keys.containsKey(uuid)) {
-			return keys.get(uuid);
+			ArrayList<Animal> key = keys.get(uuid);
+			Collections.sort(key);
+			return key;
 		}
 		
 		return null;

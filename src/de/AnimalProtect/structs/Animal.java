@@ -25,7 +25,7 @@ import craftoplugin.core.database.CraftoPlayer;
 import de.AnimalProtect.AnimalProtect;
 import de.AnimalProtect.Database;
 
-public class Animal {
+public class Animal implements Comparable<Animal> {
 	
 	private AnimalProtect plugin;
 	
@@ -439,5 +439,14 @@ public class Animal {
 	 */
 	public void setCreated_at(Timestamp created_at) {
 		this.created_at = created_at;
+	}
+	
+	@Override
+	public int compareTo(Animal animal) {
+		if (animal == null) { return 1; }
+		else if (this.getCreated_at().after(animal.getCreated_at())) {
+			return 1;
+		}
+		return -1;
 	}
 }
