@@ -46,7 +46,7 @@ public class Command_limit implements CommandExecutor {
 		}
 		else { Messenger.sendMessage(cs, "TOO_MANY_ARGUMENTS"); }
 		
-		if (player == null) { Messenger.sendMessage(cs, "PLAYER_NOT_FOUND"); }
+		if (player == null) { Messenger.sendMessage(cs, "PLAYER_NOT_FOUND"); return; }
 		
 		Integer count = plugin.getDatenbank().getAnimals(player.getUniqueId()).size();
 		if (cs.getName().equalsIgnoreCase(player.getName())) {

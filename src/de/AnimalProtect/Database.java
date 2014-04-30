@@ -13,7 +13,6 @@ import org.bukkit.entity.Horse.Style;
 /* CraftoPlugin Imports */
 import craftoplugin.core.CraftoPlugin;
 import craftoplugin.core.database.CraftoPlayer;
-import craftoplugin.modules.general.GeneralModule;
 
 /* AnimalProtect Imports */
 import de.AnimalProtect.structs.Animal;
@@ -45,7 +44,6 @@ public class Database {
 	*/
 	
 	private AnimalProtect plugin;
-	private GeneralModule module;
 	
 	private MySQL connection;
 	private final String hostname;
@@ -367,7 +365,6 @@ public class Database {
 	 */
 	public boolean containsAnimal(UUID uuid) {
 		if (uuid == null) { return false; }
-		if (module == null) { return false; }
 		
 		if (entities.containsKey(uuid)) {
 			return true;

@@ -125,10 +125,10 @@ public class MySQL {
     	String Query = "CREATE TABLE IF NOT EXISTS " + tableName + " (";
     	
     	for (String column : columns) {
-    		if (column != "" && column != null) {
+    		if (column != null && !column.equalsIgnoreCase("")) {
     			Query += column;
     			
-    			if (column != columns[columns.length-1]) {
+    			if (!column.equalsIgnoreCase(columns[columns.length-1])) {
         			Query += ", ";
         		}
     		}

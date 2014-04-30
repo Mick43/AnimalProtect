@@ -40,7 +40,7 @@ public class LeashEventListener implements Listener {
 			if (event.getPlayer().hasPermission("animalprotect.bypass")) { return; }
 			
 			/* Prüfen ob der Spieler der Owner ist */
-			if (!event.getPlayer().getUniqueId().equals(database.getOwner(event.getEntity().getUniqueId()))) {
+			if (!event.getPlayer().getUniqueId().equals(database.getOwner(event.getEntity().getUniqueId()).getUniqueId())) {
 				event.setCancelled(true);
 			}
 		}
@@ -65,7 +65,7 @@ public class LeashEventListener implements Listener {
 			if (event.getPlayer().hasPermission("animalprotect.bypass")) { return; }
 			
 			/* Prüfen ob der Spieler der Owner ist */
-			if (!event.getPlayer().getUniqueId().equals(database.getOwner(event.getEntity().getUniqueId()))) {
+			if (!event.getPlayer().getUniqueId().equals(database.getOwner(event.getEntity().getUniqueId()).getUniqueId())) {
 				event.setCancelled(true);
 			}
 		}
