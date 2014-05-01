@@ -19,7 +19,7 @@ commands:
    lockanimal:
       description: Sichert ein Tier vor anderen Spielern.
       usage: Schreibe /lockanimal
-      permission: animalprotect.protect
+      permission: animalprotect.lock
       permission-message: You don't have permission.
    unlockanimal:
       description: Entsichert das Tier.
@@ -66,9 +66,18 @@ permissions:
   animalprotect.protect:
     default: true
     description: Erlaubt dem Spieler allgemeine AnimalProtect-Befehle zu nutzen.
+  animalprotect.lock:
+    default: true
+    description: Erlaubt es dem Spieler neue Tiere zu locken.
   animalprotect.bypass:
     default: false
     description: Erlaubt dem Spieler alle Protections von Tieren zu umgehen.
+    children:
+       animalprotect.protect: true
   animalprotect.admin:
     default: false
     description: Erlaubt dem Spieler alle Admin-Befehle von AnimalProtect zu nutzen.
+    children:
+       animalprotect.protect: true
+       animalprotect.lock: true
+       animalprotect.bypass: true
