@@ -50,7 +50,7 @@ public class LeashEventListener implements Listener {
 	@EventHandler
 	public void onEntityUnleash(PlayerUnleashEntityEvent  event) {
 		try { 
-			if (!plugin.isEnabled()) { return; }
+			if (!plugin.isEnabled() || event.isCancelled()) { return; }
 			
 			/* Datenbank-Verbindung aufbauen, falls nicht vorhanden. */
 			if (!database.isConnected()) { database.connect(); }
