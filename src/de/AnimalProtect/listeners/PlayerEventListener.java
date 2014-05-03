@@ -28,7 +28,7 @@ public class PlayerEventListener implements Listener {
 			if (!plugin.isEnabled()) { return; }
 			
 			if (isAdmin(event.getPlayer()) && !database.isConnected()) {
-				Messenger.sendMessage(event.getPlayer(), "§c[!] §7Warnung: AnimalProtect konnte keine Verbindung zur Datenbank herstellen!");
+				Messenger.messageStaff("§c[!] §7Warnung: AnimalProtect konnte keine Verbindung zur Datenbank herstellen!");
 			}
 		}
 		catch (Exception e) { Messenger.exception("PlayerEventListener/onPlayerJoin", "Unknown Exception.", e); }
