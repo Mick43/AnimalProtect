@@ -115,6 +115,7 @@ public class Database {
 	private void loadFromDatabase() {
 		try {
 			if (!isConnected()) { return; }
+			Long loadStart = System.currentTimeMillis();
 			
 			/* Als erstes die CraftoPlayer's laden */
 			if (CraftoPlugin.plugin.getDatenbank().isConnected() && CraftoPlugin.plugin.getDatenbank().getPlayerCount() > 0) {
@@ -130,7 +131,7 @@ public class Database {
 			
 			if (result != null) { 
 				try {
-					while (result.next()) {
+					while (result.next() && loadStart + 60000 < System.currentTimeMillis()) {
 						Animal animal = new Animal(plugin);
 						animal.setId(result.getInt("id"));
 						animal.setOwner(result.getInt("owner"));
