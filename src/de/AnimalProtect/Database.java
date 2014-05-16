@@ -168,6 +168,9 @@ public class Database {
 			}
 			else 
 			{ Messenger.warn("Warning: Failed to load every entity from the database! (ResultSet is null)"); }
+			
+			if (loadStart + 60000 < System.currentTimeMillis()) 
+			{ Messenger.warn("Warning: AnimalProtect took to long to load all animals from the database!"); }
 		}
 		catch (Exception e) { Messenger.exception("Database/loadFromDatabase", "An exception occured in de.AnimalProtect.Database.loadFromDatabase()", e); }
 	}
