@@ -28,71 +28,69 @@ import de.AnimalProtect.listeners.VehicleEventListener;
 
 /**
  * Das AnimalProtect Plugin
- * 
+ *
  * @author Fear837, Pingebam
  * @version 1.2
  */
 public class AnimalProtect extends JavaPlugin {
-	
+
 	private Database database;
 	private Boolean debugmode;
-	
+
 	public static AnimalProtect plugin;
-	
+
 	@Override
 	public void onEnable() {
 		/* Konsole benachrichtigen */
 		Messenger.log("Initializing AnimalProtect...");
-		
+
 		/* Statische Instanz intialisieren */
 		AnimalProtect.plugin = this;
-		
+
 		/* Die Config laden */
 		initializeConfig();
-		
+
 		/* Die Datenbank laden */
 		initializeDatabase();
-		
+
 		/* Die Listener initialisieren */
 		initializeListeners();
-		
+
 		/* Die Commands laden */
 		initializeCommands();
-		
+
 		/* Konsole benachrichtigen */
 		Messenger.log("AnimalProtect v" + getDescription().getVersion() + " has been enabled!");
 	}
-	
+
 	@Override
 	public void onDisable() {
 		this.getDatenbank().closeConnection();
 		this.getDatenbank().clear();
 		InteractEventListener.clearSelections();
 	}
-	
+
 	private void initializeConfig() {
 		Messenger.log("Loading config...");
-		
+
 		try {
 			getConfig().options().copyDefaults(true);
 			saveConfig();
-			
+
 			this.debugmode = getConfig().getBoolean("settings.debug-messages");
 		}
-		catch (Exception e) { 
-			Messenger.exception("AnimalProtect.java/initializeConfig", "Failed to load the config file!", e);
-		}
+		catch (Exception e) { Messenger.exception("AnimalProtect.java/initializeConfig", "Failed to load the config file!", e); }
 	}
-	
+
 	private void initializeDatabase() {
 		Messenger.log("Loading database...");
-		
+
 		this.database = new Database(this);
 	}
-	
+
 	private void initializeListeners() {
 		Messenger.log("Loading listeners...");
-		
+
 		try {
 			this.getServer().getPluginManager().registerEvents(new DamageEventListener(this), this);
 			this.getServer().getPluginManager().registerEvents(new DeathEventListener(this), this);
@@ -100,14 +98,12 @@ public class AnimalProtect extends JavaPlugin {
 			this.getServer().getPluginManager().registerEvents(new LeashEventListener(this), this);
 			this.getServer().getPluginManager().registerEvents(new VehicleEventListener(this), this);
 		}
-		catch (Exception e) {
-			Messenger.exception("AnimalProtect.java/initializeListeners", "Failed to initialize some listeners!", e);
-		}
+		catch (Exception e) { Messenger.exception("AnimalProtect.java/initializeListeners", "Failed to initialize some listeners!", e); }
 	}
-	
+
 	private void initializeCommands() {
 		Messenger.log("Loading commands...");
-		
+
 		try {
 			this.getCommand("ap").setExecutor(new Command_animalprotect(this));
 			this.getCommand("animaldebug").setExecutor(new Command_debug(this));
@@ -118,27 +114,25 @@ public class AnimalProtect extends JavaPlugin {
 			this.getCommand("tpanimal").setExecutor(new Command_teleport(this));
 			this.getCommand("unlockanimal").setExecutor(new Command_unlock(this));
 			this.getCommand("animalinfo").setExecutor(new Command_info(this));		}
-		catch (Exception e) {
-			Messenger.exception("AnimalProtect.java/initializeCommands", "Failed to initialize some commands.", e);
-		}
+		catch (Exception e) { Messenger.exception("AnimalProtect.java/initializeCommands", "Failed to initialize some commands.", e); }
 	}
-	
+
 	/**
-	 * Lädt die komplette Datenbank von AnimalProtect neu in den RAM.
+	 * Lï¿½dt die komplette Datenbank von AnimalProtect neu in den RAM.
 	 */
 	public void reloadDatabase() {
 		this.getDatenbank().closeConnection();
 		this.getDatenbank().clear();
 		this.initializeDatabase();
 	}
-	
+
 	/**
-	 * Lädt die Config neu.
+	 * Lï¿½dt die Config neu.
 	 */
 	public void reloadSettings() {
 		this.initializeConfig();
 	}
-	
+
 	/**
 	 * Gibt aus, ob das Plugin im Debug-Modus ist, oder nicht.
 	 * @return True, falls Debugging aktiviert ist.
@@ -146,10 +140,10 @@ public class AnimalProtect extends JavaPlugin {
 	public boolean isDebugging() {
 		return debugmode;
 	}
-	
+
 	/**
-	 * Gibt aus, ob das übergebene Entity ein Tier ist, welches man mit AnimalProtect sichern kann.
-	 * @param entity - Das Entity welches überprüft wird.
+	 * Gibt aus, ob das ï¿½bergebene Entity ein Tier ist, welches man mit AnimalProtect sichern kann.
+	 * @param entity - Das Entity welches ï¿½berprï¿½ft wird.
 	 * @return True, falls der EntityType ein AnimalType ist.
 	 */
 	public boolean isAnimal(Entity entity) {
@@ -167,16 +161,16 @@ public class AnimalProtect extends JavaPlugin {
 		{ return true; }
 		return false;
 	}
-	
+
 	/**
-	 * Gibt das Entity zurück, welches von dem Spieler ausgewählt wurde.
+	 * Gibt das Entity zurï¿½ck, welches von dem Spieler ausgewï¿½hlt wurde.
 	 * @param uuid - Die UniqueID des Spielers.
-	 * @return Das Entity, welches ausgewählt wurde, oder null, falls keins ausgewählt wurde.
+	 * @return Das Entity, welches ausgewï¿½hlt wurde, oder null, falls keins ausgewï¿½hlt wurde.
 	 */
 	public Entity getSelectedAnimal(UUID uuid) {
 		return InteractEventListener.getSelected(uuid);
 	}
-	
+
 	/**
 	 * Gibt die Datenbank von AnimalProtect wieder.
 	 * @return Das Database-Objekt von AnimalProtect.
