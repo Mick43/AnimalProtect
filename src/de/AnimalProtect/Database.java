@@ -132,35 +132,38 @@ public class Database {
 			if (result != null) {
 				try {
 					while (result.next() && loadStart + 60000 < System.currentTimeMillis()) {
-						Animal animal = new Animal(plugin);
-						animal.setId(result.getInt("id"));
-						animal.setOwner(result.getInt("owner"));
-						animal.setAnimaltype(AnimalType.valueOf(result.getString("animaltype")));
-						animal.setLast_x(result.getInt("last_x"));
-						animal.setLast_y(result.getInt("last_y"));
-						animal.setLast_z(result.getInt("last_z"));
-						animal.setAlive(result.getBoolean("alive"));
-						animal.setMaxhp(result.getDouble("maxhp"));
-						animal.setColor(result.getString("color"));
-						animal.setArmor(AnimalArmor.valueOf(result.getString("armor")));
-						animal.setHorse_jumpstrength(result.getDouble("horse_jumpstrength"));
-						animal.setHorse_style(Style.valueOf(result.getString("horse_style")));
-						animal.setHorse_variant(AnimalVariant.valueOf(result.getString("horse_variant")));
-						animal.setUniqueId(UUID.fromString(result.getString("uuid")));
-						animal.setCreated_at(result.getTimestamp("created_at"));
+						try {
+							Animal animal = new Animal(plugin);
+							animal.setId(result.getInt("id"));
+							animal.setOwner(result.getInt("owner"));
+							animal.setAnimaltype(AnimalType.valueOf(result.getString("animaltype")));
+							animal.setLast_x(result.getInt("last_x"));
+							animal.setLast_y(result.getInt("last_y"));
+							animal.setLast_z(result.getInt("last_z"));
+							animal.setAlive(result.getBoolean("alive"));
+							animal.setMaxhp(result.getDouble("maxhp"));
+							animal.setColor(result.getString("color"));
+							animal.setArmor(AnimalArmor.valueOf(result.getString("armor")));
+							animal.setHorse_jumpstrength(result.getDouble("horse_jumpstrength"));
+							animal.setHorse_style(Style.valueOf(result.getString("horse_style")));
+							animal.setHorse_variant(AnimalVariant.valueOf(result.getString("horse_variant")));
+							animal.setUniqueId(UUID.fromString(result.getString("uuid")));
+							animal.setCreated_at(result.getTimestamp("created_at"));
 
-						CraftoPlayer owner = CraftoPlugin.plugin.getDatenbank().getPlayer(animal.getOwner());
-						if (owner != null) {
-							if (this.keys.containsKey(owner.getUniqueId())) {
-								entities.put(animal.getUniqueId(), animal);
-								reverseKeys.put(animal.getUniqueId(), owner.getUniqueId());
-								keys.get(owner.getUniqueId()).add(animal);
+							CraftoPlayer owner = CraftoPlugin.plugin.getDatenbank().getPlayer(animal.getOwner());
+							if (owner != null) {
+								if (this.keys.containsKey(owner.getUniqueId())) {
+									entities.put(animal.getUniqueId(), animal);
+									reverseKeys.put(animal.getUniqueId(), owner.getUniqueId());
+									keys.get(owner.getUniqueId()).add(animal);
+								}
+								else
+								{ Messenger.warn("Warning: An animal could not be loaded because the owner is not in the owners hashmap! (AnimalId: " +animal.getId()+ ") (OwnerId: " +owner.getId() +")"); }
 							}
 							else
-							{ Messenger.warn("Warning: An animal could not be loaded because the owner is not in the owners hashmap! (AnimalId: " +animal.getId()+ ") (OwnerId: " +owner.getId() +")"); }
+							{ Messenger.warn("Warning: An animal could not be loaded because the the owner does not exist! (AnimalId: " +animal.getId()+ ")"); }
 						}
-						else
-						{ Messenger.warn("Warning: An animal could not be loaded because the the owner does not exist! (AnimalId: " +animal.getId()+ ")"); }
+						catch (Exception e) { Messenger.exception("Database/loadFromDatabase", "An animal could not be loaded because an unknown error occured.", e); }
 					}
 				}
 				catch (SQLException e)
