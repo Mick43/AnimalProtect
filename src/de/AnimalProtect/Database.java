@@ -131,7 +131,7 @@ public class Database {
 
 			if (result != null) {
 				try {
-					while (result.next() && loadStart + 60000 < System.currentTimeMillis()) {
+					while (result.next() && loadStart + 60000 > System.currentTimeMillis()) {
 						try {
 							Animal animal = new Animal(plugin);
 							animal.setId(result.getInt("id"));
