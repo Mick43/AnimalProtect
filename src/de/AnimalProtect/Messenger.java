@@ -4,6 +4,7 @@ package de.AnimalProtect;
 import java.util.UUID;
 import java.util.logging.Level;
 
+
 /* Bukkit Imports */
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -289,6 +290,9 @@ public class Messenger {
 	public static void messageHeader(CommandSender cs, String message) {
 		if (cs == null || message == null) { return; }
 		
+		String parsedMessage = parseMessage(message);
+		if (parsedMessage != null) { message = parsedMessage; }
+		
 		sendMessage(cs, message, true);
 	}
 	
@@ -305,7 +309,7 @@ public class Messenger {
 	public static void messageList(CommandSender cs, String key, String value) {
 		if (cs == null || key == null || value == null) { return; }
 		
-		sendMessage(cs, ChatColor.RESET + "- " + key + ": " + ChatColor.GRAY + value, false);
+		sendMessage(cs, ChatColor.RESET + " • " + key + ": " + ChatColor.GRAY + value, false);
 	}
 	
 	/**
