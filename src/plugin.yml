@@ -21,6 +21,7 @@ commands:
       usage: Schreibe /lockanimal
       permission: animalprotect.lock
       permission-message: '§cDu hast nicht genuegend Rechte fuer diesen Befehl.'
+      aliases: [protectanimal]
    unlockanimal:
       description: Entsichert das Tier.
       usage: Schreibe /unlockanimal
