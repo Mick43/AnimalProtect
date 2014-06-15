@@ -9,8 +9,10 @@ import java.util.HashMap;
 import java.util.UUID;
 
 
+
 /* Bukkit Imports */
 import org.bukkit.entity.Horse.Style;
+
 
 
 /* CraftoPlugin Imports */
@@ -58,7 +60,6 @@ public class Database {
 	private HashMap<UUID, Animal> entities;        // Tier(UUID)    <-> Tier
 	private HashMap<UUID, ArrayList<Animal>> keys; // Spieler(UUID) <-> List<Tiere>
 	private HashMap<UUID, UUID> reverseKeys;       // Tier(UUID)    <-> Spieler(UUID)
-	private HashMap<UUID, Integer> entityCount;    // Spieler(UUID) <-> Anzahl
 
 	/**
 	 * Erstellt eine Datenbank-Instanz von AnimalProtect
@@ -75,7 +76,6 @@ public class Database {
 		this.entities = new HashMap<UUID, Animal>();
 		this.keys = new HashMap<UUID, ArrayList<Animal>>();
 		this.reverseKeys = new HashMap<UUID, UUID>();
-		this.entityCount = new HashMap<UUID, Integer>();
 
 		this.connection = new MySQL(plugin, hostname, port, dbname, username, password, plugin.isDebugging());
 		this.connection.openConnection();
@@ -123,7 +123,6 @@ public class Database {
 			if (CraftoPlugin.plugin.getDatenbank().isConnected() && CraftoPlugin.plugin.getDatenbank().getPlayerCount() > 0) {
 				for(CraftoPlayer player : CraftoPlugin.plugin.getDatenbank().getPlayers()) {
 					this.keys.put(player.getUniqueId(), new ArrayList<Animal>());
-					this.entityCount.put(player.getUniqueId(), 0);
 				}
 			}
 			else { Messenger.log("Warning: Failed to load players from the Database! (CraftoPlugin isnt connected)"); return; }
@@ -258,7 +257,9 @@ public class Database {
 					entities.put(animal.getUniqueId(), animal);
 					reverseKeys.put(animal.getUniqueId(), owner.getUniqueId());
 					keys.get(owner.getUniqueId()).add(animal);
-					entityCount.put(owner.getUniqueId(), entityCount.get(owner.getUniqueId())+1);
+					
+					Integer id = (Integer) connection.getValue("SELECT id FROM ap_entities WHERE uuid='"+animal.getUniqueId()+"';", "id", true);
+					animal.setId(id);
 				}
 				else { Messenger.error("Warning: Failed to insert an animal because the owner does not exist. (AnimalUUID="+animal.getUniqueId().toString()+")"); }
 
@@ -445,21 +446,13 @@ public class Database {
 	 * @return Die Anzahl.
 	 */
 	public Integer countAnimals(UUID player) {
-		if (entityCount.containsKey(player)) 
-		{ return entityCount.get(player); }
-		else {
-			if (keys.containsKey(player)) {
-				entityCount.put(player, 0);
-				
-				for(Animal animal : keys.get(player)) {
-					if (animal.isAlive()) {
-						entityCount.put(player, entityCount.get(player)+1);
-					}
-				}
-				return entityCount.get(player);
+		Integer count = 0;
+		for(Animal animal : keys.get(player)) {
+			if (animal.isAlive()) {
+				count++;
 			}
-			else { return -1; }
 		}
+		return count;
 	}
 	
 	/**

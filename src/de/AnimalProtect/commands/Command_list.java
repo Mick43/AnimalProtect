@@ -35,7 +35,7 @@ public class Command_list implements CommandExecutor {
 	
 	public static void runCommand(CommandSender cs, String[] args) {
 		/* Datenbank-Verbindung aufbauen, falls nicht vorhanden. */
-		if (plugin.getDatenbank().isConnected())
+		if (!plugin.getDatenbank().isConnected())
 		{ plugin.getDatenbank().connect(); }
 		
 		/* Variablen initialisieren */
