@@ -66,6 +66,9 @@ public class DeathEventListener implements Listener {
 				Animal animal = database.getAnimal(entity.getUniqueId());
 				animal.updateAnimal(entity);
 				animal.saveToDatabase(true);
+				
+				Messenger.log("[AnimalLog] Ein " +animal.getAnimaltype().toString()+" von " +animal.getOwner() + " wurde getötet. ("
+						+ ""+entity.getLocation().getBlockX()+", "+entity.getLocation().getBlockY()+", "+entity.getLocation().getBlockZ()+")");
 			}
 		}
 		catch (Exception e) { Messenger.exception("DeathEventListener/onEntityDeath", "Unknown Exception.", e); }

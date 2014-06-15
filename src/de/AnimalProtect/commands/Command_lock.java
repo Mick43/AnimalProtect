@@ -70,7 +70,7 @@ public class Command_lock implements CommandExecutor {
 		}
 		else {
 			try {
-				if (plugin.getDatenbank().getAnimals(player.getUniqueId()).size() <= plugin.getConfig().getInt("settings.max_entities_for_player")) {
+				if (plugin.getDatenbank().countAnimals(player.getUniqueId()) <= plugin.getConfig().getInt("settings.max_entities_for_player")) {
 					if (lockTimes.containsKey(sender.getUniqueId())) {
 						if (lockTimes.get(sender.getUniqueId()) + 5000 < System.currentTimeMillis()) {
 							animal = new Animal(AnimalProtect.plugin, player, entity);
