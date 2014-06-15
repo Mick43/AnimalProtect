@@ -48,7 +48,7 @@ public class Command_limit implements CommandExecutor {
 		
 		if (player == null) { Messenger.sendMessage(cs, "PLAYER_NOT_FOUND"); return; }
 		
-		Integer count = plugin.getDatenbank().getAnimals(player.getUniqueId()).size();
+		Integer count = plugin.getDatenbank().countAnimals(player.getUniqueId());
 		if (cs.getName().equalsIgnoreCase(player.getName())) {
 			Messenger.sendMessage(cs, "Du hast insgesamt §6"+count+"§e von §6"+plugin.getConfig().getInt("settings.max_entities_for_player")+"§e Tieren gesichert.");
 		}
