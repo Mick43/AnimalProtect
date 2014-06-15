@@ -2,7 +2,7 @@ name: AnimalProtect
 main: de.AnimalProtect.AnimalProtect
 version: 1.2
 
-description: Bietet normalen Spielern auf einem Server an, Tiere vor anderen Spielern zu protecten.
+description: Bietet normalen Spielern auf einem Server an Tiere vor anderen Spielern zu protecten
 authors: [Fear837, Pingebam]
 website: www.craftolution.de
 loadbefore: [CraftoPlugin]
@@ -14,54 +14,54 @@ commands:
       description: Gesamtuebersicht aller AnimalProtect-Befehle.
       usage: Schreibe /ap <befehl>
       permission: animalprotect.protect
-      permission-message: '§cDu hast nicht genuegend Rechte fuer diesen Befehl.'
+      permission-message: 'Du hast nicht genuegend Rechte fuer diesen Befehl.'
       aliases: [animalprotect]
    lockanimal:
       description: Sichert ein Tier vor anderen Spielern.
       usage: Schreibe /lockanimal
       permission: animalprotect.lock
-      permission-message: '§cDu hast nicht genuegend Rechte fuer diesen Befehl.'
+      permission-message: 'Du hast nicht genuegend Rechte fuer diesen Befehl.'
       aliases: [protectanimal]
    unlockanimal:
       description: Entsichert das Tier.
       usage: Schreibe /unlockanimal
       permission: animalprotect.protect
-      permission-message: '§cDu hast nicht genuegend Rechte fuer diesen Befehl.'
+      permission-message: 'Du hast nicht genuegend Rechte fuer diesen Befehl.'
    animalinfo:
       description: Gibt Informationen uber das ausgewaehlte Tier aus.
       usage: Schreibe /animalinfo
       permission: animalprotect.protect
-      permission-message: '§cDu hast nicht genuegend Rechte fuer diesen Befehl.'
+      permission-message: 'Du hast nicht genuegend Rechte fuer diesen Befehl.'
       aliases: [lockinfo]
    listanimals:
       description: Listet alle Tiere die der Person gehoeren auf.
       usage: Schreibe /listanimals [owner] [seite]
       permission: animalprotect.admin
-      permission-message: '§cDu hast nicht genuegend Rechte fuer diesen Befehl.'
+      permission-message: 'Du hast nicht genuegend Rechte fuer diesen Befehl.'
       aliases: [locklist]
    respawnanimal:
       description: Spawnt das ausgewaehlte Tier neu.
       usage: Schreibe /respawnanimal [p:<owner>] [id:<animal-id>] [start:<start-id>] [end:<end-id>] [-missing] [-location]
       permission: animalprotect.admin
-      permission-message: '§cDu hast nicht genuegend Rechte fuer diesen Befehl.'
+      permission-message: 'Du hast nicht genuegend Rechte fuer diesen Befehl.'
       aliases: [lockrespawn]
    tpanimal:
       description: Teleportiert dich zu einem Tier.
       usage: Schreibe /tpanimal [owner] [id]
       permission: animalprotect.admin
-      permission-message: '§cDu hast nicht genuegend Rechte fuer diesen Befehl.'
+      permission-message: 'Du hast nicht genuegend Rechte fuer diesen Befehl.'
       aliases: [locktp]
    animaldebug:
       description: Gibt Debug-Informationen ueber das Plugin aus.
       usage: Schreibe /animaldebug
       permission: animalprotect.admin
-      permission-message: '§cDu hast nicht genuegend Rechte fuer diesen Befehl.'
+      permission-message: 'Du hast nicht genuegend Rechte fuer diesen Befehl.'
       aliases: [lockdebug]
    lockedanimals:
       description: Gibt die Anzahl der Locks ueber einen Spieler aus.
       usage: Schreibe /lockedanimals <spieler>
       permission: animalprotect.protect
-      permission-message: '§cDu hast nicht genuegend Rechte fuer diesen Befehl.'
+      permission-message: 'Du hast nicht genuegend Rechte fuer diesen Befehl.'
       aliases: [locklimit]
 permissions:
   animalprotect.protect:
