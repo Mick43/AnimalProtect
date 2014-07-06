@@ -353,9 +353,9 @@ public class Messenger {
 			tempMessage = tempMessage.replaceAll("ae", "ä");
 			tempMessage = tempMessage.replaceAll("oe", "ö");
 			tempMessage = tempMessage.replaceAll("ue", "ü");
-			tempMessage = tempMessage.replaceAll("(ae)", "ae");
-			tempMessage = tempMessage.replaceAll("(oe)", "oe");
-			tempMessage = tempMessage.replaceAll("(ue)", "ue");
+			tempMessage = tempMessage.replaceAll("(ä)", "ae");
+			tempMessage = tempMessage.replaceAll("(ö)", "oe");
+			tempMessage = tempMessage.replaceAll("(ü)", "ue");
 			message = tempMessage;
 		}
 		

@@ -8,6 +8,8 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
 
+
+import craftoplugin.core.database.CraftoPlayer;
 /* AnimalProtect Imports */
 import de.AnimalProtect.AnimalProtect;
 import de.AnimalProtect.Database;
@@ -67,8 +69,16 @@ public class DeathEventListener implements Listener {
 				animal.updateAnimal(entity);
 				animal.saveToDatabase(true);
 				
-				Messenger.log("[AnimalLog] Ein " +animal.getAnimaltype().toString()+" von " +animal.getOwner() + " wurde getötet. ("
-						+ ""+entity.getLocation().getBlockX()+", "+entity.getLocation().getBlockY()+", "+entity.getLocation().getBlockZ()+")");
+				CraftoPlayer owner = CraftoPlayer.getPlayer(animal.getOwner());
+				
+				if (owner!=null) {
+					Messenger.log("[AnimalProtect] Ein " +animal.getAnimaltype().toString()+" von " +owner.getName() + " wurde getötet. ("
+							+ ""+entity.getLocation().getBlockX()+", "+entity.getLocation().getBlockY()+", "+entity.getLocation().getBlockZ()+")");
+				}
+				else {
+					Messenger.log("[AnimalProtect] Ein " +animal.getAnimaltype().toString()+" von einem unbekannten Owner wurde getötet. ("
+							+ ""+entity.getLocation().getBlockX()+", "+entity.getLocation().getBlockY()+", "+entity.getLocation().getBlockZ()+")");
+				}
 			}
 		}
 		catch (Exception e) { Messenger.exception("DeathEventListener/onEntityDeath", "Unknown Exception.", e); }

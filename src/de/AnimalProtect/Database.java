@@ -238,32 +238,45 @@ public class Database {
 		if (animal == null) { return false; }
 
 		try {
-			/* Query zum updaten/inserten aufbauen */
-			String Query = "INSERT INTO ap_entities (`owner`, `animaltype`, `last_x`, `last_y`, `last_z`, `alive`, `nametag`, `maxhp`, "
-						 + "`deathcause`, `color`, `armor`, `horse_jumpstrength`, `horse_style`, `horse_variant`, `uuid`) "
-						 + "VALUES ("+animal.getOwner()+", '"+animal.getAnimaltype().toString()+"', "+animal.getLast_x()+", "+animal.getLast_y()+", "
-						 		 + ""+animal.getLast_z()+", "+animal.isAlive()+", '"+animal.getNametag()+"', "+animal.getMaxhp()+", "
-						 		 + "'"+animal.getDeathcauseToString()+"', '"+animal.getColorToString()+"', '"+animal.getArmor()+"', "+animal.getHorse_jumpstrength()+", "
-						 		 + "'"+animal.getHorse_styleToString()+"', '"+animal.getHorse_variantToString()+"', '"+animal.getUniqueId()+"')"
-						 + "ON DUPLICATE KEY UPDATE owner="+animal.getOwner()+", last_x="+animal.getLast_x()+", last_y="+animal.getLast_y()+", "
-						 		 + "last_z="+animal.getLast_z()+", alive="+animal.isAlive()+", nametag='"+animal.getNametag()+"', "
-						 		 + "deathcause='"+animal.getDeathcauseToString()+"', color='"+animal.getColorToString()+"', armor='"+animal.getArmor().toString()+"';";
+			if (animal.getId() == null) {
+				/* Query zum updaten/inserten aufbauen */
+				String Query = "INSERT INTO ap_entities (`owner`, `animaltype`, `last_x`, `last_y`, `last_z`, `alive`, `nametag`, `maxhp`, "
+							 + "`deathcause`, `color`, `armor`, `horse_jumpstrength`, `horse_style`, `horse_variant`, `uuid`) "
+							 + "VALUES ("+animal.getOwner()+", '"+animal.getAnimaltype().toString()+"', "+animal.getLast_x()+", "+animal.getLast_y()+", "
+							 		 + ""+animal.getLast_z()+", "+animal.isAlive()+", '"+animal.getNametag()+"', "+animal.getMaxhp()+", "
+							 		 + "'"+animal.getDeathcauseToString()+"', '"+animal.getColorToString()+"', '"+animal.getArmor()+"', "+animal.getHorse_jumpstrength()+", "
+							 		 + "'"+animal.getHorse_styleToString()+"', '"+animal.getHorse_variantToString()+"', '"+animal.getUniqueId()+"')"
+							 + "ON DUPLICATE KEY UPDATE owner="+animal.getOwner()+", last_x="+animal.getLast_x()+", last_y="+animal.getLast_y()+", "
+							 		 + "last_z="+animal.getLast_z()+", alive="+animal.isAlive()+", nametag='"+animal.getNametag()+"', "
+							 		 + "deathcause='"+animal.getDeathcauseToString()+"', color='"+animal.getColorToString()+"', armor='"+animal.getArmor().toString()+"';";
 
-			/* Query ausf�hren und das Ergebnis returnen */
-			if(connection.execute(Query, plugin.isDebugging())) {
-				CraftoPlayer owner = CraftoPlayer.getPlayer(animal.getOwner());
-				if (owner != null && keys.containsKey(owner.getUniqueId())) {
-					/* Den HashMaps hinzuf�gen */
-					entities.put(animal.getUniqueId(), animal);
-					reverseKeys.put(animal.getUniqueId(), owner.getUniqueId());
-					keys.get(owner.getUniqueId()).add(animal);
-					
-					Integer id = (Integer) connection.getValue("SELECT id FROM ap_entities WHERE uuid='"+animal.getUniqueId()+"';", "id", true);
-					animal.setId(id);
+				/* Query ausf�hren und das Ergebnis returnen */
+				if(connection.execute(Query, plugin.isDebugging())) {
+					CraftoPlayer owner = CraftoPlayer.getPlayer(animal.getOwner());
+					if (owner != null && keys.containsKey(owner.getUniqueId())) {
+						/* Den HashMaps hinzuf�gen */
+						entities.put(animal.getUniqueId(), animal);
+						reverseKeys.put(animal.getUniqueId(), owner.getUniqueId());
+						keys.get(owner.getUniqueId()).add(animal);
+						
+						Integer id = (Integer) connection.getValue("SELECT id FROM ap_entities WHERE uuid='"+animal.getUniqueId()+"';", "id", true);
+						animal.setId(id);
+					}
+					else { Messenger.error("Warning: Failed to insert an animal because the owner does not exist. (AnimalUUID="+animal.getUniqueId().toString()+")"); }
+
+					return true;
 				}
-				else { Messenger.error("Warning: Failed to insert an animal because the owner does not exist. (AnimalUUID="+animal.getUniqueId().toString()+")"); }
-
-				return true;
+			}
+			else {
+				/* Query zum updaten/inserten aufbauen */
+				String Query = "UPDATE ap_entities SET owner="+animal.getOwner()+", last_x="+animal.getLast_x()+", last_y="+animal.getLast_y()+", "
+						     + "last_z="+animal.getLast_z()+", alive="+animal.isAlive()+", nametag='"+animal.getNametag()+"', "
+							 + "deathcause='"+animal.getDeathcauseToString()+"', color='"+animal.getColorToString()+"', armor='"+animal.getArmor().toString()+"' "
+						     + "WHERE id="+animal.getId()+";";
+				
+				/* Query ausf�hren und das Ergebnis returnen */
+				if(connection.execute(Query, plugin.isDebugging()))
+				{ return true; }
 			}
 		}
 		catch (Exception e) { Messenger.exception("Database.java/insertAnimal", "An Error occured while trying to insert an entity.", e); }

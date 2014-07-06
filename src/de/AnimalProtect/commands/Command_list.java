@@ -140,10 +140,12 @@ public class Command_list implements CommandExecutor {
 							animal.setAlive(true);
 							status = Messenger.parseMessage("ANIMAL_ALIVE"); // "§aALIVE";
 						}
-						else if (animal.isAlive()) {
-							animal.setAlive(false);
-							animal.saveToDatabase(true);
-							status = Messenger.parseMessage("ANIMAL_DEAD"); // "§cDEAD";
+						else {
+							status = Messenger.parseMessage("ANIMAL_DEAD");
+							if (animal.isAlive()) {
+								animal.setAlive(false);
+								animal.saveToDatabase(true);
+							}
 						}
 						found = true;
 					}
