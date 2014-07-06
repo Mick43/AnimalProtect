@@ -21,11 +21,13 @@ import org.bukkit.entity.Horse.Color;
 import org.bukkit.entity.Horse.Variant;
 import org.bukkit.inventory.ItemStack;
 
+import craftoplugin.core.CraftoMessenger;
 import craftoplugin.core.database.CraftoPlayer;
 import de.AnimalProtect.AnimalProtect;
 import de.AnimalProtect.Messenger;
 import de.AnimalProtect.structs.Animal;
 import de.AnimalProtect.structs.AnimalArmor;
+import de.AnimalProtect.structs.AnimalType;
 
 public class Command_respawn implements CommandExecutor {
 	
@@ -63,11 +65,13 @@ public class Command_respawn implements CommandExecutor {
 		String owner = null;
 		Integer start = null;
 		Integer end = null;
+		AnimalType type = null;
 		Boolean idFlag = false;
 		Boolean startFlag = false;
 		Boolean endFlag = false;
 		Boolean missingFlag = false;
 		Boolean locationFlag = false;
+		Boolean typeFlag = false;
 		
 		/* Die Flags ermitteln */
 		for (String s : args) {
@@ -114,8 +118,15 @@ public class Command_respawn implements CommandExecutor {
 			else if (s.startsWith("-location")) {
 				locationFlag = true;
 			}
+			else if (s.startsWith("type:")) {
+				type = AnimalType.valueOf(s.substring(5, s.length()));
+				if (type != null) { typeFlag = true; }
+			}
 		}
-				
+		
+		if (owner == null) { CraftoMessenger.sendMessage(cs, "§cFehler: Es wurde kein Spieler angegeben!"); return; }
+		if (!idFlag && !startFlag && !endFlag) { CraftoMessenger.sendMessage(cs, "§cFehler: Es wurde kein Start oder Endpunkt festgelegt!"); }
+		
 		/* Den angegebenen Spieler ermitteln */
 		if (isUUID(args[0])) { cOwner = CraftoPlayer.getPlayer(UUID.fromString(owner)); }
 		else { cOwner = CraftoPlayer.getPlayer(owner); }
@@ -125,7 +136,9 @@ public class Command_respawn implements CommandExecutor {
 		/* Alle Entities in eine ArrayList speichern, damit wir sie später für isMissing() haben */
 		ArrayList<UUID> foundEntities = new ArrayList<UUID>();
 		for (Entity entity : sender.getWorld().getEntities()) {
-			if (!entity.isDead()) { foundEntities.add(entity.getUniqueId()); }
+			if (!typeFlag) { if (!entity.isDead()) { foundEntities.add(entity.getUniqueId()); } }
+			else if (entity.getType().equals(type.getEntity())) 
+			{ if (!entity.isDead()) { foundEntities.add(entity.getUniqueId()); } }
 		}
 		
 		/* Alle Flags durchgehen */
