@@ -60,7 +60,7 @@ public class Database {
 	private HashMap<UUID, Animal> entities;        // Tier(UUID)    <-> Tier
 	private HashMap<UUID, ArrayList<Animal>> keys; // Spieler(UUID) <-> List<Tiere>
 	private HashMap<UUID, UUID> reverseKeys;       // Tier(UUID)    <-> Spieler(UUID)
-
+	
 	/**
 	 * Erstellt eine Datenbank-Instanz von AnimalProtect
 	 * @param plugin - Das AnimalProtect-Plugin
@@ -76,7 +76,7 @@ public class Database {
 		this.entities = new HashMap<UUID, Animal>();
 		this.keys = new HashMap<UUID, ArrayList<Animal>>();
 		this.reverseKeys = new HashMap<UUID, UUID>();
-
+		
 		this.connection = new MySQL(plugin, hostname, port, dbname, username, password, plugin.isDebugging());
 		this.connection.openConnection();
 
@@ -240,15 +240,7 @@ public class Database {
 		try {
 			if (animal.getId() == null) {
 				/* Query zum updaten/inserten aufbauen */
-				String Query = "INSERT INTO ap_entities (`owner`, `animaltype`, `last_x`, `last_y`, `last_z`, `alive`, `nametag`, `maxhp`, "
-							 + "`deathcause`, `color`, `armor`, `horse_jumpstrength`, `horse_style`, `horse_variant`, `uuid`) "
-							 + "VALUES ("+animal.getOwner()+", '"+animal.getAnimaltype().toString()+"', "+animal.getLast_x()+", "+animal.getLast_y()+", "
-							 		 + ""+animal.getLast_z()+", "+animal.isAlive()+", '"+animal.getNametag()+"', "+animal.getMaxhp()+", "
-							 		 + "'"+animal.getDeathcauseToString()+"', '"+animal.getColorToString()+"', '"+animal.getArmor()+"', "+animal.getHorse_jumpstrength()+", "
-							 		 + "'"+animal.getHorse_styleToString()+"', '"+animal.getHorse_variantToString()+"', '"+animal.getUniqueId()+"')"
-							 + "ON DUPLICATE KEY UPDATE owner="+animal.getOwner()+", last_x="+animal.getLast_x()+", last_y="+animal.getLast_y()+", "
-							 		 + "last_z="+animal.getLast_z()+", alive="+animal.isAlive()+", nametag='"+animal.getNametag()+"', "
-							 		 + "deathcause='"+animal.getDeathcauseToString()+"', color='"+animal.getColorToString()+"', armor='"+animal.getArmor().toString()+"';";
+				String Query = this.getInsertQuery(animal);
 
 				/* Query ausf�hren und das Ergebnis returnen */
 				if(connection.execute(Query, plugin.isDebugging())) {
@@ -269,19 +261,38 @@ public class Database {
 			}
 			else {
 				/* Query zum updaten/inserten aufbauen */
-				String Query = "UPDATE ap_entities SET owner="+animal.getOwner()+", last_x="+animal.getLast_x()+", last_y="+animal.getLast_y()+", "
-						     + "last_z="+animal.getLast_z()+", alive="+animal.isAlive()+", nametag='"+animal.getNametag()+"', "
-							 + "deathcause='"+animal.getDeathcauseToString()+"', color='"+animal.getColorToString()+"', armor='"+animal.getArmor().toString()+"' "
-						     + "WHERE id="+animal.getId()+";";
+				String Query = this.getUpdateQuery(animal);
 				
 				/* Query ausf�hren und das Ergebnis returnen */
-				if(connection.execute(Query, plugin.isDebugging()))
-				{ return true; }
+				if (plugin.getQueue().isRunning()) { this.plugin.getQueue().insertQuery(Query); }
+				else { this.connection.execute(Query, true); }
+				return true;
 			}
 		}
 		catch (Exception e) { Messenger.exception("Database.java/insertAnimal", "An Error occured while trying to insert an entity.", e); }
 
 		return false;
+	}
+	
+	private String getInsertQuery(Animal animal) {
+		String Query = "INSERT INTO ap_entities (`owner`, `animaltype`, `last_x`, `last_y`, `last_z`, `alive`, `nametag`, `maxhp`, "
+				 + "`deathcause`, `color`, `armor`, `horse_jumpstrength`, `horse_style`, `horse_variant`, `uuid`) "
+				 + "VALUES ("+animal.getOwner()+", '"+animal.getAnimaltype().toString()+"', "+animal.getLast_x()+", "+animal.getLast_y()+", "
+				 		 + ""+animal.getLast_z()+", "+animal.isAlive()+", '"+animal.getNametag()+"', "+animal.getMaxhp()+", "
+				 		 + "'"+animal.getDeathcauseToString()+"', '"+animal.getColorToString()+"', '"+animal.getArmor()+"', "+animal.getHorse_jumpstrength()+", "
+				 		 + "'"+animal.getHorse_styleToString()+"', '"+animal.getHorse_variantToString()+"', '"+animal.getUniqueId()+"')"
+				 + "ON DUPLICATE KEY UPDATE owner="+animal.getOwner()+", last_x="+animal.getLast_x()+", last_y="+animal.getLast_y()+", "
+				 		 + "last_z="+animal.getLast_z()+", alive="+animal.isAlive()+", nametag='"+animal.getNametag()+"', "
+				 		 + "deathcause='"+animal.getDeathcauseToString()+"', color='"+animal.getColorToString()+"', armor='"+animal.getArmor().toString()+"';";
+		return Query;
+	}
+	
+	private String getUpdateQuery(Animal animal) {
+		String Query = "UPDATE ap_entities SET owner="+animal.getOwner()+", last_x="+animal.getLast_x()+", last_y="+animal.getLast_y()+", "
+			     + "last_z="+animal.getLast_z()+", alive="+animal.isAlive()+", nametag='"+animal.getNametag()+"', "
+				 + "deathcause='"+animal.getDeathcauseToString()+"', color='"+animal.getColorToString()+"', armor='"+animal.getArmor().toString()+"' "
+			     + "WHERE id="+animal.getId()+";";
+		return Query;
 	}
 
 	/**
@@ -340,17 +351,16 @@ public class Database {
 			/* Query zum updaten/inserten aufbauen */
 			String Query = "DELETE FROM `ap_entities` WHERE id="+animal.getId()+";";
 
-			/* Query ausf�hren und das Ergebnis returnen */
-			if(connection.execute(Query, plugin.isDebugging())) {
-				CraftoPlayer owner = CraftoPlayer.getPlayer(animal.getOwner());
-				if (owner != null && keys.containsKey(owner.getUniqueId())) {
-					/* HashMaps updaten */
-					entities.remove(animal.getUniqueId());
-					reverseKeys.remove(animal.getUniqueId());
-					keys.get(owner.getUniqueId()).remove(animal);
-				}
-				return true;
+			CraftoPlayer owner = CraftoPlayer.getPlayer(animal.getOwner());
+			if (owner != null && keys.containsKey(owner.getUniqueId())) {
+				/* HashMaps updaten */
+				entities.remove(animal.getUniqueId());
+				reverseKeys.remove(animal.getUniqueId());
+				keys.get(owner.getUniqueId()).remove(animal);
 			}
+			if (plugin.getQueue().isRunning()) { this.plugin.getQueue().insertQuery(Query); }
+			else { this.connection.execute(Query, true); }
+			return true;
 		}
 		catch (Exception e) { Messenger.exception("Database.java/unlockAnimal", "An Error occured while trying to unlock an entity.", e); }
 

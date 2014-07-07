@@ -3,10 +3,12 @@ package de.AnimalProtect;
 /* Java Imports */
 import java.util.UUID;
 
+
 /* Bukkit Imports */
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.plugin.java.JavaPlugin;
+
 
 /* AnimalProtect - Command Imports */
 import de.AnimalProtect.commands.Command_animalprotect;
@@ -35,6 +37,7 @@ import de.AnimalProtect.listeners.VehicleEventListener;
 public class AnimalProtect extends JavaPlugin {
 
 	private Database database;
+	private QueueTask task;
 	private Boolean debugmode;
 
 	public static AnimalProtect plugin;
@@ -58,6 +61,9 @@ public class AnimalProtect extends JavaPlugin {
 
 		/* Die Commands laden */
 		initializeCommands();
+		
+		/* Den Task laden */
+		initializeTask();
 
 		/* Konsole benachrichtigen */
 		Messenger.log("AnimalProtect v" + getDescription().getVersion() + " has been enabled!");
@@ -67,6 +73,7 @@ public class AnimalProtect extends JavaPlugin {
 	public void onDisable() {
 		this.getDatenbank().closeConnection();
 		this.getDatenbank().clear();
+		try { task.stop(); } catch (Exception e) { Messenger.log("Failed to stop the task."); }
 		InteractEventListener.clearSelections();
 	}
 
@@ -115,6 +122,16 @@ public class AnimalProtect extends JavaPlugin {
 			this.getCommand("unlockanimal").setExecutor(new Command_unlock(this));
 			this.getCommand("animalinfo").setExecutor(new Command_info(this));		}
 		catch (Exception e) { Messenger.exception("AnimalProtect.java/initializeCommands", "Failed to initialize some commands.", e); }
+	}
+	
+	private void initializeTask() {
+		Messenger.log("Loading task...");
+		
+		try {
+			this.task = new QueueTask(this);
+			this.task.start();
+		}
+		catch (Exception e) { Messenger.exception("AnimalProtect.java/initializeTask", "Failed to initialize the task.", e); }
 	}
 
 	/**
@@ -177,5 +194,12 @@ public class AnimalProtect extends JavaPlugin {
 	 */
 	public Database getDatenbank() {
 		return database;
+	}
+	
+	/**
+	 * Gibt den QueueTask zurück, der das Inserten/Updaten/Deleten von Tieren verarbeitet.
+	 */
+	public QueueTask getQueue() {
+		return task;
 	}
 }
