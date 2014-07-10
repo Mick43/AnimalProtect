@@ -57,6 +57,12 @@ commands:
       permission: animalprotect.admin
       permission-message: 'Du hast nicht genuegend Rechte fuer diesen Befehl.'
       aliases: [lockdebug]
+   animalqueue:
+      description: Gibt Debug-Informationen ueber die Queue des Plugins aus.
+      usage: Schreibe /animalqueue [start/stop]
+      permission: animalprotect.admin
+      permission-message: 'Du hast nicht genuegend Rechte fuer diesen Befehl.'
+      aliases: [lockqueue]
    lockedanimals:
       description: Gibt die Anzahl der Locks ueber einen Spieler aus.
       usage: Schreibe /lockedanimals <spieler>
