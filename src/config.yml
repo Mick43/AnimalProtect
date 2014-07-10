@@ -28,6 +28,13 @@ messages:
   ANIMAL_DEAD: '%cDEAD'
   ANIMAL_MISSING: '%cMISSING'
   
+  QUEUE_STARTED: '%eDie Queue ist zurzeit aktiv.'
+  QUEUE_STOPPED: '%eDie Queue ist zurzeit deaktiviert.'
+  QUEUE_START: '%aDie Queue wurde gestartet.'
+  QUEUE_ALREADY_STARTED: '%cFehler: Die Queue ist bereits aktiv.'
+  QUEUE_STOP: '%aDie Queue wurde deaktiviert.'
+  QUEUE_ALREADY_STOPPED: '%cFehler: Die Queue wurde bereits deaktiviert.'
+  
   PAGE_NOT_EXIST: '%cFehler: Die angegebene Seite existiert nicht.'
   PAGE_NOT_NUMBER: '%cFehler: Die angegebene Seite ist keine Zahl.'
   ID_NOT_NUMBER: '%cFehler: Die angegebene ID ist keine Zahl!'
@@ -37,7 +44,7 @@ messages:
   ENDFLAG_TOO_HIGH: '%cFehler: Die angegebene End-Flag ist zu hoch.'
   
   UNKNOWN_COMMAND: '%cUnbekannter Befehl. (Schreibe /ap help für eine Uebersicht aller Kommandos.)'
-  NO_PERMISSION: '%cYou dont have permission.'
+  NO_PERMISSION: '%cDu hast nicht genuegend Rechte fuer diesen Befehl.'
   NO_GIVEN_PLAYER: '%cFehler: Es wurde kein Spieler angegeben!'
   TOO_FEW_ARGUMENTS: '%cFehler: Es wurden zu wenig Argumente angegeben.'
   TOO_MANY_ARGUMENTS: '%cFehler: Es wurden zu viele Argumente angegeben.'
