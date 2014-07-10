@@ -486,4 +486,12 @@ public class Database {
 		if (connection == null) { return false; }
 		return connection.checkConnection();
 	}
+	
+	/**
+	 * Gibt die MySQL-Verbindung von AnimalProtect wieder.
+	 * @return Das, in dieser Klasse verwendete, MySQL-Objekt.
+	 */
+	public MySQL getConnection() {
+		return connection;
+	}
 }

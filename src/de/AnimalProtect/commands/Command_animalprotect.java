@@ -39,6 +39,7 @@ public class Command_animalprotect implements CommandExecutor {
 			else if (args[0].equalsIgnoreCase("tpanimal")) { Command_teleport.runCommand(cs, newArgs); }
 			else if (args[0].equalsIgnoreCase("unlockanimal")) { Command_unlock.runCommand(cs, newArgs); }
 			else if (args[0].equalsIgnoreCase("debug")) { Command_debug.runCommand(cs, newArgs); }
+			else if (args[0].equalsIgnoreCase("queue")) { Command_queue.runCommand(cs, newArgs); }
 			else if (args[0].equalsIgnoreCase("list")) { Command_list.runCommand(cs, newArgs); }
 			else if (args[0].equalsIgnoreCase("lock")) { Command_lock.runCommand(cs, newArgs); }
 			else if (args[0].equalsIgnoreCase("limit")) { Command_limit.runCommand(cs, newArgs); }
@@ -65,11 +66,12 @@ public class Command_animalprotect implements CommandExecutor {
 			if (hasPerm(cs, "animalprotect.admin"))   { Messenger.sendMessage(cs, "§6/ap respawn: §f" + AnimalProtect.plugin.getCommand("respawnanimal").getDescription()); }
 			if (hasPerm(cs, "animalprotect.admin"))   { Messenger.sendMessage(cs, "§6/ap tp: §f" + AnimalProtect.plugin.getCommand("tpanimal").getDescription());           }
 			if (hasPerm(cs, "animalprotect.admin"))   { Messenger.sendMessage(cs, "§6/ap debug: §f" + AnimalProtect.plugin.getCommand("animaldebug").getDescription());     }
+			if (hasPerm(cs, "animalprotect.admin"))   { Messenger.sendMessage(cs, "§6/ap queue: §f" + AnimalProtect.plugin.getCommand("animalqueue").getDescription());     }
 			if (hasPerm(cs, "animalprotect.admin"))   { Messenger.sendMessage(cs, "§6/ap reload: §f" + "Lädt das gesamte Plugin neu.");                                     }
 		}
 		catch (Exception e) {
 			Messenger.sendMessage(cs, "HELP_NOT_AVAILABLE");
-			Messenger.exception("Command_AnimalProtect/Command_ShowHelp", "Caught an exception while trying to show someone the help page.", e);
+			Messenger.exception("Command_AnimalProtect.java/Command_ShowHelp", "Caught an exception while trying to show someone the help page.", e);
 		}
 	}
 	
@@ -110,9 +112,7 @@ public class Command_animalprotect implements CommandExecutor {
 	
 	private static boolean hasPerm(CommandSender cs, String permission) {
 		if (cs instanceof Player) {
-			if (((Player)cs).hasPermission(permission)) {
-				return true;
-			}
+			if (cs.hasPermission(permission)) { return true; }
 			return false;
 		}
 		else { return true; }

@@ -4,10 +4,12 @@ package de.AnimalProtect;
 import java.util.UUID;
 
 
+
 /* Bukkit Imports */
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.plugin.java.JavaPlugin;
+
 
 
 /* AnimalProtect - Command Imports */
@@ -17,6 +19,7 @@ import de.AnimalProtect.commands.Command_info;
 import de.AnimalProtect.commands.Command_list;
 import de.AnimalProtect.commands.Command_lock;
 import de.AnimalProtect.commands.Command_limit;
+import de.AnimalProtect.commands.Command_queue;
 import de.AnimalProtect.commands.Command_respawn;
 import de.AnimalProtect.commands.Command_teleport;
 import de.AnimalProtect.commands.Command_unlock;
@@ -114,6 +117,7 @@ public class AnimalProtect extends JavaPlugin {
 		try {
 			this.getCommand("ap").setExecutor(new Command_animalprotect(this));
 			this.getCommand("animaldebug").setExecutor(new Command_debug(this));
+			this.getCommand("animalqueue").setExecutor(new Command_queue(this));
 			this.getCommand("listanimals").setExecutor(new Command_list(this));
 			this.getCommand("lockanimal").setExecutor(new Command_lock(this));
 			this.getCommand("lockedanimals").setExecutor(new Command_limit(this));
@@ -128,7 +132,7 @@ public class AnimalProtect extends JavaPlugin {
 		Messenger.log("Loading task...");
 		
 		try {
-			this.task = new QueueTask(this);
+			this.task = new QueueTask(this, database.getConnection());
 			this.task.start();
 		}
 		catch (Exception e) { Messenger.exception("AnimalProtect.java/initializeTask", "Failed to initialize the task.", e); }
