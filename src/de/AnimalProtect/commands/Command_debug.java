@@ -22,6 +22,8 @@ public class Command_debug implements CommandExecutor {
 	}
 	
 	public static void runCommand(CommandSender cs, String[] args) {
+		if (plugin == null) { Messenger.sendMessage(cs, "§cFehler: Der Befehl konnte nicht ausgeführt werden."); return; }
+		
 		if (args.length == 0) {
 			Messenger.messageHeader(cs, "Debug-Informationen:");
 			if (AnimalProtect.plugin.isEnabled()) { Messenger.messageList(cs, "Plugin aktiviert", "Ja"); }

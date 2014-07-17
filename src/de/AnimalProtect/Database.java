@@ -8,15 +8,12 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.UUID;
 
-
-
 /* Bukkit Imports */
 import org.bukkit.entity.Horse.Style;
 
-
-
 /* CraftoPlugin Imports */
 import craftoplugin.core.CraftoPlugin;
+import craftoplugin.core.database.MySQL;
 import craftoplugin.core.database.CraftoPlayer;
 
 /* AnimalProtect Imports */
@@ -50,16 +47,12 @@ public class Database {
 
 	private AnimalProtect plugin;
 
-	private MySQL connection;
-	private final String hostname;
-	private final String username;
-	private final String dbname;
-	private final String password;
-	private final String port;
+	private final MySQL connection;
 
 	private HashMap<UUID, Animal> entities;        // Tier(UUID)    <-> Tier
 	private HashMap<UUID, ArrayList<Animal>> keys; // Spieler(UUID) <-> List<Tiere>
 	private HashMap<UUID, UUID> reverseKeys;       // Tier(UUID)    <-> Spieler(UUID)
+	private HashMap<Integer, Animal> entitiesId;  // Tier(ID)      <-> Tier
 	
 	/**
 	 * Erstellt eine Datenbank-Instanz von AnimalProtect
@@ -67,22 +60,15 @@ public class Database {
 	 */
 	public Database(AnimalProtect plugin) {
 		this.plugin = plugin;
-		this.hostname = plugin.getConfig().getString("database.hostname");
-		this.username = plugin.getConfig().getString("database.username");
-		this.dbname = plugin.getConfig().getString("database.dbname");
-		this.password = plugin.getConfig().getString("database.password");
-		this.port = plugin.getConfig().getString("database.port");
 		
 		this.entities = new HashMap<UUID, Animal>();
 		this.keys = new HashMap<UUID, ArrayList<Animal>>();
 		this.reverseKeys = new HashMap<UUID, UUID>();
+		this.entitiesId = new HashMap<Integer, Animal>();
 		
-		this.connection = new MySQL(plugin, hostname, port, dbname, username, password, plugin.isDebugging());
-		this.connection.openConnection();
+		this.connection = CraftoPlugin.plugin.getDatenbank().getSQL();
 
-		if (connection.checkConnection()) {
-			this.createTable();
-		}
+		if (connection.checkConnection()) { this.createTable(); }
 	}
 
 	private void createTable() {
@@ -139,9 +125,9 @@ public class Database {
 							animal.setId(result.getInt("id"));
 							animal.setOwner(result.getInt("owner"));
 							animal.setAnimaltype(AnimalType.valueOf(result.getString("animaltype")));
-							animal.setLast_x(result.getInt("last_x"));
-							animal.setLast_y(result.getInt("last_y"));
-							animal.setLast_z(result.getInt("last_z"));
+							animal.setX(result.getInt("last_x"));
+							animal.setY(result.getInt("last_y"));
+							animal.setZ(result.getInt("last_z"));
 							animal.setAlive(result.getBoolean("alive"));
 							animal.setMaxhp(result.getDouble("maxhp"));
 							animal.setColor(result.getString("color"));
@@ -158,6 +144,7 @@ public class Database {
 									entities.put(animal.getUniqueId(), animal);
 									reverseKeys.put(animal.getUniqueId(), owner.getUniqueId());
 									keys.get(owner.getUniqueId()).add(animal);
+									entitiesId.put(animal.getId(), animal);
 								}
 								else
 								{ Messenger.warn("Warning: An animal could not be loaded because the owner is not in the owners hashmap! (AnimalId: " +animal.getId()+ ") (OwnerId: " +owner.getId() +")"); }
@@ -250,6 +237,7 @@ public class Database {
 						entities.put(animal.getUniqueId(), animal);
 						reverseKeys.put(animal.getUniqueId(), owner.getUniqueId());
 						keys.get(owner.getUniqueId()).add(animal);
+						entitiesId.put(animal.getId(), animal);
 						
 						Integer id = (Integer) connection.getValue("SELECT id FROM ap_entities WHERE uuid='"+animal.getUniqueId()+"';", "id", true);
 						animal.setId(id);
@@ -275,23 +263,30 @@ public class Database {
 	}
 	
 	private String getInsertQuery(Animal animal) {
-		String Query = "INSERT INTO ap_entities (`owner`, `animaltype`, `last_x`, `last_y`, `last_z`, `alive`, `nametag`, `maxhp`, "
+		String Query = "INSERT INTO `ap_entities` (`owner`, `animaltype`, `last_x`, `last_y`, `last_z`, `alive`, `nametag`, `maxhp`, "
 				 + "`deathcause`, `color`, `armor`, `horse_jumpstrength`, `horse_style`, `horse_variant`, `uuid`) "
-				 + "VALUES ("+animal.getOwner()+", '"+animal.getAnimaltype().toString()+"', "+animal.getLast_x()+", "+animal.getLast_y()+", "
-				 		 + ""+animal.getLast_z()+", "+animal.isAlive()+", '"+animal.getNametag()+"', "+animal.getMaxhp()+", "
+				 + "VALUES ("+animal.getOwner()+", '"+animal.getAnimaltype().toString()+"', "+animal.getX()+", "+animal.getY()+", "
+				 		 + ""+animal.getZ()+", "+animal.isAlive()+", '"+animal.getNametag()+"', "+animal.getMaxhp()+", "
 				 		 + "'"+animal.getDeathcauseToString()+"', '"+animal.getColorToString()+"', '"+animal.getArmor()+"', "+animal.getHorse_jumpstrength()+", "
 				 		 + "'"+animal.getHorse_styleToString()+"', '"+animal.getHorse_variantToString()+"', '"+animal.getUniqueId()+"')"
-				 + "ON DUPLICATE KEY UPDATE owner="+animal.getOwner()+", last_x="+animal.getLast_x()+", last_y="+animal.getLast_y()+", "
-				 		 + "last_z="+animal.getLast_z()+", alive="+animal.isAlive()+", nametag='"+animal.getNametag()+"', "
+				 + "ON DUPLICATE KEY UPDATE owner="+animal.getOwner()+", last_x="+animal.getX()+", last_y="+animal.getY()+", "
+				 		 + "last_z="+animal.getZ()+", alive="+animal.isAlive()+", nametag='"+animal.getNametag()+"', "
 				 		 + "deathcause='"+animal.getDeathcauseToString()+"', color='"+animal.getColorToString()+"', armor='"+animal.getArmor().toString()+"';";
 		return Query;
 	}
 	
 	private String getUpdateQuery(Animal animal) {
-		String Query = "UPDATE ap_entities SET owner="+animal.getOwner()+", last_x="+animal.getLast_x()+", last_y="+animal.getLast_y()+", "
-			     + "last_z="+animal.getLast_z()+", alive="+animal.isAlive()+", nametag='"+animal.getNametag()+"', "
-				 + "deathcause='"+animal.getDeathcauseToString()+"', color='"+animal.getColorToString()+"', armor='"+animal.getArmor().toString()+"' "
-			     + "WHERE id="+animal.getId()+";";
+		String Query = "UPDATE `ap_entities` SET "
+			         + "`owner`=" + animal.getOwner()                           + ", "
+			         + "`last_x`=" + animal.getX()                              + ", "
+			         + "`last_y`=" + animal.getY()                              + ", "
+			         + "`last_z`=" + animal.getZ()                              + ", "
+			         + "`alive`=" + animal.isAlive()                            + ", "
+			         + "`nametag`='" + animal.getNametag()                      + "', "
+			         + "`deathcause`='" + animal.getDeathcauseToString()        + "', '"
+			         + "`color`='" + animal.getColorToString()                  + "', '"
+			         + "`armor`='" + animal.getArmor()                          + "' "
+			         + "WHERE `id` = " + animal.getId() + ";";
 		return Query;
 	}
 
@@ -307,14 +302,23 @@ public class Database {
 
 		try {
 			/* Query zum updaten/inserten aufbauen */
-			String Query = "UPDATE `ap_entities` "
-					     + "SET `owner`="+animal.getOwner()+",`animaltype`='"+animal.getAnimaltype()+"',`last_x`="+animal.getLast_x()+","
-					     + "`last_y`="+animal.getLast_y()+",`last_z`="+animal.getLast_z()+", `alive`="+animal.isAlive()+","
-					     + "`nametag`='"+animal.getNametag()+"',`maxhp`="+animal.getMaxhp()+",`deathcause`='"+animal.getDeathcauseToString()+"',"
-					     + "`color`='"+animal.getColorToString()+"',`armor`='"+animal.getArmor()+"', "
-					     + "`horse_jumpstrength`="+animal.getHorse_jumpstrength()+",`horse_style`='"+animal.getHorse_styleToString()+"',"
-					     + "`horse_variant`='"+animal.getHorse_variantToString()+"',`uuid`='"+animal.getUniqueId().toString()+"'"
-					     + " WHERE id="+id+";";
+			String Query = "UPDATE `ap_entities` SET "
+					     + "`owner`=" + animal.getOwner()                           + ", "
+					     + "`animaltype`='" + animal.getAnimaltype()                + "', "
+					     + "`last_x`=" + animal.getX()                              + ", "
+					     + "`last_y`=" + animal.getY()                              + ", "
+					     + "`last_z`=" + animal.getZ()                              + ", "
+					     + "`alive`=" + animal.isAlive()                            + ", "
+					     + "`nametag`='" + animal.getNametag()                      + "', "
+					     + "`maxhp`=" + animal.getMaxhp()                           + ", "
+					     + "`deathcause`='" + animal.getDeathcauseToString()        + "', "
+					     + "`color`='" + animal.getColorToString()                  + "', "
+					     + "`armor`='" + animal.getArmor()                          + "', "
+					     + "`horse_jumpstrength`=" + animal.getHorse_jumpstrength() + ", "
+					     + "`horse_style`='" + animal.getHorse_styleToString()      + "', "
+					     + "`horse_variant`='" + animal.getHorse_variantToString()  + "', "
+					     + "`uuid`='" + animal.getUniqueId().toString()             + "' "
+					     + "WHERE `id` = " + id + ";";
 
 			/* Query ausf�hren und das Ergebnis returnen */
 			if(connection.execute(Query, plugin.isDebugging())) {
@@ -349,7 +353,7 @@ public class Database {
 
 		try {
 			/* Query zum updaten/inserten aufbauen */
-			String Query = "DELETE FROM `ap_entities` WHERE id="+animal.getId()+";";
+			String Query = "DELETE FROM `ap_entities` WHERE `id` = "+animal.getId()+";";
 
 			CraftoPlayer owner = CraftoPlayer.getPlayer(animal.getOwner());
 			if (owner != null && keys.containsKey(owner.getUniqueId())) {
@@ -357,6 +361,7 @@ public class Database {
 				entities.remove(animal.getUniqueId());
 				reverseKeys.remove(animal.getUniqueId());
 				keys.get(owner.getUniqueId()).remove(animal);
+				entitiesId.remove(animal.getId());
 			}
 			if (plugin.getQueue().isRunning()) { this.plugin.getQueue().insertQuery(Query); }
 			else { this.connection.execute(Query, true); }
@@ -377,6 +382,20 @@ public class Database {
 
 		if (entities.containsKey(uuid)) {
 			return entities.get(uuid);
+		}
+		return null;
+	}
+	
+	/**
+	 * Gibt das Animal mit der angegeben Id zur�ck.
+	 * @param id - Die Datenbank-ID, nach der gesucht wird.
+	 * @return Gibt das Animal wieder, oder null, falls keins gefunden wurde.
+	 */
+	public Animal getAnimal(Integer id) {
+		if (id == null) { return null; }
+
+		if (entitiesId.containsKey(id)) {
+			return entities.get(id);
 		}
 		return null;
 	}

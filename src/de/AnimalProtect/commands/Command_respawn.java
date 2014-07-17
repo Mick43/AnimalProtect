@@ -21,7 +21,6 @@ import org.bukkit.entity.Horse.Color;
 import org.bukkit.entity.Horse.Variant;
 import org.bukkit.inventory.ItemStack;
 
-import craftoplugin.core.CraftoMessenger;
 import craftoplugin.core.database.CraftoPlayer;
 import de.AnimalProtect.AnimalProtect;
 import de.AnimalProtect.Messenger;
@@ -45,6 +44,8 @@ public class Command_respawn implements CommandExecutor {
 	}
 	
 	public static void runCommand(CommandSender cs, String[] args) { // respawnanimal <name> <id> <flags>
+		if (plugin == null) { Messenger.sendMessage(cs, "§cFehler: Der Befehl konnte nicht ausgeführt werden."); return; }
+		
 		/* Datenbank-Verbindung aufbauen, falls nicht vorhanden. */
 		if (plugin.getDatenbank().isConnected())
 		{ plugin.getDatenbank().connect(); }
@@ -124,8 +125,8 @@ public class Command_respawn implements CommandExecutor {
 			}
 		}
 		
-		if (owner == null) { CraftoMessenger.sendMessage(cs, "§cFehler: Es wurde kein Spieler angegeben!"); return; }
-		if (!idFlag && !startFlag && !endFlag) { CraftoMessenger.sendMessage(cs, "§cFehler: Es wurde kein Start oder Endpunkt festgelegt!"); }
+		if (owner == null) { Messenger.sendMessage(cs, "§cFehler: Es wurde kein Spieler angegeben!"); return; }
+		if (!idFlag && !startFlag && !endFlag) { Messenger.sendMessage(cs, "§cFehler: Es wurde kein Start oder Endpunkt festgelegt!"); }
 		
 		/* Den angegebenen Spieler ermitteln */
 		if (isUUID(args[0])) { cOwner = CraftoPlayer.getPlayer(UUID.fromString(owner)); }
@@ -193,7 +194,7 @@ public class Command_respawn implements CommandExecutor {
 		Entity entity = null;
 				
 		if (locationFlag) { 
-			Location loc = new Location(sender.getWorld(), animal.getLast_x(), animal.getLast_y(), animal.getLast_z());
+			Location loc = new Location(sender.getWorld(), animal.getX(), animal.getY(), animal.getZ());
 			entity = sender.getWorld().spawnEntity(loc, animal.getAnimaltype().getEntity());
 		}
 		else { entity = sender.getWorld().spawnEntity(sender.getLocation(), animal.getAnimaltype().getEntity()); }

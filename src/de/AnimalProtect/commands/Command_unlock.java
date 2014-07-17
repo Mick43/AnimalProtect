@@ -27,6 +27,8 @@ public class Command_unlock implements CommandExecutor {
 	}
 	
 	public static void runCommand(CommandSender cs, String[] args) {
+		if (plugin == null) { Messenger.sendMessage(cs, "§cFehler: Der Befehl konnte nicht ausgeführt werden."); return; }
+		
 		/* Datenbank-Verbindung aufbauen, falls nicht vorhanden. */
 		if (plugin.getDatenbank().isConnected())
 		{ plugin.getDatenbank().connect(); }

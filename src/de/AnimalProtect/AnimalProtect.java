@@ -3,14 +3,11 @@ package de.AnimalProtect;
 /* Java Imports */
 import java.util.UUID;
 
-
-
 /* Bukkit Imports */
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.plugin.java.JavaPlugin;
-
-
 
 /* AnimalProtect - Command Imports */
 import de.AnimalProtect.commands.Command_animalprotect;
@@ -29,6 +26,7 @@ import de.AnimalProtect.listeners.DeathEventListener;
 import de.AnimalProtect.listeners.InteractEventListener;
 import de.AnimalProtect.listeners.DamageEventListener;
 import de.AnimalProtect.listeners.LeashEventListener;
+import de.AnimalProtect.listeners.PrismEventListener;
 import de.AnimalProtect.listeners.VehicleEventListener;
 
 /**
@@ -124,18 +122,28 @@ public class AnimalProtect extends JavaPlugin {
 			this.getCommand("respawnanimal").setExecutor(new Command_respawn(this));
 			this.getCommand("tpanimal").setExecutor(new Command_teleport(this));
 			this.getCommand("unlockanimal").setExecutor(new Command_unlock(this));
-			this.getCommand("animalinfo").setExecutor(new Command_info(this));		}
+			this.getCommand("animalinfo").setExecutor(new Command_info(this));
+			
+			if (Bukkit.getServer().getPluginManager().isPluginEnabled("Prism")) {
+				new PrismEventListener(this);
+			}
+		}
 		catch (Exception e) { Messenger.exception("AnimalProtect.java/initializeCommands", "Failed to initialize some commands.", e); }
 	}
 	
 	private void initializeTask() {
-		Messenger.log("Loading task...");
-		
-		try {
-			this.task = new QueueTask(this, database.getConnection());
-			this.task.start();
+		if (this.getConfig().getBoolean("settings.use-queue-task")) {
+			Messenger.log("Loading task...");
+			
+			try {
+				this.task = new QueueTask(this);
+				this.task.start();
+			}
+			catch (Exception e) { 
+				Messenger.exception("AnimalProtect.java/initializeTask", "Failed to initialize the task.", e);
+				try { this.task = new QueueTask(this); } catch (Exception e1) { }
+			}
 		}
-		catch (Exception e) { Messenger.exception("AnimalProtect.java/initializeTask", "Failed to initialize the task.", e); }
 	}
 
 	/**

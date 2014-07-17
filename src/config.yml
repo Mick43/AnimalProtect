@@ -1,11 +1,7 @@
-database:
-  hostname: 'localhost'
-  username: 'username'
-  password: 'password'
-  dbname: 'localhost'
-  port: '3306'
 settings:
   max_entities_for_player: 25
+  use-queue-task: true
+  queue-tick-delay: 200
   debug-messages: true
 messages:
   LOCK_SUCCESS: '%aDas Tier wurde erfolgreich gesichert.'
@@ -24,9 +20,9 @@ messages:
   ANIMAL_RESPAWNED: '%aDas Tier wurde erfolgreich respawned.'
   ANIMAL_SUCESS_UNPROTECT: '%aDas Tier wurde erfolgreich entsichert.'
   ANIMAL_FAILED_UNPROTECT: '%cFehler: Das Tier konnte nicht entsichert werden.'
-  ANIMAL_ALIVE: '%aALIVE'
-  ANIMAL_DEAD: '%cDEAD'
-  ANIMAL_MISSING: '%cMISSING'
+  ANIMAL_ALIVE: '%a+'
+  ANIMAL_DEAD: '%4-'
+  ANIMAL_MISSING: '%c-'
   
   QUEUE_STARTED: '%eDie Queue ist zurzeit aktiv.'
   QUEUE_STOPPED: '%eDie Queue ist zurzeit deaktiviert.'

@@ -30,6 +30,8 @@ public class Command_teleport implements CommandExecutor {
 	}
 	
 	public static void runCommand(CommandSender cs, String[] args) {
+		if (plugin == null) { Messenger.sendMessage(cs, "§cFehler: Der Befehl konnte nicht ausgeführt werden."); return; }
+		
 		/* Datenbank-Verbindung aufbauen, falls nicht vorhanden. */
 		if (plugin.getDatenbank().isConnected())
 		{ plugin.getDatenbank().connect(); }
@@ -60,7 +62,7 @@ public class Command_teleport implements CommandExecutor {
 		
 		if (animal == null) { Messenger.sendMessage(cs, "ANIMAL_NOT_FOUND"); return; }
 		
-		Location loc = new Location(sender.getWorld(), animal.getLast_x(), animal.getLast_y(), animal.getLast_z());
+		Location loc = new Location(sender.getWorld(), animal.getX(), animal.getY(), animal.getZ());
 		
 		for (Entity entity : sender.getWorld().getEntities()) {
 			if (entity.getUniqueId().equals(animal.getUniqueId())) {

@@ -23,7 +23,6 @@ import craftoplugin.core.database.CraftoPlayer;
 
 /* AnimalProtect Imports */
 import de.AnimalProtect.AnimalProtect;
-import de.AnimalProtect.Database;
 
 public class Animal implements Comparable<Animal> {
 	
@@ -57,25 +56,6 @@ public class Animal implements Comparable<Animal> {
 		this.created_at = new Timestamp(new Date().getTime());
 		this.updateAnimal(entity);
 	}
-	public Animal(AnimalProtect plugin, Integer owner, AnimalType animaltype, Integer last_x, Integer last_y, Integer last_z, Boolean alive, Double maxhp,
-				  String color, AnimalArmor armor, Double horse_jumpstrength, Style horse_style, AnimalVariant horse_variant, UUID uuid) {
-		
-		this.plugin = plugin;
-		this.owner = owner;
-		this.animaltype = animaltype;
-		this.last_x = last_x;
-		this.last_y = last_y;
-		this.last_z = last_z;
-		this.alive = alive;
-		this.maxhp = maxhp;
-		this.color = color;
-		this.armor = armor;
-		this.horse_jumpstrength = horse_jumpstrength;
-		this.horse_style = horse_style;
-		this.horse_variant = horse_variant;
-		this.uuid = uuid;
-		this.created_at = new Timestamp(new Date().getTime());
-	}
 	
 	/**
 	 * Speichert alle Werte des Tieres in die Datenbank.
@@ -85,12 +65,8 @@ public class Animal implements Comparable<Animal> {
 	public boolean saveToDatabase(Boolean log) {
 		if (plugin == null) { return false; }
 		
-		Database database = plugin.getDatenbank();
-		if (database.insertAnimal(this)) {
-			return true;
-		}
-		
-		return false;
+		if (plugin.getDatenbank().insertAnimal(this)) { return true; }
+		else { return false; }
 	}
 	
 	/**
@@ -101,10 +77,10 @@ public class Animal implements Comparable<Animal> {
 	public boolean loadFromDatabase(UUID uuid) {
 		if (plugin == null) { return false; }
 		
-		Database database = plugin.getDatenbank();
-		Animal animal = database.getAnimal(uuid);
+		Animal animal = plugin.getDatenbank().getAnimal(uuid);
 		
 		if (animal != null) {
+			this.id = animal.id;
 			this.owner = animal.owner;
 			this.animaltype = animal.animaltype;
 			this.last_x = animal.last_x;
@@ -152,15 +128,12 @@ public class Animal implements Comparable<Animal> {
 		}
 		else if (entity.getType().equals(EntityType.HORSE)) {
 			Horse horse = (Horse) entity;
-			if (horse.getInventory().getArmor().equals(new ItemStack(Material.DIAMOND_BARDING))) {
-				this.armor = AnimalArmor.DIAMOND;
-			}
-			else if (horse.getInventory().getArmor().equals(new ItemStack(Material.GOLD_BARDING))) {
-				this.armor = AnimalArmor.GOLD;
-			}
-			else if (horse.getInventory().getArmor().equals(new ItemStack(Material.IRON_BARDING))) {
-				this.armor = AnimalArmor.IRON;
-			}
+			if (horse.getInventory().getArmor().equals(new ItemStack(Material.DIAMOND_BARDING))) 
+			{ this.armor = AnimalArmor.DIAMOND; }
+			else if (horse.getInventory().getArmor().equals(new ItemStack(Material.GOLD_BARDING))) 
+			{ this.armor = AnimalArmor.GOLD;}
+			else if (horse.getInventory().getArmor().equals(new ItemStack(Material.IRON_BARDING))) 
+			{ this.armor = AnimalArmor.IRON; }
 			
 			this.horse_style = horse.getStyle();
 			this.horse_variant = AnimalVariant.valueOf(horse.getVariant().toString());
@@ -180,56 +153,41 @@ public class Animal implements Comparable<Animal> {
 			
 			return true;
 		}
-		catch (Exception e) { }
-		
-		return false;
+		catch (Exception e) { return false; }
 	}
 	
 	/**
-	 * @return Die Id des Tieres.
+	 * @return Die Datenbank-Id des Tieres.
 	 */
-	public Integer getId() {
-		return id;
-	}
+	public Integer getId() { return id; }
 	/**
 	 * @return Die CraftoPlayer-Id des Besitzers.
 	 */
-	public Integer getOwner() {
-		return owner;
-	}
+	public Integer getOwner() { return owner; }
 	/**
 	 * @return Der Typ des Tieres.
+	 * @see AnimalType
 	 */
-	public AnimalType getAnimaltype() {
-		return animaltype;
-	}
+	public AnimalType getAnimaltype() { return animaltype; }
 	/**
 	 * @return Die letzte bekannte x-Position
 	 */
-	public Integer getLast_x() {
-		return last_x;
-	}
+	public Integer getX() { return last_x; }
 	/**
 	 * @return Die letzte bekannte y-Position
 	 */
-	public Integer getLast_y() {
-		return last_y;
-	}
+	public Integer getY() { return last_y; }
 	/**
 	 * @return Die letzte bekannte z-Position
 	 */
-	public Integer getLast_z() {
-		return last_z;
-	}
+	public Integer getZ() { return last_z; }
 	/**
 	 * @return Gibt False aus, falls bekannt ist, dass das Tier tot ist.
 	 */
-	public Boolean isAlive() {
-		return alive;
-	}
+	public Boolean isAlive() { return alive; }
 	public String isAliveAsString() {
-		if (alive) { return ChatColor.GREEN + "ALIVE"; }
-		else { return ChatColor.RED + "MISSING"; }
+		if (alive) { return ChatColor.GREEN + "+"; }
+		else { return ChatColor.RED + "-"; }
 	}
 	/**
 	 * @return Gibt den Nametag des Tieres aus.
@@ -248,9 +206,7 @@ public class Animal implements Comparable<Animal> {
 	/**
 	 * @return Der Grund, warum das Tier getötet wurde.
 	 */
-	public DamageCause getDeathcause() {
-		return deathcause;
-	}
+	public DamageCause getDeathcause() { return deathcause; }
 	/**
 	 * @return Der Grund, warum das Tier getötet wurde.
 	 */
@@ -261,9 +217,7 @@ public class Animal implements Comparable<Animal> {
 	/**
 	 * @return Die Farbe des Tieres.
 	 */
-	public String getColor() {
-		return color;
-	}
+	public String getColor() { return color; }
 	/**
 	 * @return Die Farbe des Tieres.
 	 */
@@ -274,21 +228,15 @@ public class Animal implements Comparable<Animal> {
 	/**
 	 * @return Die Rüstung des Tieres.
 	 */
-	public AnimalArmor getArmor() {
-		return armor;
-	}
+	public AnimalArmor getArmor() { return armor; }
 	/**
 	 * @return Die Sprungstärke des Pferdes.
 	 */
-	public Double getHorse_jumpstrength() {
-		return horse_jumpstrength;
-	}
+	public Double getHorse_jumpstrength() { return horse_jumpstrength; }
 	/**
 	 * @return Der Style des Pferdes.
 	 */
-	public Style getHorse_style() {
-		return horse_style;
-	}
+	public Style getHorse_style() { return horse_style; }
 	/**
 	 * @return Der Style des Pferdes
 	 */
@@ -299,9 +247,7 @@ public class Animal implements Comparable<Animal> {
 	/**
 	 * @return Die Variante des Pferdes
 	 */
-	public AnimalVariant getHorse_variant() {
-		return horse_variant;
-	}
+	public AnimalVariant getHorse_variant() { return horse_variant; }
 	/**
 	 * @return Die Variante des Pferdes
 	 */
@@ -312,141 +258,104 @@ public class Animal implements Comparable<Animal> {
 	/**
 	 * @return Die UniqueId des Tieres.
 	 */
-	public UUID getUniqueId() {
-		return uuid;
-	}
+	public UUID getUniqueId() { return uuid; }
 	/**
 	 * @return Gibt aus, wann das Tier protected wurde.
 	 */
-	public Timestamp getCreated_at() {
-		return created_at;
-	}
+	public Timestamp getCreated_at() { return created_at; }
 	/**
 	 * Setzt die Id auf den angegebenen Wert.
 	 * @param id - Die neue Id des Tieres.
 	 */
-	public void setId(Integer id) {
-		this.id = id;
-	}
+	public void setId(Integer id) { this.id = id; }
 	/**
 	 * Ändert den Owner auf einen neuen Owner.
 	 * @param Die Id des neuen Owners.
 	 */
-	public void setOwner(Integer owner) {
-		this.owner = owner;
-	}
+	public void setOwner(Integer owner) { this.owner = owner; }
 	/**
 	 * Ändert den Typ des Tieres.
 	 * @param animaltype - Der neue AnimalType.
 	 */
-	public void setAnimaltype(AnimalType animaltype) {
-		this.animaltype = animaltype;
-	}
+	public void setAnimaltype(AnimalType animaltype) { this.animaltype = animaltype; }
 	/**
 	 * Setzt die letzte bekannte X-Position auf den neuen Wert.
 	 * @param last_x - Die X-Koordinate
 	 */
-	public void setLast_x(Integer last_x) {
-		this.last_x = last_x;
-	}
+	public void setX(Integer last_x) { this.last_x = last_x; }
 	/**
 	 * Setzt die letzte bekannte Y-Position auf den neuen Wert.
 	 * @param last_y - Die Y-Koordinate
 	 */
-	public void setLast_y(Integer last_y) {
-		this.last_y = last_y;
-	}
+	public void setY(Integer last_y) { this.last_y = last_y; }
 	/**
 	 * Setzt die letzte bekannte Z-Position auf den neuen Wert.
 	 * @param last_z - Die Z-Koordinate
 	 */
-	public void setLast_z(Integer last_z) {
-		this.last_z = last_z;
-	}
+	public void setZ(Integer last_z) { this.last_z = last_z; }
 	/**
 	 * Ändert den Lebens-Status des Tieres.
 	 * @param alive - Der neue Status
 	 */
-	public void setAlive(Boolean alive) {
-		this.alive = alive;
-	}
+	public void setAlive(Boolean alive) { this.alive = alive; }
 	/**
 	 * Ändert den Nametag des Tieres.
 	 * @param nametag - Der neue Nametag
 	 */
-	public void setNametag(String nametag) {
-		this.nametag = nametag;
-	}
+	public void setNametag(String nametag) { this.nametag = nametag; }
 	/**
 	 * Ändert die maximale HP des Tieres.
 	 * @param maxhp - Die neuen maximalen HP.
 	 */
-	public void setMaxhp(Double maxhp) {
-		this.maxhp = maxhp;
-	}
+	public void setMaxhp(Double maxhp) { this.maxhp = maxhp; }
 	/**
 	 * Ändert die Angabe, warum das Tier gestorben ist.
 	 * @param deathcause - der Todesgrund.
+	 * @see DamageCause
 	 */
-	public void setDeathcause(DamageCause deathcause) {
-		this.deathcause = deathcause;
-	}
+	public void setDeathcause(DamageCause deathcause) { this.deathcause = deathcause; }
 	/**
 	 * Ändert die Farbe des Tieres.
 	 * @param color - Die neue Farbe des Tieres.
 	 */
-	public void setColor(String color) {
-		this.color = color;
-	}
+	public void setColor(String color) { this.color = color;}
 	/**
 	 * Ändert die Rüstung des Tieres.
 	 * @param armor - Die neue Rüstung
+	 * @see AnimalArmor
 	 */
-	public void setArmor(AnimalArmor armor) {
-		this.armor = armor;
-	}
+	public void setArmor(AnimalArmor armor) { this.armor = armor; }
 	/**
 	 * Ändert die Sprungstärke des Pferdes.
 	 * @param horse_jumpstrength - Die neue Sprungstärke
 	 */
-	public void setHorse_jumpstrength(Double horse_jumpstrength) {
-		this.horse_jumpstrength = horse_jumpstrength;
-	}
+	public void setHorse_jumpstrength(Double horse_jumpstrength) { this.horse_jumpstrength = horse_jumpstrength; }
 	/**
 	 * Ändert den Style des Pferdes.
 	 * @param horse_style - Der Style des Pferdes.
 	 */
-	public void setHorse_style(Style horse_style) {
-		this.horse_style = horse_style;
-	}
+	public void setHorse_style(Style horse_style) { this.horse_style = horse_style; }
 	/**
 	 * Ändert die Variante des Pferdes.
 	 * @param horse_variant - Die Variante des Pferdes.
 	 */
-	public void setHorse_variant(AnimalVariant horse_variant) {
-		this.horse_variant = horse_variant;
-	}
+	public void setHorse_variant(AnimalVariant horse_variant) { this.horse_variant = horse_variant; }
 	/**
 	 * Ändert die UniqueId des Tieres.
 	 * @param uuid - Die neue UniqueId
 	 */
-	public void setUniqueId(UUID uuid) {
-		this.uuid = uuid;
-	}
+	public void setUniqueId(UUID uuid) { this.uuid = uuid; }
 	/**
 	 * Setzt das Erstelldatum auf einen neuen Timestamp.
 	 * @param created_at - Das neue Erstelldatum
 	 */
-	public void setCreated_at(Timestamp created_at) {
-		this.created_at = created_at;
-	}
+	public void setCreated_at(Timestamp created_at) { this.created_at = created_at; }
 	
 	@Override
 	public int compareTo(Animal animal) {
 		if (animal == null) { return 1; }
-		else if (this.getCreated_at().after(animal.getCreated_at())) {
-			return 1;
-		}
+		else if (this.getCreated_at().after(animal.getCreated_at())) 
+		{ return 1; }
 		return -1;
 	}
 }

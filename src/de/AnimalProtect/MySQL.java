@@ -67,7 +67,7 @@ public class MySQL {
         try {
             Class.forName("com.mysql.jdbc.Driver");
             plugin.getLogger().info("[MySQL/openConnection] Connecting to jdbc:mysql://" + this.hostname + ":" + this.port + "/" + this.database + " ...");
-            connection = DriverManager.getConnection("jdbc:mysql://" + this.hostname + ":" + this.port + "/" + this.database, this.user, this.password);
+            connection = DriverManager.getConnection("jdbc:mysql://" + this.hostname + ":" + this.port + "/" + this.database + "?allowMultiQueries=true", this.user, this.password);
         } 
         catch (SQLException e)
         { plugin.getLogger().log(Level.SEVERE, "[MySQL] Could not connect to MySQL server! because: " + e.getMessage()); } 

@@ -7,6 +7,7 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 
 import craftoplugin.core.database.CraftoPlayer;
+import craftoplugin.utility.CraftoTime;
 import de.AnimalProtect.AnimalProtect;
 import de.AnimalProtect.Messenger;
 import de.AnimalProtect.structs.Animal;
@@ -27,6 +28,8 @@ public class Command_info implements CommandExecutor {
 	}
 
 	public static void runCommand(CommandSender cs, String[] args) {
+		if (plugin == null) { Messenger.sendMessage(cs, "§cFehler: Der Befehl konnte nicht ausgeführt werden."); return; }
+		
 		/* Datenbank-Verbindung aufbauen, falls nicht vorhanden. */
 		if (plugin.getDatenbank().isConnected())
 		{ plugin.getDatenbank().connect(); }
@@ -58,7 +61,7 @@ public class Command_info implements CommandExecutor {
 		if (animal != null) {
 			CraftoPlayer owner = plugin.getDatenbank().getOwner(animal.getUniqueId());
 			if (owner != null)
-			{ Messenger.sendMessage(sender, "§eDas Tier wurde von §6"+owner.getName()+"§e gesichert."); }
+			{ Messenger.sendMessage(sender, "§eDas Tier wurde von §6"+owner.getName()+"§e am §6"+CraftoTime.getTime("dd.MM.yyyy", animal.getCreated_at())+" gesichert."); }
 			else { 
 				Messenger.sendMessage(cs, "ANIMAL_OWNER_UNKNOWN");
 				Messenger.error("Error: Failed to find the owner of an entity! (Command_animalinfo.java/runCommand) (AnimalId="+animal.getId()+")");

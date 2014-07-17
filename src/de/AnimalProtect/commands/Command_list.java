@@ -14,6 +14,7 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 
 import craftoplugin.core.database.CraftoPlayer;
+import craftoplugin.utility.CraftoTime;
 import de.AnimalProtect.AnimalProtect;
 import de.AnimalProtect.Messenger;
 import de.AnimalProtect.structs.Animal;
@@ -34,6 +35,8 @@ public class Command_list implements CommandExecutor {
 	}
 	
 	public static void runCommand(CommandSender cs, String[] args) {
+		if (plugin == null) { Messenger.sendMessage(cs, "§cFehler: Der Befehl konnte nicht ausgeführt werden."); return; }
+		
 		/* Datenbank-Verbindung aufbauen, falls nicht vorhanden. */
 		if (!plugin.getDatenbank().isConnected())
 		{ plugin.getDatenbank().connect(); }
@@ -96,8 +99,9 @@ public class Command_list implements CommandExecutor {
 		{ Messenger.sendMessage(cs, "PAGE_NOT_EXIST"); return; }
 		
 		/* Listenanfang schicken */
-		Messenger.help(cs, "Liste der Tiere von "+cPlayer.getName()+" ("+page+"/"+pages+")");
-		Messenger.sendMessage(cs, "§7§oInsgesamte Anzahl an Tieren: " +animals.size());
+		//Messenger.help(cs, "Liste der Tiere von "+cPlayer.getName()+" ("+page+"/"+pages+")");
+		//Messenger.sendMessage(cs, "§7§oInsgesamte Anzahl an Tieren: " +animals.size());
+		Messenger.messageHeader(cs, "Liste der Tiere von " +cPlayer.getName()+" ("+page+"/"+pages+", insg. "+animals.size()+" Tiere)");
 		
 		HashMap<UUID, Entity> entities = new HashMap<UUID, Entity>();
 		for (Entity entity : Bukkit.getServer().getWorlds().get(0).getEntities()) {
@@ -106,18 +110,12 @@ public class Command_list implements CommandExecutor {
 		
 		for (int i=page*10-10; i<page*10 && i<animals.size(); i++) {
 			Animal animal = animals.get(i);
-			Integer x = animal.getLast_x();
-			Integer y = animal.getLast_y();
-			Integer z = animal.getLast_z();
 			String status = animal.isAliveAsString(); // ALIVE // DEAD
 			Boolean found = false;
 			
 			if (entities.containsKey(animal.getUniqueId())) {
 				Entity entity = entities.get(animal.getUniqueId());
 				if (!entity.isDead()) {
-					x = entity.getLocation().getBlockX();
-					y = entity.getLocation().getBlockY();
-					z = entity.getLocation().getBlockZ();
 					animal.setAlive(true);
 					status = Messenger.parseMessage("ANIMAL_ALIVE"); // "§aALIVE";
 				}
@@ -129,14 +127,11 @@ public class Command_list implements CommandExecutor {
 				found = true;
 			}
 			else {
-				Bukkit.getServer().getWorlds().get(0).loadChunk(animal.getLast_x(), animal.getLast_z());
-				Chunk chunk = Bukkit.getServer().getWorlds().get(0).getChunkAt(animal.getLast_x(), animal.getLast_z());
+				Bukkit.getServer().getWorlds().get(0).loadChunk(animal.getX(), animal.getZ());
+				Chunk chunk = Bukkit.getServer().getWorlds().get(0).getChunkAt(animal.getX(), animal.getZ());
 				for (Entity entity : chunk.getEntities()) {
 					if (entity.getUniqueId().equals(animal.getUniqueId())) {
 						if (!entity.isDead()) {
-							x = entity.getLocation().getBlockX();
-							y = entity.getLocation().getBlockY();
-							z = entity.getLocation().getBlockZ();
 							animal.setAlive(true);
 							status = Messenger.parseMessage("ANIMAL_ALIVE"); // "§aALIVE";
 						}
@@ -154,13 +149,14 @@ public class Command_list implements CommandExecutor {
 			
 			if (!found && animal.isAlive()) { status = Messenger.parseMessage("ANIMAL_MISSING"); } // "§cMISSING";
 			
-			String Message = "§6"+i+". §e";
-			Message += animal.getAnimaltype() + " - ";
-			Message += "[§6" +x+ "§e";
-			Message += ", §6" +y+ "§e";
-			Message += ", §6" +z+ "§e] ";
-			Message += "['§6"+animal.getNametag()+"§e'] ";
-			Message += "["+status+"§e]";
+			String Message = " " + status + " ";
+			Message += "§3" + animal.getAnimaltype().toString() + " ";
+			
+			if (animal.getNametag() != null || !animal.getNametag().equalsIgnoreCase("") && !animal.getNametag().isEmpty())
+			{ Message += "§fnamed '§3" + animal.getNametag() + "§f' "; }
+			
+			Message += "§flocked at §3" + CraftoTime.getTime("dd.MM.yyyy") + "§f ";
+			Message += "§7("+animals.indexOf(animal)+")";
 			
 			Messenger.sendMessage(cs, Message);
 		}

@@ -13,7 +13,7 @@ commands:
    ap:
       description: Gesamtuebersicht aller AnimalProtect-Befehle.
       usage: Schreibe /ap <befehl>
-      permission: animalprotect.protect
+      permission: animalprotect.default
       permission-message: 'Du hast nicht genuegend Rechte fuer diesen Befehl.'
       aliases: [animalprotect]
    lockanimal:
@@ -21,42 +21,43 @@ commands:
       usage: Schreibe /lockanimal
       permission: animalprotect.lock
       permission-message: 'Du hast nicht genuegend Rechte fuer diesen Befehl.'
-      aliases: [protectanimal]
+      aliases: [protectanimal, animallock, la, al]
    unlockanimal:
       description: Entsichert das Tier.
       usage: Schreibe /unlockanimal
-      permission: animalprotect.protect
+      permission: animalprotect.default
       permission-message: 'Du hast nicht genuegend Rechte fuer diesen Befehl.'
+      aliases: [unprotectanimal, animalunlock, ua, au]
    animalinfo:
       description: Gibt Informationen uber das ausgewaehlte Tier aus.
       usage: Schreibe /animalinfo
-      permission: animalprotect.protect
+      permission: animalprotect.default
       permission-message: 'Du hast nicht genuegend Rechte fuer diesen Befehl.'
-      aliases: [lockinfo]
+      aliases: [lockinfo, li]
    listanimals:
       description: Listet alle Tiere die der Person gehoeren auf.
       usage: Schreibe /listanimals [owner] [seite]
       permission: animalprotect.admin
       permission-message: 'Du hast nicht genuegend Rechte fuer diesen Befehl.'
-      aliases: [locklist]
+      aliases: [locklist, animallist]
    respawnanimal:
       description: Spawnt das ausgewaehlte Tier neu.
       usage: Schreibe /respawnanimal [p:<owner>] [id:<animal-id>] [start:<start-id>] [end:<end-id>] [-missing] [-location]
       permission: animalprotect.admin
       permission-message: 'Du hast nicht genuegend Rechte fuer diesen Befehl.'
-      aliases: [lockrespawn]
+      aliases: [lockrespawn, lr]
    tpanimal:
       description: Teleportiert dich zu einem Tier.
       usage: Schreibe /tpanimal [owner] [id]
       permission: animalprotect.admin
       permission-message: 'Du hast nicht genuegend Rechte fuer diesen Befehl.'
-      aliases: [locktp]
+      aliases: [locktp, ltp]
    animaldebug:
       description: Gibt Debug-Informationen ueber das Plugin aus.
       usage: Schreibe /animaldebug
       permission: animalprotect.admin
       permission-message: 'Du hast nicht genuegend Rechte fuer diesen Befehl.'
-      aliases: [lockdebug]
+      aliases: [lockdebug, ld]
    animalqueue:
       description: Gibt Debug-Informationen ueber die Queue des Plugins aus.
       usage: Schreibe /animalqueue [start/stop]
@@ -66,11 +67,11 @@ commands:
    lockedanimals:
       description: Gibt die Anzahl der Locks ueber einen Spieler aus.
       usage: Schreibe /lockedanimals <spieler>
-      permission: animalprotect.protect
+      permission: animalprotect.default
       permission-message: 'Du hast nicht genuegend Rechte fuer diesen Befehl.'
       aliases: [locklimit]
 permissions:
-  animalprotect.protect:
+  animalprotect.default:
     default: true
     description: Erlaubt dem Spieler allgemeine AnimalProtect-Befehle zu nutzen.
   animalprotect.lock:
