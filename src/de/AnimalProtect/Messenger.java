@@ -4,12 +4,16 @@ package de.AnimalProtect;
 import java.util.UUID;
 import java.util.logging.Level;
 
-
 /* Bukkit Imports */
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+
+/* CraftoPlugin Imports */
+import craftoplugin.core.CraftoMessenger;
+import craftoplugin.utility.CraftoFile;
+import craftoplugin.utility.CraftoTime;
 
 public class Messenger {
 	
@@ -384,5 +388,22 @@ public class Messenger {
 			warn(" -> " +s.getClassName()+"/"+s.getMethodName()+"() -> Line: "+s.getLineNumber());
 		}
 		warn("-------------------------- Exception Stacktrace End --------------------------");
+		
+		try {
+			CraftoFile file = new CraftoFile(CraftoFile.getExceptionPath() + "/animalprotect-"+CraftoTime.getFullTime());
+			file.writeLine("---------------------------- "+ConsolePrefix+" Exception! ------------------------");
+			file.writeLine("An Exception occured in animalprotect/" + Source);
+			file.writeLine("More Information: " + Information);
+			file.writeLine("Exception: " + e.getClass().getName());
+			file.writeLine("Time: " + CraftoTime.getFullTime());
+			file.writeLine("---------------------------- Exception Stacktrace ----------------------------");
+			for (StackTraceElement s : e.getStackTrace()) {
+				file.writeLine(" -> " +s.getClassName()+"/"+s.getMethodName()+"() -> Line: "+s.getLineNumber());
+			}
+			file.writeLine("-------------------------- Exception Stacktrace End --------------------------");
+			try { file.saveFile(); } 
+			catch (Exception e2) { CraftoMessenger.exception("CraftoMessenger/exception", "Failed to save an exception file", e2, false); }
+		}
+		catch (Exception e1) { CraftoMessenger.log("Failed to save an exception file for animalprotect :("); }
 	}
 }
