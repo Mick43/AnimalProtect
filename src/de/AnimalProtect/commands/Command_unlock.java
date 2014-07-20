@@ -13,31 +13,22 @@ import de.AnimalProtect.structs.Animal;
 
 public class Command_unlock implements CommandExecutor {
 	
-	private static AnimalProtect plugin;
+	private AnimalProtect plugin;
 	
 	public Command_unlock(AnimalProtect plugin) {
-		Command_unlock.plugin = plugin;
+		this.plugin = plugin;
 	}
 
 	@Override
 	public boolean onCommand(CommandSender cs, Command cmd, String label, String[] args) {
-		if (!plugin.isEnabled()) { return false; }
-		Command_unlock.runCommand(cs, args);
-		return true;
-	}
-	
-	public static void runCommand(CommandSender cs, String[] args) {
-		if (plugin == null) { Messenger.sendMessage(cs, "§cFehler: Der Befehl konnte nicht ausgeführt werden."); return; }
+		if (plugin == null || !plugin.isEnabled()) { Messenger.sendMessage(cs, "§cFehler: Der Befehl konnte nicht ausgeführt werden."); return true; }
 		
 		/* Datenbank-Verbindung aufbauen, falls nicht vorhanden. */
 		if (plugin.getDatenbank().isConnected())
 		{ plugin.getDatenbank().connect(); }
 		
 		/* Prüfen ob der Sender ein Spieler ist */
-		if (!(cs instanceof Player)) {
-			Messenger.sendMessage(cs, "SENDER_NOT_PLAYER");
-			return;
-		}
+		if (!(cs instanceof Player)) { Messenger.sendMessage(cs, "SENDER_NOT_PLAYER"); return true; }
 		
 		/* Variablen bereitstellen */
 		Player sender = (Player)cs;
@@ -45,23 +36,17 @@ public class Command_unlock implements CommandExecutor {
 		Entity entity = plugin.getSelectedAnimal(sender.getUniqueId());
 		
 		/* Variablen überprüfen */
-		if (entity == null) {
-			Messenger.sendMessage(cs, "SELECTED_NONE");
-			return;
-		}
-		else if (player == null) {
-			Messenger.sendMessage(cs, "PLAYEROBJECT_NOT_FOUND");
-		}
+		if (entity == null) { Messenger.sendMessage(cs, "SELECTED_NONE"); return true; }
+		else if (player == null) { Messenger.sendMessage(cs, "PLAYEROBJECT_NOT_FOUND"); return true; }
 		
 		Animal animal = plugin.getDatenbank().getAnimal(entity.getUniqueId());
 		
-		if (animal == null) {
-			Messenger.sendMessage(cs, "ANIMAL_NOT_FOUND");
-		}
+		if (animal == null) { Messenger.sendMessage(cs, "ANIMAL_NOT_FOUND"); }
 		else {
 			if (plugin.getDatenbank().unlockAnimal(animal)) 
 			{ Messenger.sendMessage(cs, "ANIMAL_SUCESS_UNPROTECT"); }
 			else { Messenger.sendMessage(cs, "ANIMAL_FAILED_UNPROTECT"); }
 		}
+		return true;
 	}
 }

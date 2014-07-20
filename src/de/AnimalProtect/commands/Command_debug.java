@@ -9,20 +9,15 @@ import de.AnimalProtect.Messenger;
 
 public class Command_debug implements CommandExecutor {
 	
-	private static AnimalProtect plugin;
+	private AnimalProtect plugin;
 	
 	public Command_debug(AnimalProtect plugin) {
-		Command_debug.plugin = plugin;
+		this.plugin = plugin;
 	}
 
 	@Override
 	public boolean onCommand(CommandSender cs, Command cmd, String label, String[] args) {
-		Command_debug.runCommand(cs, args);
-		return true;
-	}
-	
-	public static void runCommand(CommandSender cs, String[] args) {
-		if (plugin == null) { Messenger.sendMessage(cs, "§cFehler: Der Befehl konnte nicht ausgeführt werden."); return; }
+		if (plugin == null || !plugin.isEnabled()) { Messenger.sendMessage(cs, "§cFehler: Der Befehl konnte nicht ausgeführt werden."); return true; }
 		
 		if (args.length == 0) {
 			Messenger.messageHeader(cs, "Debug-Informationen:");
@@ -42,14 +37,12 @@ public class Command_debug implements CommandExecutor {
 				Messenger.sendMessage(cs, "§7[§f"+plugin.getDatenbank().getFailedQueries().get(Integer.parseInt(args[0])) + "§7]");
 			}
 		}
+		
+		return true;
 	}
 	
-	private static boolean isNumber(String value) {
-		try {
-			Integer.parseInt(value);
-			return true;
-		}
-		catch (Exception e) { }
-		return false;
+	private boolean isNumber(String value) {
+		try { Integer.parseInt(value); return true; }
+		catch (Exception e) { return false; }
 	}
 }

@@ -14,31 +14,23 @@ import de.AnimalProtect.structs.Animal;
 
 public class Command_info implements CommandExecutor {
 
-	private static AnimalProtect plugin;
+	private AnimalProtect plugin;
 	
 	public Command_info(AnimalProtect plugin) {
-		Command_info.plugin = plugin;
+		this.plugin = plugin;
 	}
 
 	@Override
 	public boolean onCommand(CommandSender cs, Command cmd, String label, String[] args) {
-		if (!plugin.isEnabled()) { return true; }
-		Command_info.runCommand(cs, args);
-		return true;
-	}
-
-	public static void runCommand(CommandSender cs, String[] args) {
-		if (plugin == null) { Messenger.sendMessage(cs, "§cFehler: Der Befehl konnte nicht ausgeführt werden."); return; }
+		if (plugin == null || !plugin.isEnabled()) { Messenger.sendMessage(cs, "§cFehler: Der Befehl konnte nicht ausgeführt werden."); return true; }
 		
 		/* Datenbank-Verbindung aufbauen, falls nicht vorhanden. */
-		if (plugin.getDatenbank().isConnected())
+		if (!plugin.getDatenbank().isConnected())
 		{ plugin.getDatenbank().connect(); }
 		
 		/* Prüfen ob der Sender ein Spieler ist */
-		if (!(cs instanceof Player)) {
-			Messenger.sendMessage(cs, "SENDER_NOT_PLAYER");
-			return;
-		}
+		if (!(cs instanceof Player)) 
+		{ Messenger.sendMessage(cs, "SENDER_NOT_PLAYER"); return true; }
 		
 		/* Variablen bereitstellen */
 		Player sender = (Player)cs;
@@ -46,14 +38,8 @@ public class Command_info implements CommandExecutor {
 		Entity entity = plugin.getSelectedAnimal(sender.getUniqueId());
 		
 		/* Variablen überprüfen */
-		if (entity == null) {
-			Messenger.sendMessage(cs, "SELECTED_NONE");
-			return;
-		}
-		else if (player == null) {
-			Messenger.sendMessage(cs, "PLAYEROBJECT_NOT_FOUND");
-			return;
-		}
+		if (entity == null) { Messenger.sendMessage(cs, "SELECTED_NONE"); return true; }
+		else if (player == null) { Messenger.sendMessage(cs, "PLAYEROBJECT_NOT_FOUND"); return true; }
 		
 		/* Das Animal-Objekt laden */
 		Animal animal = plugin.getDatenbank().getAnimal(entity.getUniqueId());
@@ -67,8 +53,7 @@ public class Command_info implements CommandExecutor {
 				Messenger.error("Error: Failed to find the owner of an entity! (Command_animalinfo.java/runCommand) (AnimalId="+animal.getId()+")");
 			}
 		}
-		else {
-			Messenger.sendMessage(sender, "ANIMAL_NOT_PROTECTED");
-		}
+		else { Messenger.sendMessage(sender, "ANIMAL_NOT_PROTECTED"); }
+		return true;
 	}
 }

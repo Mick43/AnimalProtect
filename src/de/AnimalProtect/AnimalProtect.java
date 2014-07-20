@@ -1,6 +1,7 @@
 package de.AnimalProtect;
 
 /* Java Imports */
+import java.util.HashMap;
 import java.util.UUID;
 
 /* Bukkit Imports */
@@ -40,6 +41,8 @@ public class AnimalProtect extends JavaPlugin {
 	private Database database;
 	private QueueTask task;
 	private Boolean debugmode;
+	private HashMap<UUID, Entity> selectedList;
+	private HashMap<UUID, Long> selectedTime;
 
 	public static AnimalProtect plugin;
 
@@ -74,8 +77,9 @@ public class AnimalProtect extends JavaPlugin {
 	public void onDisable() {
 		this.getDatenbank().closeConnection();
 		this.getDatenbank().clear();
+		this.selectedList.clear();
+		this.selectedTime.clear();
 		try { task.stop(); } catch (Exception e) { Messenger.log("Failed to stop the task."); }
-		InteractEventListener.clearSelections();
 	}
 
 	private void initializeConfig() {
@@ -100,9 +104,11 @@ public class AnimalProtect extends JavaPlugin {
 		Messenger.log("Loading listeners...");
 
 		try {
+			this.selectedList = new HashMap<UUID, Entity>();
+			this.selectedTime = new HashMap<UUID, Long>();
+			this.getServer().getPluginManager().registerEvents(new InteractEventListener(this, selectedList, selectedTime), this);
 			this.getServer().getPluginManager().registerEvents(new DamageEventListener(this), this);
 			this.getServer().getPluginManager().registerEvents(new DeathEventListener(this), this);
-			this.getServer().getPluginManager().registerEvents(new InteractEventListener(this), this);
 			this.getServer().getPluginManager().registerEvents(new LeashEventListener(this), this);
 			this.getServer().getPluginManager().registerEvents(new VehicleEventListener(this), this);
 		}
@@ -197,7 +203,25 @@ public class AnimalProtect extends JavaPlugin {
 	 * @return Das Entity, welches ausgewï¿½hlt wurde, oder null, falls keins ausgewï¿½hlt wurde.
 	 */
 	public Entity getSelectedAnimal(UUID uuid) {
-		return InteractEventListener.getSelected(uuid);
+		return this.selectedList.get(uuid);
+	}
+	
+	/**
+	 * Prüft, ob der Spieler bereits ein Tier ausgewählt hat.
+	 * @param uuid - Die UniqueID des Spielers.
+	 * @return True, wenn der Spieler ein Tier ausgewählt hat.
+	 */
+	public Boolean playerHasSelection(UUID uuid) {
+		return this.selectedList.containsKey(uuid);
+	}
+	
+	/**
+	 * Gibt den Zeitpunkt wieder, an welchem der angegebene Spieler zuletzt ein Tier ausgewählt hat.
+	 * @param uuid - Die UniqueID des Spielers.
+	 * @return Den Zeitpunkt der letzten Selection als Long.
+	 */
+	public Long getLastSelection(UUID uuid) {
+		return this.selectedTime.get(uuid);
 	}
 
 	/**

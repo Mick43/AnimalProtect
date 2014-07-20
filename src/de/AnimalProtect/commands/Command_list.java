@@ -21,21 +21,15 @@ import de.AnimalProtect.structs.Animal;
 
 public class Command_list implements CommandExecutor {
 	
-	private static AnimalProtect plugin;
+	private AnimalProtect plugin;
 	
 	public Command_list(AnimalProtect plugin) {
-		Command_list.plugin = plugin;
+		this.plugin = plugin;
 	}
 
 	@Override
 	public boolean onCommand(CommandSender cs, Command cmd, String label, String[] args) {
-		if (!plugin.isEnabled()) { return true; }
-		Command_list.runCommand(cs, args);
-		return true;
-	}
-	
-	public static void runCommand(CommandSender cs, String[] args) {
-		if (plugin == null) { Messenger.sendMessage(cs, "§cFehler: Der Befehl konnte nicht ausgeführt werden."); return; }
+		if (plugin == null || !plugin.isEnabled()) { Messenger.sendMessage(cs, "§cFehler: Der Befehl konnte nicht ausgeführt werden."); return true; }
 		
 		/* Datenbank-Verbindung aufbauen, falls nicht vorhanden. */
 		if (!plugin.getDatenbank().isConnected())
@@ -51,7 +45,7 @@ public class Command_list implements CommandExecutor {
 		if (args.length == 0) { /*  /listanimals  */
 			if (cs instanceof Player) 
 			{ cPlayer = CraftoPlayer.getPlayer(cs.getName()); }
-			else { Messenger.sendMessage(cs, "TOO_FEW_ARGUMENTS"); return; }
+			else { Messenger.sendMessage(cs, "TOO_FEW_ARGUMENTS"); return true; }
 		}
 		else if (args.length == 1) { /*  /listanimals <args[0]>  */
 			if (isNumber(args[0])) { 
@@ -59,7 +53,7 @@ public class Command_list implements CommandExecutor {
 				
 				if (cs instanceof Player) 
 				{ cPlayer = CraftoPlayer.getPlayer(cs.getName()); }
-				else { Messenger.sendMessage(cs, "NO_GIVEN_PLAYER"); return; }
+				else { Messenger.sendMessage(cs, "NO_GIVEN_PLAYER"); return true; }
 			}
 			else { 
 				if (isUUID(args[0])) { cPlayer = CraftoPlayer.getPlayer(UUID.fromString(args[0])); }
@@ -72,19 +66,19 @@ public class Command_list implements CommandExecutor {
 			
 			if (isNumber(args[1])) 
 			{ page = Integer.parseInt(args[1]);  }
-			else { Messenger.sendMessage(cs, "PAGE_NOT_NUMBER"); return; }
+			else { Messenger.sendMessage(cs, "PAGE_NOT_NUMBER"); return true; }
 		}
-		else { Messenger.sendMessage(cs, "TOO_MANY_ARGUMENTS"); return; }
+		else { Messenger.sendMessage(cs, "TOO_MANY_ARGUMENTS"); return true; }
 		
 		/* Prüfen ob der Spieler gefunden wurde */
 		if (cPlayer.getId() == null)
-		{ Messenger.sendMessage(cs, "PLAYER_NOT_FOUND"); return; }
+		{ Messenger.sendMessage(cs, "PLAYER_NOT_FOUND"); return true; }
 		
 		/* Die Tiere des Spielers laden */
 		animals = plugin.getDatenbank().getAnimals(cPlayer.getUniqueId());
 		
 		if (animals == null || animals.isEmpty())
-		{ Messenger.sendMessage(cs, "PLAYER_NO_LOCKS"); return; }
+		{ Messenger.sendMessage(cs, "PLAYER_NO_LOCKS"); return true; }
 		
 		/* Die Seitenanzahl ausrechnen */
 		Double pagesAsDouble = ((double)animals.size() / (double)10);
@@ -94,9 +88,9 @@ public class Command_list implements CommandExecutor {
 		
 		/* Seitenangabe überprüfen */
 		if (pages == 0)
-		{ Messenger.sendMessage(cs, "PLAYER_NO_LOCKS"); return; }
+		{ Messenger.sendMessage(cs, "PLAYER_NO_LOCKS"); return true; }
 		else if (page > pages)
-		{ Messenger.sendMessage(cs, "PAGE_NOT_EXIST"); return; }
+		{ Messenger.sendMessage(cs, "PAGE_NOT_EXIST"); return true; }
 		
 		/* Listenanfang schicken */
 		//Messenger.help(cs, "Liste der Tiere von "+cPlayer.getName()+" ("+page+"/"+pages+")");
@@ -160,7 +154,7 @@ public class Command_list implements CommandExecutor {
 			
 			Messenger.sendMessage(cs, Message);
 		}
-		
+		return true;
 	}
 	
 	private static boolean isUUID(String value) {
@@ -169,10 +163,7 @@ public class Command_list implements CommandExecutor {
 	}
 	
 	private static boolean isNumber(String value) {
-		try {
-			Integer.parseInt(value);
-			return true;
-		}
+		try { Integer.parseInt(value); return true; }
 		catch (Exception e) { return false; }
 	}
 }

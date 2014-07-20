@@ -30,35 +30,22 @@ import de.AnimalProtect.structs.AnimalType;
 
 public class Command_respawn implements CommandExecutor {
 	
-	private static AnimalProtect plugin;
+	private AnimalProtect plugin;
 	
 	public Command_respawn(AnimalProtect plugin) {
-		Command_respawn.plugin = plugin;
+		this.plugin = plugin;
 	}
 
 	@Override
 	public boolean onCommand(CommandSender cs, Command cmd, String label, String[] args) {
-		if (!plugin.isEnabled()) { return true; }
-		Command_respawn.runCommand(cs, args);
-		return true;
-	}
-	
-	public static void runCommand(CommandSender cs, String[] args) { // respawnanimal <name> <id> <flags>
-		if (plugin == null) { Messenger.sendMessage(cs, "§cFehler: Der Befehl konnte nicht ausgeführt werden."); return; }
+		if (plugin == null || !plugin.isEnabled()) { Messenger.sendMessage(cs, "§cFehler: Der Befehl konnte nicht ausgeführt werden."); return true; }
 		
 		/* Datenbank-Verbindung aufbauen, falls nicht vorhanden. */
-		if (plugin.getDatenbank().isConnected())
+		if (!plugin.getDatenbank().isConnected())
 		{ plugin.getDatenbank().connect(); }
 		
-		if (!(cs instanceof Player)) {
-			Messenger.sendMessage(cs, "SENDER_NOT_PLAYER");
-			return;
-		}
-		
-		if (args.length < 2) {
-			Messenger.sendMessage(cs, "TOO_FEW_ARGUMENTS"); 
-			return;
-		}
+		if (!(cs instanceof Player)) { Messenger.sendMessage(cs, "SENDER_NOT_PLAYER"); return true; }
+		if (args.length < 2) { Messenger.sendMessage(cs, "TOO_FEW_ARGUMENTS"); return true; }
 		
 		/* Variablen bereitstellen */
 		Player sender = (Player)cs;
@@ -88,9 +75,9 @@ public class Command_respawn implements CommandExecutor {
 						endFlag = false;
 						idFlag = true;
 					}
-					else { Messenger.sendMessage(cs, "START_FLAG_ALREADY"); return; }
+					else { Messenger.sendMessage(cs, "START_FLAG_ALREADY"); return true; }
 				}
-				else { Messenger.sendMessage(cs, "ID_NOT_NUMBER"); return; }
+				else { Messenger.sendMessage(cs, "ID_NOT_NUMBER"); return true; }
 			}
 			else if (s.startsWith("start:")) {
 				if (!idFlag) {
@@ -99,9 +86,9 @@ public class Command_respawn implements CommandExecutor {
 						startFlag = true;
 						idFlag = false;
 					}
-					else { Messenger.sendMessage(cs, "START_NOT_NUMBER"); return; }
+					else { Messenger.sendMessage(cs, "START_NOT_NUMBER"); return true; }
 				}
-				else { Messenger.sendMessage(cs, "ID_FLAG_ALREADY"); return; }
+				else { Messenger.sendMessage(cs, "ID_FLAG_ALREADY"); return true; }
 			}
 			else if (s.startsWith("end:")) {
 				if (!idFlag) {
@@ -111,7 +98,7 @@ public class Command_respawn implements CommandExecutor {
 						idFlag = false;
 					}
 				}
-				else { Messenger.sendMessage(cs, "ID_FLAG_ALREADY"); return; }
+				else { Messenger.sendMessage(cs, "ID_FLAG_ALREADY"); return true; }
 			}
 			else if (s.startsWith("-missing")) {
 				missingFlag = true;
@@ -125,14 +112,14 @@ public class Command_respawn implements CommandExecutor {
 			}
 		}
 		
-		if (owner == null) { Messenger.sendMessage(cs, "§cFehler: Es wurde kein Spieler angegeben!"); return; }
+		if (owner == null) { Messenger.sendMessage(cs, "§cFehler: Es wurde kein Spieler angegeben!"); return true; }
 		if (!idFlag && !startFlag && !endFlag) { Messenger.sendMessage(cs, "§cFehler: Es wurde kein Start oder Endpunkt festgelegt!"); }
 		
 		/* Den angegebenen Spieler ermitteln */
 		if (isUUID(args[0])) { cOwner = CraftoPlayer.getPlayer(UUID.fromString(owner)); }
 		else { cOwner = CraftoPlayer.getPlayer(owner); }
 		
-		if (cOwner == null) { Messenger.sendMessage(cs, "PLAYER_NOT_FOUND"); return; }
+		if (cOwner == null) { Messenger.sendMessage(cs, "PLAYER_NOT_FOUND"); return true; }
 		
 		/* Alle Entities in eine ArrayList speichern, damit wir sie später für isMissing() haben */
 		ArrayList<UUID> foundEntities = new ArrayList<UUID>();
@@ -146,9 +133,9 @@ public class Command_respawn implements CommandExecutor {
 		if (idFlag) {
 			Animal animal = plugin.getDatenbank().getAnimals(cOwner.getUniqueId()).get(start);
 			
-			if (animal == null) { Messenger.sendMessage(cs, "ANIMAL_NOT_FOUND"); return; }
-			else if (missingFlag && isMissing(animal, foundEntities)) { Command_respawn.respawnAnimal(animal, cOwner, sender, true, locationFlag); }
-			else if (!missingFlag) { Command_respawn.respawnAnimal(animal, cOwner, sender, true, locationFlag); }
+			if (animal == null) { Messenger.sendMessage(cs, "ANIMAL_NOT_FOUND"); return true; }
+			else if (missingFlag && isMissing(animal, foundEntities)) { this.respawnAnimal(animal, cOwner, sender, true, locationFlag); }
+			else if (!missingFlag) { this.respawnAnimal(animal, cOwner, sender, true, locationFlag); }
 		}
 		else if (startFlag && !endFlag) {
 			for (int i=start; i<plugin.getDatenbank().getAnimals(cOwner.getUniqueId()).size(); i++) { 
@@ -156,10 +143,10 @@ public class Command_respawn implements CommandExecutor {
 				if (foundAnimal == null) { continue; }
 				
 				if(missingFlag && isMissing(foundAnimal, foundEntities)) {
-					Command_respawn.respawnAnimal(foundAnimal, cOwner, sender, true, locationFlag);
+					this.respawnAnimal(foundAnimal, cOwner, sender, true, locationFlag);
 				}
 				else if (!missingFlag) {
-					Command_respawn.respawnAnimal(foundAnimal, cOwner, sender, true, locationFlag);
+					this.respawnAnimal(foundAnimal, cOwner, sender, true, locationFlag);
 				}
 			}
 		}
@@ -173,24 +160,25 @@ public class Command_respawn implements CommandExecutor {
 					if (foundAnimal == null) { continue; }
 					
 					if(missingFlag && isMissing(foundAnimal, foundEntities)) {
-						Command_respawn.respawnAnimal(foundAnimal, cOwner, sender, true, locationFlag);
+						this.respawnAnimal(foundAnimal, cOwner, sender, true, locationFlag);
 					}
 					else if (!missingFlag) {
-						Command_respawn.respawnAnimal(foundAnimal, cOwner, sender, true, locationFlag);
+						this.respawnAnimal(foundAnimal, cOwner, sender, true, locationFlag);
 					}
 				}
 			}
 		}
+		return true;
 	}
 		
-	public static boolean isMissing(Animal animal, ArrayList<UUID> entities) {
+	public boolean isMissing(Animal animal, ArrayList<UUID> entities) {
 		if (animal.isAlive() && !entities.contains(animal.getUniqueId())) {
 			return true;
 		}
 		return false;
 	}
 	
-	public static boolean respawnAnimal(Animal animal, CraftoPlayer owner, Player sender, Boolean response, Boolean locationFlag) {
+	public boolean respawnAnimal(Animal animal, CraftoPlayer owner, Player sender, Boolean response, Boolean locationFlag) {
 		Entity entity = null;
 				
 		if (locationFlag) { 
@@ -247,7 +235,7 @@ public class Command_respawn implements CommandExecutor {
 		return false;
 	}
 	
-	private static boolean isNumber(String value) {
+	private boolean isNumber(String value) {
 		try {
 			Integer.parseInt(value);
 			return true;
@@ -256,7 +244,7 @@ public class Command_respawn implements CommandExecutor {
 		return false;
 	}
 	
-	private static boolean isUUID(String value) {
+	private boolean isUUID(String value) {
 		return value.matches(".*-.*-.*-.*-.*");
 	}
 }

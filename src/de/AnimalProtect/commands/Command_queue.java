@@ -9,24 +9,18 @@ import de.AnimalProtect.Messenger;
 
 public class Command_queue implements CommandExecutor {
 
-	private static AnimalProtect plugin;
+	private AnimalProtect plugin;
 	
 	public Command_queue(AnimalProtect plugin) {
-		Command_queue.plugin = plugin;
+		this.plugin = plugin;
 	}
 
 	@Override
 	public boolean onCommand(CommandSender cs, Command cmd, String label, String[] args) {
-		if (!plugin.isEnabled()) { return true; }
-		Command_queue.runCommand(cs, args);
-		return true;
-	}
-
-	public static void runCommand(CommandSender cs, String[] args) {
-		if (plugin == null) { Messenger.sendMessage(cs, "§cFehler: Der Befehl konnte nicht ausgeführt werden."); return; }
+		if (plugin == null || !plugin.isEnabled()) { Messenger.sendMessage(cs, "§cFehler: Der Befehl konnte nicht ausgeführt werden."); return true; }
 		
 		/* Datenbank-Verbindung aufbauen, falls nicht vorhanden. */
-		if (plugin.getDatenbank().isConnected())
+		if (!plugin.getDatenbank().isConnected())
 		{ plugin.getDatenbank().connect(); }
 		
 		/* Permissions des Spielers überprüfen */
@@ -52,5 +46,6 @@ public class Command_queue implements CommandExecutor {
 			else { Messenger.sendMessage(cs, "UNKNOWN_COMMAND"); }
 		}
 		else { Messenger.sendMessage(cs, "TOO_MANY_ARGUMENTS"); }
+		return true;
 	}
 }

@@ -16,35 +16,22 @@ import de.AnimalProtect.structs.Animal;
 
 public class Command_teleport implements CommandExecutor {
 	
-	private static AnimalProtect plugin;
+	private AnimalProtect plugin;
 	
 	public Command_teleport(AnimalProtect plugin) {
-		Command_teleport.plugin = plugin;
+		this.plugin = plugin;
 	}
 
 	@Override
 	public boolean onCommand(CommandSender cs, Command cmd, String label, String[] args) {
-		if (!plugin.isEnabled()) { return false; }
-		Command_teleport.runCommand(cs, args);
-		return true;
-	}
-	
-	public static void runCommand(CommandSender cs, String[] args) {
-		if (plugin == null) { Messenger.sendMessage(cs, "§cFehler: Der Befehl konnte nicht ausgeführt werden."); return; }
+		if (plugin == null || !plugin.isEnabled()) { Messenger.sendMessage(cs, "§cFehler: Der Befehl konnte nicht ausgeführt werden."); return true; }
 		
 		/* Datenbank-Verbindung aufbauen, falls nicht vorhanden. */
 		if (plugin.getDatenbank().isConnected())
 		{ plugin.getDatenbank().connect(); }
 		
-		if (!(cs instanceof Player)) {
-			Messenger.sendMessage(cs, "SENDER_NOT_PLAYER");
-			return;
-		}
-		
-		if (args.length < 2) {
-			Messenger.sendMessage(cs, "TOO_FEW_ARGUMENTS");
-			return;
-		}
+		if (!(cs instanceof Player)) { Messenger.sendMessage(cs, "SENDER_NOT_PLAYER"); return true; }
+		if (args.length < 2) { Messenger.sendMessage(cs, "TOO_FEW_ARGUMENTS"); return true; }
 		
 		Player sender = (Player)cs;
 		CraftoPlayer player = null;
@@ -53,14 +40,14 @@ public class Command_teleport implements CommandExecutor {
 		if (isUUID(args[0])) { player = CraftoPlayer.getPlayer(UUID.fromString(args[0])); }
 		else { player = CraftoPlayer.getPlayer(args[0]); }
 		
-		if (player == null) { Messenger.sendMessage(cs, "PLAYER_NOT_FOUND"); return; }
-		if (!isNumber(args[1])) { Messenger.sendMessage(cs, "ID_NOT_NUMBER"); return; }
+		if (player == null) { Messenger.sendMessage(cs, "PLAYER_NOT_FOUND"); return true; }
+		if (!isNumber(args[1])) { Messenger.sendMessage(cs, "ID_NOT_NUMBER"); return true; }
 		if (plugin.getDatenbank().getAnimals(player.getUniqueId()).size() <= Integer.parseInt(args[1]))
-		{ Messenger.sendMessage(cs, "ANIMAL_NOT_FOUND"); return; }
+		{ Messenger.sendMessage(cs, "ANIMAL_NOT_FOUND"); return true; }
 		
 		animal = plugin.getDatenbank().getAnimals(player.getUniqueId()).get(Integer.parseInt(args[1]));
 		
-		if (animal == null) { Messenger.sendMessage(cs, "ANIMAL_NOT_FOUND"); return; }
+		if (animal == null) { Messenger.sendMessage(cs, "ANIMAL_NOT_FOUND"); return true; }
 		
 		Location loc = new Location(sender.getWorld(), animal.getX(), animal.getY(), animal.getZ());
 		
@@ -72,18 +59,16 @@ public class Command_teleport implements CommandExecutor {
 		
 		sender.teleport(loc);
 		Messenger.sendMessage(cs, "§eDu hast dich zu den Koordinaten §6"+loc.getBlockX()+"§e, §6"+loc.getBlockY()+"§e, §6"+loc.getBlockZ()+"§e teleportiert.");
+		return true;
 	}
 	
-	private static boolean isUUID(String value) {
+	private boolean isUUID(String value) {
+		if (value.length() != 36) { return false; }
 		return value.matches(".*-.*-.*-.*-.*");
 	}
 	
-	private static boolean isNumber(String value) {
-		try {
-			Integer.parseInt(value);
-			return true;
-		}
-		catch (Exception e) { }
-		return false;
+	private boolean isNumber(String value) {
+		try { Integer.parseInt(value); return true; }
+		catch (Exception e) { return false; }
 	}
 }

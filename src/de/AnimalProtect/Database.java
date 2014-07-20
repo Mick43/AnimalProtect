@@ -395,7 +395,7 @@ public class Database {
 		if (id == null) { return null; }
 
 		if (entitiesId.containsKey(id)) {
-			return entities.get(id);
+			return entitiesId.get(id);
 		}
 		return null;
 	}

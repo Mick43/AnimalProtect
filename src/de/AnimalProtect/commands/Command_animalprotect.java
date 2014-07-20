@@ -19,7 +19,7 @@ public class Command_animalprotect implements CommandExecutor {
 
 	@Override
 	public boolean onCommand(CommandSender cs, Command cmd, String label, String[] args) {
-		if (!plugin.isEnabled()) { return false; }
+		if (plugin == null || !plugin.isEnabled()) { return false; }
 		
 		if (cmd.getName().equalsIgnoreCase("ap") || cmd.getName().equalsIgnoreCase("animalprotect")) { /*  /ap <args0>  */
 			String[] newArgs = args;
@@ -28,32 +28,38 @@ public class Command_animalprotect implements CommandExecutor {
 				for (int i=0; i<newArgs.length; i++) { newArgs[i] = args[i+1]; }
 			}
 			
-			if (args.length < 1) { Command_animalprotect.Command_ShowHelp(cs, newArgs); }
-			else if (args[0].equalsIgnoreCase("help")) { Command_animalprotect.Command_ShowHelp(cs, newArgs); }
-			else if (args[0].equalsIgnoreCase("animaldebug")) { Command_debug.runCommand(cs, newArgs); }
-			else if (args[0].equalsIgnoreCase("listanimals")) { Command_list.runCommand(cs, newArgs); }
-			else if (args[0].equalsIgnoreCase("lockanimal")) { Command_lock.runCommand(cs, newArgs); }
-			else if (args[0].equalsIgnoreCase("lockedanimals")) { Command_limit.runCommand(cs, newArgs); }
-			else if (args[0].equalsIgnoreCase("animalinfo")) { Command_info.runCommand(cs, newArgs); }
-			else if (args[0].equalsIgnoreCase("respawnanimal")) { Command_respawn.runCommand(cs, newArgs); }
-			else if (args[0].equalsIgnoreCase("tpanimal")) { Command_teleport.runCommand(cs, newArgs); }
-			else if (args[0].equalsIgnoreCase("unlockanimal")) { Command_unlock.runCommand(cs, newArgs); }
-			else if (args[0].equalsIgnoreCase("debug")) { Command_debug.runCommand(cs, newArgs); }
-			else if (args[0].equalsIgnoreCase("queue")) { Command_queue.runCommand(cs, newArgs); }
-			else if (args[0].equalsIgnoreCase("list")) { Command_list.runCommand(cs, newArgs); }
-			else if (args[0].equalsIgnoreCase("lock")) { Command_lock.runCommand(cs, newArgs); }
-			else if (args[0].equalsIgnoreCase("limit")) { Command_limit.runCommand(cs, newArgs); }
-			else if (args[0].equalsIgnoreCase("info")) { Command_info.runCommand(cs, newArgs); }
-			else if (args[0].equalsIgnoreCase("respawn")) { Command_respawn.runCommand(cs, newArgs); }
-			else if (args[0].equalsIgnoreCase("tp")) { Command_teleport.runCommand(cs, newArgs); }
-			else if (args[0].equalsIgnoreCase("unlock")) { Command_unlock.runCommand(cs, newArgs); }
-			else if (args[0].equalsIgnoreCase("reload")) { Command_animalprotect.Command_Reload(cs, newArgs); }
-			else { Messenger.sendMessage(cs, "UNKNOWN_COMMAND"); }
+			try {
+				if (args.length < 1) { this.Command_ShowHelp(cs, newArgs); }
+				else if (args[0].equalsIgnoreCase("help")) { this.Command_ShowHelp(cs, newArgs); }
+				else if (args[0].equalsIgnoreCase("animaldebug")) { plugin.getCommand("animaldebug").getExecutor().onCommand(cs, cmd, label, newArgs); }
+				else if (args[0].equalsIgnoreCase("listanimals")) { plugin.getCommand("listanimals").getExecutor().onCommand(cs, cmd, label, newArgs); }
+				else if (args[0].equalsIgnoreCase("lockanimal")) { plugin.getCommand("lockanimal").getExecutor().onCommand(cs, cmd, label, newArgs); }
+				else if (args[0].equalsIgnoreCase("lockedanimals")) {plugin.getCommand("lockedanimals").getExecutor().onCommand(cs, cmd, label, newArgs); }
+				else if (args[0].equalsIgnoreCase("animalinfo")) { plugin.getCommand("animalinfo").getExecutor().onCommand(cs, cmd, label, newArgs); }
+				else if (args[0].equalsIgnoreCase("respawnanimal")) { plugin.getCommand("respawnanimal").getExecutor().onCommand(cs, cmd, label, newArgs); }
+				else if (args[0].equalsIgnoreCase("tpanimal")) { plugin.getCommand("tpanimal").getExecutor().onCommand(cs, cmd, label, newArgs); }
+				else if (args[0].equalsIgnoreCase("unlockanimal")) { plugin.getCommand("unlockanimal").getExecutor().onCommand(cs, cmd, label, newArgs); }
+				else if (args[0].equalsIgnoreCase("debug")) { plugin.getCommand("animaldebug").getExecutor().onCommand(cs, cmd, label, newArgs); }
+				else if (args[0].equalsIgnoreCase("queue")) { plugin.getCommand("animalqueue").getExecutor().onCommand(cs, cmd, label, newArgs); }
+				else if (args[0].equalsIgnoreCase("list")) { plugin.getCommand("listnanimals").getExecutor().onCommand(cs, cmd, label, newArgs); }
+				else if (args[0].equalsIgnoreCase("lock")) { plugin.getCommand("lockanimal").getExecutor().onCommand(cs, cmd, label, newArgs); }
+				else if (args[0].equalsIgnoreCase("limit")) { plugin.getCommand("lockedanimals").getExecutor().onCommand(cs, cmd, label, newArgs); }
+				else if (args[0].equalsIgnoreCase("info")) { plugin.getCommand("animalinfo").getExecutor().onCommand(cs, cmd, label, newArgs); }
+				else if (args[0].equalsIgnoreCase("respawn")) { plugin.getCommand("respawnanimal").getExecutor().onCommand(cs, cmd, label, newArgs); }
+				else if (args[0].equalsIgnoreCase("tp")) { plugin.getCommand("tpanimal").getExecutor().onCommand(cs, cmd, label, newArgs); }
+				else if (args[0].equalsIgnoreCase("unlock")) { plugin.getCommand("unlockanimal").getExecutor().onCommand(cs, cmd, label, newArgs); }
+				else if (args[0].equalsIgnoreCase("reload")) { this.Command_Reload(cs, newArgs); }
+				else { Messenger.sendMessage(cs, "UNKNOWN_COMMAND"); }
+			}
+			catch (Exception e) { 
+				Messenger.sendMessage(cs, "UNKNOWN_COMMAND"); 
+				Messenger.exception("Command_animalprotect.java/onCommand()", "Failed to parse command", e); 
+			}
 		}
 		return true;
 	}
 	
-	public static void Command_ShowHelp(CommandSender cs, String[] args) {
+	public void Command_ShowHelp(CommandSender cs, String[] args) {
 		try {
 			Messenger.help(cs, "HELP_HEADER");
 			Messenger.sendMessage(cs, "HELP_DESC");
@@ -71,11 +77,11 @@ public class Command_animalprotect implements CommandExecutor {
 		}
 		catch (Exception e) {
 			Messenger.sendMessage(cs, "HELP_NOT_AVAILABLE");
-			Messenger.exception("Command_AnimalProtect.java/Command_ShowHelp", "Caught an exception while trying to show someone the help page.", e);
+			Messenger.exception("Command_AnimalProtect.java/Command_ShowHelp()", "Caught an exception while trying to show someone the help page.", e);
 		}
 	}
 	
-	public static void Command_Reload(CommandSender cs, String[] args) {
+	public void Command_Reload(CommandSender cs, String[] args) {
 		if (cs.hasPermission("animalprotect.admin")) {
 			if (args.length == 0) {
 				Bukkit.getServer().getPluginManager().disablePlugin(AnimalProtect.plugin);
@@ -110,7 +116,7 @@ public class Command_animalprotect implements CommandExecutor {
 		else { Messenger.sendMessage(cs, "NO_PERMISSION"); }
 	}
 	
-	private static boolean hasPerm(CommandSender cs, String permission) {
+	private boolean hasPerm(CommandSender cs, String permission) {
 		if (cs instanceof Player) {
 			if (cs.hasPermission(permission)) { return true; }
 			return false;

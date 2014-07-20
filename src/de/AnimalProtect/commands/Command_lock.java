@@ -20,32 +20,24 @@ import de.AnimalProtect.structs.Animal;
 
 public class Command_lock implements CommandExecutor {
 	
-	private static AnimalProtect plugin;
-	private static HashMap<UUID, Long> lockTimes;
+	private AnimalProtect plugin;
+	private HashMap<UUID, Long> lockTimes;
 	
 	public Command_lock(AnimalProtect plugin) {
-		Command_lock.plugin = plugin;
+		this.plugin = plugin;
+		this.lockTimes = new HashMap<UUID, Long>();
 	}
 
 	@Override
 	public boolean onCommand(CommandSender cs, Command cmd, String label, String[] args) {
-		if (!plugin.isEnabled()) { return true; }
-		if (cmd.getName().equalsIgnoreCase("lockanimal")) { Command_lock.runCommand(cs, args); }
-		return true;
-	}
-	
-	public static void runCommand(CommandSender cs, String[] args) {
-		if (plugin == null) { Messenger.sendMessage(cs, "§cFehler: Der Befehl konnte nicht ausgeführt werden."); return; }
+		if (plugin == null || !plugin.isEnabled()) { Messenger.sendMessage(cs, "§cFehler: Der Befehl konnte nicht ausgeführt werden."); return true; }
 		
 		/* Datenbank-Verbindung aufbauen, falls nicht vorhanden. */
-		if (plugin.getDatenbank().isConnected())
+		if (!plugin.getDatenbank().isConnected())
 		{ plugin.getDatenbank().connect(); }
 		
 		/* Prüfen ob der Sender ein Spieler ist */
-		if (!(cs instanceof Player)) {
-			Messenger.sendMessage(cs, "SENDER_NOT_PLAYER");
-			return;
-		}
+		if (!(cs instanceof Player)) { Messenger.sendMessage(cs, "SENDER_NOT_PLAYER"); return true; }
 		
 		if (lockTimes == null) { lockTimes = new HashMap<UUID, Long>(); }
 		
@@ -55,22 +47,13 @@ public class Command_lock implements CommandExecutor {
 		Entity entity = plugin.getSelectedAnimal(sender.getUniqueId());
 		
 		/* Variablen überprüfen */
-		if (entity == null) {
-			Messenger.sendMessage(cs, "SELECTED_NONE");
-			return;
-		}
-		else if (player == null) {
-			Messenger.sendMessage(cs, "PLAYEROBJECT_NOT_FOUND");
-			return;
-		}
+		if (entity == null) { Messenger.sendMessage(cs, "SELECTED_NONE"); return true; }
+		else if (player == null) { Messenger.sendMessage(cs, "PLAYEROBJECT_NOT_FOUND"); return true; }
 		
 		/* Das Animal-Objekt laden */
 		Animal animal = plugin.getDatenbank().getAnimal(entity.getUniqueId());
 		
-		if (animal != null) {
-			Messenger.sendMessage(cs, "ANIMAL_ALREADY_PROTECTED");
-			return;
-		}
+		if (animal != null) { Messenger.sendMessage(cs, "ANIMAL_ALREADY_PROTECTED"); return true; }
 		else {
 			try {
 				if (plugin.getDatenbank().countAnimals(player.getUniqueId()) <= plugin.getConfig().getInt("settings.max_entities_for_player")) {
@@ -126,5 +109,6 @@ public class Command_lock implements CommandExecutor {
 				Messenger.sendMessage(cs, "LOCK_FAILED");
 			}
 		}
+		return true;
 	}
 }
