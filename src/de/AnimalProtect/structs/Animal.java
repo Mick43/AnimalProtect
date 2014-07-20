@@ -28,19 +28,19 @@ public class Animal implements Comparable<Animal> {
 	
 	private final AnimalProtect plugin;
 	
-	private Integer id;
-	private Integer owner;
+	private int id;
+	private int owner;
 	private AnimalType animaltype;
-	private Integer last_x;
-	private Integer last_y;
-	private Integer last_z;
-	private Boolean alive;
+	private int last_x;
+	private int last_y;
+	private int last_z;
+	private boolean alive;
 	private String nametag;
-	private Double maxhp;
+	private double maxhp;
 	private DamageCause deathcause;
 	private String color;
 	private AnimalArmor armor;
-	private Double horse_jumpstrength;
+	private double horse_jumpstrength;
 	private Style horse_style;
 	private AnimalVariant horse_variant; 
 	private UUID uuid;
@@ -163,7 +163,7 @@ public class Animal implements Comparable<Animal> {
 	/**
 	 * @return Die CraftoPlayer-Id des Besitzers.
 	 */
-	public Integer getOwner() { return owner; }
+	public int getOwner() { return owner; }
 	/**
 	 * @return Der Typ des Tieres.
 	 * @see AnimalType
@@ -172,19 +172,19 @@ public class Animal implements Comparable<Animal> {
 	/**
 	 * @return Die letzte bekannte x-Position
 	 */
-	public Integer getX() { return last_x; }
+	public int getX() { return last_x; }
 	/**
 	 * @return Die letzte bekannte y-Position
 	 */
-	public Integer getY() { return last_y; }
+	public int getY() { return last_y; }
 	/**
 	 * @return Die letzte bekannte z-Position
 	 */
-	public Integer getZ() { return last_z; }
+	public int getZ() { return last_z; }
 	/**
 	 * @return Gibt False aus, falls bekannt ist, dass das Tier tot ist.
 	 */
-	public Boolean isAlive() { return alive; }
+	public boolean isAlive() { return alive; }
 	public String isAliveAsString() {
 		if (alive) { return ChatColor.GREEN + "+"; }
 		else { return ChatColor.RED + "-"; }
@@ -199,8 +199,7 @@ public class Animal implements Comparable<Animal> {
 	/**
 	 * @return Die maximale HP des Tieres.
 	 */
-	public Double getMaxhp() {
-		if (maxhp == null) { return 0.0; }
+	public double getMaxhp() {
 		return maxhp;
 	}
 	/**
@@ -232,7 +231,7 @@ public class Animal implements Comparable<Animal> {
 	/**
 	 * @return Die Sprungstärke des Pferdes.
 	 */
-	public Double getHorse_jumpstrength() { return horse_jumpstrength; }
+	public double getHorse_jumpstrength() { return horse_jumpstrength; }
 	/**
 	 * @return Der Style des Pferdes.
 	 */
@@ -272,7 +271,7 @@ public class Animal implements Comparable<Animal> {
 	 * Ändert den Owner auf einen neuen Owner.
 	 * @param Die Id des neuen Owners.
 	 */
-	public void setOwner(Integer owner) { this.owner = owner; }
+	public void setOwner(int owner) { this.owner = owner; }
 	/**
 	 * Ändert den Typ des Tieres.
 	 * @param animaltype - Der neue AnimalType.
@@ -282,22 +281,22 @@ public class Animal implements Comparable<Animal> {
 	 * Setzt die letzte bekannte X-Position auf den neuen Wert.
 	 * @param last_x - Die X-Koordinate
 	 */
-	public void setX(Integer last_x) { this.last_x = last_x; }
+	public void setX(int last_x) { this.last_x = last_x; }
 	/**
 	 * Setzt die letzte bekannte Y-Position auf den neuen Wert.
 	 * @param last_y - Die Y-Koordinate
 	 */
-	public void setY(Integer last_y) { this.last_y = last_y; }
+	public void setY(int last_y) { this.last_y = last_y; }
 	/**
 	 * Setzt die letzte bekannte Z-Position auf den neuen Wert.
 	 * @param last_z - Die Z-Koordinate
 	 */
-	public void setZ(Integer last_z) { this.last_z = last_z; }
+	public void setZ(int last_z) { this.last_z = last_z; }
 	/**
 	 * Ändert den Lebens-Status des Tieres.
 	 * @param alive - Der neue Status
 	 */
-	public void setAlive(Boolean alive) { this.alive = alive; }
+	public void setAlive(boolean alive) { this.alive = alive; }
 	/**
 	 * Ändert den Nametag des Tieres.
 	 * @param nametag - Der neue Nametag
@@ -307,7 +306,7 @@ public class Animal implements Comparable<Animal> {
 	 * Ändert die maximale HP des Tieres.
 	 * @param maxhp - Die neuen maximalen HP.
 	 */
-	public void setMaxhp(Double maxhp) { this.maxhp = maxhp; }
+	public void setMaxhp(double maxhp) { this.maxhp = maxhp; }
 	/**
 	 * Ändert die Angabe, warum das Tier gestorben ist.
 	 * @param deathcause - der Todesgrund.
@@ -329,7 +328,7 @@ public class Animal implements Comparable<Animal> {
 	 * Ändert die Sprungstärke des Pferdes.
 	 * @param horse_jumpstrength - Die neue Sprungstärke
 	 */
-	public void setHorse_jumpstrength(Double horse_jumpstrength) { this.horse_jumpstrength = horse_jumpstrength; }
+	public void setHorse_jumpstrength(double horse_jumpstrength) { this.horse_jumpstrength = horse_jumpstrength; }
 	/**
 	 * Ändert den Style des Pferdes.
 	 * @param horse_style - Der Style des Pferdes.

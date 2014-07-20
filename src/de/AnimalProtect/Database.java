@@ -102,7 +102,7 @@ public class Database {
 	private void loadFromDatabase() {
 		try {
 			if (!isConnected()) { return; }
-			Long loadStart = System.currentTimeMillis();
+			final Long loadStart = System.currentTimeMillis();
 
 			/* Als erstes die CraftoPlayer's laden */
 			if (CraftoPlugin.plugin.getDatenbank().isConnected() && CraftoPlugin.plugin.getDatenbank().getPlayerCount() > 0) {
@@ -114,7 +114,7 @@ public class Database {
 
 
 			/* Dann die Tiere laden */
-			ResultSet result = connection.getResult("SELECT * FROM ap_entities", false, false);
+			final ResultSet result = connection.getResult("SELECT * FROM ap_entities", false, false);
 
 			if (result != null) {
 				try {
@@ -486,8 +486,8 @@ public class Database {
 	 * @param player - Die UniqueID des Spielers.
 	 * @return Die Anzahl.
 	 */
-	public Integer countAnimals(UUID player) {
-		Integer count = 0;
+	public int countAnimals(UUID player) {
+		int count = 0;
 		for(Animal animal : keys.get(player)) {
 			if (animal.isAlive()) {
 				count++;
