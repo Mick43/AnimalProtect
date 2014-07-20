@@ -65,9 +65,9 @@ public class Command_lock implements CommandExecutor {
 								entity.getWorld().playEffect(entity.getLocation(), Effect.SMOKE, 3);
 								entity.getWorld().playEffect(entity.getLocation(), Effect.SMOKE, 5);
 								entity.getWorld().playEffect(entity.getLocation(), Effect.SMOKE, 7);
-								entity.getWorld().playSound(entity.getLocation(), Sound.DOOR_CLOSE, 0.5f, 1.75f);
-								entity.getWorld().playSound(entity.getLocation(), Sound.DOOR_CLOSE, 0.5f, 1.75f);
-								entity.getWorld().playSound(entity.getLocation(), Sound.DOOR_CLOSE, 0.5f, 1.75f);
+								entity.getWorld().playSound(entity.getLocation(), Sound.DOOR_CLOSE, 0.25f, 1.75f);
+								entity.getWorld().playSound(entity.getLocation(), Sound.DOOR_CLOSE, 0.25f, 1.75f);
+								entity.getWorld().playSound(entity.getLocation(), Sound.DOOR_CLOSE, 0.25f, 1.75f);
 								sender.playSound(sender.getLocation(), Sound.DOOR_CLOSE, 0.75f, 1.75f);
 								lockTimes.put(sender.getUniqueId(), System.currentTimeMillis());
 								
@@ -91,9 +91,9 @@ public class Command_lock implements CommandExecutor {
 							entity.getWorld().playEffect(entity.getLocation(), Effect.SMOKE, 3);
 							entity.getWorld().playEffect(entity.getLocation(), Effect.SMOKE, 5);
 							entity.getWorld().playEffect(entity.getLocation(), Effect.SMOKE, 7);
-							entity.getWorld().playSound(entity.getLocation(), Sound.DOOR_CLOSE, 0.5f, 1.75f);
-							entity.getWorld().playSound(entity.getLocation(), Sound.DOOR_CLOSE, 0.5f, 1.75f);
-							entity.getWorld().playSound(entity.getLocation(), Sound.DOOR_CLOSE, 0.5f, 1.75f);
+							entity.getWorld().playSound(entity.getLocation(), Sound.DOOR_CLOSE, 0.25f, 1.75f);
+							entity.getWorld().playSound(entity.getLocation(), Sound.DOOR_CLOSE, 0.25f, 1.75f);
+							entity.getWorld().playSound(entity.getLocation(), Sound.DOOR_CLOSE, 0.25f, 1.75f);
 							sender.playSound(sender.getLocation(), Sound.DOOR_CLOSE, 0.75f, 1.75f);
 							lockTimes.put(sender.getUniqueId(), System.currentTimeMillis());
 						}

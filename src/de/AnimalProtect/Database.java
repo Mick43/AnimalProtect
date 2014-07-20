@@ -282,8 +282,8 @@ public class Database {
 			         + "`last_z`=" + animal.getZ()                              + ", "
 			         + "`alive`=" + animal.isAlive()                            + ", "
 			         + "`nametag`='" + animal.getNametag()                      + "', "
-			         + "`deathcause`='" + animal.getDeathcauseToString()        + "', '"
-			         + "`color`='" + animal.getColorToString()                  + "', '"
+			         + "`deathcause`='" + animal.getDeathcauseToString()        + "', "
+			         + "`color`='" + animal.getColorToString()                  + "', "
 			         + "`armor`='" + animal.getArmor()                          + "' "
 			         + "WHERE `id` = " + animal.getId() + ";";
 		return Query;

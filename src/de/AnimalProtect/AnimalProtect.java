@@ -4,11 +4,13 @@ package de.AnimalProtect;
 import java.util.HashMap;
 import java.util.UUID;
 
+
 /* Bukkit Imports */
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.plugin.java.JavaPlugin;
+
 
 /* AnimalProtect - Command Imports */
 import de.AnimalProtect.commands.Command_animalprotect;
@@ -21,6 +23,7 @@ import de.AnimalProtect.commands.Command_queue;
 import de.AnimalProtect.commands.Command_respawn;
 import de.AnimalProtect.commands.Command_teleport;
 import de.AnimalProtect.commands.Command_unlock;
+import de.AnimalProtect.listeners.ChunkEventListener;
 import de.AnimalProtect.listeners.DeathEventListener;
 
 /* AnimalProtect - Listener Imports */
@@ -111,6 +114,7 @@ public class AnimalProtect extends JavaPlugin {
 			this.getServer().getPluginManager().registerEvents(new DeathEventListener(this), this);
 			this.getServer().getPluginManager().registerEvents(new LeashEventListener(this), this);
 			this.getServer().getPluginManager().registerEvents(new VehicleEventListener(this), this);
+			this.getServer().getPluginManager().registerEvents(new ChunkEventListener(this), this);
 		}
 		catch (Exception e) { Messenger.exception("AnimalProtect.java/initializeListeners", "Failed to initialize some listeners!", e); }
 	}
