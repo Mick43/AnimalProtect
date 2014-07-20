@@ -146,10 +146,11 @@ public class Command_list implements CommandExecutor {
 			String Message = " " + status + " ";
 			Message += "§3" + animal.getAnimaltype().toString() + " ";
 			
-			if (animal.getNametag() != null || !animal.getNametag().equalsIgnoreCase("") && !animal.getNametag().isEmpty())
+			if (animal.getNametag() != null && !animal.getNametag().isEmpty())
 			{ Message += "§fnamed '§3" + animal.getNametag() + "§f' "; }
+			else { Message += "§flocated at §3"+animal.getX()+", "+animal.getY()+", "+animal.getZ()+" "; }
 			
-			Message += "§flocked at §3" + CraftoTime.getTime("dd.MM.yyyy") + "§f ";
+			Message += "§flocked at §3" + CraftoTime.getTime("dd.MM.yyyy", animal.getCreated_at()) + "§f ";
 			Message += "§7("+animals.indexOf(animal)+")";
 			
 			Messenger.sendMessage(cs, Message);
