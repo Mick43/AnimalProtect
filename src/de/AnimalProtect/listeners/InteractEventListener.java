@@ -23,10 +23,10 @@ import de.AnimalProtect.structs.Animal;
 
 public class InteractEventListener implements Listener {
 	
-	private AnimalProtect plugin;
-	private Database database;
-	private HashMap<UUID, Entity> selectedList;
-	private HashMap<UUID, Long> selectedTime;
+	private final AnimalProtect plugin;
+	private final Database database;
+	private final HashMap<UUID, Entity> selectedList;
+	private final HashMap<UUID, Long> selectedTime;
 	
 	public InteractEventListener(AnimalProtect plugin, HashMap<UUID, Entity> list, HashMap<UUID, Long> time) {
 		this.plugin = plugin;

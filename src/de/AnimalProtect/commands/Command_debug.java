@@ -9,7 +9,7 @@ import de.AnimalProtect.Messenger;
 
 public class Command_debug implements CommandExecutor {
 	
-	private AnimalProtect plugin;
+	private final AnimalProtect plugin;
 	
 	public Command_debug(AnimalProtect plugin) {
 		this.plugin = plugin;

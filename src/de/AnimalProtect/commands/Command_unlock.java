@@ -13,7 +13,7 @@ import de.AnimalProtect.structs.Animal;
 
 public class Command_unlock implements CommandExecutor {
 	
-	private AnimalProtect plugin;
+	private final AnimalProtect plugin;
 	
 	public Command_unlock(AnimalProtect plugin) {
 		this.plugin = plugin;

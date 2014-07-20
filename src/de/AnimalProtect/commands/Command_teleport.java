@@ -16,7 +16,7 @@ import de.AnimalProtect.structs.Animal;
 
 public class Command_teleport implements CommandExecutor {
 	
-	private AnimalProtect plugin;
+	private final AnimalProtect plugin;
 	
 	public Command_teleport(AnimalProtect plugin) {
 		this.plugin = plugin;

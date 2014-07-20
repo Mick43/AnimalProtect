@@ -45,14 +45,13 @@ public class Database {
 	* created_at         - (TIMESTAMP)  (NOT NULL) (DEFAULT CURRENT TIMESTAMP)
 	*/
 
-	private AnimalProtect plugin;
-
+	private final AnimalProtect plugin;
 	private final MySQL connection;
 
-	private HashMap<UUID, Animal> entities;        // Tier(UUID)    <-> Tier
-	private HashMap<UUID, ArrayList<Animal>> keys; // Spieler(UUID) <-> List<Tiere>
-	private HashMap<UUID, UUID> reverseKeys;       // Tier(UUID)    <-> Spieler(UUID)
-	private HashMap<Integer, Animal> entitiesId;  // Tier(ID)      <-> Tier
+	private final HashMap<UUID, Animal> entities;        // Tier(UUID)    <-> Tier
+	private final HashMap<UUID, ArrayList<Animal>> keys; // Spieler(UUID) <-> List<Tiere>
+	private final HashMap<UUID, UUID> reverseKeys;       // Tier(UUID)    <-> Spieler(UUID)
+	private final HashMap<Integer, Animal> entitiesId;  // Tier(ID)      <-> Tier
 	
 	/**
 	 * Erstellt eine Datenbank-Instanz von AnimalProtect

@@ -11,7 +11,7 @@ import de.AnimalProtect.Messenger;
 
 public class Command_animalprotect implements CommandExecutor {
 	
-	private AnimalProtect plugin;
+	private final AnimalProtect plugin;
 	
 	public Command_animalprotect(AnimalProtect plugin) {
 		this.plugin = plugin;

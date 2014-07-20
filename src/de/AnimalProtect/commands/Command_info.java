@@ -14,7 +14,7 @@ import de.AnimalProtect.structs.Animal;
 
 public class Command_info implements CommandExecutor {
 
-	private AnimalProtect plugin;
+	private final AnimalProtect plugin;
 	
 	public Command_info(AnimalProtect plugin) {
 		this.plugin = plugin;

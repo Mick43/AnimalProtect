@@ -20,8 +20,8 @@ import de.AnimalProtect.structs.Animal;
 
 public class Command_lock implements CommandExecutor {
 	
-	private AnimalProtect plugin;
-	private HashMap<UUID, Long> lockTimes;
+	private final AnimalProtect plugin;
+	private final HashMap<UUID, Long> lockTimes;
 	
 	public Command_lock(AnimalProtect plugin) {
 		this.plugin = plugin;
@@ -38,8 +38,6 @@ public class Command_lock implements CommandExecutor {
 		
 		/* Prüfen ob der Sender ein Spieler ist */
 		if (!(cs instanceof Player)) { Messenger.sendMessage(cs, "SENDER_NOT_PLAYER"); return true; }
-		
-		if (lockTimes == null) { lockTimes = new HashMap<UUID, Long>(); }
 		
 		/* Variablen bereitstellen */
 		Player sender = (Player)cs;

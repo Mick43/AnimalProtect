@@ -17,9 +17,9 @@ import craftoplugin.utility.CraftoTime;
 
 public class Messenger {
 	
-	private static String Prefix = ChatColor.RESET + "" + ChatColor.GOLD + "AnimalProtect //";
-	private static String ConsolePrefix = "AnimalProtect";
-	private static Boolean Debugging = true;
+	private final static String Prefix = ChatColor.RESET + "" + ChatColor.GOLD + "AnimalProtect //";
+	private final static String ConsolePrefix = "AnimalProtect";
+	private final static Boolean Debugging = true;
 	
 	/**
 	 * Gibt eine Nachricht in der Konsole aus.

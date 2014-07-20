@@ -18,8 +18,8 @@ import de.AnimalProtect.structs.Animal;
 
 public class DeathEventListener implements Listener {
 
-	private AnimalProtect plugin;
-	private Database database;
+	private final AnimalProtect plugin;
+	private final Database database;
 	
 	public DeathEventListener(AnimalProtect plugin) {
 		this.plugin = plugin;

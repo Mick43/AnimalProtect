@@ -26,7 +26,7 @@ import de.AnimalProtect.AnimalProtect;
 
 public class Animal implements Comparable<Animal> {
 	
-	private AnimalProtect plugin;
+	private final AnimalProtect plugin;
 	
 	private Integer id;
 	private Integer owner;

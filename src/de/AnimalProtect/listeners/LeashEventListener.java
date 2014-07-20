@@ -14,8 +14,8 @@ import de.AnimalProtect.Messenger;
 
 public class LeashEventListener implements Listener {
 	
-	private AnimalProtect plugin;
-	private Database database;
+	private final AnimalProtect plugin;
+	private final Database database;
 	
 	public LeashEventListener(AnimalProtect plugin) {
 		this.plugin = plugin;

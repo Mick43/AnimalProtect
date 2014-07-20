@@ -22,10 +22,9 @@ import de.AnimalProtect.structs.Animal;
 
 public class VehicleEventListener implements Listener {
 	
-	private AnimalProtect plugin;
-	private Database database;
-	
-	private HashMap<UUID, Long> exitedAnimals;
+	private final AnimalProtect plugin;
+	private final Database database;
+	private final HashMap<UUID, Long> exitedAnimals;
 	
 	public VehicleEventListener(AnimalProtect plugin) {
 		this.plugin = plugin;

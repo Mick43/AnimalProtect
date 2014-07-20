@@ -25,8 +25,8 @@ import de.AnimalProtect.Messenger;
 
 public class DamageEventListener implements Listener {
 	
-	private AnimalProtect plugin;
-	private Database database;
+	private final AnimalProtect plugin;
+	private final Database database;
 	
 	public DamageEventListener(AnimalProtect plugin) {
 		this.plugin = plugin;

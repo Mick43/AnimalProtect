@@ -30,7 +30,7 @@ import de.AnimalProtect.structs.AnimalType;
 
 public class Command_respawn implements CommandExecutor {
 	
-	private AnimalProtect plugin;
+	private final AnimalProtect plugin;
 	
 	public Command_respawn(AnimalProtect plugin) {
 		this.plugin = plugin;

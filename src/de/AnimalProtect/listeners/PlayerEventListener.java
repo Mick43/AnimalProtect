@@ -14,8 +14,8 @@ import de.AnimalProtect.Messenger;
 
 public class PlayerEventListener implements Listener {
 	
-	private AnimalProtect plugin;
-	private Database database;
+	private final AnimalProtect plugin;
+	private final Database database;
 	
 	public PlayerEventListener(AnimalProtect plugin) {
 		this.plugin = plugin;

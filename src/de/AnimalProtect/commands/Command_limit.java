@@ -13,7 +13,7 @@ import de.AnimalProtect.Messenger;
 
 public class Command_limit implements CommandExecutor {
 	
-	private AnimalProtect plugin;
+	private final AnimalProtect plugin;
 	
 	public Command_limit(AnimalProtect plugin) {
 		this.plugin = plugin;
