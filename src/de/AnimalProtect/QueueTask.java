@@ -96,7 +96,7 @@ public class QueueTask extends BukkitRunnable {
 			}
 			else if (failedQueries > 5) {
 				Messenger.log("Stopped the AnimalProtect-QueueTask for 4 hours because it failed more than 5 queries.");
-				CraftoMessenger.messageStaff("Stopped the AnimalProtect-QueueTask", true);
+				CraftoMessenger.warnStaff("Stopped the AnimalProtect-QueueTask", true);
 				this.rescheduleTask(288000L);
 			}
 		}
