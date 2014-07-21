@@ -1,16 +1,18 @@
 package de.AnimalProtect;
 
 /* Java Imports */
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.UUID;
 
-
 /* Bukkit Imports */
 import org.bukkit.Bukkit;
+import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.plugin.java.JavaPlugin;
-
+import craftoplugin.core.CraftoMessenger;
+import craftoplugin.core.database.CraftoPlayer;
 
 /* AnimalProtect - Command Imports */
 import de.AnimalProtect.commands.Command_animalprotect;
@@ -32,6 +34,8 @@ import de.AnimalProtect.listeners.DamageEventListener;
 import de.AnimalProtect.listeners.LeashEventListener;
 import de.AnimalProtect.listeners.PrismEventListener;
 import de.AnimalProtect.listeners.VehicleEventListener;
+import de.AnimalProtect.structs.Animal;
+import de.AnimalProtect.structs.AnimalType;
 
 /**
  * Das AnimalProtect Plugin
@@ -241,5 +245,80 @@ public class AnimalProtect extends JavaPlugin {
 	 */
 	public QueueTask getQueue() {
 		return task;
+	}
+	
+	public ArrayList<Animal> parseAnimal(CommandSender cs, String[] args) {
+		String playerFlag = null;
+		Integer idFlag = null;
+		AnimalType typeFlag = null;
+		String nameFlag = null;
+		Boolean missingFlag = false;
+		Boolean deadFlag = false;
+		ArrayList<Animal> returnList = new ArrayList<Animal>();
+		
+		for (String arg : args) {
+			if (arg.startsWith("p:"))
+			{ playerFlag = arg.substring(2, arg.length()); }
+			else if (arg.startsWith("id:")) {
+				if (isNumber(arg.substring(3, arg.length())))
+				{ idFlag = Integer.parseInt(arg.substring(3, arg.length())); }
+			}
+			else if (arg.startsWith("type:")) 
+			{ typeFlag = AnimalType.valueOf(arg.substring(5, arg.length())); }
+			else if (arg.startsWith("t:")) 
+			{ typeFlag = AnimalType.valueOf(arg.substring(2, arg.length())); }
+			else if (arg.startsWith("name:"))
+			{ nameFlag = arg.substring(5, arg.length()); }
+			else if (arg.startsWith("nametag:"))
+			{ nameFlag = arg.substring(8, arg.length()); }
+			else if (arg.startsWith("-missing"))
+			{ missingFlag = true; }
+			else if (arg.startsWith("-dead"))
+			{ deadFlag = true; }
+		}
+		
+		if (playerFlag == null) {
+			if (idFlag != null) { returnList.add(this.database.getAnimal(idFlag)); }
+			else { CraftoMessenger.sendMessage(cs, "§cFehler: Es wurde kein Spieler und keine Tierid angegeben."); }
+			return null;
+		}
+		else {
+			CraftoPlayer player = CraftoPlayer.getPlayer(playerFlag);
+			
+			if (player == null) { CraftoMessenger.sendMessage(cs, "§cFehler: Der angegebene Spieler konnte nicht gefunden werden."); return null; }
+			else {
+				ArrayList<Animal> animals = this.database.getAnimals(player.getUniqueId());
+				if (idFlag != null) { returnList.add(animals.get(idFlag)); }
+				else {
+					for (Animal animal : animals) {
+						boolean passed = true;
+						if (typeFlag != null) 
+						{ if (!animal.getAnimaltype().equals(typeFlag)) { passed = false; } }
+						else if (nameFlag != null)
+						{ if (!animal.getNametag().equals(nameFlag)) { passed = false; } }
+						else if (missingFlag) {
+							passed = true;
+							for (Entity e : Bukkit.getServer().getWorlds().get(0).getEntities()) {
+								for (Animal a : animals) {
+									if (a.getUniqueId().equals(e.getUniqueId())) {
+										passed = false;
+									}
+								}
+							}
+						}
+						else if (deadFlag)
+						{ if (animal.isAlive()) { passed = false; } }
+						if (passed) { returnList.add(animal); }
+					}
+				}
+				
+				return returnList;
+			}
+		}
+	}
+	
+	private boolean isNumber(String value) {
+		try { Integer.parseInt(value); return true; }
+		catch (Exception e) { return false; }
 	}
 }
