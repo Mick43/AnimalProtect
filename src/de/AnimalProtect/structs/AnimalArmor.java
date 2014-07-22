@@ -11,16 +11,16 @@ public enum AnimalArmor {
 	private String name;
 	private Material material;
 	
-	private AnimalArmor(String name, Material material) {
+	private AnimalArmor(final String name, final Material material) {
 		this.name = name;
 		this.material = material;
 	}
 	
 	public String getName() {
-		return name;
+		return this.name;
 	}
 	
 	public Material getMaterial() {
-		return material;
+		return this.material;
 	}
 }

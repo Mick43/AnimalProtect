@@ -23,40 +23,40 @@ public class Command_lock implements CommandExecutor {
 	private final AnimalProtect plugin;
 	private final HashMap<UUID, Long> lockTimes;
 	
-	public Command_lock(AnimalProtect plugin) {
+	public Command_lock(final AnimalProtect plugin) {
 		this.plugin = plugin;
 		this.lockTimes = new HashMap<UUID, Long>();
 	}
 
 	@Override
-	public boolean onCommand(CommandSender cs, Command cmd, String label, String[] args) {
-		if (plugin == null || !plugin.isEnabled()) { Messenger.sendMessage(cs, "§cFehler: Der Befehl konnte nicht ausgeführt werden."); return true; }
+	public boolean onCommand(final CommandSender cs, final Command cmd, final String label, final String[] args) {
+		if (this.plugin == null || !this.plugin.isEnabled()) { Messenger.sendMessage(cs, "§cFehler: Der Befehl konnte nicht ausgeführt werden."); return true; }
 		
 		/* Datenbank-Verbindung aufbauen, falls nicht vorhanden. */
-		if (!plugin.getDatenbank().isConnected())
-		{ plugin.getDatenbank().connect(); }
+		if (!this.plugin.getDatenbank().isConnected())
+		{ this.plugin.getDatenbank().connect(); }
 		
 		/* Prüfen ob der Sender ein Spieler ist */
 		if (!(cs instanceof Player)) { Messenger.sendMessage(cs, "SENDER_NOT_PLAYER"); return true; }
 		
 		/* Variablen bereitstellen */
-		Player sender = (Player)cs;
-		CraftoPlayer player = CraftoPlayer.getPlayer(sender.getUniqueId());
-		Entity entity = plugin.getSelectedAnimal(sender.getUniqueId());
+		final Player sender = (Player)cs;
+		final CraftoPlayer player = CraftoPlayer.getPlayer(sender.getUniqueId());
+		final Entity entity = this.plugin.getSelectedAnimal(sender.getUniqueId());
 		
 		/* Variablen überprüfen */
 		if (entity == null) { Messenger.sendMessage(cs, "SELECTED_NONE"); return true; }
 		else if (player == null) { Messenger.sendMessage(cs, "PLAYEROBJECT_NOT_FOUND"); return true; }
 		
 		/* Das Animal-Objekt laden */
-		Animal animal = plugin.getDatenbank().getAnimal(entity.getUniqueId());
+		Animal animal = this.plugin.getDatenbank().getAnimal(entity.getUniqueId());
 		
 		if (animal != null) { Messenger.sendMessage(cs, "ANIMAL_ALREADY_PROTECTED"); return true; }
 		else {
 			try {
-				if (plugin.getDatenbank().countAnimals(player.getUniqueId()) <= plugin.getConfig().getInt("settings.max_entities_for_player")) {
-					if (lockTimes.containsKey(sender.getUniqueId())) {
-						if (lockTimes.get(sender.getUniqueId()) + 5000 < System.currentTimeMillis()) {
+				if (this.plugin.getDatenbank().countAnimals(player.getUniqueId()) <= this.plugin.getConfig().getInt("settings.max_entities_for_player")) {
+					if (this.lockTimes.containsKey(sender.getUniqueId())) {
+						if (this.lockTimes.get(sender.getUniqueId()) + 5000 < System.currentTimeMillis()) {
 							animal = new Animal(AnimalProtect.plugin, player, entity);
 							if(animal.saveToDatabase(true)) { 
 								Messenger.sendMessage(cs, "LOCK_SUCCESS"); 
@@ -69,15 +69,15 @@ public class Command_lock implements CommandExecutor {
 								entity.getWorld().playSound(entity.getLocation(), Sound.DOOR_CLOSE, 0.25f, 1.75f);
 								entity.getWorld().playSound(entity.getLocation(), Sound.DOOR_CLOSE, 0.25f, 1.75f);
 								sender.playSound(sender.getLocation(), Sound.DOOR_CLOSE, 0.75f, 1.75f);
-								lockTimes.put(sender.getUniqueId(), System.currentTimeMillis());
+								this.lockTimes.put(sender.getUniqueId(), System.currentTimeMillis());
 								
 								if (Bukkit.getServer().getPluginManager().isPluginEnabled("Prism"))
-								{ PrismEventListener.logEvent(animal, sender, plugin); }
+								{ PrismEventListener.logEvent(animal, sender, this.plugin); }
 							}
 							else { Messenger.sendMessage(cs, "LOCK_FAILED"); }
 						}
 						else {
-							Integer wait = (int) Math.floor((lockTimes.get(sender.getUniqueId()) + 5000 - System.currentTimeMillis()));
+							Integer wait = (int) Math.floor((this.lockTimes.get(sender.getUniqueId()) + 5000 - System.currentTimeMillis()));
 							wait = wait / 1000;
 							Messenger.sendMessageFailed(cs, "Fehler: Warte noch "+wait+" Sekunden, bevor du das nächste Tier protectest.");
 						}
@@ -95,14 +95,14 @@ public class Command_lock implements CommandExecutor {
 							entity.getWorld().playSound(entity.getLocation(), Sound.DOOR_CLOSE, 0.25f, 1.75f);
 							entity.getWorld().playSound(entity.getLocation(), Sound.DOOR_CLOSE, 0.25f, 1.75f);
 							sender.playSound(sender.getLocation(), Sound.DOOR_CLOSE, 0.75f, 1.75f);
-							lockTimes.put(sender.getUniqueId(), System.currentTimeMillis());
+							this.lockTimes.put(sender.getUniqueId(), System.currentTimeMillis());
 						}
 						else { Messenger.sendMessage(cs, "LOCK_FAILED"); }
 					}
 				}
 				else { Messenger.sendMessage(cs, "MAX_LOCKS_EXCEEDED"); }
 			}
-			catch (Exception e) {
+			catch (final Exception e) {
 				Messenger.exception("Command_lockanimal/runCommand", "No Information available.", e);
 				Messenger.sendMessage(cs, "LOCK_FAILED");
 			}

@@ -11,37 +11,37 @@ public class Command_queue implements CommandExecutor {
 
 	private final AnimalProtect plugin;
 	
-	public Command_queue(AnimalProtect plugin) {
+	public Command_queue(final AnimalProtect plugin) {
 		this.plugin = plugin;
 	}
 
 	@Override
-	public boolean onCommand(CommandSender cs, Command cmd, String label, String[] args) {
-		if (plugin == null || !plugin.isEnabled()) { Messenger.sendMessage(cs, "§cFehler: Der Befehl konnte nicht ausgeführt werden."); return true; }
+	public boolean onCommand(final CommandSender cs, final Command cmd, final String label, final String[] args) {
+		if (this.plugin == null || !this.plugin.isEnabled()) { Messenger.sendMessage(cs, "§cFehler: Der Befehl konnte nicht ausgeführt werden."); return true; }
 		
 		/* Datenbank-Verbindung aufbauen, falls nicht vorhanden. */
-		if (!plugin.getDatenbank().isConnected())
-		{ plugin.getDatenbank().connect(); }
+		if (!this.plugin.getDatenbank().isConnected())
+		{ this.plugin.getDatenbank().connect(); }
 		
 		/* Permissions des Spielers überprüfen */
 		if (!cs.hasPermission("animalprotect.admin")) { Messenger.sendMessage(cs, "NO_PERMISSION"); }
 		
 		/* Die Argumente überprüfen */
 		if (args.length == 0) {
-			if (plugin.getQueue().isRunning()) { Messenger.sendMessage(cs, "QUEUE_STARTED"); }
+			if (this.plugin.getQueue().isRunning()) { Messenger.sendMessage(cs, "QUEUE_STARTED"); }
 			else { Messenger.sendMessage(cs, "QUEUE_STOPPED"); }
 		}
 		else if (args.length == 1) {
 			if (args[0].equalsIgnoreCase("start") || args[0].equalsIgnoreCase("run")) {
-				if (!plugin.getQueue().isRunning()) { Messenger.sendMessage(cs, "QUEUE_START"); plugin.getQueue().start(); }
+				if (!this.plugin.getQueue().isRunning()) { Messenger.sendMessage(cs, "QUEUE_START"); this.plugin.getQueue().start(); }
 				else { Messenger.sendMessage(cs, "QUEUE_ALREADY_STARTED"); }
 			}
 			else if (args[0].equalsIgnoreCase("stop") || args[0].equalsIgnoreCase("pause")) {
-				if (plugin.getQueue().isRunning()) { Messenger.sendMessage(cs, "QUEUE_STOP"); plugin.getQueue().stop(); }
+				if (this.plugin.getQueue().isRunning()) { Messenger.sendMessage(cs, "QUEUE_STOP"); this.plugin.getQueue().stop(); }
 				else { Messenger.sendMessage(cs, "QUEUE_ALREADY_STOPPED"); }
 			}
 			else if (args[0].equalsIgnoreCase("size")) {
-				Messenger.sendMessage(cs, "§eDie Größe der aktuellen AnimalProtect-Queue beträgt " + plugin.getQueue().getSize() + ".");
+				Messenger.sendMessage(cs, "§eDie Größe der aktuellen AnimalProtect-Queue beträgt " + this.plugin.getQueue().getSize() + ".");
 			}
 			else { Messenger.sendMessage(cs, "UNKNOWN_COMMAND"); }
 		}

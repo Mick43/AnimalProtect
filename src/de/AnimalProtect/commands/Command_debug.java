@@ -11,38 +11,38 @@ public class Command_debug implements CommandExecutor {
 	
 	private final AnimalProtect plugin;
 	
-	public Command_debug(AnimalProtect plugin) {
+	public Command_debug(final AnimalProtect plugin) {
 		this.plugin = plugin;
 	}
 
 	@Override
-	public boolean onCommand(CommandSender cs, Command cmd, String label, String[] args) {
-		if (plugin == null || !plugin.isEnabled()) { Messenger.sendMessage(cs, "§cFehler: Der Befehl konnte nicht ausgeführt werden."); return true; }
+	public boolean onCommand(final CommandSender cs, final Command cmd, final String label, final String[] args) {
+		if (this.plugin == null || !this.plugin.isEnabled()) { Messenger.sendMessage(cs, "§cFehler: Der Befehl konnte nicht ausgeführt werden."); return true; }
 		
 		if (args.length == 0) {
 			Messenger.messageHeader(cs, "Debug-Informationen:");
 			if (AnimalProtect.plugin.isEnabled()) { Messenger.messageList(cs, "Plugin aktiviert", "Ja"); }
 			else { Messenger.messageList(cs, "Plugin aktiviert", "Nein"); }
 			
-			Messenger.messageList(cs, "Gesicherte Tiere", "" + plugin.getDatenbank().getLockedAnimals());
+			Messenger.messageList(cs, "Gesicherte Tiere", "" + this.plugin.getDatenbank().getLockedAnimals());
 			
-			if (plugin.getDatenbank().isConnected())
+			if (this.plugin.getDatenbank().isConnected())
 			{ Messenger.messageList(cs, "Datenbank-Verbindung", "Aktiv"); }
 			else { Messenger.messageList(cs, "Datenbank-Verbindung", "Nicht aktiv"); }
 			
-			Messenger.messageList(cs, "Anzahl an fehlgeschlagenen Queries", ""+plugin.getDatenbank().getFailedQueries().size());
+			Messenger.messageList(cs, "Anzahl an fehlgeschlagenen Queries", ""+this.plugin.getDatenbank().getFailedQueries().size());
 		}
 		else {
-			if (isNumber(args[0])) {
-				Messenger.sendMessage(cs, "§7[§f"+plugin.getDatenbank().getFailedQueries().get(Integer.parseInt(args[0])) + "§7]");
+			if (this.isNumber(args[0])) {
+				Messenger.sendMessage(cs, "§7[§f"+this.plugin.getDatenbank().getFailedQueries().get(Integer.parseInt(args[0])) + "§7]");
 			}
 		}
 		
 		return true;
 	}
 	
-	private boolean isNumber(String value) {
+	private boolean isNumber(final String value) {
 		try { Integer.parseInt(value); return true; }
-		catch (Exception e) { return false; }
+		catch (final Exception e) { return false; }
 	}
 }

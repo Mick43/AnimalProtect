@@ -18,7 +18,7 @@ public class QueueTask extends BukkitRunnable {
 	private Integer taskId;
 	private Integer failedQueries;
 	
-	public QueueTask(AnimalProtect plugin) {
+	public QueueTask(final AnimalProtect plugin) {
 		this.plugin = plugin;
 		this.tickDelay = plugin.getConfig().getInt("settings.queue-tick-delay");
 		
@@ -41,16 +41,16 @@ public class QueueTask extends BukkitRunnable {
 	/**
 	 * Fügt eine Query der Queue hinzu.
 	 */
-	public synchronized void insertQuery(String Query) {
+	public synchronized void insertQuery(final String Query) {
 		this.queue += Query + " ";
 		this.queueSize++;
 	}
 	
 	@SuppressWarnings("deprecation")
 	public synchronized void start() {
-		if (!running) {
-			this.taskId = plugin.getServer().getScheduler().scheduleAsyncRepeatingTask(plugin, this, 100, tickDelay); 
-			if (taskId > 0) {
+		if (!this.running) {
+			this.taskId = this.plugin.getServer().getScheduler().scheduleAsyncRepeatingTask(this.plugin, this, 100, this.tickDelay); 
+			if (this.taskId > 0) {
 				this.failedQueries = 0;
 				this.running = true;
 			}
@@ -59,25 +59,25 @@ public class QueueTask extends BukkitRunnable {
 	}
 	
 	public synchronized void stop() {
-		if (running) {
-			if (taskId > 0) { plugin.getServer().getScheduler().cancelTask(taskId); }
+		if (this.running) {
+			if (this.taskId > 0) { this.plugin.getServer().getScheduler().cancelTask(this.taskId); }
 			this.running = false;
 		}
 	}
 	
 	public synchronized boolean isRunning() {
-		return running;
+		return this.running;
 	}
 	
 	public synchronized int getSize() {
-		return queueSize;
+		return this.queueSize;
 	}
 
 	@Override
 	public synchronized void run() {
-		if (running && !queue.isEmpty()) {
+		if (this.running && !this.queue.isEmpty()) {
 			boolean success = false;
-			success = database.execute(queue, true);
+			success = this.database.execute(this.queue, true);
 			
 			if (!success) { this.failedQueries += 1; }
 			else { 
@@ -85,16 +85,16 @@ public class QueueTask extends BukkitRunnable {
 				this.queueSize = 0;
 			}
 			
-			if (failedQueries == 2) {
+			if (this.failedQueries == 2) {
 				this.rescheduleTask(600L);
 			}
-			else if (failedQueries == 3) {
+			else if (this.failedQueries == 3) {
 				this.rescheduleTask(1200L);
 			}
-			else if (failedQueries == 4) {
+			else if (this.failedQueries == 4) {
 				this.rescheduleTask(6000L);
 			}
-			else if (failedQueries > 5) {
+			else if (this.failedQueries > 5) {
 				Messenger.log("Stopped the AnimalProtect-QueueTask for 4 hours because it failed more than 5 queries.");
 				CraftoMessenger.warnStaff("Stopped the AnimalProtect-QueueTask", true);
 				this.rescheduleTask(288000L);
@@ -105,7 +105,8 @@ public class QueueTask extends BukkitRunnable {
 	@SuppressWarnings("deprecation")
 	public synchronized void rescheduleTask(final Long delay) {
 		this.stop();
-		this.plugin.getServer().getScheduler().scheduleAsyncDelayedTask(plugin, new Runnable() 
-		{ public void run() { plugin.getQueue().start(); } }, delay);
+		this.plugin.getServer().getScheduler().scheduleAsyncDelayedTask(this.plugin, new Runnable() 
+		{ @Override
+		public void run() { QueueTask.this.plugin.getQueue().start(); } }, delay);
 	}
 }

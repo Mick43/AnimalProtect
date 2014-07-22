@@ -18,16 +18,16 @@ public enum AnimalType {
 	private String name;
 	private EntityType entity;
 	
-	private AnimalType(String name, EntityType entity) {
+	private AnimalType(final String name, final EntityType entity) {
 		this.name = name;
 		this.entity = entity;
 	}
 	
 	public String getName() {
-		return name;
+		return this.name;
 	}
 	
 	public EntityType getEntity() {
-		return entity;
+		return this.entity;
 	}
 }

@@ -11,26 +11,25 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.plugin.java.JavaPlugin;
+
 import craftoplugin.core.CraftoMessenger;
 import craftoplugin.core.database.CraftoPlayer;
-
 /* AnimalProtect - Command Imports */
 import de.AnimalProtect.commands.Command_animalprotect;
 import de.AnimalProtect.commands.Command_debug;
 import de.AnimalProtect.commands.Command_info;
+import de.AnimalProtect.commands.Command_limit;
 import de.AnimalProtect.commands.Command_list;
 import de.AnimalProtect.commands.Command_lock;
-import de.AnimalProtect.commands.Command_limit;
 import de.AnimalProtect.commands.Command_queue;
 import de.AnimalProtect.commands.Command_respawn;
 import de.AnimalProtect.commands.Command_teleport;
 import de.AnimalProtect.commands.Command_unlock;
 import de.AnimalProtect.listeners.ChunkEventListener;
+import de.AnimalProtect.listeners.DamageEventListener;
 import de.AnimalProtect.listeners.DeathEventListener;
-
 /* AnimalProtect - Listener Imports */
 import de.AnimalProtect.listeners.InteractEventListener;
-import de.AnimalProtect.listeners.DamageEventListener;
 import de.AnimalProtect.listeners.LeashEventListener;
 import de.AnimalProtect.listeners.PrismEventListener;
 import de.AnimalProtect.listeners.VehicleEventListener;
@@ -62,22 +61,22 @@ public class AnimalProtect extends JavaPlugin {
 		AnimalProtect.plugin = this;
 
 		/* Die Config laden */
-		initializeConfig();
+		this.initializeConfig();
 
 		/* Die Datenbank laden */
-		initializeDatabase();
+		this.initializeDatabase();
 
 		/* Die Listener initialisieren */
-		initializeListeners();
+		this.initializeListeners();
 
 		/* Die Commands laden */
-		initializeCommands();
+		this.initializeCommands();
 		
 		/* Den Task laden */
-		initializeTask();
+		this.initializeTask();
 
 		/* Konsole benachrichtigen */
-		Messenger.log("AnimalProtect v" + getDescription().getVersion() + " has been enabled!");
+		Messenger.log("AnimalProtect v" + this.getDescription().getVersion() + " has been enabled!");
 	}
 
 	@Override
@@ -86,19 +85,19 @@ public class AnimalProtect extends JavaPlugin {
 		this.getDatenbank().clear();
 		this.selectedList.clear();
 		this.selectedTime.clear();
-		try { task.stop(); } catch (Exception e) { Messenger.log("Failed to stop the task."); }
+		try { this.task.stop(); } catch (final Exception e) { Messenger.log("Failed to stop the task."); }
 	}
 
 	private void initializeConfig() {
 		Messenger.log("Loading config...");
 
 		try {
-			getConfig().options().copyDefaults(true);
-			saveConfig();
+			this.getConfig().options().copyDefaults(true);
+			this.saveConfig();
 
-			this.debugmode = getConfig().getBoolean("settings.debug-messages");
+			this.debugmode = this.getConfig().getBoolean("settings.debug-messages");
 		}
-		catch (Exception e) { Messenger.exception("AnimalProtect.java/initializeConfig", "Failed to load the config file!", e); }
+		catch (final Exception e) { Messenger.exception("AnimalProtect.java/initializeConfig", "Failed to load the config file!", e); }
 	}
 
 	private void initializeDatabase() {
@@ -113,14 +112,14 @@ public class AnimalProtect extends JavaPlugin {
 		try {
 			this.selectedList = new HashMap<UUID, Entity>();
 			this.selectedTime = new HashMap<UUID, Long>();
-			this.getServer().getPluginManager().registerEvents(new InteractEventListener(this, selectedList, selectedTime), this);
+			this.getServer().getPluginManager().registerEvents(new InteractEventListener(this, this.selectedList, this.selectedTime), this);
 			this.getServer().getPluginManager().registerEvents(new DamageEventListener(this), this);
 			this.getServer().getPluginManager().registerEvents(new DeathEventListener(this), this);
 			this.getServer().getPluginManager().registerEvents(new LeashEventListener(this), this);
 			this.getServer().getPluginManager().registerEvents(new VehicleEventListener(this), this);
 			this.getServer().getPluginManager().registerEvents(new ChunkEventListener(this), this);
 		}
-		catch (Exception e) { Messenger.exception("AnimalProtect.java/initializeListeners", "Failed to initialize some listeners!", e); }
+		catch (final Exception e) { Messenger.exception("AnimalProtect.java/initializeListeners", "Failed to initialize some listeners!", e); }
 	}
 
 	private void initializeCommands() {
@@ -142,7 +141,7 @@ public class AnimalProtect extends JavaPlugin {
 				new PrismEventListener(this);
 			}
 		}
-		catch (Exception e) { Messenger.exception("AnimalProtect.java/initializeCommands", "Failed to initialize some commands.", e); }
+		catch (final Exception e) { Messenger.exception("AnimalProtect.java/initializeCommands", "Failed to initialize some commands.", e); }
 	}
 	
 	private void initializeTask() {
@@ -153,9 +152,9 @@ public class AnimalProtect extends JavaPlugin {
 				this.task = new QueueTask(this);
 				this.task.start();
 			}
-			catch (Exception e) { 
+			catch (final Exception e) { 
 				Messenger.exception("AnimalProtect.java/initializeTask", "Failed to initialize the task.", e);
-				try { this.task = new QueueTask(this); } catch (Exception e1) { }
+				try { this.task = new QueueTask(this); } catch (final Exception e1) { }
 			}
 		}
 	}
@@ -181,7 +180,7 @@ public class AnimalProtect extends JavaPlugin {
 	 * @return True, falls Debugging aktiviert ist.
 	 */
 	public boolean isDebugging() {
-		return debugmode;
+		return this.debugmode;
 	}
 
 	/**
@@ -189,8 +188,8 @@ public class AnimalProtect extends JavaPlugin {
 	 * @param entity - Das Entity welches ï¿½berprï¿½ft wird.
 	 * @return True, falls der EntityType ein AnimalType ist.
 	 */
-	public boolean isAnimal(Entity entity) {
-		EntityType type = entity.getType();
+	public boolean isAnimal(final Entity entity) {
+		final EntityType type = entity.getType();
 		if (type == EntityType.SHEEP
 		||  type == EntityType.PIG
 		||  type == EntityType.COW
@@ -210,7 +209,7 @@ public class AnimalProtect extends JavaPlugin {
 	 * @param uuid - Die UniqueID des Spielers.
 	 * @return Das Entity, welches ausgewï¿½hlt wurde, oder null, falls keins ausgewï¿½hlt wurde.
 	 */
-	public Entity getSelectedAnimal(UUID uuid) {
+	public Entity getSelectedAnimal(final UUID uuid) {
 		return this.selectedList.get(uuid);
 	}
 	
@@ -219,7 +218,7 @@ public class AnimalProtect extends JavaPlugin {
 	 * @param uuid - Die UniqueID des Spielers.
 	 * @return True, wenn der Spieler ein Tier ausgewählt hat.
 	 */
-	public Boolean playerHasSelection(UUID uuid) {
+	public Boolean playerHasSelection(final UUID uuid) {
 		return this.selectedList.containsKey(uuid);
 	}
 	
@@ -228,7 +227,7 @@ public class AnimalProtect extends JavaPlugin {
 	 * @param uuid - Die UniqueID des Spielers.
 	 * @return Den Zeitpunkt der letzten Selection als Long.
 	 */
-	public Long getLastSelection(UUID uuid) {
+	public Long getLastSelection(final UUID uuid) {
 		return this.selectedTime.get(uuid);
 	}
 
@@ -237,30 +236,30 @@ public class AnimalProtect extends JavaPlugin {
 	 * @return Das Database-Objekt von AnimalProtect.
 	 */
 	public Database getDatenbank() {
-		return database;
+		return this.database;
 	}
 	
 	/**
 	 * Gibt den QueueTask zurück, der das Inserten/Updaten/Deleten von Tieren verarbeitet.
 	 */
 	public QueueTask getQueue() {
-		return task;
+		return this.task;
 	}
 	
-	public ArrayList<Animal> parseAnimal(CommandSender cs, String[] args) {
+	public ArrayList<Animal> parseAnimal(final CommandSender cs, final String[] args) {
 		String playerFlag = null;
 		Integer idFlag = null;
 		AnimalType typeFlag = null;
 		String nameFlag = null;
 		Boolean missingFlag = false;
 		Boolean deadFlag = false;
-		ArrayList<Animal> returnList = new ArrayList<Animal>();
+		final ArrayList<Animal> returnList = new ArrayList<Animal>();
 		
-		for (String arg : args) {
+		for (final String arg : args) {
 			if (arg.startsWith("p:"))
 			{ playerFlag = arg.substring(2, arg.length()); }
 			else if (arg.startsWith("id:")) {
-				if (isNumber(arg.substring(3, arg.length())))
+				if (this.isNumber(arg.substring(3, arg.length())))
 				{ idFlag = Integer.parseInt(arg.substring(3, arg.length())); }
 			}
 			else if (arg.startsWith("type:")) 
@@ -283,14 +282,14 @@ public class AnimalProtect extends JavaPlugin {
 			return null;
 		}
 		else {
-			CraftoPlayer player = CraftoPlayer.getPlayer(playerFlag);
+			final CraftoPlayer player = CraftoPlayer.getPlayer(playerFlag);
 			
 			if (player == null) { CraftoMessenger.sendMessage(cs, "§cFehler: Der angegebene Spieler konnte nicht gefunden werden."); return null; }
 			else {
-				ArrayList<Animal> animals = this.database.getAnimals(player.getUniqueId());
+				final ArrayList<Animal> animals = this.database.getAnimals(player.getUniqueId());
 				if (idFlag != null) { returnList.add(animals.get(idFlag)); }
 				else {
-					for (Animal animal : animals) {
+					for (final Animal animal : animals) {
 						boolean passed = true;
 						if (typeFlag != null) 
 						{ if (!animal.getAnimaltype().equals(typeFlag)) { passed = false; } }
@@ -298,8 +297,8 @@ public class AnimalProtect extends JavaPlugin {
 						{ if (!animal.getNametag().equals(nameFlag)) { passed = false; } }
 						else if (missingFlag) {
 							passed = true;
-							for (Entity e : Bukkit.getServer().getWorlds().get(0).getEntities()) {
-								for (Animal a : animals) {
+							for (final Entity e : Bukkit.getServer().getWorlds().get(0).getEntities()) {
+								for (final Animal a : animals) {
 									if (a.getUniqueId().equals(e.getUniqueId())) {
 										passed = false;
 									}
@@ -317,8 +316,8 @@ public class AnimalProtect extends JavaPlugin {
 		}
 	}
 	
-	private boolean isNumber(String value) {
+	private boolean isNumber(final String value) {
 		try { Integer.parseInt(value); return true; }
-		catch (Exception e) { return false; }
+		catch (final Exception e) { return false; }
 	}
 }

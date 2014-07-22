@@ -14,7 +14,6 @@ import org.bukkit.event.player.PlayerInteractEntityEvent;
 
 /* CraftoPlugin Imports */
 import craftoplugin.core.database.CraftoPlayer;
-
 /* AnimalProtect Imports */
 import de.AnimalProtect.AnimalProtect;
 import de.AnimalProtect.Database;
@@ -28,7 +27,7 @@ public class InteractEventListener implements Listener {
 	private final HashMap<UUID, Entity> selectedList;
 	private final HashMap<UUID, Long> selectedTime;
 	
-	public InteractEventListener(AnimalProtect plugin, HashMap<UUID, Entity> list, HashMap<UUID, Long> time) {
+	public InteractEventListener(final AnimalProtect plugin, final HashMap<UUID, Entity> list, final HashMap<UUID, Long> time) {
 		this.plugin = plugin;
 		this.database = plugin.getDatenbank();
 		this.selectedList = list;
@@ -36,22 +35,22 @@ public class InteractEventListener implements Listener {
 	}
 	
 	@EventHandler
-	public void onEntityEvent(PlayerInteractEntityEvent event) {
+	public void onEntityEvent(final PlayerInteractEntityEvent event) {
 		try {
-			if (!plugin.isEnabled() || event.isCancelled()) { return; }
+			if (!this.plugin.isEnabled() || event.isCancelled()) { return; }
 			
 			/* Datenbank-Verbindung aufbauen, falls nicht vorhanden. */
-			if (!database.isConnected()) { database.connect(); }
+			if (!this.database.isConnected()) { this.database.connect(); }
 			
-			if (plugin.isEnabled() && database.isConnected() && !event.isCancelled()) {
+			if (this.plugin.isEnabled() && this.database.isConnected() && !event.isCancelled()) {
 				/* Wenn der Spieler nicht geduckt ist, dann wird returned. */
 				if (!event.getPlayer().isSneaking()) { return; }
 				/* Wenn das Entity kein Tier ist, dann wird returned. */
-				if (!plugin.isAnimal(event.getRightClicked())) { return; }
+				if (!this.plugin.isAnimal(event.getRightClicked())) { return; }
 				
 				/* Die Variablen werden initialisiert. */
-				Player player = event.getPlayer();
-				Entity entity = event.getRightClicked();
+				final Player player = event.getPlayer();
+				final Entity entity = event.getRightClicked();
 				CraftoPlayer owner = null;
 				
 				/* Prüfen ob das ausgewählte Tier bereits vom Spieler ausgewählt ist. */
@@ -62,7 +61,7 @@ public class InteractEventListener implements Listener {
 				}
 				
 				/* Den Owner des Entities festlegen, null falls Entity nicht locked. */
-				owner = database.getOwner(entity.getUniqueId());
+				owner = this.database.getOwner(entity.getUniqueId());
 				
 				/* Wenn das Tier nicht gelockt ist, dann wird der Owner nicht erwähnt. */
 				if (owner == null) {
@@ -110,7 +109,7 @@ public class InteractEventListener implements Listener {
 						/* Wenn seit dem letzten Select 30 Sekunden vergangen sind */
 						if (this.plugin.playerHasSelection(player.getUniqueId())) {
 							if (this.plugin.getLastSelection(player.getUniqueId()) + 60000 < System.currentTimeMillis()) {
-								Animal animal = database.getAnimal(entity.getUniqueId());
+								final Animal animal = this.database.getAnimal(entity.getUniqueId());
 								if (animal != null) { 
 									animal.updateAnimal(entity);
 									animal.saveToDatabase(true);
@@ -118,18 +117,18 @@ public class InteractEventListener implements Listener {
 							}
 						}
 					}
-					catch (Exception e) { Messenger.exception("InteractEventListener.onEntityEvent", "Exception :(", e); }
+					catch (final Exception e) { Messenger.exception("InteractEventListener.onEntityEvent", "Exception :(", e); }
 				}
 				
 				/* Zum Schluss wird bei dem Spieler noch ein Sound abgespielt und sein zuletzt ausgewähltes Tier wird gespeichert. */
 				player.playSound(player.getLocation(), Sound.CLICK, 0.75f, 0.8f);
-				addSelected(player.getUniqueId(), entity);
+				this.addSelected(player.getUniqueId(), entity);
 			}
 		}
-		catch (Exception e) { Messenger.exception("InteractEventListener/onEntityEvent", "Unknown Exception", e); }
+		catch (final Exception e) { Messenger.exception("InteractEventListener/onEntityEvent", "Unknown Exception", e); }
 	}
 	
-	private void addSelected(UUID uuid, Entity entity) {
+	private void addSelected(final UUID uuid, final Entity entity) {
 		this.selectedList.put(uuid, entity);
 		this.selectedTime.put(uuid, System.currentTimeMillis());
 	}

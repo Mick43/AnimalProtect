@@ -4,7 +4,6 @@ package de.AnimalProtect.listeners;
 import java.util.HashMap;
 import java.util.UUID;
 
-
 /* Bukkit Imports */
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
@@ -12,7 +11,6 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.vehicle.VehicleEnterEvent;
 import org.bukkit.event.vehicle.VehicleExitEvent;
-
 
 /* AnimalProtect Imports */
 import de.AnimalProtect.AnimalProtect;
@@ -26,70 +24,70 @@ public class VehicleEventListener implements Listener {
 	private final Database database;
 	private final HashMap<UUID, Long> exitedAnimals;
 	
-	public VehicleEventListener(AnimalProtect plugin) {
+	public VehicleEventListener(final AnimalProtect plugin) {
 		this.plugin = plugin;
 		this.database = plugin.getDatenbank();
 		this.exitedAnimals = new HashMap<UUID, Long>();
 	}
 	
 	@EventHandler
-	public void onVehicleEnter(VehicleEnterEvent event) {
+	public void onVehicleEnter(final VehicleEnterEvent event) {
 		try {
-			if (!plugin.isEnabled() || event.isCancelled()) { return; }
+			if (!this.plugin.isEnabled() || event.isCancelled()) { return; }
 			
 			/* Datenbank-Verbindung aufbauen, falls nicht vorhanden */
-			if (!database.isConnected()) { database.connect(); }
+			if (!this.database.isConnected()) { this.database.connect(); }
 			
 			/* Prüfen ob das Entity ein Tier ist */
-			if (!plugin.isAnimal(event.getVehicle())) { return; }
+			if (!this.plugin.isAnimal(event.getVehicle())) { return; }
 			
 			/* Prüfen ob das Entity, welches auf das Tier steigt, ein Spieler ist */
 			if (!(event.getEntered() instanceof Player)) { return; }
 			
 			/* Variablen bereitstellen */
-			Player player = (Player) event.getEntered();
-			Entity entity = (Entity) event.getVehicle();
+			final Player player = (Player) event.getEntered();
+			final Entity entity = event.getVehicle();
 			
 			/* Prüfen ob das Tier gesichert wurde */
-			if (!database.containsAnimal(entity.getUniqueId())) { return; }
+			if (!this.database.containsAnimal(entity.getUniqueId())) { return; }
 			
 			/* Prüfen ob der Spieler die 'AnimalProtect.Bypass'-Permission hat */
 			if (player.hasPermission("animalprotect.bypass")) { return; }
 			
 			/* Prüfen ob der Spieler der Owner ist */
-			if (!database.getOwner(entity.getUniqueId()).getUniqueId().equals(player.getUniqueId())) {
+			if (!this.database.getOwner(entity.getUniqueId()).getUniqueId().equals(player.getUniqueId())) {
 				event.setCancelled(true);
 			}
 		}
-		catch (Exception e) { Messenger.exception("VehicleEventListener/onVehicleEnter", "Unknown Exception.", e); }
+		catch (final Exception e) { Messenger.exception("VehicleEventListener/onVehicleEnter", "Unknown Exception.", e); }
 	}
 	
 	@EventHandler
-	public void onVehicleExit(VehicleExitEvent event) {
+	public void onVehicleExit(final VehicleExitEvent event) {
 		try {
-			if (!plugin.isEnabled() || event.isCancelled()) { return; }
+			if (!this.plugin.isEnabled() || event.isCancelled()) { return; }
 			
 			/* Datenbank-Verbindung aufbauen, falls nicht vorhanden */
-			if (!database.isConnected()) { database.connect(); }
+			if (!this.database.isConnected()) { this.database.connect(); }
 			
 			/* Prüfen ob das Entity ein Tier ist */
-			if (!plugin.isAnimal(event.getVehicle())) { return; }
+			if (!this.plugin.isAnimal(event.getVehicle())) { return; }
 			
 			/* Prüfen ob das Tier gesichert ist */
-			if (!database.containsAnimal(event.getVehicle().getUniqueId())) { return; }
+			if (!this.database.containsAnimal(event.getVehicle().getUniqueId())) { return; }
 			
 			/* Das Tier updaten, falls 30 Sekunden vergangen sind */
-			if (exitedAnimals.containsKey(event.getVehicle().getUniqueId())) {
-				if (exitedAnimals.get(event.getVehicle().getUniqueId()) + 30000 > System.currentTimeMillis()) {
-					Animal animal = database.getAnimal(event.getVehicle().getUniqueId());
+			if (this.exitedAnimals.containsKey(event.getVehicle().getUniqueId())) {
+				if (this.exitedAnimals.get(event.getVehicle().getUniqueId()) + 30000 > System.currentTimeMillis()) {
+					final Animal animal = this.database.getAnimal(event.getVehicle().getUniqueId());
 					animal.updateAnimal(event.getVehicle());
 					animal.saveToDatabase(true);
 					
-					exitedAnimals.put(event.getVehicle().getUniqueId(), System.currentTimeMillis());
+					this.exitedAnimals.put(event.getVehicle().getUniqueId(), System.currentTimeMillis());
 				}
 			}
-			else { exitedAnimals.put(event.getVehicle().getUniqueId(), System.currentTimeMillis()); }
+			else { this.exitedAnimals.put(event.getVehicle().getUniqueId(), System.currentTimeMillis()); }
 		}
-		catch (Exception e) { Messenger.exception("VehicleEventListener/onVehicleEnter", "Unknown Exception.", e); }
+		catch (final Exception e) { Messenger.exception("VehicleEventListener/onVehicleEnter", "Unknown Exception.", e); }
 	}
 }

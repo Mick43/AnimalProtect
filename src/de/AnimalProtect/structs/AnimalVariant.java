@@ -13,16 +13,16 @@ public enum AnimalVariant {
 	private String name;
 	private Variant variant;
 	
-	private AnimalVariant(String name, Variant variant) {
+	private AnimalVariant(final String name, final Variant variant) {
 		this.name = name;
 		this.variant = variant;
 	}
 	
 	public String getName() {
-		return name;
+		return this.name;
 	}
 	
 	public Variant getVariant() {
-		return variant;
+		return this.variant;
 	}
 }

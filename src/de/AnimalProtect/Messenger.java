@@ -27,8 +27,8 @@ public class Messenger {
 	 * @param message
      *            Die auszugebende Nachricht
      */
-	public static void log(String message) {
-		Bukkit.getServer().getLogger().info("["+ConsolePrefix+"] "  + message);
+	public static void log(final String message) {
+		Bukkit.getServer().getLogger().info("["+Messenger.ConsolePrefix+"] "  + message);
 	}
 	
 	/**
@@ -39,8 +39,8 @@ public class Messenger {
 	 * @param level
      *            Der Nachrichten-Typ
      */
-	public static void log(String message, Level level) {
-		Bukkit.getServer().getLogger().log(level, "["+ConsolePrefix+"] " + message);
+	public static void log(final String message, final Level level) {
+		Bukkit.getServer().getLogger().log(level, "["+Messenger.ConsolePrefix+"] " + message);
 	}
 	
 	/**
@@ -49,8 +49,8 @@ public class Messenger {
 	 * @param message
      *            Die auszugebende Nachricht.
      */
-	public static void warn(String message) {
-		Bukkit.getServer().getLogger().warning("["+ConsolePrefix+"] " + message);
+	public static void warn(final String message) {
+		Bukkit.getServer().getLogger().warning("["+Messenger.ConsolePrefix+"] " + message);
 	}
 	
 	/**
@@ -59,8 +59,8 @@ public class Messenger {
 	 * @param message
      *            Die auszugebende Nachricht.
      */
-	public static void error(String message) {
-		Bukkit.getServer().getLogger().log(Level.SEVERE, "["+ConsolePrefix+"] " + message);
+	public static void error(final String message) {
+		Bukkit.getServer().getLogger().log(Level.SEVERE, "["+Messenger.ConsolePrefix+"] " + message);
 	}
 	
 	/**
@@ -69,7 +69,7 @@ public class Messenger {
 	 * @param message
      *            Die Nachricht, die an jeden Spieler geschickt wird.
      */
-	public static void broadcast(String message) {
+	public static void broadcast(final String message) {
 		Bukkit.getServer().broadcastMessage(message);
 	}			
 	
@@ -82,15 +82,15 @@ public class Messenger {
 	 * @param message
      *            Die Überschrift, ohne Farbcodes!
 	 */
-	public static void help(CommandSender cs, String message) {
-		String parsedMessage = parseMessage(message);
+	public static void help(final CommandSender cs, String message) {
+		final String parsedMessage = Messenger.parseMessage(message);
 		if (parsedMessage != null) { message = parsedMessage; }
 		
 		String title = ChatColor.YELLOW + "---------- " + ChatColor.WHITE + message + ChatColor.YELLOW + " ";
 		for (int i=0; i<18-message.length()+20; i++) {
 			title += "-";
 		}
-		sendMessage(cs, title);
+		Messenger.sendMessage(cs, title);
 	}
 	
 	/**
@@ -103,13 +103,13 @@ public class Messenger {
      * @param prefix
      *            Gibt an, ob vor der Nachricht der Prefix angegeben werden soll.
      */
-	public static void sendMessage(Player player, String message, Boolean prefix) {
+	public static void sendMessage(final Player player, String message, final Boolean prefix) {
 		if (player == null) { return; }
 		
-		String parsedMessage = parseMessage(message);
+		final String parsedMessage = Messenger.parseMessage(message);
 		if (parsedMessage != null) { message = parsedMessage; }
 		
-		if (prefix) { player.sendMessage(Prefix + " " + ChatColor.YELLOW + message); }
+		if (prefix) { player.sendMessage(Messenger.Prefix + " " + ChatColor.YELLOW + message); }
 		else { player.sendMessage(ChatColor.YELLOW + message); }
 	}
 	
@@ -121,10 +121,10 @@ public class Messenger {
 	 * @param message
      *            Die Nachricht, welche verschickt wird.
      */
-	public static void sendMessage(Player player, String message) {
+	public static void sendMessage(final Player player, final String message) {
 		if (player == null) { return; }
 		
-		sendMessage(player, message, false);
+		Messenger.sendMessage(player, message, false);
 	}
 	
 	/**
@@ -138,8 +138,8 @@ public class Messenger {
      *            Gibt an, ob vor der Nachricht der Prefix angegeben werden soll.
      */
 	@SuppressWarnings("deprecation")
-	public static void sendMessage(String playerName, String message, Boolean prefix) {
-		sendMessage(Bukkit.getServer().getPlayer(playerName), message, prefix);
+	public static void sendMessage(final String playerName, final String message, final Boolean prefix) {
+		Messenger.sendMessage(Bukkit.getServer().getPlayer(playerName), message, prefix);
 	}
 	
 	/**
@@ -151,8 +151,8 @@ public class Messenger {
      *            Die Nachricht, welche verschickt wird.
      */
 	@SuppressWarnings("deprecation")
-	public static void sendMessage(String playerName, String message) {
-		sendMessage(Bukkit.getServer().getPlayer(playerName), message, false);
+	public static void sendMessage(final String playerName, final String message) {
+		Messenger.sendMessage(Bukkit.getServer().getPlayer(playerName), message, false);
 	}
 	
 	/**
@@ -165,8 +165,8 @@ public class Messenger {
      * @param prefix
      *            Gibt an, ob vor der Nachricht der Prefix angegeben werden soll.
      */
-	public static void sendMessage(UUID uniqueId, String message, Boolean prefix) {
-		sendMessage(Bukkit.getServer().getPlayer(uniqueId), message, prefix);
+	public static void sendMessage(final UUID uniqueId, final String message, final Boolean prefix) {
+		Messenger.sendMessage(Bukkit.getServer().getPlayer(uniqueId), message, prefix);
 	}
 	
 	/**
@@ -177,8 +177,8 @@ public class Messenger {
 	 * @param message
      *            Die Nachricht, welche verschickt wird.
      */
-	public static void sendMessage(UUID uniqueId, String message) {
-		sendMessage(Bukkit.getServer().getPlayer(uniqueId), message, false);
+	public static void sendMessage(final UUID uniqueId, final String message) {
+		Messenger.sendMessage(Bukkit.getServer().getPlayer(uniqueId), message, false);
 	}
 	
 	/**
@@ -191,14 +191,14 @@ public class Messenger {
      * @param prefix
      *            Gibt an, ob vor der Nachricht der Prefix angegeben werden soll.
      */
-	public static void sendMessage(CommandSender cs, String message, Boolean prefix) {
+	public static void sendMessage(final CommandSender cs, String message, final Boolean prefix) {
 		if (cs == null) { return; }
 		
 		if (cs instanceof Player) {
-			sendMessage((Player)cs, message, prefix);
+			Messenger.sendMessage((Player)cs, message, prefix);
 		}
 		else {
-			String parsedMessage = parseMessage(message);
+			final String parsedMessage = Messenger.parseMessage(message);
 			if (parsedMessage != null) { message = parsedMessage; }
 			
 			message = message.replaceAll("§0", "");
@@ -236,7 +236,7 @@ public class Messenger {
 			message = message.replaceAll("§N", "");
 			message = message.replaceAll("§R", "");
 			
-			if (prefix) { cs.sendMessage(ConsolePrefix + " // " + message); }
+			if (prefix) { cs.sendMessage(Messenger.ConsolePrefix + " // " + message); }
 			else { cs.sendMessage(message); }
 		}
 	}
@@ -249,10 +249,10 @@ public class Messenger {
 	 * @param message
      *            Die Nachricht, welche verschickt wird.
      */
-	public static void sendMessage(CommandSender cs, String message) {
+	public static void sendMessage(final CommandSender cs, final String message) {
 		if (cs == null || message == null) { return; }
 		
-		sendMessage(cs, message, false);
+		Messenger.sendMessage(cs, message, false);
 	}
 	
 	/**
@@ -263,10 +263,10 @@ public class Messenger {
 	 * @param message
      *            Die Nachricht, welche verschickt wird.
      */
-	public static void sendMessageSuccess(CommandSender cs, String message) {
+	public static void sendMessageSuccess(final CommandSender cs, final String message) {
 		if (cs == null || message == null) { return; }
 		
-		sendMessage(cs, ChatColor.GREEN + message, false);
+		Messenger.sendMessage(cs, ChatColor.GREEN + message, false);
 	}
 	
 	/**
@@ -277,10 +277,10 @@ public class Messenger {
 	 * @param message
      *            Die Nachricht, welche verschickt wird.
      */
-	public static void sendMessageFailed(CommandSender cs, String message) {
+	public static void sendMessageFailed(final CommandSender cs, final String message) {
 		if (cs == null || message == null) { return; }
 		
-		sendMessage(cs, ChatColor.RED + message, false);
+		Messenger.sendMessage(cs, ChatColor.RED + message, false);
 	}
 	
 	/**
@@ -291,13 +291,13 @@ public class Messenger {
 	 * @param message
      *            Der Titel, welcher verschickt wird.
      */
-	public static void messageHeader(CommandSender cs, String message) {
+	public static void messageHeader(final CommandSender cs, String message) {
 		if (cs == null || message == null) { return; }
 		
-		String parsedMessage = parseMessage(message);
+		final String parsedMessage = Messenger.parseMessage(message);
 		if (parsedMessage != null) { message = parsedMessage; }
 		
-		sendMessage(cs, message, true);
+		Messenger.sendMessage(cs, message, true);
 	}
 	
 	/**
@@ -310,10 +310,10 @@ public class Messenger {
      * @param value
      *            Der Wert, zu dem der Schlüssel gehört.
      */
-	public static void messageList(CommandSender cs, String key, String value) {
+	public static void messageList(final CommandSender cs, final String key, final String value) {
 		if (cs == null || key == null || value == null) { return; }
 		
-		sendMessage(cs, ChatColor.RESET + " • " + key + ": " + ChatColor.GRAY + value, false);
+		Messenger.sendMessage(cs, ChatColor.RESET + " • " + key + ": " + ChatColor.GRAY + value, false);
 	}
 	
 	/**
@@ -323,14 +323,14 @@ public class Messenger {
      *            Die Nachricht, welche verschickt wird.
      */
 	public static void messageStaff(String message) {
-		Player[] players = Bukkit.getServer().getOnlinePlayers();
+		final Player[] players = Bukkit.getServer().getOnlinePlayers();
 		
-		String parsedMessage = parseMessage(message);
+		final String parsedMessage = Messenger.parseMessage(message);
 		if (parsedMessage != null) { message = parsedMessage; }
 		
-		for (Player p : players) {
+		for (final Player p : players) {
 			if (p.hasPermission("craftoplugin.admin") || p.hasPermission("craftoplugin.moderator") || p.isOp()) {
-				p.sendMessage(Prefix + message);
+				p.sendMessage(Messenger.Prefix + message);
 			}
 		}
 	}
@@ -342,11 +342,11 @@ public class Messenger {
      *            Die Nachricht die in der Konsole ausgegeben wird.
      */
 	public static void debugMessage(String message) {
-		if (Debugging && AnimalProtect.plugin.isDebugging()) {
-			String parsedMessage = parseMessage(message);
+		if (Messenger.Debugging && AnimalProtect.plugin.isDebugging()) {
+			final String parsedMessage = Messenger.parseMessage(message);
 			if (parsedMessage != null) { message = parsedMessage; }
 			
-			log("[DEBUG] " + message);
+			Messenger.log("[DEBUG] " + message);
 		}
 	}
 	
@@ -376,34 +376,34 @@ public class Messenger {
 	 * @param e
      *            Die Exception, von der der Stacktrace in die Konsole geschrieben wird.
      */
-	public static void exception(String Source, String Information, Exception e) {
+	public static void exception(final String Source, final String Information, final Exception e) {
 		if (e == null) { return; }
 		
-		warn("---------------------------- "+ConsolePrefix+" Exception! ------------------------");
-		warn("An Exception occured in animalprotect/" + Source);
-		warn("More Information: " + Information);
-		warn("Exception: " + e.getClass().getName());
-		warn("---------------------------- Exception Stacktrace ----------------------------");
-		for (StackTraceElement s : e.getStackTrace()) {
-			warn(" -> " +s.getClassName()+"/"+s.getMethodName()+"() -> Line: "+s.getLineNumber());
+		Messenger.warn("---------------------------- "+Messenger.ConsolePrefix+" Exception! ------------------------");
+		Messenger.warn("An Exception occured in animalprotect/" + Source);
+		Messenger.warn("More Information: " + Information);
+		Messenger.warn("Exception: " + e.getClass().getName());
+		Messenger.warn("---------------------------- Exception Stacktrace ----------------------------");
+		for (final StackTraceElement s : e.getStackTrace()) {
+			Messenger.warn(" -> " +s.getClassName()+"/"+s.getMethodName()+"() -> Line: "+s.getLineNumber());
 		}
-		warn("-------------------------- Exception Stacktrace End --------------------------");
+		Messenger.warn("-------------------------- Exception Stacktrace End --------------------------");
 		
 		try {
-			CraftoFile file = new CraftoFile(CraftoFile.getExceptionPath() + "/animalprotect-"+CraftoTime.getFullTime());
-			file.writeLine("---------------------------- "+ConsolePrefix+" Exception! ------------------------");
+			final CraftoFile file = new CraftoFile(CraftoFile.getExceptionPath() + "/animalprotect-"+CraftoTime.getFullTime());
+			file.writeLine("---------------------------- "+Messenger.ConsolePrefix+" Exception! ------------------------");
 			file.writeLine("An Exception occured in animalprotect/" + Source);
 			file.writeLine("More Information: " + Information);
 			file.writeLine("Exception: " + e.getClass().getName());
 			file.writeLine("Time: " + CraftoTime.getFullTime());
 			file.writeLine("---------------------------- Exception Stacktrace ----------------------------");
-			for (StackTraceElement s : e.getStackTrace()) {
+			for (final StackTraceElement s : e.getStackTrace()) {
 				file.writeLine(" -> " +s.getClassName()+"/"+s.getMethodName()+"() -> Line: "+s.getLineNumber());
 			}
 			file.writeLine("-------------------------- Exception Stacktrace End --------------------------");
 			try { file.saveFile(); } 
-			catch (Exception e2) { CraftoMessenger.exception("CraftoMessenger/exception", "Failed to save an exception file", e2, false); }
+			catch (final Exception e2) { CraftoMessenger.exception("CraftoMessenger/exception", "Failed to save an exception file", e2, false); }
 		}
-		catch (Exception e1) { CraftoMessenger.log("Failed to save an exception file for animalprotect :("); }
+		catch (final Exception e1) { CraftoMessenger.log("Failed to save an exception file for animalprotect :("); }
 	}
 }

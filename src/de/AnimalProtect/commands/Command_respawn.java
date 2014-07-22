@@ -13,12 +13,12 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Horse;
+import org.bukkit.entity.Horse.Color;
+import org.bukkit.entity.Horse.Variant;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Sheep;
 import org.bukkit.entity.Wolf;
-import org.bukkit.entity.Horse.Color;
-import org.bukkit.entity.Horse.Variant;
 import org.bukkit.inventory.ItemStack;
 
 import craftoplugin.core.database.CraftoPlayer;
@@ -32,23 +32,23 @@ public class Command_respawn implements CommandExecutor {
 	
 	private final AnimalProtect plugin;
 	
-	public Command_respawn(AnimalProtect plugin) {
+	public Command_respawn(final AnimalProtect plugin) {
 		this.plugin = plugin;
 	}
 
 	@Override
-	public boolean onCommand(CommandSender cs, Command cmd, String label, String[] args) {
-		if (plugin == null || !plugin.isEnabled()) { Messenger.sendMessage(cs, "§cFehler: Der Befehl konnte nicht ausgeführt werden."); return true; }
+	public boolean onCommand(final CommandSender cs, final Command cmd, final String label, final String[] args) {
+		if (this.plugin == null || !this.plugin.isEnabled()) { Messenger.sendMessage(cs, "§cFehler: Der Befehl konnte nicht ausgeführt werden."); return true; }
 		
 		/* Datenbank-Verbindung aufbauen, falls nicht vorhanden. */
-		if (!plugin.getDatenbank().isConnected())
-		{ plugin.getDatenbank().connect(); }
+		if (!this.plugin.getDatenbank().isConnected())
+		{ this.plugin.getDatenbank().connect(); }
 		
 		if (!(cs instanceof Player)) { Messenger.sendMessage(cs, "SENDER_NOT_PLAYER"); return true; }
 		if (args.length < 2) { Messenger.sendMessage(cs, "TOO_FEW_ARGUMENTS"); return true; }
 		
 		/* Variablen bereitstellen */
-		Player sender = (Player)cs;
+		final Player sender = (Player)cs;
 		CraftoPlayer cOwner = null;
 		String owner = null;
 		Integer start = null;
@@ -62,12 +62,12 @@ public class Command_respawn implements CommandExecutor {
 		Boolean typeFlag = false;
 		
 		/* Die Flags ermitteln */
-		for (String s : args) {
+		for (final String s : args) {
 			if (s.startsWith("p:")) {
 				owner = s.substring(2, s.length());
 			}
 			else if (s.startsWith("id:")) {
-				if (isNumber(s.substring(3, s.length()))) {
+				if (this.isNumber(s.substring(3, s.length()))) {
 					if (!startFlag) {
 						start = Integer.parseInt(s.substring(3, s.length()));
 						end = start;
@@ -81,7 +81,7 @@ public class Command_respawn implements CommandExecutor {
 			}
 			else if (s.startsWith("start:")) {
 				if (!idFlag) {
-					if (isNumber(s.substring(6, s.length()))) {
+					if (this.isNumber(s.substring(6, s.length()))) {
 						start = Integer.parseInt(s.substring(6, s.length()));
 						startFlag = true;
 						idFlag = false;
@@ -92,7 +92,7 @@ public class Command_respawn implements CommandExecutor {
 			}
 			else if (s.startsWith("end:")) {
 				if (!idFlag) {
-					if (isNumber(s.substring(4, s.length()))) {
+					if (this.isNumber(s.substring(4, s.length()))) {
 						end = Integer.parseInt(s.substring(4, s.length()));
 						endFlag = true;
 						idFlag = false;
@@ -116,14 +116,14 @@ public class Command_respawn implements CommandExecutor {
 		if (!idFlag && !startFlag && !endFlag) { Messenger.sendMessage(cs, "§cFehler: Es wurde kein Start oder Endpunkt festgelegt!"); }
 		
 		/* Den angegebenen Spieler ermitteln */
-		if (isUUID(args[0])) { cOwner = CraftoPlayer.getPlayer(UUID.fromString(owner)); }
+		if (this.isUUID(args[0])) { cOwner = CraftoPlayer.getPlayer(UUID.fromString(owner)); }
 		else { cOwner = CraftoPlayer.getPlayer(owner); }
 		
 		if (cOwner == null) { Messenger.sendMessage(cs, "PLAYER_NOT_FOUND"); return true; }
 		
 		/* Alle Entities in eine ArrayList speichern, damit wir sie später für isMissing() haben */
-		ArrayList<UUID> foundEntities = new ArrayList<UUID>();
-		for (Entity entity : sender.getWorld().getEntities()) {
+		final ArrayList<UUID> foundEntities = new ArrayList<UUID>();
+		for (final Entity entity : sender.getWorld().getEntities()) {
 			if (!typeFlag) { if (!entity.isDead()) { foundEntities.add(entity.getUniqueId()); } }
 			else if (entity.getType().equals(type.getEntity())) 
 			{ if (!entity.isDead()) { foundEntities.add(entity.getUniqueId()); } }
@@ -131,18 +131,18 @@ public class Command_respawn implements CommandExecutor {
 		
 		/* Alle Flags durchgehen */
 		if (idFlag) {
-			Animal animal = plugin.getDatenbank().getAnimals(cOwner.getUniqueId()).get(start);
+			final Animal animal = this.plugin.getDatenbank().getAnimals(cOwner.getUniqueId()).get(start);
 			
 			if (animal == null) { Messenger.sendMessage(cs, "ANIMAL_NOT_FOUND"); return true; }
-			else if (missingFlag && isMissing(animal, foundEntities)) { this.respawnAnimal(animal, cOwner, sender, true, locationFlag); }
+			else if (missingFlag && this.isMissing(animal, foundEntities)) { this.respawnAnimal(animal, cOwner, sender, true, locationFlag); }
 			else if (!missingFlag) { this.respawnAnimal(animal, cOwner, sender, true, locationFlag); }
 		}
 		else if (startFlag && !endFlag) {
-			for (int i=start; i<plugin.getDatenbank().getAnimals(cOwner.getUniqueId()).size(); i++) { 
-				Animal foundAnimal = plugin.getDatenbank().getAnimals(cOwner.getUniqueId()).get(i);
+			for (int i=start; i<this.plugin.getDatenbank().getAnimals(cOwner.getUniqueId()).size(); i++) { 
+				final Animal foundAnimal = this.plugin.getDatenbank().getAnimals(cOwner.getUniqueId()).get(i);
 				if (foundAnimal == null) { continue; }
 				
-				if(missingFlag && isMissing(foundAnimal, foundEntities)) {
+				if(missingFlag && this.isMissing(foundAnimal, foundEntities)) {
 					this.respawnAnimal(foundAnimal, cOwner, sender, true, locationFlag);
 				}
 				else if (!missingFlag) {
@@ -151,15 +151,15 @@ public class Command_respawn implements CommandExecutor {
 			}
 		}
 		else if  (startFlag && endFlag) {
-			if (end > plugin.getDatenbank().getAnimals(cOwner.getUniqueId()).size()) {
+			if (end > this.plugin.getDatenbank().getAnimals(cOwner.getUniqueId()).size()) {
 				Messenger.sendMessage(cs, "ENDFLAG_TOO_HIGH");
 			}
 			else {
 				for (int i=start; i<end; i++) {
-					Animal foundAnimal = plugin.getDatenbank().getAnimals(cOwner.getUniqueId()).get(i);
+					final Animal foundAnimal = this.plugin.getDatenbank().getAnimals(cOwner.getUniqueId()).get(i);
 					if (foundAnimal == null) { continue; }
 					
-					if(missingFlag && isMissing(foundAnimal, foundEntities)) {
+					if(missingFlag && this.isMissing(foundAnimal, foundEntities)) {
 						this.respawnAnimal(foundAnimal, cOwner, sender, true, locationFlag);
 					}
 					else if (!missingFlag) {
@@ -171,36 +171,36 @@ public class Command_respawn implements CommandExecutor {
 		return true;
 	}
 		
-	public boolean isMissing(Animal animal, ArrayList<UUID> entities) {
+	public boolean isMissing(final Animal animal, final ArrayList<UUID> entities) {
 		if (animal.isAlive() && !entities.contains(animal.getUniqueId())) {
 			return true;
 		}
 		return false;
 	}
 	
-	public boolean respawnAnimal(Animal animal, CraftoPlayer owner, Player sender, Boolean response, Boolean locationFlag) {
+	public boolean respawnAnimal(final Animal animal, final CraftoPlayer owner, final Player sender, final Boolean response, final Boolean locationFlag) {
 		Entity entity = null;
 				
 		if (locationFlag) { 
-			Location loc = new Location(sender.getWorld(), animal.getX(), animal.getY(), animal.getZ());
+			final Location loc = new Location(sender.getWorld(), animal.getX(), animal.getY(), animal.getZ());
 			entity = sender.getWorld().spawnEntity(loc, animal.getAnimaltype().getEntity());
 		}
 		else { entity = sender.getWorld().spawnEntity(sender.getLocation(), animal.getAnimaltype().getEntity()); }
 		
-		UUID oldUUID = animal.getUniqueId();
+		final UUID oldUUID = animal.getUniqueId();
 		
 		if (entity == null)
 		{ Messenger.sendMessage(sender, "ANIMAL_NOT_RESPAWNED"); return false; }
 		
-		LivingEntity livingEntity = (LivingEntity) entity;
+		final LivingEntity livingEntity = (LivingEntity) entity;
 		livingEntity.setCustomName(animal.getNametag());
 		
 		if (livingEntity.getType().equals(EntityType.SHEEP)) { 
-			Sheep sheep = (Sheep) entity; 
+			final Sheep sheep = (Sheep) entity; 
 			sheep.setColor(DyeColor.valueOf(animal.getColor())); 
 		}
 		else if (livingEntity.getType().equals(EntityType.HORSE)) {
-			Horse horse = (Horse) entity;
+			final Horse horse = (Horse) entity;
 			if (animal.getArmor() == AnimalArmor.DIAMOND) {
 				horse.getInventory().setArmor(new ItemStack(Material.DIAMOND_BARDING));
 			}
@@ -220,13 +220,13 @@ public class Command_respawn implements CommandExecutor {
 			horse.setTamed(true);
 		}
 		else if (livingEntity.getType().equals(EntityType.WOLF)) {
-			Wolf wolf = (Wolf) entity;
+			final Wolf wolf = (Wolf) entity;
 			wolf.setCollarColor(DyeColor.valueOf(animal.getColor()));
 		}
 		
 		/* Das Tier updaten und sichern */
 		animal.updateAnimal(entity);
-		if (plugin.getDatenbank().updateAnimal(animal.getId(), animal, oldUUID)) {
+		if (this.plugin.getDatenbank().updateAnimal(animal.getId(), animal, oldUUID)) {
 			if (response) { Messenger.sendMessage(sender, "ANIMAL_RESPAWNED"); }
 			return true;
 		}
@@ -235,16 +235,16 @@ public class Command_respawn implements CommandExecutor {
 		return false;
 	}
 	
-	private boolean isNumber(String value) {
+	private boolean isNumber(final String value) {
 		try {
 			Integer.parseInt(value);
 			return true;
 		}
-		catch (Exception e) { }
+		catch (final Exception e) { }
 		return false;
 	}
 	
-	private boolean isUUID(String value) {
+	private boolean isUUID(final String value) {
 		return value.matches(".*-.*-.*-.*-.*");
 	}
 }

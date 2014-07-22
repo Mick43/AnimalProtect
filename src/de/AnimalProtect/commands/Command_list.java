@@ -23,17 +23,17 @@ public class Command_list implements CommandExecutor {
 	
 	private final AnimalProtect plugin;
 	
-	public Command_list(AnimalProtect plugin) {
+	public Command_list(final AnimalProtect plugin) {
 		this.plugin = plugin;
 	}
 
 	@Override
-	public boolean onCommand(CommandSender cs, Command cmd, String label, String[] args) {
-		if (plugin == null || !plugin.isEnabled()) { Messenger.sendMessage(cs, "§cFehler: Der Befehl konnte nicht ausgeführt werden."); return true; }
+	public boolean onCommand(final CommandSender cs, final Command cmd, final String label, final String[] args) {
+		if (this.plugin == null || !this.plugin.isEnabled()) { Messenger.sendMessage(cs, "§cFehler: Der Befehl konnte nicht ausgeführt werden."); return true; }
 		
 		/* Datenbank-Verbindung aufbauen, falls nicht vorhanden. */
-		if (!plugin.getDatenbank().isConnected())
-		{ plugin.getDatenbank().connect(); }
+		if (!this.plugin.getDatenbank().isConnected())
+		{ this.plugin.getDatenbank().connect(); }
 		
 		/* Variablen initialisieren */
 		CraftoPlayer cPlayer = null;
@@ -48,7 +48,7 @@ public class Command_list implements CommandExecutor {
 			else { Messenger.sendMessage(cs, "TOO_FEW_ARGUMENTS"); return true; }
 		}
 		else if (args.length == 1) { /*  /listanimals <args[0]>  */
-			if (isNumber(args[0])) { 
+			if (Command_list.isNumber(args[0])) { 
 				page = Integer.parseInt(args[0]); 
 				
 				if (cs instanceof Player) 
@@ -56,15 +56,15 @@ public class Command_list implements CommandExecutor {
 				else { Messenger.sendMessage(cs, "NO_GIVEN_PLAYER"); return true; }
 			}
 			else { 
-				if (isUUID(args[0])) { cPlayer = CraftoPlayer.getPlayer(UUID.fromString(args[0])); }
+				if (Command_list.isUUID(args[0])) { cPlayer = CraftoPlayer.getPlayer(UUID.fromString(args[0])); }
 				else { cPlayer = CraftoPlayer.getPlayer(args[0]); }
 			}
 		}
 		else if (args.length == 2) { /*  /listanimals <args[0]> <args[1]  */
-			if (isUUID(args[0])) { cPlayer = CraftoPlayer.getPlayer(UUID.fromString(args[0])); }
+			if (Command_list.isUUID(args[0])) { cPlayer = CraftoPlayer.getPlayer(UUID.fromString(args[0])); }
 			else { cPlayer = CraftoPlayer.getPlayer(args[0]); }
 			
-			if (isNumber(args[1])) 
+			if (Command_list.isNumber(args[1])) 
 			{ page = Integer.parseInt(args[1]);  }
 			else { Messenger.sendMessage(cs, "PAGE_NOT_NUMBER"); return true; }
 		}
@@ -75,13 +75,13 @@ public class Command_list implements CommandExecutor {
 		{ Messenger.sendMessage(cs, "PLAYER_NOT_FOUND"); return true; }
 		
 		/* Die Tiere des Spielers laden */
-		animals = plugin.getDatenbank().getAnimals(cPlayer.getUniqueId());
+		animals = this.plugin.getDatenbank().getAnimals(cPlayer.getUniqueId());
 		
 		if (animals == null || animals.isEmpty())
 		{ Messenger.sendMessage(cs, "PLAYER_NO_LOCKS"); return true; }
 		
 		/* Die Seitenanzahl ausrechnen */
-		Double pagesAsDouble = ((double)animals.size() / (double)10);
+		final Double pagesAsDouble = ((double)animals.size() / (double)10);
 		pages = (int) Math.ceil(pagesAsDouble);
 		
 		Collections.sort(animals);
@@ -97,18 +97,18 @@ public class Command_list implements CommandExecutor {
 		//Messenger.sendMessage(cs, "§7§oInsgesamte Anzahl an Tieren: " +animals.size());
 		Messenger.messageHeader(cs, "Liste der Tiere von " +cPlayer.getName()+" ("+page+"/"+pages+", insg. "+animals.size()+" Tiere)");
 		
-		HashMap<UUID, Entity> entities = new HashMap<UUID, Entity>();
-		for (Entity entity : Bukkit.getServer().getWorlds().get(0).getEntities()) {
+		final HashMap<UUID, Entity> entities = new HashMap<UUID, Entity>();
+		for (final Entity entity : Bukkit.getServer().getWorlds().get(0).getEntities()) {
 			entities.put(entity.getUniqueId(), entity);
 		}
 		
 		for (int i=page*10-10; i<page*10 && i<animals.size(); i++) {
-			Animal animal = animals.get(i);
+			final Animal animal = animals.get(i);
 			String status = animal.isAliveAsString(); // ALIVE // DEAD
 			Boolean found = false;
 			
 			if (entities.containsKey(animal.getUniqueId())) {
-				Entity entity = entities.get(animal.getUniqueId());
+				final Entity entity = entities.get(animal.getUniqueId());
 				if (!entity.isDead()) {
 					animal.setAlive(true);
 					status = Messenger.parseMessage("ANIMAL_ALIVE"); // "§aALIVE";
@@ -122,8 +122,8 @@ public class Command_list implements CommandExecutor {
 			}
 			else {
 				Bukkit.getServer().getWorlds().get(0).loadChunk(animal.getX(), animal.getZ());
-				Chunk chunk = Bukkit.getServer().getWorlds().get(0).getChunkAt(animal.getX(), animal.getZ());
-				for (Entity entity : chunk.getEntities()) {
+				final Chunk chunk = Bukkit.getServer().getWorlds().get(0).getChunkAt(animal.getX(), animal.getZ());
+				for (final Entity entity : chunk.getEntities()) {
 					if (entity.getUniqueId().equals(animal.getUniqueId())) {
 						if (!entity.isDead()) {
 							animal.setAlive(true);
@@ -158,13 +158,13 @@ public class Command_list implements CommandExecutor {
 		return true;
 	}
 	
-	private static boolean isUUID(String value) {
+	private static boolean isUUID(final String value) {
 		if (value.length() != 36) { return false; }
 		return value.matches(".*-.*-.*-.*-.*");
 	}
 	
-	private static boolean isNumber(String value) {
+	private static boolean isNumber(final String value) {
 		try { Integer.parseInt(value); return true; }
-		catch (Exception e) { return false; }
+		catch (final Exception e) { return false; }
 	}
 }

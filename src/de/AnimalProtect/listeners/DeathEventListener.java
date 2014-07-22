@@ -8,7 +8,6 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
 
-
 import craftoplugin.core.database.CraftoPlayer;
 /* AnimalProtect Imports */
 import de.AnimalProtect.AnimalProtect;
@@ -21,29 +20,29 @@ public class DeathEventListener implements Listener {
 	private final AnimalProtect plugin;
 	private final Database database;
 	
-	public DeathEventListener(AnimalProtect plugin) {
+	public DeathEventListener(final AnimalProtect plugin) {
 		this.plugin = plugin;
 		this.database = plugin.getDatenbank();
 	}
 	
 	@EventHandler
-	public void onEntityDeath(EntityDeathEvent event) {
+	public void onEntityDeath(final EntityDeathEvent event) {
 		try {
 			/* Prüfen ob das Plugin aktiviert ist */
-			if (!plugin.isEnabled()) { return; }
+			if (!this.plugin.isEnabled()) { return; }
 			
 			/* Datenbank-Verbindung aufbauen, falls nicht vorhanden. */
-			if (!database.isConnected()) { database.connect(); }
+			if (!this.database.isConnected()) { this.database.connect(); }
 			
-			if (plugin.getDatenbank().containsAnimal(event.getEntity().getUniqueId())) {
+			if (this.plugin.getDatenbank().containsAnimal(event.getEntity().getUniqueId())) {
 				/* Variablen bereitstellen */
 				EntityDamageByEntityEvent damageEvent = null;
-				Entity entity = event.getEntity();
+				final Entity entity = event.getEntity();
 				Player damager = null;
 				
 				/* Prüfen ob das Tier ermordet wurde */
 				try { damageEvent = (EntityDamageByEntityEvent) event.getEntity().getLastDamageCause(); }
-				catch (Exception exception) { }
+				catch (final Exception exception) { }
 				
 				/* Prüfen ob der Mörder ein Spieler ist */
 				if (damageEvent != null)
@@ -52,9 +51,9 @@ public class DeathEventListener implements Listener {
 						damager = (Player) damageEvent.getDamager();
 						
 						/* Prüfen ob der Mörder der Owner ist */
-						if (database.getOwner(entity.getUniqueId()).getUniqueId().equals(damager.getUniqueId())) {
-							Animal animal = database.getAnimal(entity.getUniqueId());
-							database.unlockAnimal(animal);
+						if (this.database.getOwner(entity.getUniqueId()).getUniqueId().equals(damager.getUniqueId())) {
+							final Animal animal = this.database.getAnimal(entity.getUniqueId());
+							this.database.unlockAnimal(animal);
 							return;
 						}
 						else {
@@ -65,11 +64,11 @@ public class DeathEventListener implements Listener {
 				}
 				
 				/* Der Mörder ist kein Spieler, also wird das Tier geupdated */
-				Animal animal = database.getAnimal(entity.getUniqueId());
+				final Animal animal = this.database.getAnimal(entity.getUniqueId());
 				animal.updateAnimal(entity);
 				animal.saveToDatabase(true);
 				
-				CraftoPlayer owner = CraftoPlayer.getPlayer(animal.getOwner());
+				final CraftoPlayer owner = CraftoPlayer.getPlayer(animal.getOwner());
 				
 				if (owner!=null) {
 					Messenger.log("[AnimalProtect] Ein " +animal.getAnimaltype().toString()+" von " +owner.getName() + " wurde getötet. ("
@@ -81,6 +80,6 @@ public class DeathEventListener implements Listener {
 				}
 			}
 		}
-		catch (Exception e) { Messenger.exception("DeathEventListener/onEntityDeath", "Unknown Exception.", e); }
+		catch (final Exception e) { Messenger.exception("DeathEventListener/onEntityDeath", "Unknown Exception.", e); }
 	}
 }

@@ -14,25 +14,27 @@ public class ChunkEventListener implements Listener {
 	
 	private final AnimalProtect plugin;
 	
-	public ChunkEventListener(AnimalProtect plugin) {
+	public ChunkEventListener(final AnimalProtect plugin) {
 		this.plugin = plugin;
 	}
 	
 	@EventHandler
-	public void onChunkUnload(ChunkUnloadEvent event) {
+	public void onChunkUnload(final ChunkUnloadEvent event) {
 		if (event.getWorld().getEnvironment().equals(Environment.NORMAL)) {
 			try {
-				synchronized (plugin) {
-					for (Entity e : event.getChunk().getEntities()) {
-						if (plugin.getDatenbank().containsAnimal(e.getUniqueId())) {
-							Animal animal = plugin.getDatenbank().getAnimal(e.getUniqueId());
-							animal.updateAnimal(e);
-							animal.saveToDatabase(true);
+				synchronized (this.plugin) {
+					if (this.plugin.getQueue().isRunning()) {
+						for (final Entity e : event.getChunk().getEntities()) {
+							if (this.plugin.getDatenbank().containsAnimal(e.getUniqueId())) {
+								final Animal animal = this.plugin.getDatenbank().getAnimal(e.getUniqueId());
+								animal.updateAnimal(e);
+								animal.saveToDatabase(true);
+							}
 						}
 					}
 				}
 			}
-			catch (Exception e) { CraftoMessenger.exception("ChunkEventListener.java/onChunkUnload()", "Failed to handle ChunkUnloadEvent.", e); }
+			catch (final Exception e) { CraftoMessenger.exception("ChunkEventListener.java/onChunkUnload()", "Failed to handle ChunkUnloadEvent.", e); }
 		}
 	}
 }

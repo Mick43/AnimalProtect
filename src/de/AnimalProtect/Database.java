@@ -13,9 +13,8 @@ import org.bukkit.entity.Horse.Style;
 
 /* CraftoPlugin Imports */
 import craftoplugin.core.CraftoPlugin;
-import craftoplugin.core.database.MySQL;
 import craftoplugin.core.database.CraftoPlayer;
-
+import craftoplugin.core.database.MySQL;
 /* AnimalProtect Imports */
 import de.AnimalProtect.structs.Animal;
 import de.AnimalProtect.structs.AnimalArmor;
@@ -57,7 +56,7 @@ public class Database {
 	 * Erstellt eine Datenbank-Instanz von AnimalProtect
 	 * @param plugin - Das AnimalProtect-Plugin
 	 */
-	public Database(AnimalProtect plugin) {
+	public Database(final AnimalProtect plugin) {
 		this.plugin = plugin;
 		
 		this.entities = new HashMap<UUID, Animal>();
@@ -67,14 +66,14 @@ public class Database {
 		
 		this.connection = CraftoPlugin.plugin.getDatenbank().getSQL();
 
-		if (connection.checkConnection()) { this.createTable(); }
+		if (this.connection.checkConnection()) { this.createTable(); }
 	}
 
 	private void createTable() {
 		try {
-			if (!isConnected()) { return; }
+			if (!this.isConnected()) { return; }
 
-			String[] columns = new String[17];
+			final String[] columns = new String[17];
 			columns[0] = "id INT AUTO_INCREMENT PRIMARY KEY";
 			columns[1] = "owner INT(11) NOT NULL";
 			columns[2] = "animaltype ENUM('UNKNOWN', 'COW', 'CHICKEN', 'PIG', 'SHEEP', 'HORSE', 'WOLF', 'IRON_GOLEM', 'SNOWMAN', 'VILLAGER', 'OCELOT') NOT NULL";
@@ -96,17 +95,17 @@ public class Database {
 			this.connection.createTable("ap_entities", columns, false);
 			this.loadFromDatabase();
 		}
-		catch (Exception e) { Messenger.exception("Database/createTable", "An exception occured in de.AnimalProtect.Database.createTabel()", e); }
+		catch (final Exception e) { Messenger.exception("Database/createTable", "An exception occured in de.AnimalProtect.Database.createTabel()", e); }
 	}
 
 	private void loadFromDatabase() {
 		try {
-			if (!isConnected()) { return; }
+			if (!this.isConnected()) { return; }
 			final Long loadStart = System.currentTimeMillis();
 
 			/* Als erstes die CraftoPlayer's laden */
 			if (CraftoPlugin.plugin.getDatenbank().isConnected() && CraftoPlugin.plugin.getDatenbank().getPlayerCount() > 0) {
-				for(CraftoPlayer player : CraftoPlugin.plugin.getDatenbank().getPlayers()) {
+				for(final CraftoPlayer player : CraftoPlugin.plugin.getDatenbank().getPlayers()) {
 					this.keys.put(player.getUniqueId(), new ArrayList<Animal>());
 				}
 			}
@@ -114,13 +113,13 @@ public class Database {
 
 
 			/* Dann die Tiere laden */
-			final ResultSet result = connection.getResult("SELECT * FROM ap_entities", false, false);
+			final ResultSet result = this.connection.getResult("SELECT * FROM ap_entities", false, false);
 
 			if (result != null) {
 				try {
 					while (result.next() && loadStart + 60000 > System.currentTimeMillis()) {
 						try {
-							Animal animal = new Animal(plugin);
+							final Animal animal = new Animal(this.plugin);
 							animal.setId(result.getInt("id"));
 							animal.setOwner(result.getInt("owner"));
 							animal.setAnimaltype(AnimalType.valueOf(result.getString("animaltype")));
@@ -137,13 +136,13 @@ public class Database {
 							animal.setUniqueId(UUID.fromString(result.getString("uuid")));
 							animal.setCreated_at(result.getTimestamp("created_at"));
 
-							CraftoPlayer owner = CraftoPlugin.plugin.getDatenbank().getPlayer(animal.getOwner());
+							final CraftoPlayer owner = CraftoPlugin.plugin.getDatenbank().getPlayer(animal.getOwner());
 							if (owner != null) {
 								if (this.keys.containsKey(owner.getUniqueId())) {
-									entities.put(animal.getUniqueId(), animal);
-									reverseKeys.put(animal.getUniqueId(), owner.getUniqueId());
-									keys.get(owner.getUniqueId()).add(animal);
-									entitiesId.put(animal.getId(), animal);
+									this.entities.put(animal.getUniqueId(), animal);
+									this.reverseKeys.put(animal.getUniqueId(), owner.getUniqueId());
+									this.keys.get(owner.getUniqueId()).add(animal);
+									this.entitiesId.put(animal.getId(), animal);
 								}
 								else
 								{ Messenger.warn("Warning: An animal could not be loaded because the owner is not in the owners hashmap! (AnimalId: " +animal.getId()+ ") (OwnerId: " +owner.getId() +")"); }
@@ -151,10 +150,10 @@ public class Database {
 							else
 							{ Messenger.warn("Warning: An animal could not be loaded because the the owner does not exist! (AnimalId: " +animal.getId()+ ")"); }
 						}
-						catch (Exception e) { Messenger.exception("Database/loadFromDatabase", "An animal could not be loaded because an unknown error occured.", e); }
+						catch (final Exception e) { Messenger.exception("Database/loadFromDatabase", "An animal could not be loaded because an unknown error occured.", e); }
 					}
 				}
-				catch (SQLException e)
+				catch (final SQLException e)
 				{ Messenger.exception("Database.java/loadFromDatabase", "Exception caught while trying to load every entity from the database.", e); }
 			}
 			else
@@ -163,7 +162,7 @@ public class Database {
 			if (loadStart + 60000 < System.currentTimeMillis())
 			{ Messenger.warn("Warning: AnimalProtect took to long to load all animals from the database!"); }
 		}
-		catch (Exception e) { Messenger.exception("Database/loadFromDatabase", "An exception occured in de.AnimalProtect.Database.loadFromDatabase()", e); }
+		catch (final Exception e) { Messenger.exception("Database/loadFromDatabase", "An exception occured in de.AnimalProtect.Database.loadFromDatabase()", e); }
 	}
 
 	/**
@@ -171,19 +170,19 @@ public class Database {
 	 */
 	public void connect() {
 		try {
-			if (!isConnected()) {
-				connection.openConnection();
+			if (!this.isConnected()) {
+				this.connection.openConnection();
 			}
 		}
-		catch (Exception e) { Messenger.exception("Database/connect", "An exception occured in de.AnimalProtect.Database.connect()", e); }
+		catch (final Exception e) { Messenger.exception("Database/connect", "An exception occured in de.AnimalProtect.Database.connect()", e); }
 	}
 
 	/**
 	 * Schlie�t die Verbindung zur Datenbank.
 	 */
 	public void closeConnection() {
-		if (isConnected()) {
-			connection.closeConnection();
+		if (this.isConnected()) {
+			this.connection.closeConnection();
 		}
 	}
 
@@ -201,16 +200,16 @@ public class Database {
 	 * @param uuid - Die UniqueId des Spielers, der eingef�gt werden soll.
 	 * @return True, falls die Aktion ohne Probleme funktioniert hat.
 	 */
-	public boolean insertPlayer(UUID uuid) {
+	public boolean insertPlayer(final UUID uuid) {
 		if (uuid == null) { return false; }
 
 		try {
-			if (!keys.containsKey(uuid)) {
-				keys.put(uuid, new ArrayList<Animal>());
+			if (!this.keys.containsKey(uuid)) {
+				this.keys.put(uuid, new ArrayList<Animal>());
 				return true;
 			}
 		}
-		catch (Exception e) { Messenger.exception("Database.java/insertPlayer", "Unknown exception occured while trying to insert a player", e); }
+		catch (final Exception e) { Messenger.exception("Database.java/insertPlayer", "Unknown exception occured while trying to insert a player", e); }
 
 		return false;
 	}
@@ -220,25 +219,25 @@ public class Database {
 	 * @param animal - Das Tier welches aktualisiert/eingef�gt werden soll.
 	 * @return True, falls die Aktion ohne Probleme funktioniert hat.
 	 */
-	public boolean insertAnimal(Animal animal) {
+	public boolean insertAnimal(final Animal animal) {
 		if (animal == null) { return false; }
 
 		try {
 			if (animal.getId() == null) {
 				/* Query zum updaten/inserten aufbauen */
-				String Query = this.getInsertQuery(animal);
+				final String Query = this.getInsertQuery(animal);
 
 				/* Query ausf�hren und das Ergebnis returnen */
-				if(connection.execute(Query, plugin.isDebugging())) {
-					CraftoPlayer owner = CraftoPlayer.getPlayer(animal.getOwner());
-					if (owner != null && keys.containsKey(owner.getUniqueId())) {
+				if(this.connection.execute(Query, this.plugin.isDebugging())) {
+					final CraftoPlayer owner = CraftoPlayer.getPlayer(animal.getOwner());
+					if (owner != null && this.keys.containsKey(owner.getUniqueId())) {
 						/* Den HashMaps hinzuf�gen */
-						entities.put(animal.getUniqueId(), animal);
-						reverseKeys.put(animal.getUniqueId(), owner.getUniqueId());
-						keys.get(owner.getUniqueId()).add(animal);
-						entitiesId.put(animal.getId(), animal);
+						this.entities.put(animal.getUniqueId(), animal);
+						this.reverseKeys.put(animal.getUniqueId(), owner.getUniqueId());
+						this.keys.get(owner.getUniqueId()).add(animal);
+						this.entitiesId.put(animal.getId(), animal);
 						
-						Integer id = (Integer) connection.getValue("SELECT id FROM ap_entities WHERE uuid='"+animal.getUniqueId()+"';", "id", true);
+						final Integer id = (Integer) this.connection.getValue("SELECT id FROM ap_entities WHERE uuid='"+animal.getUniqueId()+"';", "id", true);
 						animal.setId(id);
 					}
 					else { Messenger.error("Warning: Failed to insert an animal because the owner does not exist. (AnimalUUID="+animal.getUniqueId().toString()+")"); }
@@ -248,21 +247,21 @@ public class Database {
 			}
 			else {
 				/* Query zum updaten/inserten aufbauen */
-				String Query = this.getUpdateQuery(animal);
+				final String Query = this.getUpdateQuery(animal);
 				
 				/* Query ausf�hren und das Ergebnis returnen */
-				if (plugin.getQueue().isRunning()) { this.plugin.getQueue().insertQuery(Query); }
+				if (this.plugin.getQueue().isRunning()) { this.plugin.getQueue().insertQuery(Query); }
 				else { this.connection.execute(Query, true); }
 				return true;
 			}
 		}
-		catch (Exception e) { Messenger.exception("Database.java/insertAnimal", "An Error occured while trying to insert an entity.", e); }
+		catch (final Exception e) { Messenger.exception("Database.java/insertAnimal", "An Error occured while trying to insert an entity.", e); }
 
 		return false;
 	}
 	
-	private String getInsertQuery(Animal animal) {
-		String Query = "INSERT INTO `ap_entities` (`owner`, `animaltype`, `last_x`, `last_y`, `last_z`, `alive`, `nametag`, `maxhp`, "
+	private String getInsertQuery(final Animal animal) {
+		final String Query = "INSERT INTO `ap_entities` (`owner`, `animaltype`, `last_x`, `last_y`, `last_z`, `alive`, `nametag`, `maxhp`, "
 				 + "`deathcause`, `color`, `armor`, `horse_jumpstrength`, `horse_style`, `horse_variant`, `uuid`) "
 				 + "VALUES ("+animal.getOwner()+", '"+animal.getAnimaltype().toString()+"', "+animal.getX()+", "+animal.getY()+", "
 				 		 + ""+animal.getZ()+", "+animal.isAlive()+", '"+animal.getNametag()+"', "+animal.getMaxhp()+", "
@@ -274,8 +273,8 @@ public class Database {
 		return Query;
 	}
 	
-	private String getUpdateQuery(Animal animal) {
-		String Query = "UPDATE `ap_entities` SET "
+	private String getUpdateQuery(final Animal animal) {
+		final String Query = "UPDATE `ap_entities` SET "
 			         + "`owner`=" + animal.getOwner()                           + ", "
 			         + "`last_x`=" + animal.getX()                              + ", "
 			         + "`last_y`=" + animal.getY()                              + ", "
@@ -296,12 +295,12 @@ public class Database {
 	 * @param oldUniqueId - Die alte UniqueId des Tieres.
 	 * @return True, falls das Updaten erfolgreich war.
 	 */
-	public boolean updateAnimal(Integer id, Animal animal, UUID oldUniqueId) {
+	public boolean updateAnimal(final Integer id, final Animal animal, final UUID oldUniqueId) {
 		if (id == null) { return false; }
 
 		try {
 			/* Query zum updaten/inserten aufbauen */
-			String Query = "UPDATE `ap_entities` SET "
+			final String Query = "UPDATE `ap_entities` SET "
 					     + "`owner`=" + animal.getOwner()                           + ", "
 					     + "`animaltype`='" + animal.getAnimaltype()                + "', "
 					     + "`last_x`=" + animal.getX()                              + ", "
@@ -320,24 +319,24 @@ public class Database {
 					     + "WHERE `id` = " + id + ";";
 
 			/* Query ausf�hren und das Ergebnis returnen */
-			if(connection.execute(Query, plugin.isDebugging())) {
-				CraftoPlayer owner = CraftoPlayer.getPlayer(animal.getOwner());
-				if (owner != null && keys.containsKey(owner.getUniqueId())) {
+			if(this.connection.execute(Query, this.plugin.isDebugging())) {
+				final CraftoPlayer owner = CraftoPlayer.getPlayer(animal.getOwner());
+				if (owner != null && this.keys.containsKey(owner.getUniqueId())) {
 					/* HashMaps updaten */
-					entities.remove(oldUniqueId);
-					reverseKeys.remove(oldUniqueId);
-					keys.get(owner.getUniqueId()).remove(animal);
+					this.entities.remove(oldUniqueId);
+					this.reverseKeys.remove(oldUniqueId);
+					this.keys.get(owner.getUniqueId()).remove(animal);
 
-					entities.put(animal.getUniqueId(), animal);
-					reverseKeys.put(animal.getUniqueId(), owner.getUniqueId());
-					keys.get(owner.getUniqueId()).add(animal);
+					this.entities.put(animal.getUniqueId(), animal);
+					this.reverseKeys.put(animal.getUniqueId(), owner.getUniqueId());
+					this.keys.get(owner.getUniqueId()).add(animal);
 				}
 				else { Messenger.error("Warning: Failed to update an animal because the owner does not exist. (AnimalId="+animal.getId()+")"); }
 
 				return true;
 			}
 		}
-		catch (Exception e) { Messenger.exception("Database.java/updateAnimal", "An Error occured while trying to update an entity.", e); }
+		catch (final Exception e) { Messenger.exception("Database.java/updateAnimal", "An Error occured while trying to update an entity.", e); }
 
 		return false;
 	}
@@ -347,26 +346,26 @@ public class Database {
 	 * @param animal - Das Animal-Objekt
 	 * @return True, falls das entsichern ohne Probleme geklappt hat.
 	 */
-	public boolean unlockAnimal(Animal animal) {
+	public boolean unlockAnimal(final Animal animal) {
 		if (animal == null) { return false; }
 
 		try {
 			/* Query zum updaten/inserten aufbauen */
-			String Query = "DELETE FROM `ap_entities` WHERE `id` = "+animal.getId()+";";
+			final String Query = "DELETE FROM `ap_entities` WHERE `id` = "+animal.getId()+";";
 
-			CraftoPlayer owner = CraftoPlayer.getPlayer(animal.getOwner());
-			if (owner != null && keys.containsKey(owner.getUniqueId())) {
+			final CraftoPlayer owner = CraftoPlayer.getPlayer(animal.getOwner());
+			if (owner != null && this.keys.containsKey(owner.getUniqueId())) {
 				/* HashMaps updaten */
-				entities.remove(animal.getUniqueId());
-				reverseKeys.remove(animal.getUniqueId());
-				keys.get(owner.getUniqueId()).remove(animal);
-				entitiesId.remove(animal.getId());
+				this.entities.remove(animal.getUniqueId());
+				this.reverseKeys.remove(animal.getUniqueId());
+				this.keys.get(owner.getUniqueId()).remove(animal);
+				this.entitiesId.remove(animal.getId());
 			}
-			if (plugin.getQueue().isRunning()) { this.plugin.getQueue().insertQuery(Query); }
+			if (this.plugin.getQueue().isRunning()) { this.plugin.getQueue().insertQuery(Query); }
 			else { this.connection.execute(Query, true); }
 			return true;
 		}
-		catch (Exception e) { Messenger.exception("Database.java/unlockAnimal", "An Error occured while trying to unlock an entity.", e); }
+		catch (final Exception e) { Messenger.exception("Database.java/unlockAnimal", "An Error occured while trying to unlock an entity.", e); }
 
 		return false;
 	}
@@ -376,11 +375,11 @@ public class Database {
 	 * @param uuid - Die UniqueId, nach der gesucht wird.
 	 * @return Gibt das Animal wieder, oder null, falls keins gefunden wurde.
 	 */
-	public Animal getAnimal(UUID uuid) {
+	public Animal getAnimal(final UUID uuid) {
 		if (uuid == null) { return null; }
 
-		if (entities.containsKey(uuid)) {
-			return entities.get(uuid);
+		if (this.entities.containsKey(uuid)) {
+			return this.entities.get(uuid);
 		}
 		return null;
 	}
@@ -390,11 +389,11 @@ public class Database {
 	 * @param id - Die Datenbank-ID, nach der gesucht wird.
 	 * @return Gibt das Animal wieder, oder null, falls keins gefunden wurde.
 	 */
-	public Animal getAnimal(Integer id) {
+	public Animal getAnimal(final Integer id) {
 		if (id == null) { return null; }
 
-		if (entitiesId.containsKey(id)) {
-			return entitiesId.get(id);
+		if (this.entitiesId.containsKey(id)) {
+			return this.entitiesId.get(id);
 		}
 		return null;
 	}
@@ -404,11 +403,11 @@ public class Database {
 	 * @param uuid - Die UniqueId, nach der gesucht wird.
 	 * @return Gibt den CraftoPlayer wieder, oder null, falls keiner gefunden wurde.
 	 */
-	public CraftoPlayer getOwner(UUID uuid) {
+	public CraftoPlayer getOwner(final UUID uuid) {
 		if (uuid == null) { return null; }
 
-		if (reverseKeys.containsKey(uuid)) {
-			CraftoPlayer player = CraftoPlayer.getPlayer(reverseKeys.get(uuid));
+		if (this.reverseKeys.containsKey(uuid)) {
+			final CraftoPlayer player = CraftoPlayer.getPlayer(this.reverseKeys.get(uuid));
 
 			if (player != null) {
 				return player;
@@ -423,11 +422,11 @@ public class Database {
 	 * @param uuid - Die UniqueId des Spielers
 	 * @return Gibt eine Liste der gesicherten Tiere zur�ck.
 	 */
-	public ArrayList<Animal> getAnimals(UUID uuid) {
+	public ArrayList<Animal> getAnimals(final UUID uuid) {
 		if (uuid == null) { return null; }
 
-		if  (keys.containsKey(uuid)) {
-			ArrayList<Animal> key = keys.get(uuid);
+		if  (this.keys.containsKey(uuid)) {
+			final ArrayList<Animal> key = this.keys.get(uuid);
 			Collections.sort(key);
 			return key;
 		}
@@ -440,10 +439,10 @@ public class Database {
 	 * @param uuid - Die UniqueId, nach der gesucht werden soll.
 	 * @return True, falls das Tier gefunden wurde.
 	 */
-	public boolean containsAnimal(UUID uuid) {
+	public boolean containsAnimal(final UUID uuid) {
 		if (uuid == null) { return false; }
 
-		if (entities.containsKey(uuid)) {
+		if (this.entities.containsKey(uuid)) {
 			return true;
 		}
 
@@ -455,7 +454,7 @@ public class Database {
 	 * @param uuid - Die UniqueId, nach der gesucht werden soll.
 	 * @return True, falls der Spieler gefunden wurde.
 	 */
-	public boolean containsPlayer(UUID uuid) {
+	public boolean containsPlayer(final UUID uuid) {
 		if (uuid == null) { return false; }
 
 		if (CraftoPlugin.plugin.getDatenbank().containsPlayer(uuid)) {
@@ -486,9 +485,9 @@ public class Database {
 	 * @param player - Die UniqueID des Spielers.
 	 * @return Die Anzahl.
 	 */
-	public int countAnimals(UUID player) {
+	public int countAnimals(final UUID player) {
 		int count = 0;
-		for(Animal animal : keys.get(player)) {
+		for(final Animal animal : this.keys.get(player)) {
 			if (animal.isAlive()) {
 				count++;
 			}
@@ -501,8 +500,8 @@ public class Database {
 	 * @return True, wenn die Verbindung steht.
 	 */
 	public boolean isConnected() {
-		if (connection == null) { return false; }
-		return connection.checkConnection();
+		if (this.connection == null) { return false; }
+		return this.connection.checkConnection();
 	}
 	
 	/**
@@ -510,6 +509,6 @@ public class Database {
 	 * @return Das, in dieser Klasse verwendete, MySQL-Objekt.
 	 */
 	public MySQL getConnection() {
-		return connection;
+		return this.connection;
 	}
 }

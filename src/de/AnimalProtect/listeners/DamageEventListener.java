@@ -17,7 +17,6 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent;
 
 /* CraftoPlugin Imports */
 import craftoplugin.core.database.CraftoPlayer;
-
 /* AnimalProtect Imports */
 import de.AnimalProtect.AnimalProtect;
 import de.AnimalProtect.Database;
@@ -28,25 +27,25 @@ public class DamageEventListener implements Listener {
 	private final AnimalProtect plugin;
 	private final Database database;
 	
-	public DamageEventListener(AnimalProtect plugin) {
+	public DamageEventListener(final AnimalProtect plugin) {
 		this.plugin = plugin;
 		this.database = plugin.getDatenbank();
 	}
 	
 	@EventHandler
-	public void onEntityEvent(EntityDamageByEntityEvent event) {
+	public void onEntityEvent(final EntityDamageByEntityEvent event) {
 		try {
-			if (!plugin.isEnabled() || event.isCancelled()) { return; }
+			if (!this.plugin.isEnabled() || event.isCancelled()) { return; }
 			
 			/* Datenbank-Verbindung aufbauen, falls nicht vorhanden. */
-			if (!database.isConnected()) { database.connect(); }
+			if (!this.database.isConnected()) { this.database.connect(); }
 			
-			if (!plugin.isAnimal(event.getEntity())) { return; }
+			if (!this.plugin.isAnimal(event.getEntity())) { return; }
 			
 			/* Erst die Variablen bereit stellen, die später genutzt werden. */
-			Entity entity = event.getEntity();
+			final Entity entity = event.getEntity();
 			Entity damager = event.getDamager();
-			CraftoPlayer owner = database.getOwner(entity.getUniqueId());
+			final CraftoPlayer owner = this.database.getOwner(entity.getUniqueId());
 			
 			/* Wenn es keinen Owner gibt, dann ist das Tier auch nicht protected */
 			/* Wenn es also keinen Owner gibt, dann wird die Methode abgebrochen.*/
@@ -57,35 +56,35 @@ public class DamageEventListener implements Listener {
 			case PLAYER:
 				break;
 			case ARROW:
-				Arrow projectile1 = (Arrow)damager;
+				final Arrow projectile1 = (Arrow)damager;
 				damager = (Entity) projectile1.getShooter();
 				break;
 			case EGG:
-				Egg projectile2 = (Egg)damager;
+				final Egg projectile2 = (Egg)damager;
 				damager = (Entity) projectile2.getShooter();
 				break;
 			case SNOWBALL:
-				Snowball projectile3 = (Snowball)damager;
+				final Snowball projectile3 = (Snowball)damager;
 				damager = (Entity) projectile3.getShooter();
 				break;
 			case FIREBALL:
-				Fireball projectile4 = (Fireball)damager;
+				final Fireball projectile4 = (Fireball)damager;
 				damager = (Entity) projectile4.getShooter();
 				break;
 			case SPLASH_POTION:
-				ThrownPotion projectile5 = (ThrownPotion)damager;
+				final ThrownPotion projectile5 = (ThrownPotion)damager;
 				damager = (Entity) projectile5.getShooter();
 				break;
 			case SMALL_FIREBALL:
-				SmallFireball projectile6 = (SmallFireball)damager;
+				final SmallFireball projectile6 = (SmallFireball)damager;
 				damager = (Entity) projectile6.getShooter();
 				break;
 			case PRIMED_TNT:
-				TNTPrimed tnt = (TNTPrimed)damager;
-				damager = (Entity) tnt.getSource();
+				final TNTPrimed tnt = (TNTPrimed)damager;
+				damager = tnt.getSource();
 				break;
 			case FISHING_HOOK:
-				Fish fishingHook = (Fish)damager;
+				final Fish fishingHook = (Fish)damager;
 				damager = (Entity) fishingHook.getShooter();
 				break;
 			default:
@@ -101,13 +100,13 @@ public class DamageEventListener implements Listener {
 			/* Wenn der echte Damager ein Spieler ist,     */
 			/* dann wird überprüft ob der Spieler das darf */
 			if (damager instanceof Player) { 
-				Player player = (Player)damager;
+				final Player player = (Player)damager;
 				if (!player.hasPermission("animalprotect.bypass") && !player.getUniqueId().equals(owner.getUniqueId())) {
 					event.setCancelled(true);
 					Messenger.sendMessage(player, "Dieses Tier ist von §6" +owner.getName()+ " §egesichert!");
 				}
 			}
 		}
-		catch (Exception e) { Messenger.exception("DamageEventListener/onEntityEvent", "Unknown Exception.", e); }
+		catch (final Exception e) { Messenger.exception("DamageEventListener/onEntityEvent", "Unknown Exception.", e); }
 	}
 }
