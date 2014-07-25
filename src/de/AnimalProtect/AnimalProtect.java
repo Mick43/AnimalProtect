@@ -137,9 +137,20 @@ public class AnimalProtect extends JavaPlugin {
 			this.getCommand("unlockanimal").setExecutor(new Command_unlock(this));
 			this.getCommand("animalinfo").setExecutor(new Command_info(this));
 			
-			if (Bukkit.getServer().getPluginManager().isPluginEnabled("Prism")) {
-				new PrismEventListener(this);
-			}
+			this.getCommand("ap").setPermissionMessage(this.getCommand("ap").getPermissionMessage().replaceAll("&", "§"));
+			this.getCommand("animaldebug").setPermissionMessage(this.getCommand("animaldebug").getPermissionMessage().replaceAll("&", "§"));
+			this.getCommand("animalqueue").setPermissionMessage(this.getCommand("animalqueue").getPermissionMessage().replaceAll("&", "§"));
+			this.getCommand("listanimals").setPermissionMessage(this.getCommand("listanimals").getPermissionMessage().replaceAll("&", "§"));
+			this.getCommand("lockanimal").setPermissionMessage(this.getCommand("lockanimal").getPermissionMessage().replaceAll("&", "§"));
+			this.getCommand("lockedanimals").setPermissionMessage(this.getCommand("lockedanimals").getPermissionMessage().replaceAll("&", "§"));
+			this.getCommand("respawnanimal").setPermissionMessage(this.getCommand("respawnanimal").getPermissionMessage().replaceAll("&", "§"));
+			this.getCommand("tpanimal").setPermissionMessage(this.getCommand("tpanimal").getPermissionMessage().replaceAll("&", "§"));
+			this.getCommand("listanimals").setPermissionMessage(this.getCommand("listanimals").getPermissionMessage().replaceAll("&", "§"));
+			this.getCommand("unlockanimal").setPermissionMessage(this.getCommand("unlockanimal").getPermissionMessage().replaceAll("&", "§"));
+			this.getCommand("animalinfo").setPermissionMessage(this.getCommand("animalinfo").getPermissionMessage().replaceAll("&", "§"));
+			
+			//if (Bukkit.getServer().getPluginManager().isPluginEnabled("Prism")) 
+			//{ new PrismEventListener(this); }
 		}
 		catch (final Exception e) { Messenger.exception("AnimalProtect.java/initializeCommands", "Failed to initialize some commands.", e); }
 	}
@@ -246,7 +257,13 @@ public class AnimalProtect extends JavaPlugin {
 		return this.task;
 	}
 	
-	public ArrayList<Animal> parseAnimal(final CommandSender cs, final String[] args) {
+	public ArrayList<Animal> parseAnimal(final CommandSender cs, final String[] args, final boolean needsPlayer) {
+		if (args.length == 0) {
+			Messenger.sendMessage(cs, "§cFehler: Keine Argumente angegeben!");
+			Messenger.sendMessage(cs, "§cVerfügbare Parameter: 'p:', 't:', 'id:', 'name:', '-missing', '-dead'");
+			return null;
+		}
+		
 		String playerFlag = null;
 		Integer idFlag = null;
 		AnimalType typeFlag = null;
@@ -264,8 +281,10 @@ public class AnimalProtect extends JavaPlugin {
 			}
 			else if (arg.startsWith("type:")) 
 			{ typeFlag = AnimalType.valueOf(arg.substring(5, arg.length())); }
-			else if (arg.startsWith("t:")) 
-			{ typeFlag = AnimalType.valueOf(arg.substring(2, arg.length())); }
+			else if (arg.startsWith("t:")) { 
+				final String type = arg.substring(2, arg.length());
+				if (AnimalType.contains(type)) { typeFlag = AnimalType.valueOf(type); }
+			}
 			else if (arg.startsWith("name:"))
 			{ nameFlag = arg.substring(5, arg.length()); }
 			else if (arg.startsWith("nametag:"))
@@ -277,17 +296,21 @@ public class AnimalProtect extends JavaPlugin {
 		}
 		
 		if (playerFlag == null) {
-			if (idFlag != null) { returnList.add(this.database.getAnimal(idFlag)); }
+			if (idFlag != null && !needsPlayer) { returnList.add(this.database.getAnimal(idFlag)); }
+			else if (needsPlayer) { Messenger.sendMessage(cs, "NO_GIVEN_PLAYER"); }
 			else { CraftoMessenger.sendMessage(cs, "§cFehler: Es wurde kein Spieler und keine Tierid angegeben."); }
 			return null;
 		}
 		else {
 			final CraftoPlayer player = CraftoPlayer.getPlayer(playerFlag);
 			
-			if (player == null) { CraftoMessenger.sendMessage(cs, "§cFehler: Der angegebene Spieler konnte nicht gefunden werden."); return null; }
+			if (player == null) { CraftoMessenger.sendMessage(cs, "PLAYER_NOT_FOUND"); return null; }
 			else {
 				final ArrayList<Animal> animals = this.database.getAnimals(player.getUniqueId());
-				if (idFlag != null) { returnList.add(animals.get(idFlag)); }
+				if (idFlag != null) {
+					if (animals != null && !animals.isEmpty() && returnList != null) { returnList.add(animals.get(idFlag)); }
+					else { Messenger.sendMessage(cs, "ANIMAL_NOT_FOUND"); return null; }
+				}
 				else {
 					for (final Animal animal : animals) {
 						boolean passed = true;
