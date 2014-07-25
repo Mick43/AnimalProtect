@@ -2,8 +2,10 @@ package de.AnimalProtect;
 
 /* Java Imports */
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.UUID;
+
 
 /* Bukkit Imports */
 import org.bukkit.Bukkit;
@@ -12,8 +14,11 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.plugin.java.JavaPlugin;
 
+
+/* CraftoPlugin Imports */
 import craftoplugin.core.CraftoMessenger;
 import craftoplugin.core.database.CraftoPlayer;
+
 /* AnimalProtect - Command Imports */
 import de.AnimalProtect.commands.Command_animalprotect;
 import de.AnimalProtect.commands.Command_debug;
@@ -28,10 +33,10 @@ import de.AnimalProtect.commands.Command_unlock;
 import de.AnimalProtect.listeners.ChunkEventListener;
 import de.AnimalProtect.listeners.DamageEventListener;
 import de.AnimalProtect.listeners.DeathEventListener;
+
 /* AnimalProtect - Listener Imports */
 import de.AnimalProtect.listeners.InteractEventListener;
 import de.AnimalProtect.listeners.LeashEventListener;
-import de.AnimalProtect.listeners.PrismEventListener;
 import de.AnimalProtect.listeners.VehicleEventListener;
 import de.AnimalProtect.structs.Animal;
 import de.AnimalProtect.structs.AnimalType;
@@ -257,6 +262,26 @@ public class AnimalProtect extends JavaPlugin {
 		return this.task;
 	}
 	
+	/**
+	 * Filtert Tiere, die den angegebenen Parametern entsprechen, raus und gibt sie zurück. </br>
+	 * @param cs - Der CommandSender, der die Auflistung gestartet hat. </br>
+	 * @param needsPlayer - True, wenn ein Spieler angegeben werden muss. </br>
+	 * @param args - Die Parametern mit denen die Tiere gesucht werden. <br>
+	 * Tiere die nicht den angegebenen Parametern entsprechen werden ignoriert. <br>
+	 * </br>
+	 * <b> Verfügbare Parameter: </b> <br>
+	 * @param '<tt>p:[text]</tt>' - Der Name des Spielers dem die Tiere gehören. </br>
+	 * @param '<tt>id:[zahl]</tt>' - Die ID des Tieres, oder wenn ein Spieler angegeben wurde das Tier mit der angegebenen Platzierung. </br>
+	 * @param '<tt>type:[text]</tt>' - Die Art des Tieres. Alle erlaubte Tiertypen: @see AnimalType </br>
+	 * @param '<tt>name:[text]</tt>' - Der Nametag des Tieres. </br>
+	 * @param '<tt>-missing</tt>' - Filtert Tiere heraus die in der Datenbank als "Lebend" angegeben sind, aber in der Welt nicht gefunden werden konnte. </br>
+	 * @param '<tt>-dead</tt>' - Filtert alle Tiere heraus die in der Datenbank bereits tot sind. </br>
+	 * </br>
+	 * @return {@literal ArrayList<Animal>} - Gibt eine sortierte Liste der herausgefilterten Tiere wieder. </br>
+	 * </br>
+	 * @see Animal
+	 * @see AnimalType
+	 */
 	public ArrayList<Animal> parseAnimal(final CommandSender cs, final String[] args, final boolean needsPlayer) {
 		if (args.length == 0) {
 			Messenger.sendMessage(cs, "§cFehler: Keine Argumente angegeben!");
@@ -334,6 +359,7 @@ public class AnimalProtect extends JavaPlugin {
 					}
 				}
 				
+				Collections.sort(returnList);
 				return returnList;
 			}
 		}

@@ -23,6 +23,15 @@ import craftoplugin.core.database.CraftoPlayer;
 /* AnimalProtect Imports */
 import de.AnimalProtect.AnimalProtect;
 
+/**
+ * Das Animal-Objekt in AnimalProtect
+ * 
+ * @see AnimalProtect
+ * @see AnimalArmor
+ * @see AnimalType
+ * @see AnimalVariant
+ * @see Comparable
+ */
 public class Animal implements Comparable<Animal> {
 	
 	private final AnimalProtect plugin;

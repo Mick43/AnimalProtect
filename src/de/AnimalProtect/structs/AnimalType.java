@@ -2,6 +2,26 @@ package de.AnimalProtect.structs;
 
 import org.bukkit.entity.EntityType;
 
+/**
+ * Beschreibt den Typ eines Tieres und Entities. <br>
+ * Diese Enumeration besteht aus fast allen freundlichen EntityType's. <br>
+ * 
+ * <b> Verfügbare Typen: </b> <br>
+ * '<code>UNKNOWN</code>' <br>
+ * '<code>COW</code>' <br>
+ * '<code>CHICKEN</code>' <br>
+ * '<code>PIG</code>' <br>
+ * '<code>SHEEP</code>' <br>
+ * '<code>HORSE</code>' <br>
+ * '<code>IRON_GOLEM</code>' <br>
+ * '<code>SNOWMAN</code>'
+ * '<code>VILLAGER</code>' <br>
+ * '<code>OCELOT</code>' <br>
+ * '<code>WOLF</code>' <br>
+ * 
+ * @see Animal
+ * @see EntityType
+ */
 public enum AnimalType {
 	UNKNOWN ("Unknown", EntityType.UNKNOWN),
 	COW ("Cow", EntityType.COW),

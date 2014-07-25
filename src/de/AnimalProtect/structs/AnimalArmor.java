@@ -2,6 +2,20 @@ package de.AnimalProtect.structs;
 
 import org.bukkit.Material;
 
+/**
+ * Gibt die Rüstung eines Tieres an. <br>
+ * Zurzeit können nur Pferde eine Rüstung besitzen. <br>
+ * Jeder Rüstungstyp besitzt auch ein Material. <br>
+ * 
+ * <b> Verfügbare Typen: </b> <br>
+ * '<code>UNKNOWN</code>' <br>
+ * '<code>DIAMOND</code>' <br>
+ * '<code>GOLD</code>' <br>
+ * '<code>IRON</code>' <br>
+ * 
+ * @see Animal
+ * @see Material
+ */
 public enum AnimalArmor {
 	UNKNOWN("Unknown", Material.AIR),
 	DIAMOND ("Diamond", Material.DIAMOND_BARDING),

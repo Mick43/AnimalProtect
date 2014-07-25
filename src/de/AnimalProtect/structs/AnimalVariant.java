@@ -2,6 +2,21 @@ package de.AnimalProtect.structs;
 
 import org.bukkit.entity.Horse.Variant;
 
+/**
+ * Beschreibt die Variante des Tieres. <br>
+ * Nur Pferde haben verschiedene Varianten. <br>
+ * 
+ * <b> Verfügbare Typen: </b> <br>
+ * '<code>NONE</code>' <br>
+ * '<code>DONKEY</code>' <br>
+ * '<code>HORSE</code>' <br>
+ * '<code>MULE</code>' <br>
+ * '<code>SKELETON_HORSE</code>' <br>
+ * '<code>UNDEAD_HORSE</code>' <br>
+ * 
+ * @see Animal
+ * @see Variant
+ */
 public enum AnimalVariant {
 	NONE ("None", null),
 	DONKEY ("Donkey", Variant.DONKEY),
