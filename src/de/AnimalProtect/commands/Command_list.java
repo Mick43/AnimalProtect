@@ -11,7 +11,6 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Entity;
-import org.bukkit.entity.Player;
 
 import craftoplugin.core.database.CraftoPlayer;
 import craftoplugin.utility.CraftoTime;
@@ -36,49 +35,20 @@ public class Command_list implements CommandExecutor {
 		{ this.plugin.getDatenbank().connect(); }
 		
 		/* Variablen initialisieren */
-		CraftoPlayer cPlayer = null;
 		Integer page = 1;
 		Integer pages = 1;
-		ArrayList<Animal> animals = null;
+		CraftoPlayer cPlayer = null;
+		final ArrayList<Animal> animals = this.plugin.parseAnimal(cs, args, true);
 		
-		/* Argumente überprüfen */
-		if (args.length == 0) { /*  /listanimals  */
-			if (cs instanceof Player) 
-			{ cPlayer = CraftoPlayer.getPlayer(cs.getName()); }
-			else { Messenger.sendMessage(cs, "TOO_FEW_ARGUMENTS"); return true; }
-		}
-		else if (args.length == 1) { /*  /listanimals <args[0]>  */
-			if (Command_list.isNumber(args[0])) { 
-				page = Integer.parseInt(args[0]); 
-				
-				if (cs instanceof Player) 
-				{ cPlayer = CraftoPlayer.getPlayer(cs.getName()); }
-				else { Messenger.sendMessage(cs, "NO_GIVEN_PLAYER"); return true; }
-			}
-			else { 
-				if (Command_list.isUUID(args[0])) { cPlayer = CraftoPlayer.getPlayer(UUID.fromString(args[0])); }
-				else { cPlayer = CraftoPlayer.getPlayer(args[0]); }
-			}
-		}
-		else if (args.length == 2) { /*  /listanimals <args[0]> <args[1]  */
-			if (Command_list.isUUID(args[0])) { cPlayer = CraftoPlayer.getPlayer(UUID.fromString(args[0])); }
-			else { cPlayer = CraftoPlayer.getPlayer(args[0]); }
-			
-			if (Command_list.isNumber(args[1])) 
-			{ page = Integer.parseInt(args[1]);  }
-			else { Messenger.sendMessage(cs, "PAGE_NOT_NUMBER"); return true; }
-		}
-		else { Messenger.sendMessage(cs, "TOO_MANY_ARGUMENTS"); return true; }
+		if (animals == null) { return true; }
 		
-		/* Prüfen ob der Spieler gefunden wurde */
-		if (cPlayer.getId() == null)
-		{ Messenger.sendMessage(cs, "PLAYER_NOT_FOUND"); return true; }
+		if (animals.size() < 1)
+		{ Messenger.sendMessage(cs, "ANIMALS_NOT_FOUND"); return true; }
 		
-		/* Die Tiere des Spielers laden */
-		animals = this.plugin.getDatenbank().getAnimals(cPlayer.getUniqueId());
+		cPlayer = CraftoPlayer.getPlayer(animals.get(0).getOwner());
 		
-		if (animals == null || animals.isEmpty())
-		{ Messenger.sendMessage(cs, "PLAYER_NO_LOCKS"); return true; }
+		/* Seite ermitteln */
+		for (final String arg : args) { if (this.isNumber(arg)) { page = Integer.parseInt(arg); } }
 		
 		/* Die Seitenanzahl ausrechnen */
 		final Double pagesAsDouble = ((double)animals.size() / (double)10);
@@ -158,12 +128,7 @@ public class Command_list implements CommandExecutor {
 		return true;
 	}
 	
-	private static boolean isUUID(final String value) {
-		if (value.length() != 36) { return false; }
-		return value.matches(".*-.*-.*-.*-.*");
-	}
-	
-	private static boolean isNumber(final String value) {
+	private boolean isNumber(final String value) {
 		try { Integer.parseInt(value); return true; }
 		catch (final Exception e) { return false; }
 	}
