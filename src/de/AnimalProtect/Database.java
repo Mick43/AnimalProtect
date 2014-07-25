@@ -72,26 +72,26 @@ public class Database {
 	private void createTable() {
 		try {
 			if (!this.isConnected()) { return; }
-
+			
 			final String[] columns = new String[17];
 			columns[0] = "id INT AUTO_INCREMENT PRIMARY KEY";
-			columns[1] = "owner INT(11) NOT NULL";
+			columns[1] = "owner INT(6) NOT NULL UNSIGNED";
 			columns[2] = "animaltype ENUM('UNKNOWN', 'COW', 'CHICKEN', 'PIG', 'SHEEP', 'HORSE', 'WOLF', 'IRON_GOLEM', 'SNOWMAN', 'VILLAGER', 'OCELOT') NOT NULL";
 			columns[3] = "last_x SMALLINT(5) NOT NULL";
 			columns[4] = "last_y SMALLINT(3) UNSIGNED NOT NULL";
 			columns[5] = "last_z SMALLINT(5) NOT NULL";
-			columns[6] = "alive BOOL NOT NULL";
+			columns[6] = "alive BOOL NOT NULL UNSIGNED";
 			columns[7] = "nametag VARCHAR(255) NOT NULL";
-			columns[8] = "maxhp DOUBLE NOT NULL";
+			columns[8] = "maxhp DOUBLE NOT NULL UNSIGNED";
 			columns[9] = "deathcause ENUM('NONE', 'CUSTOM', 'CONTACT', 'ENTITY_ATTACK', 'PROJECTILE', 'SUFFOCATION', 'FALL', 'FIRE', 'FIRE_TICK', 'MELTING', 'LAVA', 'DROWNING', 'BLOCK_EXPLOSION', 'ENTITY_EXPLOSION', 'VOID', 'LIGHTNING', 'SUICIDE', 'STARVATION', 'POISON', 'MAGIC', 'WITHER', 'FALLING_BLOCK', 'THORNS') NOT NULL";
-			columns[10] = "color VARCHAR(40) NOT NULL";
+			columns[10] = "color VARCHAR(32) NOT NULL";
 			columns[11] = "armor ENUM('UNKNOWN', 'DIAMOND','GOLD','IRON') NOT NULL";
-			columns[12] = "horse_jumpstrength DOUBLE NOT NULL";
+			columns[12] = "horse_jumpstrength DOUBLE NOT NULL UNSIGNED";
 			columns[13] = "horse_style ENUM('NONE', 'WHITE', 'WHITEFIELD', 'WHITE_DOTS', 'BLACK_DOTS') NOT NULL";
 			columns[14] = "horse_variant ENUM('NONE', 'HORSE', 'DONKEY', 'MULE', 'UNDEAD_HORSE', 'SKELETON_HORSE') NOT NULL";
 			columns[15] = "uuid CHAR(36) NOT NULL UNIQUE KEY";
 			columns[16] = "created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL";
-
+			
 			this.connection.createTable("ap_entities", columns, false);
 			this.loadFromDatabase();
 		}
@@ -104,12 +104,12 @@ public class Database {
 			final Long loadStart = System.currentTimeMillis();
 
 			/* Als erstes die CraftoPlayer's laden */
-			if (CraftoPlugin.plugin.getDatenbank().isConnected() && CraftoPlugin.plugin.getDatenbank().getPlayerCount() > 0) {
+			if (CraftoPlugin.plugin.getDatenbank().getPlayerCount() > 0) {
 				for(final CraftoPlayer player : CraftoPlugin.plugin.getDatenbank().getPlayers()) {
 					this.keys.put(player.getUniqueId(), new ArrayList<Animal>());
 				}
 			}
-			else { Messenger.log("Warning: Failed to load players from the Database! (CraftoPlugin isnt connected)"); return; }
+			else { Messenger.log("Warning: Failed to load players from the Database! (CraftoPlugin.getPlayerCount < 0)"); return; }
 
 
 			/* Dann die Tiere laden */
