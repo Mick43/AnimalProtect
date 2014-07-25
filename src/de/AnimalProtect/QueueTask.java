@@ -109,4 +109,9 @@ public class QueueTask extends BukkitRunnable {
 		{ @Override
 		public void run() { QueueTask.this.plugin.getQueue().start(); } }, delay);
 	}
+
+	public synchronized void reloadConnection() {
+		this.database.closeConnection();
+		this.database.openConnection();
+	}
 }
