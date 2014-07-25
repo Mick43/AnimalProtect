@@ -22,7 +22,7 @@ public class ChunkEventListener implements Listener {
 	public void onChunkUnload(final ChunkUnloadEvent event) {
 		if (event.getWorld().getEnvironment().equals(Environment.NORMAL)) {
 			try {
-				synchronized (this.plugin) {
+				synchronized (this.plugin.getQueue()) {
 					if (this.plugin.getQueue().isRunning()) {
 						for (final Entity e : event.getChunk().getEntities()) {
 							if (this.plugin.getDatenbank().containsAnimal(e.getUniqueId())) {
