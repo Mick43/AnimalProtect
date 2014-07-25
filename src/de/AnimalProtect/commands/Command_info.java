@@ -47,7 +47,7 @@ public class Command_info implements CommandExecutor {
 		if (animal != null) {
 			final CraftoPlayer owner = this.plugin.getDatenbank().getOwner(animal.getUniqueId());
 			if (owner != null)
-			{ Messenger.sendMessage(sender, "§eDas Tier wurde von §6"+owner.getName()+"§e am §6"+CraftoTime.getTime("dd.MM.yyyy", animal.getCreated_at())+" gesichert."); }
+			{ Messenger.sendMessage(sender, "§eDas Tier wurde von §6"+owner.getName()+"§e am §6"+CraftoTime.getTime("dd.MM.yyyy", animal.getCreated_at())+"§e gesichert."); }
 			else { 
 				Messenger.sendMessage(cs, "ANIMAL_OWNER_UNKNOWN");
 				Messenger.error("Error: Failed to find the owner of an entity! (Command_animalinfo.java/runCommand) (AnimalId="+animal.getId()+")");
