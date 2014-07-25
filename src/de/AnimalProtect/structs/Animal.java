@@ -27,8 +27,8 @@ public class Animal implements Comparable<Animal> {
 	
 	private final AnimalProtect plugin;
 	
-	private int id;
-	private int owner;
+	private Integer id;
+	private Integer owner;
 	private AnimalType animaltype;
 	private int last_x;
 	private int last_y;
@@ -44,6 +44,7 @@ public class Animal implements Comparable<Animal> {
 	private AnimalVariant horse_variant; 
 	private UUID uuid;
 	private Timestamp created_at;
+	private CraftoPlayer cOwner;
 	
 	public Animal(final AnimalProtect plugin) { 
 		this.plugin = plugin;
@@ -261,6 +262,13 @@ public class Animal implements Comparable<Animal> {
 	 * @return Gibt aus, wann das Tier protected wurde.
 	 */
 	public Timestamp getCreated_at() { return this.created_at; }
+	/**
+	 * @return Gibt den Owner des Tieres als CraftoPlayer-Objekt wieder.
+	 */
+	public CraftoPlayer getCraftoOwner() {
+		if (this.cOwner == null ) { this.cOwner = CraftoPlayer.getPlayer(this.owner); }
+		return this.cOwner;
+	}
 	/**
 	 * Setzt die Id auf den angegebenen Wert.
 	 * @param id - Die neue Id des Tieres.
