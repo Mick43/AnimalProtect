@@ -30,4 +30,11 @@ public enum AnimalType {
 	public EntityType getEntity() {
 		return this.entity;
 	}
+	
+	public static boolean contains(final String value) {
+		for (final AnimalType type : AnimalType.values()) {
+			if (type.getName().equalsIgnoreCase(value)) { return true; }
+		}
+		return false;
+	}
 }
