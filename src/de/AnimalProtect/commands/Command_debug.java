@@ -31,11 +31,16 @@ public class Command_debug implements CommandExecutor {
 			else { Messenger.messageList(cs, "Datenbank-Verbindung", "Nicht aktiv"); }
 			
 			Messenger.messageList(cs, "Anzahl an fehlgeschlagenen Queries", ""+this.plugin.getDatenbank().getFailedQueries().size());
+			
+			if (this.plugin.getQueue().isRunning()) { Messenger.messageList(cs, "Status der Queue", "Aktiv."); }
+			else { Messenger.messageList(cs, "Status der Queue", "Inaktiv."); }
+			
+			Messenger.messageList(cs, "Größe der Queue", this.plugin.getQueue().getSize() + " Queries.");
+			Messenger.messageList(cs, "Maximale Protections eines Spielers", this.plugin.getConfig().getInt("settings.max_entities_for_player") + " Locks.");
 		}
 		else {
-			if (this.isNumber(args[0])) {
-				Messenger.sendMessage(cs, "§7[§f"+this.plugin.getDatenbank().getFailedQueries().get(Integer.parseInt(args[0])) + "§7]");
-			}
+			if (this.isNumber(args[0])) 
+			{ Messenger.sendMessage(cs, "§7[§f"+this.plugin.getDatenbank().getFailedQueries().get(Integer.parseInt(args[0])) + "§7]"); }
 		}
 		
 		return true;
