@@ -390,7 +390,7 @@ public class Messenger {
 		Messenger.warn("-------------------------- Exception Stacktrace End --------------------------");
 		
 		try {
-			final CraftoFile file = new CraftoFile(CraftoFile.getExceptionPath() + "/animalprotect-"+CraftoTime.getFullTime());
+			final CraftoFile file = new CraftoFile(CraftoFile.getExceptionPath() + "/animalprotect-"+CraftoTime.getFullTime()+".log");
 			file.writeLine("---------------------------- "+Messenger.ConsolePrefix+" Exception! ------------------------");
 			file.writeLine("An Exception occured in animalprotect/" + Source);
 			file.writeLine("More Information: " + Information);
