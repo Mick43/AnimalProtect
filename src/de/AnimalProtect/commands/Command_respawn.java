@@ -26,7 +26,6 @@ import de.AnimalProtect.AnimalProtect;
 import de.AnimalProtect.Messenger;
 import de.AnimalProtect.structs.Animal;
 import de.AnimalProtect.structs.AnimalArmor;
-import de.AnimalProtect.structs.AnimalType;
 
 public class Command_respawn implements CommandExecutor {
 	
@@ -47,127 +46,23 @@ public class Command_respawn implements CommandExecutor {
 		if (!(cs instanceof Player)) { Messenger.sendMessage(cs, "SENDER_NOT_PLAYER"); return true; }
 		if (args.length < 2) { Messenger.sendMessage(cs, "TOO_FEW_ARGUMENTS"); return true; }
 		
-		/* Variablen bereitstellen */
-		final Player sender = (Player)cs;
-		CraftoPlayer cOwner = null;
-		String owner = null;
-		Integer start = null;
-		Integer end = null;
-		AnimalType type = null;
-		Boolean idFlag = false;
-		Boolean startFlag = false;
-		Boolean endFlag = false;
-		Boolean missingFlag = false;
-		Boolean locationFlag = false;
-		Boolean typeFlag = false;
+		/* Liste erstellen */
+		final ArrayList<Animal> list = this.plugin.parseAnimal(cs, args, false);
+		if (list == null) { return true; }
+		else if (list.isEmpty()) { Messenger.sendMessage(cs, "ANIMALS_NOT_FOUND"); return true; }
 		
-		/* Die Flags ermitteln */
-		for (final String s : args) {
-			if (s.startsWith("p:")) {
-				owner = s.substring(2, s.length());
-			}
-			else if (s.startsWith("id:")) {
-				if (this.isNumber(s.substring(3, s.length()))) {
-					if (!startFlag) {
-						start = Integer.parseInt(s.substring(3, s.length()));
-						end = start;
-						startFlag = false;
-						endFlag = false;
-						idFlag = true;
-					}
-					else { Messenger.sendMessage(cs, "START_FLAG_ALREADY"); return true; }
-				}
-				else { Messenger.sendMessage(cs, "ID_NOT_NUMBER"); return true; }
-			}
-			else if (s.startsWith("start:")) {
-				if (!idFlag) {
-					if (this.isNumber(s.substring(6, s.length()))) {
-						start = Integer.parseInt(s.substring(6, s.length()));
-						startFlag = true;
-						idFlag = false;
-					}
-					else { Messenger.sendMessage(cs, "START_NOT_NUMBER"); return true; }
-				}
-				else { Messenger.sendMessage(cs, "ID_FLAG_ALREADY"); return true; }
-			}
-			else if (s.startsWith("end:")) {
-				if (!idFlag) {
-					if (this.isNumber(s.substring(4, s.length()))) {
-						end = Integer.parseInt(s.substring(4, s.length()));
-						endFlag = true;
-						idFlag = false;
-					}
-				}
-				else { Messenger.sendMessage(cs, "ID_FLAG_ALREADY"); return true; }
-			}
-			else if (s.startsWith("-missing")) {
-				missingFlag = true;
-			}
-			else if (s.startsWith("-location")) {
-				locationFlag = true;
-			}
-			else if (s.startsWith("type:")) {
-				type = AnimalType.valueOf(s.substring(5, s.length()));
-				if (type != null) { typeFlag = true; }
-			}
+		/* LocationFlag */
+		boolean locationFlag = false;
+		for(final String arg : args) { if (arg.equalsIgnoreCase("-location")) { locationFlag = true; } }
+		
+		int failedCounter = 0;
+		for (final Animal animal : list) {
+			if(!this.respawnAnimal(animal, animal.getCraftoOwner(), ((Player)cs), true, locationFlag)) 
+			{ failedCounter += 1; }
 		}
 		
-		if (owner == null) { Messenger.sendMessage(cs, "§cFehler: Es wurde kein Spieler angegeben!"); return true; }
-		if (!idFlag && !startFlag && !endFlag) { Messenger.sendMessage(cs, "§cFehler: Es wurde kein Start oder Endpunkt festgelegt!"); }
-		
-		/* Den angegebenen Spieler ermitteln */
-		if (this.isUUID(args[0])) { cOwner = CraftoPlayer.getPlayer(UUID.fromString(owner)); }
-		else { cOwner = CraftoPlayer.getPlayer(owner); }
-		
-		if (cOwner == null) { Messenger.sendMessage(cs, "PLAYER_NOT_FOUND"); return true; }
-		
-		/* Alle Entities in eine ArrayList speichern, damit wir sie später für isMissing() haben */
-		final ArrayList<UUID> foundEntities = new ArrayList<UUID>();
-		for (final Entity entity : sender.getWorld().getEntities()) {
-			if (!typeFlag) { if (!entity.isDead()) { foundEntities.add(entity.getUniqueId()); } }
-			else if (entity.getType().equals(type.getEntity())) 
-			{ if (!entity.isDead()) { foundEntities.add(entity.getUniqueId()); } }
-		}
-		
-		/* Alle Flags durchgehen */
-		if (idFlag) {
-			final Animal animal = this.plugin.getDatenbank().getAnimals(cOwner.getUniqueId()).get(start);
-			
-			if (animal == null) { Messenger.sendMessage(cs, "ANIMAL_NOT_FOUND"); return true; }
-			else if (missingFlag && this.isMissing(animal, foundEntities)) { this.respawnAnimal(animal, cOwner, sender, true, locationFlag); }
-			else if (!missingFlag) { this.respawnAnimal(animal, cOwner, sender, true, locationFlag); }
-		}
-		else if (startFlag && !endFlag) {
-			for (int i=start; i<this.plugin.getDatenbank().getAnimals(cOwner.getUniqueId()).size(); i++) { 
-				final Animal foundAnimal = this.plugin.getDatenbank().getAnimals(cOwner.getUniqueId()).get(i);
-				if (foundAnimal == null) { continue; }
-				
-				if(missingFlag && this.isMissing(foundAnimal, foundEntities)) {
-					this.respawnAnimal(foundAnimal, cOwner, sender, true, locationFlag);
-				}
-				else if (!missingFlag) {
-					this.respawnAnimal(foundAnimal, cOwner, sender, true, locationFlag);
-				}
-			}
-		}
-		else if  (startFlag && endFlag) {
-			if (end > this.plugin.getDatenbank().getAnimals(cOwner.getUniqueId()).size()) {
-				Messenger.sendMessage(cs, "ENDFLAG_TOO_HIGH");
-			}
-			else {
-				for (int i=start; i<end; i++) {
-					final Animal foundAnimal = this.plugin.getDatenbank().getAnimals(cOwner.getUniqueId()).get(i);
-					if (foundAnimal == null) { continue; }
-					
-					if(missingFlag && this.isMissing(foundAnimal, foundEntities)) {
-						this.respawnAnimal(foundAnimal, cOwner, sender, true, locationFlag);
-					}
-					else if (!missingFlag) {
-						this.respawnAnimal(foundAnimal, cOwner, sender, true, locationFlag);
-					}
-				}
-			}
-		}
+		if (failedCounter == 0) { Messenger.sendMessage(cs, "§aEs wurden alle ausgewählten Tiere erfolgreich respawned."); }
+		else { Messenger.sendMessage(cs, "§cFehler: Es konnten "+failedCounter+" von "+list.size()+" nicht respawned werden."); }
 		return true;
 	}
 		
@@ -233,18 +128,5 @@ public class Command_respawn implements CommandExecutor {
 		else { Messenger.sendMessage(sender, "ANIMAL_NOT_RESPAWNED"); }
 		
 		return false;
-	}
-	
-	private boolean isNumber(final String value) {
-		try {
-			Integer.parseInt(value);
-			return true;
-		}
-		catch (final Exception e) { }
-		return false;
-	}
-	
-	private boolean isUUID(final String value) {
-		return value.matches(".*-.*-.*-.*-.*");
 	}
 }
