@@ -41,7 +41,7 @@ public class Command_animalprotect implements CommandExecutor {
 				else if (args[0].equalsIgnoreCase("unlockanimal")) { this.plugin.getCommand("unlockanimal").getExecutor().onCommand(cs, cmd, label, newArgs); }
 				else if (args[0].equalsIgnoreCase("debug")) { this.plugin.getCommand("animaldebug").getExecutor().onCommand(cs, cmd, label, newArgs); }
 				else if (args[0].equalsIgnoreCase("queue")) { this.plugin.getCommand("animalqueue").getExecutor().onCommand(cs, cmd, label, newArgs); }
-				else if (args[0].equalsIgnoreCase("list")) { this.plugin.getCommand("listnanimals").getExecutor().onCommand(cs, cmd, label, newArgs); }
+				else if (args[0].equalsIgnoreCase("list")) { this.plugin.getCommand("listanimals").getExecutor().onCommand(cs, cmd, label, newArgs); }
 				else if (args[0].equalsIgnoreCase("lock")) { this.plugin.getCommand("lockanimal").getExecutor().onCommand(cs, cmd, label, newArgs); }
 				else if (args[0].equalsIgnoreCase("limit")) { this.plugin.getCommand("lockedanimals").getExecutor().onCommand(cs, cmd, label, newArgs); }
 				else if (args[0].equalsIgnoreCase("info")) { this.plugin.getCommand("animalinfo").getExecutor().onCommand(cs, cmd, label, newArgs); }
@@ -64,11 +64,11 @@ public class Command_animalprotect implements CommandExecutor {
 			Messenger.help(cs, "HELP_HEADER");
 			Messenger.sendMessage(cs, "HELP_DESC");
 			if (this.hasPerm(cs, "animalprotect.protect")) { Messenger.sendMessage(cs, "§6/ap help: §fRuft diese Hilfe auf."); }
-			if (this.hasPerm(cs, "animalprotect.lock")) { Messenger.sendMessage(cs, "§6/ap lock: §f" + AnimalProtect.plugin.getCommand("lockanimal").getDescription());       }
+			if (this.hasPerm(cs, "animalprotect.lock"))    { Messenger.sendMessage(cs, "§6/ap lock: §f" + AnimalProtect.plugin.getCommand("lockanimal").getDescription());       }
 			if (this.hasPerm(cs, "animalprotect.protect")) { Messenger.sendMessage(cs, "§6/ap unlock: §f" + AnimalProtect.plugin.getCommand("unlockanimal").getDescription());   }
 			if (this.hasPerm(cs, "animalprotect.admin"))   { Messenger.sendMessage(cs, "§6/ap list: §f" + AnimalProtect.plugin.getCommand("listanimals").getDescription());      }
 			if (this.hasPerm(cs, "animalprotect.protect")) { Messenger.sendMessage(cs, "§6/ap limit: §f" + AnimalProtect.plugin.getCommand("lockedanimals").getDescription());   }
-			if (this.hasPerm(cs, "animalprotect.protect")) { Messenger.sendMessage(cs, "§6/ap info: §f" + AnimalProtect.plugin.getCommand("animalinfo").getDescription());   	}
+			if (this.hasPerm(cs, "animalprotect.protect")) { Messenger.sendMessage(cs, "§6/ap info: §f" + AnimalProtect.plugin.getCommand("animalinfo").getDescription());   	 }
 			if (this.hasPerm(cs, "animalprotect.admin"))   { Messenger.sendMessage(cs, "§6/ap respawn: §f" + AnimalProtect.plugin.getCommand("respawnanimal").getDescription()); }
 			if (this.hasPerm(cs, "animalprotect.admin"))   { Messenger.sendMessage(cs, "§6/ap tp: §f" + AnimalProtect.plugin.getCommand("tpanimal").getDescription());           }
 			if (this.hasPerm(cs, "animalprotect.admin"))   { Messenger.sendMessage(cs, "§6/ap debug: §f" + AnimalProtect.plugin.getCommand("animaldebug").getDescription());     }
@@ -91,22 +91,23 @@ public class Command_animalprotect implements CommandExecutor {
 			}
 			else if (args.length == 1) {
 				if (args[0].equalsIgnoreCase("config")) {
-					AnimalProtect.plugin.reloadSettings();
+					this.plugin.reloadSettings();
 					
 					Messenger.sendMessage(cs, "RELOAD_SUCCESS_CONFIG");
 				}
 				else if (args[0].equalsIgnoreCase("database")) {
-					AnimalProtect.plugin.reloadDatabase();
+					this.plugin.reloadDatabase();
 					
-					if (AnimalProtect.plugin.getDatenbank().isConnected()) 
+					if (this.plugin.getDatenbank().isConnected()) 
 					{ Messenger.sendMessage(cs, "RELOAD_SUCCESS_DATABASE"); }
 					else { Messenger.sendMessage(cs, "RELOAD_FAILED_DATABASE"); }
 				}
 				else if (args[0].equalsIgnoreCase("connection")) {
-					AnimalProtect.plugin.getDatenbank().closeConnection();
-					AnimalProtect.plugin.getDatenbank().connect();
+					this.plugin.getDatenbank().closeConnection();
+					this.plugin.getDatenbank().connect();
+					this.plugin.getQueue().reloadConnection();
 					
-					if (AnimalProtect.plugin.getDatenbank().isConnected()) 
+					if (this.plugin.getDatenbank().isConnected()) 
 					{ Messenger.sendMessage(cs, "RELOAD_SUCCESS_CONNECTION"); }
 					else { Messenger.sendMessage(cs, "RELOAD_FAILED_CONNECTION"); }
 				}
