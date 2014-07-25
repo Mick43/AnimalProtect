@@ -1,5 +1,7 @@
 package de.AnimalProtect.commands;
 
+import java.util.ArrayList;
+
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -30,23 +32,40 @@ public class Command_unlock implements CommandExecutor {
 		/* Prüfen ob der Sender ein Spieler ist */
 		if (!(cs instanceof Player)) { Messenger.sendMessage(cs, "SENDER_NOT_PLAYER"); return true; }
 		
-		/* Variablen bereitstellen */
-		final Player sender = (Player)cs;
-		final CraftoPlayer player = CraftoPlayer.getPlayer(sender.getUniqueId());
-		final Entity entity = this.plugin.getSelectedAnimal(sender.getUniqueId());
-		
-		/* Variablen überprüfen */
-		if (entity == null) { Messenger.sendMessage(cs, "SELECTED_NONE"); return true; }
-		else if (player == null) { Messenger.sendMessage(cs, "PLAYEROBJECT_NOT_FOUND"); return true; }
-		
-		final Animal animal = this.plugin.getDatenbank().getAnimal(entity.getUniqueId());
-		
-		if (animal == null) { Messenger.sendMessage(cs, "ANIMAL_NOT_FOUND"); }
-		else {
-			if (this.plugin.getDatenbank().unlockAnimal(animal)) 
-			{ Messenger.sendMessage(cs, "ANIMAL_SUCESS_UNPROTECT"); }
-			else { Messenger.sendMessage(cs, "ANIMAL_FAILED_UNPROTECT"); }
+		/* Argumente überprüfen */
+		if (args.length < 1) {
+			/* Variablen bereitstellen */
+			final Player sender = (Player)cs;
+			final CraftoPlayer player = CraftoPlayer.getPlayer(sender.getUniqueId());
+			final Entity entity = this.plugin.getSelectedAnimal(sender.getUniqueId());
+			
+			/* Variablen überprüfen */
+			if (entity == null) { Messenger.sendMessage(cs, "SELECTED_NONE"); return true; }
+			else if (player == null) { Messenger.sendMessage(cs, "PLAYEROBJECT_NOT_FOUND"); return true; }
+			
+			final Animal animal = this.plugin.getDatenbank().getAnimal(entity.getUniqueId());
+			
+			if (animal == null) { Messenger.sendMessage(cs, "ANIMAL_NOT_FOUND"); }
+			else {
+				if (this.plugin.getDatenbank().unlockAnimal(animal)) 
+				{ Messenger.sendMessage(cs, "ANIMAL_SUCESS_UNPROTECT"); }
+				else { Messenger.sendMessage(cs, "ANIMAL_FAILED_UNPROTECT"); }
+			}
+			return true;
 		}
-		return true;
+		else {
+			final ArrayList<Animal> list = this.plugin.parseAnimal(cs, args, false);
+			if (list==null) { return true; }
+			else if (list.isEmpty()) { Messenger.sendMessage(cs, "ANIMALS_NOT_FOUND"); }
+			
+			int failed = 0;
+			for (final Animal animal : list) {
+				if (!this.plugin.getDatenbank().unlockAnimal(animal))
+				{ failed += 1; }
+			}
+			
+			Messenger.sendMessage(cs, "§aEs wurden "+(list.size()-failed)+" von "+list.size()+" entsichert.");
+			return true;
+		}
 	}
 }
