@@ -332,6 +332,8 @@ public class AnimalProtect extends JavaPlugin {
 			if (player == null) { CraftoMessenger.sendMessage(cs, "PLAYER_NOT_FOUND"); return null; }
 			else {
 				final ArrayList<Animal> animals = this.database.getAnimals(player.getUniqueId());
+				if (animals==null || animals.isEmpty()) { Messenger.sendMessage(cs, "ANIMALS_NOT_FOUND"); return null; }
+				
 				if (idFlag != null) {
 					if (animals != null && !animals.isEmpty() && returnList != null) { returnList.add(animals.get(idFlag)); }
 					else { Messenger.sendMessage(cs, "ANIMAL_NOT_FOUND"); return null; }
