@@ -75,24 +75,24 @@ public class Database {
 			
 			final String[] columns = new String[17];
 			columns[0] = "id INT AUTO_INCREMENT PRIMARY KEY";
-			columns[1] = "owner INT(6) NOT NULL UNSIGNED";
+			columns[1] = "owner INT(11) NOT NULL";
 			columns[2] = "animaltype ENUM('UNKNOWN', 'COW', 'CHICKEN', 'PIG', 'SHEEP', 'HORSE', 'WOLF', 'IRON_GOLEM', 'SNOWMAN', 'VILLAGER', 'OCELOT') NOT NULL";
 			columns[3] = "last_x SMALLINT(5) NOT NULL";
 			columns[4] = "last_y SMALLINT(3) UNSIGNED NOT NULL";
 			columns[5] = "last_z SMALLINT(5) NOT NULL";
-			columns[6] = "alive BOOL NOT NULL UNSIGNED";
+			columns[6] = "alive BOOL NOT NULL";
 			columns[7] = "nametag VARCHAR(255) NOT NULL";
-			columns[8] = "maxhp DOUBLE NOT NULL UNSIGNED";
+			columns[8] = "maxhp DOUBLE NOT NULL";
 			columns[9] = "deathcause ENUM('NONE', 'CUSTOM', 'CONTACT', 'ENTITY_ATTACK', 'PROJECTILE', 'SUFFOCATION', 'FALL', 'FIRE', 'FIRE_TICK', 'MELTING', 'LAVA', 'DROWNING', 'BLOCK_EXPLOSION', 'ENTITY_EXPLOSION', 'VOID', 'LIGHTNING', 'SUICIDE', 'STARVATION', 'POISON', 'MAGIC', 'WITHER', 'FALLING_BLOCK', 'THORNS') NOT NULL";
 			columns[10] = "color VARCHAR(32) NOT NULL";
 			columns[11] = "armor ENUM('UNKNOWN', 'DIAMOND','GOLD','IRON') NOT NULL";
-			columns[12] = "horse_jumpstrength DOUBLE NOT NULL UNSIGNED";
+			columns[12] = "horse_jumpstrength DOUBLE NOT NULL";
 			columns[13] = "horse_style ENUM('NONE', 'WHITE', 'WHITEFIELD', 'WHITE_DOTS', 'BLACK_DOTS') NOT NULL";
 			columns[14] = "horse_variant ENUM('NONE', 'HORSE', 'DONKEY', 'MULE', 'UNDEAD_HORSE', 'SKELETON_HORSE') NOT NULL";
 			columns[15] = "uuid CHAR(36) NOT NULL UNIQUE KEY";
 			columns[16] = "created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL";
 			
-			this.connection.createTable("ap_entities", columns, false);
+			this.connection.createTable("ap_entities", columns, true);
 			this.loadFromDatabase();
 		}
 		catch (final Exception e) { Messenger.exception("Database/createTable", "An exception occured in de.AnimalProtect.Database.createTabel()", e); }
@@ -266,7 +266,7 @@ public class Database {
 				 + "VALUES ("+animal.getOwner()+", '"+animal.getAnimaltype().toString()+"', "+animal.getX()+", "+animal.getY()+", "
 				 		 + ""+animal.getZ()+", "+animal.isAlive()+", '"+animal.getNametag()+"', "+animal.getMaxhp()+", "
 				 		 + "'"+animal.getDeathcauseToString()+"', '"+animal.getColorToString()+"', '"+animal.getArmor()+"', "+animal.getHorse_jumpstrength()+", "
-				 		 + "'"+animal.getHorse_styleToString()+"', '"+animal.getHorse_variantToString()+"', '"+animal.getUniqueId()+"')"
+				 		 + "'"+animal.getHorse_styleToString()+"', '"+animal.getHorse_variantToString()+"', '"+animal.getUniqueId()+"') "
 				 + "ON DUPLICATE KEY UPDATE owner="+animal.getOwner()+", last_x="+animal.getX()+", last_y="+animal.getY()+", "
 				 		 + "last_z="+animal.getZ()+", alive="+animal.isAlive()+", nametag='"+animal.getNametag()+"', "
 				 		 + "deathcause='"+animal.getDeathcauseToString()+"', color='"+animal.getColorToString()+"', armor='"+animal.getArmor().toString()+"';";
