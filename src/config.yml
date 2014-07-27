@@ -24,7 +24,7 @@ messages:
   ANIMAL_ALIVE: '%a+'
   ANIMAL_DEAD: '%4-'
   ANIMAL_MISSING: '%c-'
-  ANIMALS_NOT_FOUND: '%cfehler: Es konnten keine Tiere gefunden werden.'
+  ANIMALS_NOT_FOUND: '%cFehler: Es konnten keine Tiere gefunden werden.'
   
   QUEUE_STARTED: '%eDie Queue ist zurzeit aktiv.'
   QUEUE_STOPPED: '%eDie Queue ist zurzeit deaktiviert.'
