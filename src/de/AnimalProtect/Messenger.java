@@ -1,6 +1,7 @@
 package de.AnimalProtect;
 
 /* Java Imports */
+import java.util.HashMap;
 import java.util.UUID;
 import java.util.logging.Level;
 
@@ -20,6 +21,7 @@ public class Messenger {
 	private final static String Prefix = ChatColor.RESET + "" + ChatColor.GOLD + "AnimalProtect //";
 	private final static String ConsolePrefix = "AnimalProtect";
 	private final static Boolean Debugging = true;
+	private static HashMap<String, Integer> exceptions;
 	
 	/**
 	 * Gibt eine Nachricht in der Konsole aus.
@@ -367,43 +369,58 @@ public class Messenger {
 	}
 	
 	/**
-	 * Gibt eine Exception mit dem kompletten Stacktrace in der Konsole aus.
-	 * 
-	 * @param Source
-     *            Die Quelle, aus welcher Klasse/Funktion die Exception kommt.
-	 * @param Information
-     *            Weitere Informationen über die Exception.
-	 * @param e
-     *            Die Exception, von der der Stacktrace in die Konsole geschrieben wird.
-     */
-	public static void exception(final String Source, final String Information, final Exception e) {
+	 * Schreibt die Exception in die Konsole und speichert sie in einer Datei.
+	 * @param e - Die Exception
+	 * @param source - Die Quelle der Exception. (zb: GeneralModule/GeneralListener.java/onPlayerLogin)    
+	 * @param information - Weitere Informationen über die Ursache der Exception
+	 */
+	public static void exception(String source, String information, Exception e) {
+		CraftoMessenger.exception(source, information, e, true);
+	}
+	
+	/**
+	 * Schreibt die Exception in die Konsole und speichert sie in einer Datei.
+	 * @param e - Die Exception
+	 * @param source - Die Quelle der Exception. (zb: GeneralModule/GeneralListener.java/onPlayerLogin)    
+	 * @param information - Weitere Informationen über die Ursache der Exception
+	 */
+	public static synchronized void exception(final String source, final String information, final Exception e, final boolean createFile) {
 		if (e == null) { return; }
 		
-		Messenger.warn("---------------------------- "+Messenger.ConsolePrefix+" Exception! ------------------------");
-		Messenger.warn("An Exception occured in animalprotect/" + Source);
-		Messenger.warn("More Information: " + Information);
-		Messenger.warn("Exception: " + e.getClass().getName());
-		Messenger.warn("---------------------------- Exception Stacktrace ----------------------------");
-		for (final StackTraceElement s : e.getStackTrace()) {
-			Messenger.warn(" -> " +s.getClassName()+"/"+s.getMethodName()+"() -> Line: "+s.getLineNumber());
+		warn("--------------------- CraftoPlugin Exception! --------------------");
+		warn("An exception occured in craftoplugin/" + source);
+		warn("Detailed information: " + information);
+		warn("Exception: " + e.getClass().getName());
+		if (e.getCause() != null) { warn("Cause: " + e.getCause().getMessage()); }
+		for (StackTraceElement s : e.getStackTrace()) {
+			if (s.getClassName().startsWith("craftoplugin"))
+			{ warn(" ---> " + s.getFileName() + "/" + s.getMethodName() + "() ---> Line: " + s.getLineNumber()); }
+			else { warn(" -> " + s.getFileName() + "/" + s.getMethodName() + "() -> Line: " + s.getLineNumber()); }
 		}
-		Messenger.warn("-------------------------- Exception Stacktrace End --------------------------");
+		warn("-------------------- Exception Stacktrace end --------------------");
 		
-		try {
-			final CraftoFile file = new CraftoFile(CraftoFile.getExceptionPath() + "/animalprotect-"+CraftoTime.getFullTime()+".log");
-			file.writeLine("---------------------------- "+Messenger.ConsolePrefix+" Exception! ------------------------");
-			file.writeLine("An Exception occured in animalprotect/" + Source);
-			file.writeLine("More Information: " + Information);
+		if (createFile) {
+			if (exceptions == null) { exceptions = new HashMap<String, Integer>(); exceptions.put(source, 1); }
+			else if (exceptions.containsKey(source)) { exceptions.put(source, exceptions.get(source)+1); }
+			else { exceptions.put(source, 1); }
+			
+			final CraftoFile file = new CraftoFile(CraftoFile.getExceptionPath() + "/exception-"+CraftoTime.getFullTime());
+			file.writeLine("--------------------- CraftoPlugin Exception! --------------------");
+			file.writeLine("An exception occured in craftoplugin/" + source);
+			file.writeLine("This exception was thrown " + exceptions.get(source) + " times today.");
+			file.writeLine("Detailed information: " + information);
 			file.writeLine("Exception: " + e.getClass().getName());
-			file.writeLine("Time: " + CraftoTime.getFullTime());
-			file.writeLine("---------------------------- Exception Stacktrace ----------------------------");
-			for (final StackTraceElement s : e.getStackTrace()) {
-				file.writeLine(" -> " +s.getClassName()+"/"+s.getMethodName()+"() -> Line: "+s.getLineNumber());
+			file.writeLine("Exception first occured at: " + CraftoTime.getFullTime());
+			if (e.getCause() != null) { file.writeLine("Cause: " + e.getCause().getMessage()); }
+			for (StackTraceElement s : e.getStackTrace()) {
+				if (s.getClassName().startsWith("craftoplugin"))
+				{ file.writeLine(" ---> " + s.getFileName() + "/" + s.getMethodName() + "() ---> Line: " + s.getLineNumber()); }
+				else { file.writeLine(" -> " + s.getFileName() + "/" + s.getMethodName() + "() -> Line: " + s.getLineNumber()); }
 			}
-			file.writeLine("-------------------------- Exception Stacktrace End --------------------------");
-			try { file.saveFile(); } 
-			catch (final Exception e2) { CraftoMessenger.exception("CraftoMessenger/exception", "Failed to save an exception file", e2, false); }
+			file.writeLine("-------------------- Exception Stacktrace end --------------------");
+			
+			try { file.saveFile(); file.close(); }
+			catch (Exception fileException) { exception("CraftoMessenger.java/exception()", "Failed to save an exception file.", fileException, false); }
 		}
-		catch (final Exception e1) { CraftoMessenger.log("Failed to save an exception file for animalprotect :("); }
 	}
 }
