@@ -24,6 +24,7 @@ messages:
   ANIMAL_ALIVE: '%a+'
   ANIMAL_DEAD: '%4-'
   ANIMAL_MISSING: '%c-'
+  ANIMAL_LOCKED_ANOTHER: '%cFehler: Dieses Tier wurde nicht von dir gesichert.'
   ANIMALS_NOT_FOUND: '%cFehler: Es konnten keine Tiere gefunden werden.'
   
   QUEUE_STARTED: '%eDie Queue ist zurzeit aktiv.'

@@ -88,8 +88,6 @@ public class DamageEventListener implements Listener {
 				damager = (Entity) fishingHook.getShooter();
 				break;
 			default:
-				Messenger.warn("Unknown Damager detected! DamagerType: " +damager.getType().toString());
-				Messenger.messageStaff("§c[!] §7AnimalProtect: Ein unbekannter Damager wurde entdeckt: " + damager.getType().toString());
 				damager = null;
 				break;
 			}

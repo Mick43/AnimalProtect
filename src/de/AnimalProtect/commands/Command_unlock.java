@@ -47,13 +47,16 @@ public class Command_unlock implements CommandExecutor {
 			
 			if (animal == null) { Messenger.sendMessage(cs, "ANIMAL_NOT_FOUND"); }
 			else {
-				if (this.plugin.getDatenbank().unlockAnimal(animal)) 
-				{ Messenger.sendMessage(cs, "ANIMAL_SUCESS_UNPROTECT"); }
-				else { Messenger.sendMessage(cs, "ANIMAL_FAILED_UNPROTECT"); }
+				if (player.getId().equals(animal.getOwner()) || sender.hasPermission("animalprotect.admin")) {
+					if (this.plugin.getDatenbank().unlockAnimal(animal)) 
+					{ Messenger.sendMessage(cs, "ANIMAL_SUCESS_UNPROTECT"); }
+					else { Messenger.sendMessage(cs, "ANIMAL_FAILED_UNPROTECT"); }
+				}
+				else { Messenger.sendMessage(cs, "ANIMAL_LOCKED_ANOTHER"); }
 			}
 			return true;
 		}
-		else {
+		else if (cs.hasPermission("animalprotect.admin")) {
 			final ArrayList<Animal> list = this.plugin.parseAnimal(cs, args, false);
 			if (list==null) { return true; }
 			else if (list.isEmpty()) { Messenger.sendMessage(cs, "ANIMALS_NOT_FOUND"); }
@@ -64,8 +67,9 @@ public class Command_unlock implements CommandExecutor {
 				{ failed += 1; }
 			}
 			
-			Messenger.sendMessage(cs, "§aEs wurden "+(list.size()-failed)+" von "+list.size()+" entsichert.");
+			Messenger.sendMessage(cs, "§aEs wurden "+(list.size()-failed)+" von "+list.size()+" Tieren entsichert.");
 			return true;
 		}
+		else { Messenger.sendMessage(cs, "TOO_MANY_ARGUMENTS"); return true; }
 	}
 }
