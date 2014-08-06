@@ -11,24 +11,26 @@ import de.AnimalProtect.AnimalProtect;
 import de.AnimalProtect.structs.Animal;
 
 public class ChunkEventListener implements Listener {
-	
+
 	private final AnimalProtect plugin;
-	
+
 	public ChunkEventListener(final AnimalProtect plugin) {
 		this.plugin = plugin;
 	}
-	
+
 	@EventHandler
 	public void onChunkUnload(final ChunkUnloadEvent event) {
 		if (event.getWorld().getEnvironment().equals(Environment.NORMAL)) {
 			try {
-				synchronized (this.plugin.getQueue()) {
-					if (this.plugin.getQueue().isRunning()) {
-						for (final Entity e : event.getChunk().getEntities()) {
-							if (this.plugin.getDatenbank().containsAnimal(e.getUniqueId())) {
-								final Animal animal = this.plugin.getDatenbank().getAnimal(e.getUniqueId());
-								animal.updateAnimal(e);
-								animal.saveToDatabase(true);
+				if (this.plugin.getQueue() != null) {
+					synchronized (this.plugin.getQueue()) {
+						if (this.plugin.getQueue().isRunning()) {
+							for (final Entity e : event.getChunk().getEntities()) {
+								if (this.plugin.getDatenbank().containsAnimal(e.getUniqueId())) {
+									final Animal animal = this.plugin.getDatenbank().getAnimal(e.getUniqueId());
+									animal.updateAnimal(e);
+									animal.saveToDatabase(true);
+								}
 							}
 						}
 					}

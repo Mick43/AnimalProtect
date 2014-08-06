@@ -23,34 +23,34 @@ import de.AnimalProtect.Database;
 import de.AnimalProtect.Messenger;
 
 public class DamageEventListener implements Listener {
-	
+
 	private final AnimalProtect plugin;
 	private final Database database;
-	
+
 	public DamageEventListener(final AnimalProtect plugin) {
 		this.plugin = plugin;
 		this.database = plugin.getDatenbank();
 	}
-	
+
 	@EventHandler
 	public void onEntityEvent(final EntityDamageByEntityEvent event) {
 		try {
 			if (!this.plugin.isEnabled() || event.isCancelled()) { return; }
-			
+
 			/* Datenbank-Verbindung aufbauen, falls nicht vorhanden. */
 			if (!this.database.isConnected()) { this.database.connect(); }
-			
+
 			if (!this.plugin.isAnimal(event.getEntity())) { return; }
-			
+
 			/* Erst die Variablen bereit stellen, die später genutzt werden. */
 			final Entity entity = event.getEntity();
 			Entity damager = event.getDamager();
 			final CraftoPlayer owner = this.database.getOwner(entity.getUniqueId());
-			
+
 			/* Wenn es keinen Owner gibt, dann ist das Tier auch nicht protected */
 			/* Wenn es also keinen Owner gibt, dann wird die Methode abgebrochen.*/
 			if (owner == null) { return; }
-			
+
 			/* Jetzt die einzelnen Damager-Typen durchlaufen, um den wahren Damager herauszufinden. */
 			switch (damager.getType()) {
 			case PLAYER:
@@ -91,17 +91,17 @@ public class DamageEventListener implements Listener {
 				damager = null;
 				break;
 			}
-			
+
 			/* Wenn der echte Damager null ist, wird die Funktion abgebrochen */
 			if (damager == null) { return; }
-			
+
 			/* Wenn der echte Damager ein Spieler ist,     */
 			/* dann wird überprüft ob der Spieler das darf */
 			if (damager instanceof Player) { 
 				final Player player = (Player)damager;
 				if (!player.hasPermission("animalprotect.bypass") && !player.getUniqueId().equals(owner.getUniqueId())) {
 					event.setCancelled(true);
-					Messenger.sendMessage(player, "Dieses Tier ist von §6" +owner.getName()+ " §egesichert!");
+					Messenger.sendMessage(player, "Dieses Tier ist von §6" +owner.getName()+ "§e gesichert!");
 				}
 			}
 		}

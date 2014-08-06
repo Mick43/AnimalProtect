@@ -23,26 +23,26 @@ import de.AnimalProtect.structs.AnimalVariant;
 
 public class Database {
 
-   /* AnimalProtect  ---  Tabellenstruktur  ---  ap_entities
-	*
-	* id                 - (INT)                   (PRIMARY KEY) (AUTO_INCREMENT)
-	* owner              - (INT11)      (NOT NULL)
-	* animaltype         - (ENUM)       (NOT NULL)
-	* last_x             - (SMALLINT5)  (NOT NULL)
-	* last_y             - (SMALLINT3)  (NOT NULL) (UNSIGNED)
-	* last_z             - (SMALLINT5)  (NOT NULL)
-	* alive              - (BOOL)       (NOT NULL)
-	* nametag            - (VARCHAR255) (NOT NULL)
-	* maxhp              - (DOUBLE)     (NOT NULL)
-	* deathcause         - (ENUM)       (NOT NULL)
-	* color              - (VARCHAR40)  (NOT NULL)
-	* armor              - (ENUM)       (NOT NULL)
-	* horse_jumpstrength - (DOUBLE)     (NOT NULL)
-	* horse_style        - (ENUM)       (NOT NULL)
-	* horse_variant      - (ENUM)       (NOT NULL)
-	* uuid               - (CHAR36)     (NOT NULL) (UNIQUE KEY)
-	* created_at         - (TIMESTAMP)  (NOT NULL) (DEFAULT CURRENT TIMESTAMP)
-	*/
+	/* AnimalProtect  ---  Tabellenstruktur  ---  ap_entities
+	 *
+	 * id                 - (INT)                   (PRIMARY KEY) (AUTO_INCREMENT)
+	 * owner              - (INT11)      (NOT NULL)
+	 * animaltype         - (ENUM)       (NOT NULL)
+	 * last_x             - (SMALLINT5)  (NOT NULL)
+	 * last_y             - (SMALLINT3)  (NOT NULL) (UNSIGNED)
+	 * last_z             - (SMALLINT5)  (NOT NULL)
+	 * alive              - (BOOL)       (NOT NULL)
+	 * nametag            - (VARCHAR255) (NOT NULL)
+	 * maxhp              - (DOUBLE)     (NOT NULL)
+	 * deathcause         - (ENUM)       (NOT NULL)
+	 * color              - (VARCHAR40)  (NOT NULL)
+	 * armor              - (ENUM)       (NOT NULL)
+	 * horse_jumpstrength - (DOUBLE)     (NOT NULL)
+	 * horse_style        - (ENUM)       (NOT NULL)
+	 * horse_variant      - (ENUM)       (NOT NULL)
+	 * uuid               - (CHAR36)     (NOT NULL) (UNIQUE KEY)
+	 * created_at         - (TIMESTAMP)  (NOT NULL) (DEFAULT CURRENT TIMESTAMP)
+	 */
 
 	private final AnimalProtect plugin;
 	private final MySQL connection;
@@ -51,19 +51,19 @@ public class Database {
 	private final HashMap<UUID, ArrayList<Animal>> keys; // Spieler(UUID) <-> List<Tiere>
 	private final HashMap<UUID, UUID> reverseKeys;       // Tier(UUID)    <-> Spieler(UUID)
 	private final HashMap<Integer, Animal> entitiesId;  // Tier(ID)      <-> Tier
-	
+
 	/**
 	 * Erstellt eine Datenbank-Instanz von AnimalProtect
 	 * @param plugin - Das AnimalProtect-Plugin
 	 */
 	public Database(final AnimalProtect plugin) {
 		this.plugin = plugin;
-		
+
 		this.entities = new HashMap<UUID, Animal>();
 		this.keys = new HashMap<UUID, ArrayList<Animal>>();
 		this.reverseKeys = new HashMap<UUID, UUID>();
 		this.entitiesId = new HashMap<Integer, Animal>();
-		
+
 		this.connection = CraftoPlugin.plugin.getDatenbank().getSQL();
 
 		if (this.connection.checkConnection()) { this.createTable(); }
@@ -72,7 +72,7 @@ public class Database {
 	private void createTable() {
 		try {
 			if (!this.isConnected()) { return; }
-			
+
 			final String[] columns = new String[17];
 			columns[0] = "id INT AUTO_INCREMENT PRIMARY KEY";
 			columns[1] = "owner INT(11) NOT NULL";
@@ -91,8 +91,8 @@ public class Database {
 			columns[14] = "horse_variant ENUM('NONE', 'HORSE', 'DONKEY', 'MULE', 'UNDEAD_HORSE', 'SKELETON_HORSE') NOT NULL";
 			columns[15] = "uuid CHAR(36) NOT NULL UNIQUE KEY";
 			columns[16] = "created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL";
-			
-			this.connection.createTable("ap_entities", columns, true);
+
+			this.connection.createTable("ap_entities", columns, false);
 			this.loadFromDatabase();
 		}
 		catch (final Exception e) { Messenger.exception("Database/createTable", "An exception occured in de.AnimalProtect.Database.createTabel()", e); }
@@ -236,7 +236,7 @@ public class Database {
 						this.reverseKeys.put(animal.getUniqueId(), owner.getUniqueId());
 						this.keys.get(owner.getUniqueId()).add(animal);
 						this.entitiesId.put(animal.getId(), animal);
-						
+
 						final Integer id = (Integer) this.connection.getValue("SELECT id FROM ap_entities WHERE uuid='"+animal.getUniqueId()+"';", "id", true);
 						animal.setId(id);
 					}
@@ -248,7 +248,7 @@ public class Database {
 			else {
 				/* Query zum updaten/inserten aufbauen */
 				final String Query = this.getUpdateQuery(animal);
-				
+
 				/* Query ausfï¿½hren und das Ergebnis returnen */
 				if (this.plugin.getQueue().isRunning()) { this.plugin.getQueue().insertQuery(Query); }
 				else { this.connection.execute(Query, true); }
@@ -259,32 +259,32 @@ public class Database {
 
 		return false;
 	}
-	
+
 	private String getInsertQuery(final Animal animal) {
 		final String Query = "INSERT INTO `ap_entities` (`owner`, `animaltype`, `last_x`, `last_y`, `last_z`, `alive`, `nametag`, `maxhp`, "
-				 + "`deathcause`, `color`, `armor`, `horse_jumpstrength`, `horse_style`, `horse_variant`, `uuid`) "
-				 + "VALUES ("+animal.getOwner()+", '"+animal.getAnimaltype().toString()+"', "+animal.getX()+", "+animal.getY()+", "
-				 		 + ""+animal.getZ()+", "+animal.isAlive()+", '"+animal.getNametag()+"', "+animal.getMaxhp()+", "
-				 		 + "'"+animal.getDeathcauseToString()+"', '"+animal.getColorToString()+"', '"+animal.getArmor()+"', "+animal.getHorse_jumpstrength()+", "
-				 		 + "'"+animal.getHorse_styleToString()+"', '"+animal.getHorse_variantToString()+"', '"+animal.getUniqueId()+"') "
-				 + "ON DUPLICATE KEY UPDATE owner="+animal.getOwner()+", last_x="+animal.getX()+", last_y="+animal.getY()+", "
-				 		 + "last_z="+animal.getZ()+", alive="+animal.isAlive()+", nametag='"+animal.getNametag()+"', "
-				 		 + "deathcause='"+animal.getDeathcauseToString()+"', color='"+animal.getColorToString()+"', armor='"+animal.getArmor().toString()+"';";
+				+ "`deathcause`, `color`, `armor`, `horse_jumpstrength`, `horse_style`, `horse_variant`, `uuid`) "
+				+ "VALUES ("+animal.getOwner()+", '"+animal.getAnimaltype().toString()+"', "+animal.getX()+", "+animal.getY()+", "
+				+ ""+animal.getZ()+", "+animal.isAlive()+", '"+animal.getNametag()+"', "+animal.getMaxhp()+", "
+				+ "'"+animal.getDeathcauseToString()+"', '"+animal.getColorToString()+"', '"+animal.getArmor()+"', "+animal.getHorse_jumpstrength()+", "
+				+ "'"+animal.getHorse_styleToString()+"', '"+animal.getHorse_variantToString()+"', '"+animal.getUniqueId()+"') "
+				+ "ON DUPLICATE KEY UPDATE owner="+animal.getOwner()+", last_x="+animal.getX()+", last_y="+animal.getY()+", "
+				+ "last_z="+animal.getZ()+", alive="+animal.isAlive()+", nametag='"+animal.getNametag()+"', "
+				+ "deathcause='"+animal.getDeathcauseToString()+"', color='"+animal.getColorToString()+"', armor='"+animal.getArmor().toString()+"';";
 		return Query;
 	}
-	
+
 	private String getUpdateQuery(final Animal animal) {
 		final String Query = "UPDATE `ap_entities` SET "
-			         + "`owner`=" + animal.getOwner()                           + ", "
-			         + "`last_x`=" + animal.getX()                              + ", "
-			         + "`last_y`=" + animal.getY()                              + ", "
-			         + "`last_z`=" + animal.getZ()                              + ", "
-			         + "`alive`=" + animal.isAlive()                            + ", "
-			         + "`nametag`='" + animal.getNametag()                      + "', "
-			         + "`deathcause`='" + animal.getDeathcauseToString()        + "', "
-			         + "`color`='" + animal.getColorToString()                  + "', "
-			         + "`armor`='" + animal.getArmor()                          + "' "
-			         + "WHERE `id` = " + animal.getId() + ";";
+				+ "`owner`=" + animal.getOwner()                           + ", "
+				+ "`last_x`=" + animal.getX()                              + ", "
+				+ "`last_y`=" + animal.getY()                              + ", "
+				+ "`last_z`=" + animal.getZ()                              + ", "
+				+ "`alive`=" + animal.isAlive()                            + ", "
+				+ "`nametag`='" + animal.getNametag()                      + "', "
+				+ "`deathcause`='" + animal.getDeathcauseToString()        + "', "
+				+ "`color`='" + animal.getColorToString()                  + "', "
+				+ "`armor`='" + animal.getArmor()                          + "' "
+				+ "WHERE `id` = " + animal.getId() + ";";
 		return Query;
 	}
 
@@ -301,22 +301,22 @@ public class Database {
 		try {
 			/* Query zum updaten/inserten aufbauen */
 			final String Query = "UPDATE `ap_entities` SET "
-					     + "`owner`=" + animal.getOwner()                           + ", "
-					     + "`animaltype`='" + animal.getAnimaltype()                + "', "
-					     + "`last_x`=" + animal.getX()                              + ", "
-					     + "`last_y`=" + animal.getY()                              + ", "
-					     + "`last_z`=" + animal.getZ()                              + ", "
-					     + "`alive`=" + animal.isAlive()                            + ", "
-					     + "`nametag`='" + animal.getNametag()                      + "', "
-					     + "`maxhp`=" + animal.getMaxhp()                           + ", "
-					     + "`deathcause`='" + animal.getDeathcauseToString()        + "', "
-					     + "`color`='" + animal.getColorToString()                  + "', "
-					     + "`armor`='" + animal.getArmor()                          + "', "
-					     + "`horse_jumpstrength`=" + animal.getHorse_jumpstrength() + ", "
-					     + "`horse_style`='" + animal.getHorse_styleToString()      + "', "
-					     + "`horse_variant`='" + animal.getHorse_variantToString()  + "', "
-					     + "`uuid`='" + animal.getUniqueId().toString()             + "' "
-					     + "WHERE `id` = " + id + ";";
+					+ "`owner`=" + animal.getOwner()                           + ", "
+					+ "`animaltype`='" + animal.getAnimaltype()                + "', "
+					+ "`last_x`=" + animal.getX()                              + ", "
+					+ "`last_y`=" + animal.getY()                              + ", "
+					+ "`last_z`=" + animal.getZ()                              + ", "
+					+ "`alive`=" + animal.isAlive()                            + ", "
+					+ "`nametag`='" + animal.getNametag()                      + "', "
+					+ "`maxhp`=" + animal.getMaxhp()                           + ", "
+					+ "`deathcause`='" + animal.getDeathcauseToString()        + "', "
+					+ "`color`='" + animal.getColorToString()                  + "', "
+					+ "`armor`='" + animal.getArmor()                          + "', "
+					+ "`horse_jumpstrength`=" + animal.getHorse_jumpstrength() + ", "
+					+ "`horse_style`='" + animal.getHorse_styleToString()      + "', "
+					+ "`horse_variant`='" + animal.getHorse_variantToString()  + "', "
+					+ "`uuid`='" + animal.getUniqueId().toString()             + "' "
+					+ "WHERE `id` = " + id + ";";
 
 			/* Query ausfï¿½hren und das Ergebnis returnen */
 			if(this.connection.execute(Query, this.plugin.isDebugging())) {
@@ -383,7 +383,7 @@ public class Database {
 		}
 		return null;
 	}
-	
+
 	/**
 	 * Gibt das Animal mit der angegeben Id zurï¿½ck.
 	 * @param id - Die Datenbank-ID, nach der gesucht wird.
@@ -479,7 +479,7 @@ public class Database {
 	public ArrayList<String> getFailedQueries() {
 		return this.connection.getFailedQueries();
 	}
-	
+
 	/**
 	 * Zählt die Anzahl der lebenden gelockten Tiere eines Spielers.
 	 * @param player - Die UniqueID des Spielers.
@@ -494,7 +494,7 @@ public class Database {
 		}
 		return count;
 	}
-	
+
 	/**
 	 * Prï¿½ft, ob die Datenbank-Verbindung aktiv ist.
 	 * @return True, wenn die Verbindung steht.
@@ -503,7 +503,7 @@ public class Database {
 		if (this.connection == null) { return false; }
 		return this.connection.checkConnection();
 	}
-	
+
 	/**
 	 * Gibt die MySQL-Verbindung von AnimalProtect wieder.
 	 * @return Das, in dieser Klasse verwendete, MySQL-Objekt.

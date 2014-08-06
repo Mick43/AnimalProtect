@@ -12,21 +12,21 @@ import de.AnimalProtect.AnimalProtect;
 import de.AnimalProtect.Messenger;
 
 public class Command_limit implements CommandExecutor {
-	
+
 	private final AnimalProtect plugin;
-	
+
 	public Command_limit(final AnimalProtect plugin) {
 		this.plugin = plugin;
 	}
 
 	@Override
 	public boolean onCommand(final CommandSender cs, final Command cmd, final String label, final String[] args) {
-		if (this.plugin == null || !this.plugin.isEnabled()) { Messenger.sendMessage(cs, "§cFehler: Der Befehl konnte nicht ausgeführt werden."); return true; }
-		
+		if (!this.plugin.isEnabled()) { Messenger.sendMessage(cs, "§cFehler: Der Befehl konnte nicht ausgeführt werden."); return true; }
+
 		/* Datenbank-Verbindung aufbauen, falls nicht vorhanden. */
 		if (!this.plugin.getDatenbank().isConnected())
 		{ this.plugin.getDatenbank().connect(); }
-		
+
 		CraftoPlayer player = null;
 		if (args.length == 0) {
 			if (cs instanceof Player) { player = CraftoPlayer.getPlayer(((Player)cs).getUniqueId()); }
@@ -37,9 +37,9 @@ public class Command_limit implements CommandExecutor {
 			else { player = CraftoPlayer.getPlayer(args[0]); }
 		}
 		else { Messenger.sendMessage(cs, "TOO_MANY_ARGUMENTS"); }
-		
+
 		if (player == null) { Messenger.sendMessage(cs, "PLAYER_NOT_FOUND"); return true; }
-		
+
 		final Integer count = this.plugin.getDatenbank().countAnimals(player.getUniqueId());
 		final Integer max = this.plugin.getConfig().getInt("settings.max_entities_for_player");
 		if (cs.getName().equalsIgnoreCase(player.getName())) 
@@ -47,7 +47,7 @@ public class Command_limit implements CommandExecutor {
 		else { Messenger.sendMessage(cs, "Der Spieler §6"+player.getName()+"§e hat insgesamt §6"+count+"§e von §6"+max+"§e Tieren gesichert."); }
 		return true;
 	}
-	
+
 	private boolean isUUID(final String value) {
 		return value.matches(".*-.*-.*-.*-.*");
 	}

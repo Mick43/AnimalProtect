@@ -10,24 +10,24 @@ import de.AnimalProtect.AnimalProtect;
 import de.AnimalProtect.Messenger;
 
 public class Command_animalprotect implements CommandExecutor {
-	
+
 	private final AnimalProtect plugin;
-	
+
 	public Command_animalprotect(final AnimalProtect plugin) {
 		this.plugin = plugin;
 	}
 
 	@Override
 	public boolean onCommand(final CommandSender cs, final Command cmd, final String label, final String[] args) {
-		if (this.plugin == null || !this.plugin.isEnabled()) { return false; }
-		
+		if (!this.plugin.isEnabled()) { return false; }
+
 		if (cmd.getName().equalsIgnoreCase("ap") || cmd.getName().equalsIgnoreCase("animalprotect")) { /*  /ap <args0>  */
 			String[] newArgs = args;
 			if (args.length > 0) {
 				newArgs = new String[args.length-1];
 				for (int i=0; i<newArgs.length; i++) { newArgs[i] = args[i+1]; }
 			}
-			
+
 			try {
 				if (args.length < 1) { this.Command_ShowHelp(cs, newArgs); }
 				else if (args[0].equalsIgnoreCase("help")) { this.Command_ShowHelp(cs, newArgs); }
@@ -58,7 +58,7 @@ public class Command_animalprotect implements CommandExecutor {
 		}
 		return true;
 	}
-	
+
 	public void Command_ShowHelp(final CommandSender cs, final String[] args) {
 		try {
 			Messenger.help(cs, "HELP_HEADER");
@@ -80,24 +80,24 @@ public class Command_animalprotect implements CommandExecutor {
 			Messenger.exception("Command_AnimalProtect.java/Command_ShowHelp()", "Caught an exception while trying to show someone the help page.", e);
 		}
 	}
-	
+
 	public void Command_Reload(final CommandSender cs, final String[] args) {
 		if (cs.hasPermission("animalprotect.admin")) {
 			if (args.length == 0) {
 				Bukkit.getServer().getPluginManager().disablePlugin(AnimalProtect.plugin);
 				Bukkit.getServer().getPluginManager().enablePlugin(AnimalProtect.plugin);
-				
+
 				Messenger.sendMessage(cs, "RELOAD_SUCCESS_PLUGIN");
 			}
 			else if (args.length == 1) {
 				if (args[0].equalsIgnoreCase("config")) {
 					this.plugin.reloadSettings();
-					
+
 					Messenger.sendMessage(cs, "RELOAD_SUCCESS_CONFIG");
 				}
 				else if (args[0].equalsIgnoreCase("database")) {
 					this.plugin.reloadDatabase();
-					
+
 					if (this.plugin.getDatenbank().isConnected()) 
 					{ Messenger.sendMessage(cs, "RELOAD_SUCCESS_DATABASE"); }
 					else { Messenger.sendMessage(cs, "RELOAD_FAILED_DATABASE"); }
@@ -106,7 +106,7 @@ public class Command_animalprotect implements CommandExecutor {
 					this.plugin.getDatenbank().closeConnection();
 					this.plugin.getDatenbank().connect();
 					this.plugin.getQueue().reloadConnection();
-					
+
 					if (this.plugin.getDatenbank().isConnected()) 
 					{ Messenger.sendMessage(cs, "RELOAD_SUCCESS_CONNECTION"); }
 					else { Messenger.sendMessage(cs, "RELOAD_FAILED_CONNECTION"); }
@@ -116,7 +116,7 @@ public class Command_animalprotect implements CommandExecutor {
 		}
 		else { Messenger.sendMessage(cs, "NO_PERMISSION"); }
 	}
-	
+
 	private boolean hasPerm(final CommandSender cs, final String permission) {
 		if (cs instanceof Player) {
 			if (cs.hasPermission(permission)) { return true; }

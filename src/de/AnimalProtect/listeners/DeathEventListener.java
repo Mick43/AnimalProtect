@@ -19,37 +19,37 @@ public class DeathEventListener implements Listener {
 
 	private final AnimalProtect plugin;
 	private final Database database;
-	
+
 	public DeathEventListener(final AnimalProtect plugin) {
 		this.plugin = plugin;
 		this.database = plugin.getDatenbank();
 	}
-	
+
 	@EventHandler
 	public void onEntityDeath(final EntityDeathEvent event) {
 		try {
 			/* Prüfen ob das Plugin aktiviert ist */
 			if (!this.plugin.isEnabled()) { return; }
-			
+
 			/* Datenbank-Verbindung aufbauen, falls nicht vorhanden. */
 			if (!this.database.isConnected()) { this.database.connect(); }
-			
+
 			if (this.plugin.getDatenbank().containsAnimal(event.getEntity().getUniqueId())) {
 				/* Variablen bereitstellen */
 				EntityDamageByEntityEvent damageEvent = null;
 				final Entity entity = event.getEntity();
 				Player damager = null;
-				
+
 				/* Prüfen ob das Tier ermordet wurde */
 				try { damageEvent = (EntityDamageByEntityEvent) event.getEntity().getLastDamageCause(); }
 				catch (final Exception exception) { }
-				
+
 				/* Prüfen ob der Mörder ein Spieler ist */
 				if (damageEvent != null)
 				{ 
 					if (damageEvent.getDamager() instanceof Player)  {
 						damager = (Player) damageEvent.getDamager();
-						
+
 						/* Prüfen ob der Mörder der Owner ist */
 						if (this.database.getOwner(entity.getUniqueId()).getUniqueId().equals(damager.getUniqueId())) {
 							final Animal animal = this.database.getAnimal(entity.getUniqueId());
@@ -62,14 +62,14 @@ public class DeathEventListener implements Listener {
 						}
 					}
 				}
-				
+
 				/* Der Mörder ist kein Spieler, also wird das Tier geupdated */
 				final Animal animal = this.database.getAnimal(entity.getUniqueId());
 				animal.updateAnimal(entity);
 				animal.saveToDatabase(true);
-				
+
 				final CraftoPlayer owner = CraftoPlayer.getPlayer(animal.getOwner());
-				
+
 				if (owner!=null) {
 					Messenger.log("[AnimalProtect] Ein " +animal.getAnimaltype().toString()+" von " +owner.getName() + " wurde getötet. ("
 							+ ""+entity.getLocation().getBlockX()+", "+entity.getLocation().getBlockY()+", "+entity.getLocation().getBlockZ()+")");

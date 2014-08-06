@@ -28,68 +28,68 @@ import de.AnimalProtect.structs.Animal;
 import de.AnimalProtect.structs.AnimalArmor;
 
 public class Command_respawn implements CommandExecutor {
-	
+
 	private final AnimalProtect plugin;
-	
+
 	public Command_respawn(final AnimalProtect plugin) {
 		this.plugin = plugin;
 	}
 
 	@Override
 	public boolean onCommand(final CommandSender cs, final Command cmd, final String label, final String[] args) {
-		if (this.plugin == null || !this.plugin.isEnabled()) { Messenger.sendMessage(cs, "§cFehler: Der Befehl konnte nicht ausgeführt werden."); return true; }
-		
+		if (!this.plugin.isEnabled()) { Messenger.sendMessage(cs, "§cFehler: Der Befehl konnte nicht ausgeführt werden."); return true; }
+
 		/* Datenbank-Verbindung aufbauen, falls nicht vorhanden. */
 		if (!this.plugin.getDatenbank().isConnected())
 		{ this.plugin.getDatenbank().connect(); }
-		
+
 		if (!(cs instanceof Player)) { Messenger.sendMessage(cs, "SENDER_NOT_PLAYER"); return true; }
 		if (args.length < 2) { Messenger.sendMessage(cs, "TOO_FEW_ARGUMENTS"); return true; }
-		
+
 		/* Liste erstellen */
 		final ArrayList<Animal> list = this.plugin.parseAnimal(cs, args, false);
 		if (list == null) { return true; }
 		else if (list.isEmpty()) { Messenger.sendMessage(cs, "ANIMALS_NOT_FOUND"); return true; }
-		
+
 		/* LocationFlag */
 		boolean locationFlag = false;
 		for(final String arg : args) { if (arg.equalsIgnoreCase("-location")) { locationFlag = true; } }
-		
+
 		int failedCounter = 0;
 		for (final Animal animal : list) {
 			if(!this.respawnAnimal(animal, animal.getCraftoOwner(), ((Player)cs), true, locationFlag)) 
 			{ failedCounter += 1; }
 		}
-		
+
 		if (failedCounter == 0) { Messenger.sendMessage(cs, "§aEs wurden alle ausgewählten Tiere erfolgreich respawned."); }
 		else { Messenger.sendMessage(cs, "§cFehler: Es konnten "+failedCounter+" von "+list.size()+" nicht respawned werden."); }
 		return true;
 	}
-		
+
 	public boolean isMissing(final Animal animal, final ArrayList<UUID> entities) {
 		if (animal.isAlive() && !entities.contains(animal.getUniqueId())) {
 			return true;
 		}
 		return false;
 	}
-	
+
 	public boolean respawnAnimal(final Animal animal, final CraftoPlayer owner, final Player sender, final Boolean response, final Boolean locationFlag) {
 		Entity entity = null;
-				
+
 		if (locationFlag) { 
 			final Location loc = new Location(sender.getWorld(), animal.getX(), animal.getY(), animal.getZ());
 			entity = sender.getWorld().spawnEntity(loc, animal.getAnimaltype().getEntity());
 		}
 		else { entity = sender.getWorld().spawnEntity(sender.getLocation(), animal.getAnimaltype().getEntity()); }
-		
+
 		final UUID oldUUID = animal.getUniqueId();
-		
+
 		if (entity == null)
 		{ Messenger.sendMessage(sender, "ANIMAL_NOT_RESPAWNED"); return false; }
-		
+
 		final LivingEntity livingEntity = (LivingEntity) entity;
 		livingEntity.setCustomName(animal.getNametag());
-		
+
 		if (livingEntity.getType().equals(EntityType.SHEEP)) { 
 			final Sheep sheep = (Sheep) entity; 
 			sheep.setColor(DyeColor.valueOf(animal.getColor())); 
@@ -105,7 +105,7 @@ public class Command_respawn implements CommandExecutor {
 			else if (animal.getArmor() == AnimalArmor.GOLD) {
 				horse.getInventory().setArmor(new ItemStack(Material.GOLD_BARDING));
 			}
-			
+
 			horse.setColor(Color.valueOf(animal.getColor()));
 			horse.setVariant(Variant.valueOf(animal.getHorse_variant().toString()));
 			horse.setStyle(animal.getHorse_style());
@@ -118,7 +118,7 @@ public class Command_respawn implements CommandExecutor {
 			final Wolf wolf = (Wolf) entity;
 			wolf.setCollarColor(DyeColor.valueOf(animal.getColor()));
 		}
-		
+
 		/* Das Tier updaten und sichern */
 		animal.updateAnimal(entity);
 		if (this.plugin.getDatenbank().updateAnimal(animal.getId(), animal, oldUUID)) {
@@ -126,7 +126,7 @@ public class Command_respawn implements CommandExecutor {
 			return true;
 		}
 		else { Messenger.sendMessage(sender, "ANIMAL_NOT_RESPAWNED"); }
-		
+
 		return false;
 	}
 }

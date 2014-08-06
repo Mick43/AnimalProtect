@@ -4,6 +4,7 @@ settings:
   queue-tick-delay: 200
   debug-messages: true
   max-entities-per-chunk: 25
+  enable-spawn-limit: true
 messages:
   LOCK_SUCCESS: '%aDas Tier wurde erfolgreich gesichert.'
   LOCK_FAILED: '%cFehler: Das Tier konnte nicht gesichert werden.'

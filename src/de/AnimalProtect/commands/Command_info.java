@@ -15,35 +15,35 @@ import de.AnimalProtect.structs.Animal;
 public class Command_info implements CommandExecutor {
 
 	private final AnimalProtect plugin;
-	
+
 	public Command_info(final AnimalProtect plugin) {
 		this.plugin = plugin;
 	}
 
 	@Override
 	public boolean onCommand(final CommandSender cs, final Command cmd, final String label, final String[] args) {
-		if (this.plugin == null || !this.plugin.isEnabled()) { Messenger.sendMessage(cs, "§cFehler: Der Befehl konnte nicht ausgeführt werden."); return true; }
-		
+		if (!this.plugin.isEnabled()) { Messenger.sendMessage(cs, "§cFehler: Der Befehl konnte nicht ausgeführt werden."); return true; }
+
 		/* Datenbank-Verbindung aufbauen, falls nicht vorhanden. */
 		if (!this.plugin.getDatenbank().isConnected())
 		{ this.plugin.getDatenbank().connect(); }
-		
+
 		/* Prüfen ob der Sender ein Spieler ist */
 		if (!(cs instanceof Player)) 
 		{ Messenger.sendMessage(cs, "SENDER_NOT_PLAYER"); return true; }
-		
+
 		/* Variablen bereitstellen */
 		final Player sender = (Player)cs;
 		final CraftoPlayer player = CraftoPlayer.getPlayer(sender.getUniqueId());
 		final Entity entity = this.plugin.getSelectedAnimal(sender.getUniqueId());
-		
+
 		/* Variablen überprüfen */
 		if (entity == null) { Messenger.sendMessage(cs, "SELECTED_NONE"); return true; }
 		else if (player == null) { Messenger.sendMessage(cs, "PLAYEROBJECT_NOT_FOUND"); return true; }
-		
+
 		/* Das Animal-Objekt laden */
 		final Animal animal = this.plugin.getDatenbank().getAnimal(entity.getUniqueId());
-		
+
 		if (animal != null) {
 			final CraftoPlayer owner = this.plugin.getDatenbank().getOwner(animal.getUniqueId());
 			if (owner != null)

@@ -10,22 +10,22 @@ import de.AnimalProtect.Messenger;
 public class Command_queue implements CommandExecutor {
 
 	private final AnimalProtect plugin;
-	
+
 	public Command_queue(final AnimalProtect plugin) {
 		this.plugin = plugin;
 	}
 
 	@Override
 	public boolean onCommand(final CommandSender cs, final Command cmd, final String label, final String[] args) {
-		if (this.plugin == null || !this.plugin.isEnabled()) { Messenger.sendMessage(cs, "§cFehler: Der Befehl konnte nicht ausgeführt werden."); return true; }
-		
+		if (!this.plugin.isEnabled()) { Messenger.sendMessage(cs, "§cFehler: Der Befehl konnte nicht ausgeführt werden."); return true; }
+
 		/* Datenbank-Verbindung aufbauen, falls nicht vorhanden. */
 		if (!this.plugin.getDatenbank().isConnected())
 		{ this.plugin.getDatenbank().connect(); }
-		
+
 		/* Permissions des Spielers überprüfen */
 		if (!cs.hasPermission("animalprotect.admin")) { Messenger.sendMessage(cs, "NO_PERMISSION"); }
-		
+
 		/* Die Argumente überprüfen */
 		if (args.length == 0) {
 			if (this.plugin.getQueue().isRunning()) { Messenger.sendMessage(cs, "QUEUE_STARTED"); }

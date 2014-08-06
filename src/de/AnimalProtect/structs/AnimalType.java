@@ -34,23 +34,23 @@ public enum AnimalType {
 	VILLAGER ("Villager", EntityType.VILLAGER),
 	OCELOT ("Ocelot", EntityType.OCELOT),
 	WOLF ("Wolf", EntityType.WOLF);
-	
+
 	private String name;
 	private EntityType entity;
-	
+
 	private AnimalType(final String name, final EntityType entity) {
 		this.name = name;
 		this.entity = entity;
 	}
-	
+
 	public String getName() {
 		return this.name;
 	}
-	
+
 	public EntityType getEntity() {
 		return this.entity;
 	}
-	
+
 	public static boolean contains(final String value) {
 		for (final AnimalType type : AnimalType.values()) {
 			if (type.getName().equalsIgnoreCase(value)) { return true; }

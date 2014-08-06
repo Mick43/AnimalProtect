@@ -19,64 +19,64 @@ import de.AnimalProtect.Messenger;
 import de.AnimalProtect.structs.Animal;
 
 public class Command_list implements CommandExecutor {
-	
+
 	private final AnimalProtect plugin;
-	
+
 	public Command_list(final AnimalProtect plugin) {
 		this.plugin = plugin;
 	}
 
 	@Override
 	public boolean onCommand(final CommandSender cs, final Command cmd, final String label, final String[] args) {
-		if (this.plugin == null || !this.plugin.isEnabled()) { Messenger.sendMessage(cs, "§cFehler: Der Befehl konnte nicht ausgeführt werden."); return true; }
-		
+		if (!this.plugin.isEnabled()) { Messenger.sendMessage(cs, "§cFehler: Der Befehl konnte nicht ausgeführt werden."); return true; }
+
 		/* Datenbank-Verbindung aufbauen, falls nicht vorhanden. */
 		if (!this.plugin.getDatenbank().isConnected())
 		{ this.plugin.getDatenbank().connect(); }
-		
+
 		/* Variablen initialisieren */
 		Integer page = 1;
 		Integer pages = 1;
 		CraftoPlayer cPlayer = null;
 		final ArrayList<Animal> animals = this.plugin.parseAnimal(cs, args, true);
-		
+
 		if (animals == null) { return true; }
-		
+
 		if (animals.size() < 1)
 		{ Messenger.sendMessage(cs, "ANIMALS_NOT_FOUND"); return true; }
-		
+
 		cPlayer = CraftoPlayer.getPlayer(animals.get(0).getOwner());
-		
+
 		/* Seite ermitteln */
 		for (final String arg : args) { if (this.isNumber(arg)) { page = Integer.parseInt(arg); } }
-		
+
 		/* Die Seitenanzahl ausrechnen */
 		final Double pagesAsDouble = ((double)animals.size() / (double)10);
 		pages = (int) Math.ceil(pagesAsDouble);
-		
+
 		Collections.sort(animals);
-		
+
 		/* Seitenangabe überprüfen */
 		if (pages == 0)
 		{ Messenger.sendMessage(cs, "PLAYER_NO_LOCKS"); return true; }
 		else if (page > pages)
 		{ Messenger.sendMessage(cs, "PAGE_NOT_EXIST"); return true; }
-		
+
 		/* Listenanfang schicken */
 		//Messenger.help(cs, "Liste der Tiere von "+cPlayer.getName()+" ("+page+"/"+pages+")");
 		//Messenger.sendMessage(cs, "§7§oInsgesamte Anzahl an Tieren: " +animals.size());
 		Messenger.messageHeader(cs, "Liste der Tiere von " +cPlayer.getName()+" ("+page+"/"+pages+", insg. "+animals.size()+" Tiere)");
-		
+
 		final HashMap<UUID, Entity> entities = new HashMap<UUID, Entity>();
 		for (final Entity entity : Bukkit.getServer().getWorlds().get(0).getEntities()) {
 			entities.put(entity.getUniqueId(), entity);
 		}
-		
+
 		for (int i=page*10-10; i<page*10 && i<animals.size(); i++) {
 			final Animal animal = animals.get(i);
 			String status = animal.isAliveAsString(); // ALIVE // DEAD
 			Boolean found = false;
-			
+
 			if (entities.containsKey(animal.getUniqueId())) {
 				final Entity entity = entities.get(animal.getUniqueId());
 				if (!entity.isDead()) {
@@ -110,24 +110,24 @@ public class Command_list implements CommandExecutor {
 					}
 				}
 			}
-			
+
 			if (!found && animal.isAlive()) { status = Messenger.parseMessage("ANIMAL_MISSING"); } // "§cMISSING";
-			
+
 			String Message = " " + status + " ";
 			Message += "§3" + animal.getAnimaltype().toString() + " ";
-			
+
 			if (animal.getNametag() != null && !animal.getNametag().isEmpty())
 			{ Message += "§fnamed '§3" + animal.getNametag() + "§f' "; }
 			else { Message += "§flocated at §3"+animal.getX()+", "+animal.getY()+", "+animal.getZ()+" "; }
-			
+
 			Message += "§flocked at §3" + CraftoTime.getTime("dd.MM.yyyy", animal.getCreated_at()) + "§f ";
 			Message += "§7("+animals.indexOf(animal)+")";
-			
+
 			Messenger.sendMessage(cs, Message);
 		}
 		return true;
 	}
-	
+
 	private boolean isNumber(final String value) {
 		try { Integer.parseInt(value); return true; }
 		catch (final Exception e) { return false; }

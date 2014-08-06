@@ -33,9 +33,9 @@ import de.AnimalProtect.AnimalProtect;
  * @see Comparable
  */
 public class Animal implements Comparable<Animal> {
-	
+
 	private final AnimalProtect plugin;
-	
+
 	private Integer id;
 	private Integer owner;
 	private AnimalType animaltype;
@@ -54,7 +54,7 @@ public class Animal implements Comparable<Animal> {
 	private UUID uuid;
 	private Timestamp created_at;
 	private CraftoPlayer cOwner;
-	
+
 	public Animal(final AnimalProtect plugin) { 
 		this.plugin = plugin;
 		this.created_at = new Timestamp(new Date().getTime());
@@ -65,7 +65,7 @@ public class Animal implements Comparable<Animal> {
 		this.created_at = new Timestamp(new Date().getTime());
 		this.updateAnimal(entity);
 	}
-	
+
 	/**
 	 * Speichert alle Werte des Tieres in die Datenbank.
 	 * @param log - True, für Console-Output.
@@ -73,11 +73,11 @@ public class Animal implements Comparable<Animal> {
 	 */
 	public boolean saveToDatabase(final Boolean log) {
 		if (this.plugin == null) { return false; }
-		
+
 		if (this.plugin.getDatenbank().insertAnimal(this)) { return true; }
 		else { return false; }
 	}
-	
+
 	/**
 	 * Lädt das Tier mit der angegebenen UUID aus der Datenbank und speichert es in dieses Objekt.
 	 * @param uuid - Die UniqueId nach welcher in der Datenbank gesucht werden soll.
@@ -85,9 +85,9 @@ public class Animal implements Comparable<Animal> {
 	 */
 	public boolean loadFromDatabase(final UUID uuid) {
 		if (this.plugin == null) { return false; }
-		
+
 		final Animal animal = this.plugin.getDatenbank().getAnimal(uuid);
-		
+
 		if (animal != null) {
 			this.id = animal.id;
 			this.owner = animal.owner;
@@ -106,10 +106,10 @@ public class Animal implements Comparable<Animal> {
 			this.created_at = new Timestamp(new Date().getTime());
 			return true;
 		}
-		
+
 		return false;
 	}
-	
+
 	/**
 	 * Aktualisiert alle Werte dieses Tieres.
 	 * @param entity - Das Entity, von dem die Werte genommen werden.
@@ -117,11 +117,11 @@ public class Animal implements Comparable<Animal> {
 	 */
 	public boolean updateAnimal(final Entity entity) {
 		if (entity == null) { return false; }
-		
+
 		this.uuid = entity.getUniqueId();
-		this.last_x = entity.getLocation().getBlockX();
-		this.last_y = entity.getLocation().getBlockY();
-		this.last_z = entity.getLocation().getBlockZ();
+		this.last_x = (short) entity.getLocation().getBlockX();
+		this.last_y = (short) entity.getLocation().getBlockY();
+		this.last_z = (short) entity.getLocation().getBlockZ();
 		this.alive = !entity.isDead();
 		this.animaltype = AnimalType.valueOf(entity.getType().toString());
 		this.deathcause = null;
@@ -130,7 +130,7 @@ public class Animal implements Comparable<Animal> {
 		this.maxhp = 0.0;
 		this.horse_jumpstrength = 0.0;
 		this.horse_style = Style.NONE;
-		
+
 		if (entity.getType().equals(EntityType.SHEEP)) { 
 			final Sheep sheep = (Sheep) entity; 
 			this.color = sheep.getColor().toString(); 
@@ -143,7 +143,7 @@ public class Animal implements Comparable<Animal> {
 			{ this.armor = AnimalArmor.GOLD;}
 			else if (horse.getInventory().getArmor().equals(new ItemStack(Material.IRON_BARDING))) 
 			{ this.armor = AnimalArmor.IRON; }
-			
+
 			this.horse_style = horse.getStyle();
 			this.horse_variant = AnimalVariant.valueOf(horse.getVariant().toString());
 			this.color = horse.getColor().toString();
@@ -154,17 +154,17 @@ public class Animal implements Comparable<Animal> {
 			final Wolf wolf = (Wolf) entity;
 			this.color = wolf.getCollarColor().toString();
 		}
-		
+
 		try {
 			final LivingEntity le = (LivingEntity) entity;
 			this.nametag = le.getCustomName();
 			if (this.maxhp == 0.0) { this.maxhp = le.getMaxHealth(); }
-			
+
 			return true;
 		}
 		catch (final Exception e) { return false; }
 	}
-	
+
 	/**
 	 * @return Die Datenbank-Id des Tieres.
 	 */
@@ -365,7 +365,7 @@ public class Animal implements Comparable<Animal> {
 	 * @param created_at - Das neue Erstelldatum
 	 */
 	public void setCreated_at(final Timestamp created_at) { this.created_at = created_at; }
-	
+
 	@Override
 	public int compareTo(final Animal animal) {
 		if (animal == null) { return 1; }
