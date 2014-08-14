@@ -1,13 +1,19 @@
 AnimalProtect
 =============
 
-Description:
----------
 Bietet normalen Spielern auf einem Server an, Tiere vor anderen Spielern zu protecten.
 
-Todo:
+Commands:
 ---------
-- AnimalProtect 1.2 testen
+- `/ap <command>` - Ãœbersicht aller AnimalProtect-Kommandos
+- `/lockanimal` - Sichert das ausgewÃ¤hlte Tier vor anderen Spielern.
+- `/unlockanimal`- Entsichert das ausgewÃ¤hlte Tier.
+- `/animalinfo` - Gibt Informationen Ã¼ber das ausgewÃ¤hlte Tier aus.
+- `/listanimals` - Listet alle gesicherten Tiere eines Spielers auf.
+- `/respawnanimal` - Respawnt das angegebene Tier.
+- `/tpanimal` - Teleportiert den Sender zu dem angegebenen Tier.
+- `/animaldebug` - Gibt Debug-Informationen Ã¼ber das Plugin aus.
+- `/lockedanimals` - Gibt die Anzahl der Locks eines Spielers an.
 
 Datenbank-Struktur:
 ---------
@@ -30,15 +36,3 @@ Datenbank-Struktur:
  15 | horse_variant      | enum(..)     | Nein | kein(e)
  16 | uuid               | char(36)     | Nein | kein(e)
  17 | created_at         | timestamp    | Nein | CURRENT_TIMESTAMP
-
-Commands:
----------
-- `/ap <command>` - Übersicht aller AnimalProtect-Kommandos
-- `/lockanimal` - Sichert das ausgewählte Tier vor anderen Spielern.
-- `/unlockanimal`- Entsichert das ausgewählte Tier.
-- `/animalinfo` - Gibt Informationen über das ausgewählte Tier aus.
-- `/listanimals` - Listet alle gesicherten Tiere eines Spielers auf.
-- `/respawnanimal` - Respawnt das angegebene Tier.
-- `/tpanimal` - Teleportiert den Sender zu dem angegebenen Tier.
-- `/animaldebug` - Gibt Debug-Informationen über das Plugin aus.
-- `/lockedanimals` - Gibt die Anzahl der Locks eines Spielers an.
