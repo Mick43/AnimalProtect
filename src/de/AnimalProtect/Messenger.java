@@ -412,7 +412,7 @@ public class Messenger {
 		Messenger.warn("-------------------- Exception Stacktrace end --------------------");
 
 		if (createFile) {
-			final CraftoFile file = new CraftoFile("animalprotect", "plugins/AnimalProtect/exceptions/exception-"+CraftoTime.getFullTime());
+			final CraftoFile file = new CraftoFile(CraftoFile.BUKKIT_PATH + "plugins/AnimalProtect/exceptions/exception-"+CraftoTime.getFullTime());
 			file.writeLine("--------------------- AnimalProtect Exception! --------------------");
 			file.writeLine("An exception occured in animalprotect/" + source);
 			file.writeLine("This exception was thrown " + Messenger.exceptions.get(source) + " times today.");
@@ -427,8 +427,8 @@ public class Messenger {
 			}
 			file.writeLine("-------------------- Exception Stacktrace end --------------------");
 
-			try { file.saveFile(); file.close(); }
-			catch (final Exception fileException) { Messenger.exception("CraftoMessenger.java/exception()", "Failed to save an exception file.", fileException, false); }
+			if (!file.save()) { Messenger.error("Failed to save an exception file."); }
+			file.close();
 		}
 	}
 }

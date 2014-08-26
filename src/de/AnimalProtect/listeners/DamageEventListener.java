@@ -53,43 +53,43 @@ public class DamageEventListener implements Listener {
 
 			/* Jetzt die einzelnen Damager-Typen durchlaufen, um den wahren Damager herauszufinden. */
 			switch (damager.getType()) {
-			case PLAYER:
-				break;
-			case ARROW:
-				final Arrow projectile1 = (Arrow)damager;
-				damager = (Entity) projectile1.getShooter();
-				break;
-			case EGG:
-				final Egg projectile2 = (Egg)damager;
-				damager = (Entity) projectile2.getShooter();
-				break;
-			case SNOWBALL:
-				final Snowball projectile3 = (Snowball)damager;
-				damager = (Entity) projectile3.getShooter();
-				break;
-			case FIREBALL:
-				final Fireball projectile4 = (Fireball)damager;
-				damager = (Entity) projectile4.getShooter();
-				break;
-			case SPLASH_POTION:
-				final ThrownPotion projectile5 = (ThrownPotion)damager;
-				damager = (Entity) projectile5.getShooter();
-				break;
-			case SMALL_FIREBALL:
-				final SmallFireball projectile6 = (SmallFireball)damager;
-				damager = (Entity) projectile6.getShooter();
-				break;
-			case PRIMED_TNT:
-				final TNTPrimed tnt = (TNTPrimed)damager;
-				damager = tnt.getSource();
-				break;
-			case FISHING_HOOK:
-				final Fish fishingHook = (Fish)damager;
-				damager = (Entity) fishingHook.getShooter();
-				break;
-			default:
-				damager = null;
-				break;
+				case PLAYER:
+					break;
+				case ARROW:
+					final Arrow projectile1 = (Arrow)damager;
+					damager = (Entity) projectile1.getShooter();
+					break;
+				case EGG:
+					final Egg projectile2 = (Egg)damager;
+					damager = (Entity) projectile2.getShooter();
+					break;
+				case SNOWBALL:
+					final Snowball projectile3 = (Snowball)damager;
+					damager = (Entity) projectile3.getShooter();
+					break;
+				case FIREBALL:
+					final Fireball projectile4 = (Fireball)damager;
+					damager = (Entity) projectile4.getShooter();
+					break;
+				case SPLASH_POTION:
+					final ThrownPotion projectile5 = (ThrownPotion)damager;
+					damager = (Entity) projectile5.getShooter();
+					break;
+				case SMALL_FIREBALL:
+					final SmallFireball projectile6 = (SmallFireball)damager;
+					damager = (Entity) projectile6.getShooter();
+					break;
+				case PRIMED_TNT:
+					final TNTPrimed tnt = (TNTPrimed)damager;
+					damager = tnt.getSource();
+					break;
+				case FISHING_HOOK:
+					final Fish fishingHook = (Fish)damager;
+					damager = (Entity) fishingHook.getShooter();
+					break;
+				default:
+					damager = null;
+					break;
 			}
 
 			/* Wenn der echte Damager null ist, wird die Funktion abgebrochen */

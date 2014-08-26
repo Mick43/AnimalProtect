@@ -23,7 +23,7 @@ public class QueueTask extends BukkitRunnable {
 		this.plugin = plugin;
 		this.tickDelay = plugin.getConfig().getInt("settings.queue-tick-delay");
 
-		final HashMap<String, String> map = CraftoPlugin.plugin.getDatenbank().getSQL().getConnectionValues();
+		final HashMap<String, String> map = CraftoPlugin.instance.getDatenbank().getSQL().getConnectionValues();
 		final String hostname = map.get("hostname");
 		final String username = map.get("user");
 		final String dbname = map.get("database");
@@ -103,24 +103,28 @@ public class QueueTask extends BukkitRunnable {
 			}
 			else if (this.failedQueries == 5) {
 				Messenger.log("Stopped the AnimalProtect-QueueTask for 4 hours because it failed more than 5 queries.");
-				CraftoMessenger.warnStaff("Stopped the AnimalProtect-QueueTask.", true);
+				CraftoMessenger.sendStaff("Stopped the AnimalProtect-QueueTask.", true);
 				this.rescheduleTask(288000L);
 			}
 			else if (this.failedQueries == 6) {
 				Messenger.log("Stopping the AnimalProtect-QueueTask for 4 hours because it failed more than 10 queries.");
 				Messenger.log("Saving the queries to plugins/animalprotect/queue.txt");
-				CraftoMessenger.warnStaff("Stopped the AnimalProtect-QueueTask.", true);
+				CraftoMessenger.sendStaff("Stopped the AnimalProtect-QueueTask.", true);
 
-				final CraftoFile file = new CraftoFile("AnimalProtect", "plugins/AnimalProtect/queue.txt");
+				final CraftoFile file = new CraftoFile(CraftoFile.BUKKIT_PATH + "plugins/AnimalProtect/queue.txt");
 				file.writeLine(this.queue);
-				try { file.saveFile(); this.queue = ""; this.queueSize = 0; } catch (final Exception e) { Messenger.log("Failed to save queue file."); }
+				if (file.save()) {
+					this.queue = "";
+					this.queueSize = 0;
+				}
+				else { Messenger.log("Failed to save queue into a log file!"); }
 				file.close();
 
 				this.rescheduleTask(288000L);
 			}
 			else if (this.failedQueries > 6) {
 				Messenger.log("Stopped the AnimalProtect-QueueTask for 4 hours because it failed more than 5 queries.");
-				CraftoMessenger.warnStaff("Stopped the AnimalProtect-QueueTask.", true);
+				CraftoMessenger.sendStaff("Stopped the AnimalProtect-QueueTask.", true);
 				this.rescheduleTask(288000L);
 			}
 		}

@@ -64,7 +64,7 @@ public class Database {
 		this.reverseKeys = new HashMap<UUID, UUID>();
 		this.entitiesId = new HashMap<Integer, Animal>();
 
-		this.connection = CraftoPlugin.plugin.getDatenbank().getSQL();
+		this.connection = CraftoPlugin.instance.getDatenbank().getSQL();
 
 		if (this.connection.checkConnection()) { this.createTable(); }
 	}
@@ -104,8 +104,8 @@ public class Database {
 			final Long loadStart = System.currentTimeMillis();
 
 			/* Als erstes die CraftoPlayer's laden */
-			if (CraftoPlugin.plugin.getDatenbank().getPlayerCount() > 0) {
-				for(final CraftoPlayer player : CraftoPlugin.plugin.getDatenbank().getPlayers()) {
+			if (CraftoPlugin.instance.getDatenbank().getPlayerCount() > 0) {
+				for(final CraftoPlayer player : CraftoPlugin.instance.getDatenbank().getPlayers()) {
 					this.keys.put(player.getUniqueId(), new ArrayList<Animal>());
 				}
 			}
@@ -136,7 +136,7 @@ public class Database {
 							animal.setUniqueId(UUID.fromString(result.getString("uuid")));
 							animal.setCreated_at(result.getTimestamp("created_at"));
 
-							final CraftoPlayer owner = CraftoPlugin.plugin.getDatenbank().getPlayer(animal.getOwner());
+							final CraftoPlayer owner = CraftoPlugin.instance.getDatenbank().getPlayer(animal.getOwner());
 							if (owner != null) {
 								if (this.keys.containsKey(owner.getUniqueId())) {
 									this.entities.put(animal.getUniqueId(), animal);
@@ -457,7 +457,7 @@ public class Database {
 	public boolean containsPlayer(final UUID uuid) {
 		if (uuid == null) { return false; }
 
-		if (CraftoPlugin.plugin.getDatenbank().containsPlayer(uuid)) {
+		if (CraftoPlugin.instance.getDatenbank().containsPlayer(uuid)) {
 			return true;
 		}
 

@@ -66,39 +66,39 @@ public class InteractEventListener implements Listener {
 				/* Wenn das Tier nicht gelockt ist, dann wird der Owner nicht erwähnt. */
 				if (owner == null) {
 					switch (entity.getType()) {
-					case COW:
-						Messenger.sendMessage(player, "SELECTED_COW");
-						break;
-					case PIG:
-						Messenger.sendMessage(player, "SELECTED_PIG");
-						break;
-					case CHICKEN:
-						Messenger.sendMessage(player, "SELECTED_CHICKEN");
-						break;
-					case HORSE:
-						Messenger.sendMessage(player, "SELECTED_HORSE");
-						break;
-					case WOLF:
-						Messenger.sendMessage(player, "SELECTED_WOLF");
-						break;
-					case SHEEP:
-						Messenger.sendMessage(player, "SELECTED_SHEEP");
-						break;
-					case IRON_GOLEM:
-						Messenger.sendMessage(player, "SELECTED_IRONGOLEM");
-						break;
-					case SNOWMAN:
-						Messenger.sendMessage(player, "SELECTED_SNOWMAN");
-						break;
-					case VILLAGER:
-						Messenger.sendMessage(player, "SELECTED_VILLAGER");
-						break;
-					case OCELOT:
-						Messenger.sendMessage(player, "SELECTED_OCELOT");
-						break;
-					default:
-						Messenger.sendMessage(player, "SELECTED_UNKNOWN");
-						break;
+						case COW:
+							Messenger.sendMessage(player, "SELECTED_COW");
+							break;
+						case PIG:
+							Messenger.sendMessage(player, "SELECTED_PIG");
+							break;
+						case CHICKEN:
+							Messenger.sendMessage(player, "SELECTED_CHICKEN");
+							break;
+						case HORSE:
+							Messenger.sendMessage(player, "SELECTED_HORSE");
+							break;
+						case WOLF:
+							Messenger.sendMessage(player, "SELECTED_WOLF");
+							break;
+						case SHEEP:
+							Messenger.sendMessage(player, "SELECTED_SHEEP");
+							break;
+						case IRON_GOLEM:
+							Messenger.sendMessage(player, "SELECTED_IRONGOLEM");
+							break;
+						case SNOWMAN:
+							Messenger.sendMessage(player, "SELECTED_SNOWMAN");
+							break;
+						case VILLAGER:
+							Messenger.sendMessage(player, "SELECTED_VILLAGER");
+							break;
+						case OCELOT:
+							Messenger.sendMessage(player, "SELECTED_OCELOT");
+							break;
+						default:
+							Messenger.sendMessage(player, "SELECTED_UNKNOWN");
+							break;
 					}
 				}
 				/* Wenn das Tier protected ist, dann wird der Owner erwähnt. */
