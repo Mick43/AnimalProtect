@@ -11,11 +11,25 @@ import de.AnimalProtect.AnimalProtect;
 import de.AnimalProtect.Database;
 import de.AnimalProtect.Messenger;
 
+/**
+ * Der LeashEventListener fängt das {@link PlayerLeashEntityEvent} und {@link PlayerUnleashEntityEvent} ab
+ * und prüft ob versucht wird ein gesichertes Tier zu leashen.
+ * 
+ * @author Fear837, Pingebam
+ * @version 1.0
+ * @see Listener
+ */
 public class LeashEventListener implements Listener {
 
+	/** Die AnimalProtect-Instanz. */
 	private final AnimalProtect plugin;
+	/** Ein Verweise auf die AnimalProtect-Datenbank. */
 	private final Database database;
 
+	/**
+	 * Initialisiert den EventListener.
+	 * @param plugin - Das AnimalProtect-Plugin.
+	 */
 	public LeashEventListener(final AnimalProtect plugin) {
 		this.plugin = plugin;
 		this.database = plugin.getDatenbank();
@@ -47,7 +61,7 @@ public class LeashEventListener implements Listener {
 	}
 
 	@EventHandler
-	public void onEntityUnleash(final PlayerUnleashEntityEvent  event) {
+	public void onEntityUnleash(final PlayerUnleashEntityEvent event) {
 		try { 
 			if (!this.plugin.isEnabled() || event.isCancelled()) { return; }
 

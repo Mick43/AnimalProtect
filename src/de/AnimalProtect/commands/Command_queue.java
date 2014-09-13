@@ -7,10 +7,22 @@ import org.bukkit.command.CommandSender;
 import de.AnimalProtect.AnimalProtect;
 import de.AnimalProtect.Messenger;
 
+/**
+ * Die Queuecommand-Klasse. {@code /animalqueue}
+ * 
+ * @author Fear837, Pingebam
+ * @version 1.0
+ * @see CommandExecutor
+ */
 public class Command_queue implements CommandExecutor {
 
+	/** Die AnimalProtect-Instanz. */
 	private final AnimalProtect plugin;
 
+	/**
+	 * Initialisiert die Commandklasse.
+	 * @param plugin - Das AnimalProtect-Plugin.
+	 */
 	public Command_queue(final AnimalProtect plugin) {
 		this.plugin = plugin;
 	}

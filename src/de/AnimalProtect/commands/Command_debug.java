@@ -7,10 +7,22 @@ import org.bukkit.command.CommandSender;
 import de.AnimalProtect.AnimalProtect;
 import de.AnimalProtect.Messenger;
 
+/**
+ * Die Debugcommand-Klasse. {@code /animaldebug}
+ * 
+ * @author Fear837, Pingebam
+ * @version 1.0
+ * @see CommandExecutor
+ */
 public class Command_debug implements CommandExecutor {
 
+	/** Die AnimalProtect-Instanz. */
 	private final AnimalProtect plugin;
 
+	/**
+	 * Initialisiert die Commandklasse.
+	 * @param plugin - Das AnimalProtect-Plugin.
+	 */
 	public Command_debug(final AnimalProtect plugin) {
 		this.plugin = plugin;
 	}
@@ -46,6 +58,10 @@ public class Command_debug implements CommandExecutor {
 		return true;
 	}
 
+	/**
+	 * @param value - Der übergebene Wert.
+	 * @return True, wenn der übergebene Wert eine Zahl ist.
+	 */
 	private boolean isNumber(final String value) {
 		try { Integer.parseInt(value); return true; }
 		catch (final Exception e) { return false; }

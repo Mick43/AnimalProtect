@@ -27,10 +27,22 @@ import de.AnimalProtect.Messenger;
 import de.AnimalProtect.structs.Animal;
 import de.AnimalProtect.structs.AnimalArmor;
 
+/**
+ * Die Respawncommand-Klasse. {@code /respawnanimal}
+ * 
+ * @author Fear837, Pingebam
+ * @version 1.0
+ * @see CommandExecutor
+ */
 public class Command_respawn implements CommandExecutor {
 
+	/** Die AnimalProtect-Instanz. */
 	private final AnimalProtect plugin;
 
+	/**
+	 * Initialisiert die Commandklasse.
+	 * @param plugin - Das AnimalProtect-Plugin.
+	 */
 	public Command_respawn(final AnimalProtect plugin) {
 		this.plugin = plugin;
 	}

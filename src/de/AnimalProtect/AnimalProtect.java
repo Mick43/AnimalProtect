@@ -39,19 +39,25 @@ import de.AnimalProtect.structs.Animal;
 import de.AnimalProtect.structs.AnimalType;
 
 /**
- * Das AnimalProtect Plugin
+ * Das AnimalProtect Plugin.
  *
  * @author Fear837, Pingebam
  * @version 1.2
  */
 public class AnimalProtect extends JavaPlugin {
 
+	/** Die Datenbank-Klasse um mit der Datenbank von AnimalProtect zu interagieren. */
 	private Database database;
+	/** Der Task, in dem die Queries in eine Queue geschrieben werden. */
 	private QueueTask task;
+	/** True, wenn der Debugmodus aktiv sein soll. */
 	private Boolean debugmode;
+	/** Eine Map an Tieren die von bestimmten Spielern ausgewählt wurden. */
 	private HashMap<UUID, Entity> selectedList;
+	/** Eine Map an Zeitpunkten, wann die Spieler ihr letztes Tier ausgewählt haben. */
 	private HashMap<UUID, Long> selectedTime;
 
+	/** Eine statische Instanz des Plugins. */
 	public static AnimalProtect plugin;
 
 	@Override
@@ -89,6 +95,9 @@ public class AnimalProtect extends JavaPlugin {
 		this.selectedTime.clear();
 	}
 
+	/**
+	 * Initialisiert die Config des Plugins.
+	 */
 	private void initializeConfig() {
 		Messenger.log("Loading config...");
 
@@ -101,12 +110,18 @@ public class AnimalProtect extends JavaPlugin {
 		catch (final Exception e) { Messenger.exception("AnimalProtect.java/initializeConfig", "Failed to load the config file!", e); }
 	}
 
+	/**
+	 * Initialisiert die Datenbank.
+	 */
 	private void initializeDatabase() {
 		Messenger.log("Loading database...");
 
 		this.database = new Database(this);
 	}
 
+	/**
+	 * Initialisiert alle Listener.
+	 */
 	private void initializeListeners() {
 		Messenger.log("Loading listeners...");
 
@@ -126,6 +141,9 @@ public class AnimalProtect extends JavaPlugin {
 		catch (final Exception e) { Messenger.exception("AnimalProtect.java/initializeListeners", "Failed to initialize some listeners!", e); }
 	}
 
+	/**
+	 * Initialisiert alle Kommandos.
+	 */
 	private void initializeCommands() {
 		Messenger.log("Loading commands...");
 
@@ -159,6 +177,9 @@ public class AnimalProtect extends JavaPlugin {
 		catch (final Exception e) { Messenger.exception("AnimalProtect.java/initializeCommands", "Failed to initialize some commands.", e); }
 	}
 
+	/**
+	 * Initialisiert den Queue-Task.
+	 */
 	private void initializeTask() {
 		try {
 			if (this.getConfig().getBoolean("settings.use-queue-task")) {
@@ -372,6 +393,10 @@ public class AnimalProtect extends JavaPlugin {
 		}
 	}
 
+	/**
+	 * @param value - Der übergebene Wert.
+	 * @return True, wenn der übergebene Wert eine Zahl ist.
+	 */
 	private boolean isNumber(final String value) {
 		try { Integer.parseInt(value); return true; }
 		catch (final Exception e) { return false; }

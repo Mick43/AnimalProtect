@@ -22,11 +22,25 @@ import de.AnimalProtect.AnimalProtect;
 import de.AnimalProtect.Database;
 import de.AnimalProtect.Messenger;
 
+/**
+ * Der DamageEventListener fängt das {@link EntityDamageByEntityEvent} ab
+ * und prüft ob ein gesichertes Tier Schaden bekommt.
+ * 
+ * @author Fear837, Pingebam
+ * @version 1.0
+ * @see Listener
+ */
 public class DamageEventListener implements Listener {
 
+	/** Die AnimalProtect-Instanz. */
 	private final AnimalProtect plugin;
+	/** Ein Verweis auf die AnimalProtect-Datenbank. */
 	private final Database database;
 
+	/**
+	 * Initialisiert den EventListener.
+	 * @param plugin - Das AnimalProtect-Plugin.
+	 */
 	public DamageEventListener(final AnimalProtect plugin) {
 		this.plugin = plugin;
 		this.database = plugin.getDatenbank();

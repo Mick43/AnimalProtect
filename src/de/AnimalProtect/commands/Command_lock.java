@@ -16,11 +16,24 @@ import de.AnimalProtect.AnimalProtect;
 import de.AnimalProtect.Messenger;
 import de.AnimalProtect.structs.Animal;
 
+/**
+ * Die Lockcommand-Klasse. {@code /lockanimal}
+ * 
+ * @author Fear837, Pingebam
+ * @version 1.0
+ * @see CommandExecutor
+ */
 public class Command_lock implements CommandExecutor {
 
+	/** Die AnimalProtect-Instanz. */
 	private final AnimalProtect plugin;
+	/** Eine Map in der gespeichert wird, wann ein Spieler zuletzt ein Tier gesichert hat. */
 	private final HashMap<UUID, Long> lockTimes;
 
+	/**
+	 * Initialisiert die Commandklasse.
+	 * @param plugin - Das AnimalProtect-Plugin.
+	 */
 	public Command_lock(final AnimalProtect plugin) {
 		this.plugin = plugin;
 		this.lockTimes = new HashMap<UUID, Long>();

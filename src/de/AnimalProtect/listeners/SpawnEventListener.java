@@ -9,11 +9,26 @@ import org.bukkit.event.entity.CreatureSpawnEvent.SpawnReason;
 
 import de.AnimalProtect.AnimalProtect;
 
+/**
+ * Der SpawnEventListener fängt das {@link CreatureSpawnEvent} ab
+ * und prüft ob schon genug Tiere in dem jeweiligen Chunk existieren.
+ * 
+ * @author Fear837, Pingebam
+ * @version 1.0
+ * @see Listener
+ */
 public class SpawnEventListener implements Listener {
 
+	/** Die AnimalProtect-Instanz. */
 	private final AnimalProtect plugin;
+	/** Wieviele Entities maximal pro Chunk existieren dürfen. 
+	 * Wird in der Config von {@code settings.max-entities-per-chunk} festgelegt. */
 	private final int maxEntitiesPerChunk;
 
+	/**
+	 * Initialisiert den EventListener.
+	 * @param plugin - Das AnimalProtect-Plugin.
+	 */
 	public SpawnEventListener(final AnimalProtect plugin) {
 		this.plugin = plugin;
 		this.maxEntitiesPerChunk = this.plugin.getConfig().getInt("settings.max-entities-per-chunk");

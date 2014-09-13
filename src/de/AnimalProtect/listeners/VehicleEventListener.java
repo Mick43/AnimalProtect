@@ -18,10 +18,21 @@ import de.AnimalProtect.Database;
 import de.AnimalProtect.Messenger;
 import de.AnimalProtect.structs.Animal;
 
+/**
+ * Der VehicleEventListener fängt das {@link VehicleEnterEvent} und {@link VehicleExitEvent} ab
+ * und prüft ob ein Spieler versucht auf ein gesichertes Tier zu steigen.
+ * 
+ * @author Fear837, Pingebam
+ * @version 1.0
+ * @see Listener
+ */
 public class VehicleEventListener implements Listener {
 
+	/** Die AnimalProtect-Instanz. */
 	private final AnimalProtect plugin;
+	/** Ein Verweis auf die AnimalProtect-Datenbank. */
 	private final Database database;
+	/** Eine Map in der gespeichert wird, wann zuletzt ein Spieler von dem Tier abgestiegen ist. */
 	private final HashMap<UUID, Long> exitedAnimals;
 
 	public VehicleEventListener(final AnimalProtect plugin) {

@@ -13,10 +13,22 @@ import de.AnimalProtect.AnimalProtect;
 import de.AnimalProtect.Messenger;
 import de.AnimalProtect.structs.Animal;
 
+/**
+ * Die Unlockcommand-Klasse. {@code /unlockanimal}
+ * 
+ * @author Fear837, Pingebam
+ * @version 1.0
+ * @see CommandExecutor
+ */
 public class Command_unlock implements CommandExecutor {
 
+	/** Die AnimalProtect-Instanz. */
 	private final AnimalProtect plugin;
 
+	/**
+	 * Initialisiert die Commandklasse.
+	 * @param plugin - Das AnimalProtect-Plugin.
+	 */
 	public Command_unlock(final AnimalProtect plugin) {
 		this.plugin = plugin;
 	}

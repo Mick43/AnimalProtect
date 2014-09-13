@@ -11,10 +11,22 @@ import craftoplugin.core.database.CraftoPlayer;
 import de.AnimalProtect.AnimalProtect;
 import de.AnimalProtect.Messenger;
 
+/**
+ * Die Limitcommand-Klasse. {@code /lockedanimals}
+ * 
+ * @author Fear837, Pingebam
+ * @version 1.0
+ * @see CommandExecutor
+ */
 public class Command_limit implements CommandExecutor {
 
+	/** Die AnimalProtect-Instanz. */
 	private final AnimalProtect plugin;
 
+	/**
+	 * Initialisiert die Commandklasse.
+	 * @param plugin - Das AnimalProtect-Plugin.
+	 */
 	public Command_limit(final AnimalProtect plugin) {
 		this.plugin = plugin;
 	}
@@ -48,7 +60,12 @@ public class Command_limit implements CommandExecutor {
 		return true;
 	}
 
+	/**
+	 * @param value - Der übergebene Wert.
+	 * @return True, wenn der übergebene Wert eine UniqueID ist.
+	 */
 	private boolean isUUID(final String value) {
+		if (value.length() != 36) { return false; }
 		return value.matches(".*-.*-.*-.*-.*");
 	}
 }

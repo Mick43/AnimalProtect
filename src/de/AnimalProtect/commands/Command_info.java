@@ -12,10 +12,22 @@ import de.AnimalProtect.AnimalProtect;
 import de.AnimalProtect.Messenger;
 import de.AnimalProtect.structs.Animal;
 
+/**
+ * Die Infocommand-Klasse. {@code /animalinfo}
+ * 
+ * @author Fear837, Pingebam
+ * @version 1.0
+ * @see CommandExecutor
+ */
 public class Command_info implements CommandExecutor {
 
+	/** Die AnimalProtect-Instanz. */
 	private final AnimalProtect plugin;
 
+	/**
+	 * Initialisiert die Commandklasse.
+	 * @param plugin - Das AnimalProtect-Plugin.
+	 */
 	public Command_info(final AnimalProtect plugin) {
 		this.plugin = plugin;
 	}

@@ -20,13 +20,29 @@ import de.AnimalProtect.Database;
 import de.AnimalProtect.Messenger;
 import de.AnimalProtect.structs.Animal;
 
+/**
+ * Der InteractEventListener fängt das {@link PlayerInteractEntityEvent} ab
+ * und prüft ob ein Spieler ein Tier auswählen will.
+ * 
+ * @author Fear837, Pingebam
+ * @version 1.0
+ * @see Listener
+ */
 public class InteractEventListener implements Listener {
 
+	/** Die AnimalProtect-Instanz. */
 	private final AnimalProtect plugin;
+	/** Ein Verweis auf die AnimalProtect-Datenbank. */
 	private final Database database;
+	/** Eine Map in der gespeichert wird, welcher Spieler welches Entity ausgewählt hat. */
 	private final HashMap<UUID, Entity> selectedList;
+	/** Eine Map in der gespeichert wird, wann ein Spieler zuletzt ein Tier ausgewählt hat. */
 	private final HashMap<UUID, Long> selectedTime;
 
+	/**
+	 * Initialisiert den EventListener.
+	 * @param plugin - Das AnimalProtect-Plugin.
+	 */
 	public InteractEventListener(final AnimalProtect plugin, final HashMap<UUID, Entity> list, final HashMap<UUID, Long> time) {
 		this.plugin = plugin;
 		this.database = plugin.getDatenbank();
@@ -128,6 +144,11 @@ public class InteractEventListener implements Listener {
 		catch (final Exception e) { Messenger.exception("InteractEventListener/onEntityEvent", "Unknown Exception", e); }
 	}
 
+	/**
+	 * Fügt das Entity und den Spieler der Maps hinzu.
+	 * @param uuid - Die UniqueId des Spielers, der das Tier ausgewählt hat.
+	 * @param entity - Das Entity, dass ausgewählt wurde.
+	 */
 	private void addSelected(final UUID uuid, final Entity entity) {
 		this.selectedList.put(uuid, entity);
 		this.selectedTime.put(uuid, System.currentTimeMillis());

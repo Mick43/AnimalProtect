@@ -8,17 +8,37 @@ import craftoplugin.core.CraftoMessenger;
 import craftoplugin.core.CraftoPlugin;
 import craftoplugin.utility.CraftoFile;
 
+/**
+ * Der QueueTask baut alle Queries hintereinander zusammen und
+ * führt sie in einem bestimmten Intervall aus. Der Intervall kann
+ * in der Config unter {@code settings.queue-tick-delay} festgelegt werden.
+ * 
+ * @author Fear837, Pingebam
+ * @version 1.0
+ */
 public class QueueTask extends BukkitRunnable {
 
+	/** Die AnimalProtect-Instanz. */
 	private final AnimalProtect plugin;
+	/** Eine eigene Datenbank-Instanz. */
 	private final MySQL database;
+	/** Der Intervall in Ticks. */
 	private final Integer tickDelay;
+	/** Die Queue, an der alle Queries drangehängt werden. */
 	private String queue;
+	/** Die Größe der Queue. */
 	private Integer queueSize;
+	/** True, wenn der Task zurzeit aktiv ist. */
 	private boolean running;
+	/** Die ID des Tasks. */
 	private int taskId;
+	/** Die Anzahl an fehlgeschlagenen Queries. */
 	private Short failedQueries;
 
+	/**
+	 * Initialisiert den QueueTask.
+	 * @param plugin - Das AnimalProtect-Plugin.
+	 */
 	public QueueTask(final AnimalProtect plugin) {
 		this.plugin = plugin;
 		this.tickDelay = plugin.getConfig().getInt("settings.queue-tick-delay");
@@ -47,6 +67,9 @@ public class QueueTask extends BukkitRunnable {
 		synchronized (this.queueSize) { this.queueSize++; }
 	}
 
+	/**
+	 * Startet den Task.
+	 */
 	@SuppressWarnings("deprecation")
 	public synchronized void start() {
 		if (!this.running) {
@@ -60,6 +83,9 @@ public class QueueTask extends BukkitRunnable {
 		}
 	}
 
+	/**
+	 * Stoppt den QueueTask.
+	 */
 	public synchronized void stop() {
 		if (this.running) {
 			if (this.taskId > 0) { this.plugin.getServer().getScheduler().cancelTask(this.taskId); }
@@ -67,14 +93,23 @@ public class QueueTask extends BukkitRunnable {
 		}
 	}
 
+	/**
+	 * @return True, wenn der Task aktiv ist.
+	 */
 	public boolean isRunning() {
 		return this.running;
 	}
 
+	/**
+	 * @return Gibt die Anzahl der Queries in der Queue zurück.
+	 */
 	public int getSize() {
 		synchronized (this.queueSize) { return this.queueSize; }
 	}
 
+	/**
+	 * Führt den Task aus.
+	 */
 	@Override
 	public void run() {
 		boolean success = false;
@@ -130,6 +165,10 @@ public class QueueTask extends BukkitRunnable {
 		}
 	}
 
+	/**
+	 * Verzögert den Task um den angegebenen Delay.
+	 * @param delay - Der Delay um den der Task verzögert werden soll. In Ticks!
+	 */
 	@SuppressWarnings("deprecation")
 	public synchronized void rescheduleTask(final Long delay) {
 		this.stop();
@@ -138,6 +177,9 @@ public class QueueTask extends BukkitRunnable {
 			public void run() { QueueTask.this.plugin.getQueue().start(); } }, delay);
 	}
 
+	/**
+	 * Verbindet sich neu zur Datenbank.
+	 */
 	public synchronized void reloadConnection() {
 		this.database.closeConnection();
 		this.database.openConnection();

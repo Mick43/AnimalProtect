@@ -18,10 +18,22 @@ import de.AnimalProtect.AnimalProtect;
 import de.AnimalProtect.Messenger;
 import de.AnimalProtect.structs.Animal;
 
+/**
+ * Die Listcommand-Klasse. {@code /listanimals}
+ * 
+ * @author Fear837, Pingebam
+ * @version 1.0
+ * @see CommandExecutor
+ */
 public class Command_list implements CommandExecutor {
 
+	/** Die AnimalProtect-Instanz. */
 	private final AnimalProtect plugin;
 
+	/**
+	 * Initialisiert die Commandklasse.
+	 * @param plugin - Das AnimalProtect-Plugin.
+	 */
 	public Command_list(final AnimalProtect plugin) {
 		this.plugin = plugin;
 	}
@@ -128,6 +140,10 @@ public class Command_list implements CommandExecutor {
 		return true;
 	}
 
+	/**
+	 * @param value - Der übergebene Wert.
+	 * @return True, wenn der übergebene Wert eine Zahl ist.
+	 */
 	private boolean isNumber(final String value) {
 		try { Integer.parseInt(value); return true; }
 		catch (final Exception e) { return false; }

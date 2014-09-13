@@ -9,10 +9,22 @@ import org.bukkit.entity.Player;
 import de.AnimalProtect.AnimalProtect;
 import de.AnimalProtect.Messenger;
 
+/**
+ * Die Hauptcommand-Klasse. {@code /ap}
+ * 
+ * @author Fear837, Pingebam
+ * @version 1.0
+ * @see CommandExecutor
+ */
 public class Command_animalprotect implements CommandExecutor {
 
+	/** Die AnimalProtect-Instanz. */
 	private final AnimalProtect plugin;
 
+	/**
+	 * Initialisiert die Commandklasse.
+	 * @param plugin - Das AnimalProtect-Plugin.
+	 */
 	public Command_animalprotect(final AnimalProtect plugin) {
 		this.plugin = plugin;
 	}
@@ -59,6 +71,11 @@ public class Command_animalprotect implements CommandExecutor {
 		return true;
 	}
 
+	/**
+	 * Zeigt dem angegebenen CommandSender die Hilfe zu AnimalProtect an.
+	 * @param cs - Der CommandSender, der die Hilfe braucht.
+	 * @param args - Weitere Argumente.
+	 */
 	public void Command_ShowHelp(final CommandSender cs, final String[] args) {
 		try {
 			Messenger.help(cs, "HELP_HEADER");
@@ -81,6 +98,11 @@ public class Command_animalprotect implements CommandExecutor {
 		}
 	}
 
+	/**
+	 * Führt den Reload-Befehl von AnimalProtect aus.
+	 * @param cs - Der CommandSender, der den Befehl ausführen will.
+	 * @param args - Weitere Argumente.
+	 */
 	public void Command_Reload(final CommandSender cs, final String[] args) {
 		if (cs.hasPermission("animalprotect.admin")) {
 			if (args.length == 0) {
@@ -117,6 +139,12 @@ public class Command_animalprotect implements CommandExecutor {
 		else { Messenger.sendMessage(cs, "NO_PERMISSION"); }
 	}
 
+	/**
+	 * Prüft, ob der angegebene CommandSender die angegebene Permission besitzt.
+	 * @param cs - Der CommandSender.
+	 * @param permission - Die Permission die geprüft werden soll.
+	 * @return True, wenn der CommandSender die angegebene Permission hat.
+	 */
 	private boolean hasPerm(final CommandSender cs, final String permission) {
 		if (cs instanceof Player) {
 			if (cs.hasPermission(permission)) { return true; }

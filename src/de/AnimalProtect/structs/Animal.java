@@ -24,7 +24,7 @@ import craftoplugin.core.database.CraftoPlayer;
 import de.AnimalProtect.AnimalProtect;
 
 /**
- * Das Animal-Objekt in AnimalProtect
+ * Das Animal-Objekt in AnimalProtect.
  * 
  * @see AnimalProtect
  * @see AnimalArmor
@@ -34,31 +34,61 @@ import de.AnimalProtect.AnimalProtect;
  */
 public class Animal implements Comparable<Animal> {
 
+	/** Die AnimalProtect-Instanz. */
 	private final AnimalProtect plugin;
 
+	/** Die Datenbank-ID des Tieres. Kann {@link null} sein!*/
 	private Integer id;
+	/** Die {@link CraftoPlayer}-Id des Owners. */
 	private Integer owner;
+	/** Der Typ des Tieres. */
 	private AnimalType animaltype;
+	/** Die X-Koordinate der letzten bekannten Position des Tieres. */
 	private int last_x;
+	/** Die Y-Koordinate der letzten bekannten Position des Tieres. */
 	private int last_y;
+	/** Die Z-Koordinate der letzten bekannten Position des Tieres. */
 	private int last_z;
+	/** True, wenn das Tier noch nicht als tot erkannt wurde. */
 	private boolean alive;
+	/** Der Nametag des Tieres. */
 	private String nametag;
+	/** Die maximalen HP des Tieres. */
 	private double maxhp;
+	/** Der Todesgrund des Tieres, falls es bereits tot ist. */
 	private DamageCause deathcause;
+	/** Die Farbe des Tieres, falls vorhanden. */
 	private String color;
+	/** Die Rüstung des Tieres. */
 	private AnimalArmor armor;
+	/** Die Sprungstärke des Tieres, falls es ein Pferd ist. */
 	private double horse_jumpstrength;
+	/** Der Style des Tieres, falls es ein Pferd ist. */
 	private Style horse_style;
-	private AnimalVariant horse_variant; 
+	/** Die Variante des Tieres, falls es ein Pferd ist. */
+	private AnimalVariant horse_variant;
+	/** Die UniqueId des Tieres. */
 	private UUID uuid;
+	/** Der Zeitpunkt an dem das Tier gesichert wurde. */
 	private Timestamp created_at;
+	/** Das {@link CraftoPlayer}-Objekt des Owners. */
 	private CraftoPlayer cOwner;
 
+	/**
+	 * Initialisiert ein leeres Animal-Objekt.
+	 * @param plugin - Das AnimalProtect-Plugin.
+	 */
 	public Animal(final AnimalProtect plugin) { 
 		this.plugin = plugin;
 		this.created_at = new Timestamp(new Date().getTime());
 	}
+
+	/**
+	 * Initialisiert ein neues Animal-Objekt mit einem Owner und dem Entity.
+	 * @param plugin - Das AnimalProtect-Plugin.
+	 * @param owner - Der Owner des Tieres.
+	 * @param entity - Das Tier selber, als Entity-Objekt.
+	 */
 	public Animal(final AnimalProtect plugin, final CraftoPlayer owner, final Entity entity) { 
 		this.plugin = plugin;
 		this.owner = owner.getId();

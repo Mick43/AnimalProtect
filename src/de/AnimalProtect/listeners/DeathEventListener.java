@@ -15,11 +15,25 @@ import de.AnimalProtect.Database;
 import de.AnimalProtect.Messenger;
 import de.AnimalProtect.structs.Animal;
 
+/**
+ * Der DeathEventListener fängt das {@link EntityDeathEvent} ab
+ * und prüft ob ein gesichertes Tier gestorben ist.
+ * 
+ * @author Fear837, Pingebam
+ * @version 1.0
+ * @see Listener
+ */
 public class DeathEventListener implements Listener {
 
+	/** Die AnimalProtect-Instanz. */
 	private final AnimalProtect plugin;
+	/** Ein Verweis auf die AnimalProtect-Datenbank. */
 	private final Database database;
 
+	/**
+	 * Initialisiert den EventListener.
+	 * @param plugin - Das AnimalProtect-Plugin.
+	 */
 	public DeathEventListener(final AnimalProtect plugin) {
 		this.plugin = plugin;
 		this.database = plugin.getDatenbank();

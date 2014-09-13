@@ -18,10 +18,15 @@ import craftoplugin.utility.CraftoTime;
 
 public class Messenger {
 
+	/** Der Chatprefix von AnimalProtect. */
 	private final static String Prefix = ChatColor.RESET + "" + ChatColor.GOLD + "AnimalProtect //";
+	/** der Konsolenprefix von AnimalProtect. */
 	private final static String ConsolePrefix = "AnimalProtect";
+	/** True, für Debugausgaben vom Messenger. */
 	private final static Boolean Debugging = true;
+	/** Eine Map an Exceptions. */
 	private static HashMap<String, Integer> exceptions;
+	/** Eine Map an Exceptions mit dem Zeitpunkt an der sie zum ersten mal aufgetreten sind. */
 	private static HashMap<String, Long> exceptionTimings;
 
 	/**

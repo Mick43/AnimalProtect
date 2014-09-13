@@ -69,7 +69,7 @@ commands:
       usage: Schreibe /lockedanimals <spieler>
       permission: animalprotect.default
       permission-message: '&cDu hast nicht genuegend Rechte fuer diesen Befehl.'
-      aliases: [locklimit]
+      aliases: [locklimit, animallimit]
 permissions:
   animalprotect.default:
     default: true

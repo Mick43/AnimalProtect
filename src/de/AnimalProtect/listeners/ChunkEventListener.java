@@ -10,10 +10,23 @@ import craftoplugin.core.CraftoMessenger;
 import de.AnimalProtect.AnimalProtect;
 import de.AnimalProtect.structs.Animal;
 
+/**
+ * Der ChunkEventListener fängt das {@link ChunkUnloadEvent} ab
+ * und prüft ob sich ein gesichertes Tier in dem Chunk befindet.
+ * 
+ * @author Fear837, Pingebam
+ * @version 1.0
+ * @see Listener
+ */
 public class ChunkEventListener implements Listener {
 
+	/** Die AnimalProtect-Instanz. */
 	private final AnimalProtect plugin;
 
+	/**
+	 * Initialisiert den EventListener.
+	 * @param plugin - Das AnimalProtect-Plugin.
+	 */
 	public ChunkEventListener(final AnimalProtect plugin) {
 		this.plugin = plugin;
 	}

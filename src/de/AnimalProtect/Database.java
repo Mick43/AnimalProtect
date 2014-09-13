@@ -44,12 +44,18 @@ public class Database {
 	 * created_at         - (TIMESTAMP)  (NOT NULL) (DEFAULT CURRENT TIMESTAMP)
 	 */
 
+	/** Die AnimalProtect-Instanz. */
 	private final AnimalProtect plugin;
+	/** Die Verbindung zur Datenbank. */
 	private final MySQL connection;
 
+	/** Eine Map in der alle Tiere zu ihren UniqueId's gemappt werden. */
 	private final HashMap<UUID, Animal> entities;        // Tier(UUID)    <-> Tier
+	/** Eine Map in der alle Tiere zu ihren Ownern gemappt werden. */
 	private final HashMap<UUID, ArrayList<Animal>> keys; // Spieler(UUID) <-> List<Tiere>
+	/** Eine Map in der alle Owner zu ihren Tieren gemappt werden. */
 	private final HashMap<UUID, UUID> reverseKeys;       // Tier(UUID)    <-> Spieler(UUID)
+	/** Eine map in der alle Tiere zu ihren Datenbank-Id's gemappt werden. */
 	private final HashMap<Integer, Animal> entitiesId;  // Tier(ID)      <-> Tier
 
 	/**
@@ -69,6 +75,9 @@ public class Database {
 		if (this.connection.checkConnection()) { this.createTable(); }
 	}
 
+	/**
+	 * Erstellt die Tabelle in der Datenbank.
+	 */
 	private void createTable() {
 		try {
 			if (!this.isConnected()) { return; }
@@ -98,6 +107,9 @@ public class Database {
 		catch (final Exception e) { Messenger.exception("Database/createTable", "An exception occured in de.AnimalProtect.Database.createTabel()", e); }
 	}
 
+	/**
+	 * Lädt alle Entities aus der Datenbank und speichert sie in den Arbeitsspeicher.
+	 */
 	private void loadFromDatabase() {
 		try {
 			if (!this.isConnected()) { return; }
@@ -109,7 +121,7 @@ public class Database {
 					this.keys.put(player.getUniqueId(), new ArrayList<Animal>());
 				}
 			}
-			else { Messenger.log("Warning: Failed to load players from the Database! (CraftoPlugin.getPlayerCount < 0)"); return; }
+			else { Messenger.error("Warning: Failed to load players from the Database! (CraftoPlugin.getPlayerCount < 0)"); return; }
 
 
 			/* Dann die Tiere laden */
@@ -178,7 +190,7 @@ public class Database {
 	}
 
 	/**
-	 * Schlieï¿½t die Verbindung zur Datenbank.
+	 * Schließt die Verbindung zur Datenbank.
 	 */
 	public void closeConnection() {
 		if (this.isConnected()) {
@@ -260,6 +272,11 @@ public class Database {
 		return false;
 	}
 
+	/**
+	 * Gibt die Insertquery, für die Datenbank, des angegebenen Tieres zurück.
+	 * @param animal - Das Tier, aus dem die Werte genommen werden.
+	 * @return Eine SQL-Query für die Datenbank.
+	 */
 	private String getInsertQuery(final Animal animal) {
 		final String Query = "INSERT INTO `ap_entities` (`owner`, `animaltype`, `last_x`, `last_y`, `last_z`, `alive`, `nametag`, `maxhp`, "
 				+ "`deathcause`, `color`, `armor`, `horse_jumpstrength`, `horse_style`, `horse_variant`, `uuid`) "
@@ -273,6 +290,11 @@ public class Database {
 		return Query;
 	}
 
+	/**
+	 * Gibt eine Updatequery, für die Datenbank, des angegebenen Tieres wieder.
+	 * @param animal - Das Tier, aus dem die Werte genommen werden.
+	 * @return Eine SQL-Query für die Datenbank.
+	 */
 	private String getUpdateQuery(final Animal animal) {
 		final String Query = "UPDATE `ap_entities` SET "
 				+ "`owner`=" + animal.getOwner()                           + ", "
