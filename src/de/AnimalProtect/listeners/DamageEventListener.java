@@ -5,7 +5,7 @@ import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Egg;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Fireball;
-import org.bukkit.entity.Fish;
+import org.bukkit.entity.FishHook;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.SmallFireball;
 import org.bukkit.entity.Snowball;
@@ -98,7 +98,7 @@ public class DamageEventListener implements Listener {
 					damager = tnt.getSource();
 					break;
 				case FISHING_HOOK:
-					final Fish fishingHook = (Fish)damager;
+					final FishHook fishingHook = (FishHook)damager;
 					damager = (Entity) fishingHook.getShooter();
 					break;
 				default:

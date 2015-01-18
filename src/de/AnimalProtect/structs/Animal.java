@@ -37,7 +37,7 @@ public class Animal implements Comparable<Animal> {
 	/** Die AnimalProtect-Instanz. */
 	private final AnimalProtect plugin;
 
-	/** Die Datenbank-ID des Tieres. Kann {@link null} sein!*/
+	/** Die Datenbank-ID des Tieres. Kann {@code null} sein!*/
 	private Integer id;
 	/** Die {@link CraftoPlayer}-Id des Owners. */
 	private Integer owner;

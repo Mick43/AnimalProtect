@@ -241,7 +241,8 @@ public class AnimalProtect extends JavaPlugin {
 				||  type == EntityType.IRON_GOLEM
 				||  type == EntityType.SNOWMAN
 				||  type == EntityType.VILLAGER
-				||  type == EntityType.OCELOT)
+				||  type == EntityType.OCELOT
+				||  type == EntityType.RABBIT)
 		{ return true; }
 		return false;
 	}

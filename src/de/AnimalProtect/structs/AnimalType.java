@@ -18,6 +18,7 @@ import org.bukkit.entity.EntityType;
  * '<code>VILLAGER</code>' <br>
  * '<code>OCELOT</code>' <br>
  * '<code>WOLF</code>' <br>
+ * '<code>RABBIT</code>' <br>
  * 
  * @see Animal
  * @see EntityType
@@ -44,7 +45,9 @@ public enum AnimalType {
 	/** Ein Ozelot. */
 	OCELOT ("Ocelot", EntityType.OCELOT),
 	/** Ein Wolf. */
-	WOLF ("Wolf", EntityType.WOLF);
+	WOLF ("Wolf", EntityType.WOLF),
+	/** Ein Kaninchen. */
+	RABBIT ("Kaninchen", EntityType.RABBIT);
 
 	/** Der Name des Tieres. */
 	private String name;

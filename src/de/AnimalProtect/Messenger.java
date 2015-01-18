@@ -1,15 +1,18 @@
 package de.AnimalProtect;
 
 /* Java Imports */
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.UUID;
 import java.util.logging.Level;
+
 
 /* Bukkit Imports */
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+
 
 /* CraftoPlugin Imports */
 import craftoplugin.core.CraftoMessenger;
@@ -145,7 +148,6 @@ public class Messenger {
 	 * @param prefix
 	 *            Gibt an, ob vor der Nachricht der Prefix angegeben werden soll.
 	 */
-	@SuppressWarnings("deprecation")
 	public static void sendMessage(final String playerName, final String message, final Boolean prefix) {
 		Messenger.sendMessage(Bukkit.getServer().getPlayer(playerName), message, prefix);
 	}
@@ -158,7 +160,6 @@ public class Messenger {
 	 * @param message
 	 *            Die Nachricht, welche verschickt wird.
 	 */
-	@SuppressWarnings("deprecation")
 	public static void sendMessage(final String playerName, final String message) {
 		Messenger.sendMessage(Bukkit.getServer().getPlayer(playerName), message, false);
 	}
@@ -331,7 +332,7 @@ public class Messenger {
 	 *            Die Nachricht, welche verschickt wird.
 	 */
 	public static void messageStaff(String message) {
-		final Player[] players = Bukkit.getServer().getOnlinePlayers();
+		final Collection<? extends Player> players = Bukkit.getServer().getOnlinePlayers();
 
 		final String parsedMessage = Messenger.parseMessage(message);
 		if (parsedMessage != null) { message = parsedMessage; }
@@ -417,13 +418,13 @@ public class Messenger {
 		Messenger.warn("-------------------- Exception Stacktrace end --------------------");
 
 		if (createFile) {
-			final CraftoFile file = new CraftoFile(CraftoFile.BUKKIT_PATH + "plugins/AnimalProtect/exceptions/exception-"+CraftoTime.getFullTime());
+			final CraftoFile file = new CraftoFile(CraftoFile.BUKKIT_PATH + "plugins/AnimalProtect/exceptions/exception-"+CraftoTime.getCurrentTime());
 			file.writeLine("--------------------- AnimalProtect Exception! --------------------");
 			file.writeLine("An exception occured in animalprotect/" + source);
 			file.writeLine("This exception was thrown " + Messenger.exceptions.get(source) + " times today.");
 			file.writeLine("Detailed information: " + information);
 			file.writeLine("Exception: " + e.getClass().getName());
-			file.writeLine("Exception first occured at: " + CraftoTime.getFullTime());
+			file.writeLine("Exception first occured at: " + CraftoTime.getCurrentTime());
 			if (e.getCause() != null) { file.writeLine("Cause: " + e.getCause().getMessage()); }
 			for (final StackTraceElement s : e.getStackTrace()) {
 				if (s.getClassName().startsWith("craftoplugin") || s.getClassName().startsWith("animalprotect"))
