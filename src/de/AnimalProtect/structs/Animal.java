@@ -16,7 +16,6 @@ import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Sheep;
 import org.bukkit.entity.Wolf;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
-import org.bukkit.inventory.ItemStack;
 
 /* CraftoPlugin Imports */
 import craftoplugin.core.database.CraftoPlayer;
@@ -25,7 +24,7 @@ import de.AnimalProtect.AnimalProtect;
 
 /**
  * Das Animal-Objekt in AnimalProtect.
- * 
+ *
  * @see AnimalProtect
  * @see AnimalArmor
  * @see AnimalType
@@ -78,7 +77,7 @@ public class Animal implements Comparable<Animal> {
 	 * Initialisiert ein leeres Animal-Objekt.
 	 * @param plugin - Das AnimalProtect-Plugin.
 	 */
-	public Animal(final AnimalProtect plugin) { 
+	public Animal(final AnimalProtect plugin) {
 		this.plugin = plugin;
 		this.created_at = new Timestamp(new Date().getTime());
 	}
@@ -89,7 +88,7 @@ public class Animal implements Comparable<Animal> {
 	 * @param owner - Der Owner des Tieres.
 	 * @param entity - Das Tier selber, als Entity-Objekt.
 	 */
-	public Animal(final AnimalProtect plugin, final CraftoPlayer owner, final Entity entity) { 
+	public Animal(final AnimalProtect plugin, final CraftoPlayer owner, final Entity entity) {
 		this.plugin = plugin;
 		this.owner = owner.getId();
 		this.created_at = new Timestamp(new Date().getTime());
@@ -161,18 +160,20 @@ public class Animal implements Comparable<Animal> {
 		this.horse_jumpstrength = 0.0;
 		this.horse_style = Style.NONE;
 
-		if (entity.getType().equals(EntityType.SHEEP)) { 
-			final Sheep sheep = (Sheep) entity; 
-			this.color = sheep.getColor().toString(); 
+		if (entity.getType().equals(EntityType.SHEEP)) {
+			final Sheep sheep = (Sheep) entity;
+			this.color = sheep.getColor().toString();
 		}
 		else if (entity.getType().equals(EntityType.HORSE)) {
 			final Horse horse = (Horse) entity;
-			if (horse.getInventory().getArmor().equals(new ItemStack(Material.DIAMOND_BARDING))) 
-			{ this.armor = AnimalArmor.DIAMOND; }
-			else if (horse.getInventory().getArmor().equals(new ItemStack(Material.GOLD_BARDING))) 
-			{ this.armor = AnimalArmor.GOLD;}
-			else if (horse.getInventory().getArmor().equals(new ItemStack(Material.IRON_BARDING))) 
-			{ this.armor = AnimalArmor.IRON; }
+			if (horse.getInventory() != null && horse.getInventory().getArmor() != null) {
+				if (horse.getInventory().getArmor().getType().equals(Material.DIAMOND_BARDING))
+				{ this.armor = AnimalArmor.DIAMOND; }
+				else if (horse.getInventory().getArmor().getType().equals(Material.GOLD_BARDING))
+				{ this.armor = AnimalArmor.GOLD;}
+				else if (horse.getInventory().getArmor().getType().equals(Material.IRON_BARDING))
+				{ this.armor = AnimalArmor.IRON; }
+			}
 
 			this.horse_style = horse.getStyle();
 			this.horse_variant = AnimalVariant.valueOf(horse.getVariant().toString());
@@ -399,7 +400,7 @@ public class Animal implements Comparable<Animal> {
 	@Override
 	public int compareTo(final Animal animal) {
 		if (animal == null) { return 1; }
-		else if (this.getCreated_at().after(animal.getCreated_at())) 
+		else if (this.getCreated_at().after(animal.getCreated_at()))
 		{ return 1; }
 		return -1;
 	}
