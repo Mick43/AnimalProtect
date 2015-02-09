@@ -27,6 +27,7 @@ messages:
   ANIMAL_MISSING: '%c-'
   ANIMAL_LOCKED_ANOTHER: '%cFehler: Dieses Tier wurde nicht von dir gesichert.'
   ANIMALS_NOT_FOUND: '%cFehler: Es konnten keine Tiere gefunden werden.'
+  ANIMAL_INVALID_TYPE: '%cFehler: Das ausgewaehlte Entity ist kein gueltiges Tier!'
   
   QUEUE_STARTED: '%eDie Queue ist zurzeit aktiv.'
   QUEUE_STOPPED: '%eDie Queue ist zurzeit deaktiviert.'
@@ -72,4 +73,6 @@ messages:
   SELECTED_SNOWMAN: 'Du hast einen %6Schneemann %eausgewaehlt. %7(/lockanimal um ihn zu protecten.)'
   SELECTED_VILLAGER: 'Du hast einen %6Villager %eausgewaehlt. %7(/lockanimal um ihn zu protecten.)'
   SELECTED_OCELOT: 'Du hast einen %6Ozelot %eausgewaehlt. %7(/lockanimal um ihn zu protecten.)'
+  SELECTED_RABBIT: 'Du hast ein %6Kaninchen %eausgewaehlt. %7(/lockanimal um es zu protecten.)'
+  SELECTED_ARMORSTAND: 'Du hast einen %6Armorstand %eausgewaehlt. %7(/lockanimal um es zu protecten.)'
   SELECTED_UNKNOWN: 'Du hast ein %6unbekanntes %eTier ausgewaehlt. %7(/lockanimal um es zu protecten.)'

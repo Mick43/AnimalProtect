@@ -18,7 +18,7 @@ import de.AnimalProtect.structs.Animal;
 
 /**
  * Die Lockcommand-Klasse. {@code /lockanimal}
- * 
+ *
  * @author Fear837, Pingebam
  * @version 1.0
  * @see CommandExecutor
@@ -58,6 +58,7 @@ public class Command_lock implements CommandExecutor {
 		/* Variablen überprüfen */
 		if (entity == null) { Messenger.sendMessage(cs, "SELECTED_NONE"); return true; }
 		else if (player == null) { Messenger.sendMessage(cs, "PLAYEROBJECT_NOT_FOUND"); return true; }
+		else if (!this.plugin.isAnimal(entity)) { Messenger.sendMessage(cs, "ANIMAL_INVALID_TYPE"); return true; }
 
 		/* Das Animal-Objekt laden */
 		Animal animal = this.plugin.getDatenbank().getAnimal(entity.getUniqueId());
@@ -69,8 +70,8 @@ public class Command_lock implements CommandExecutor {
 					if (this.lockTimes.containsKey(sender.getUniqueId())) {
 						if (this.lockTimes.get(sender.getUniqueId()) + 5000 < System.currentTimeMillis()) {
 							animal = new Animal(AnimalProtect.plugin, player, entity);
-							if(animal.saveToDatabase(true)) { 
-								Messenger.sendMessage(cs, "LOCK_SUCCESS"); 
+							if(animal.saveToDatabase(true)) {
+								Messenger.sendMessage(cs, "LOCK_SUCCESS");
 								entity.getWorld().playEffect(entity.getLocation(), Effect.SMOKE, 4);
 								entity.getWorld().playEffect(entity.getLocation(), Effect.SMOKE, 1);
 								entity.getWorld().playEffect(entity.getLocation(), Effect.SMOKE, 3);
@@ -92,8 +93,8 @@ public class Command_lock implements CommandExecutor {
 					}
 					else {
 						animal = new Animal(AnimalProtect.plugin, player, entity);
-						if(animal.saveToDatabase(true)) { 
-							Messenger.sendMessage(cs, "LOCK_SUCCESS"); 
+						if(animal.saveToDatabase(true)) {
+							Messenger.sendMessage(cs, "LOCK_SUCCESS");
 							entity.getWorld().playEffect(entity.getLocation(), Effect.SMOKE, 4);
 							entity.getWorld().playEffect(entity.getLocation(), Effect.SMOKE, 1);
 							entity.getWorld().playEffect(entity.getLocation(), Effect.SMOKE, 3);

@@ -85,7 +85,7 @@ public class Database {
 			final String[] columns = new String[17];
 			columns[0] = "id INT AUTO_INCREMENT PRIMARY KEY";
 			columns[1] = "owner INT(11) NOT NULL";
-			columns[2] = "animaltype ENUM('UNKNOWN', 'COW', 'CHICKEN', 'PIG', 'SHEEP', 'HORSE', 'WOLF', 'IRON_GOLEM', 'SNOWMAN', 'VILLAGER', 'OCELOT') NOT NULL";
+			columns[2] = "animaltype ENUM('UNKNOWN', 'COW', 'CHICKEN', 'PIG', 'SHEEP', 'HORSE', 'WOLF', 'IRON_GOLEM', 'SNOWMAN', 'VILLAGER', 'OCELOT', 'RABBIT', 'ARMOR_STAND') NOT NULL";
 			columns[3] = "last_x SMALLINT(5) NOT NULL";
 			columns[4] = "last_y SMALLINT(3) UNSIGNED NOT NULL";
 			columns[5] = "last_z SMALLINT(5) NOT NULL";

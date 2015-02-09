@@ -16,6 +16,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 /* CraftoPlugin Imports */
 import craftoplugin.core.CraftoMessenger;
 import craftoplugin.core.database.CraftoPlayer;
+
 /* AnimalProtect - Command Imports */
 import de.AnimalProtect.commands.Command_animalprotect;
 import de.AnimalProtect.commands.Command_debug;
@@ -242,7 +243,8 @@ public class AnimalProtect extends JavaPlugin {
 				||  type == EntityType.SNOWMAN
 				||  type == EntityType.VILLAGER
 				||  type == EntityType.OCELOT
-				||  type == EntityType.RABBIT)
+				||  type == EntityType.RABBIT
+				||  type == EntityType.ARMOR_STAND)
 		{ return true; }
 		return false;
 	}

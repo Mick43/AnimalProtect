@@ -5,7 +5,7 @@ import org.bukkit.entity.EntityType;
 /**
  * Beschreibt den Typ eines Tieres und Entities. <br>
  * Diese Enumeration besteht aus fast allen freundlichen EntityType's. <br>
- * 
+ *
  * <b> Verfügbare Typen: </b> <br>
  * '<code>UNKNOWN</code>' <br>
  * '<code>COW</code>' <br>
@@ -19,7 +19,7 @@ import org.bukkit.entity.EntityType;
  * '<code>OCELOT</code>' <br>
  * '<code>WOLF</code>' <br>
  * '<code>RABBIT</code>' <br>
- * 
+ *
  * @see Animal
  * @see EntityType
  */
@@ -47,7 +47,9 @@ public enum AnimalType {
 	/** Ein Wolf. */
 	WOLF ("Wolf", EntityType.WOLF),
 	/** Ein Kaninchen. */
-	RABBIT ("Kaninchen", EntityType.RABBIT);
+	RABBIT ("Kaninchen", EntityType.RABBIT),
+	/** Ein Armorstand. */
+	ARMOR_STAND ("Armorstand", EntityType.ARMOR_STAND);
 
 	/** Der Name des Tieres. */
 	private String name;

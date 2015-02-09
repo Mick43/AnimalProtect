@@ -112,6 +112,12 @@ public class InteractEventListener implements Listener {
 						case OCELOT:
 							Messenger.sendMessage(player, "SELECTED_OCELOT");
 							break;
+						case RABBIT:
+							Messenger.sendMessage(player, "SELECTED_RABBIT");
+							break;
+						case ARMOR_STAND:
+							Messenger.sendMessage(player, "SELECTED_ARMORSTAND");
+							break;
 						default:
 							Messenger.sendMessage(player, "SELECTED_UNKNOWN");
 							break;
