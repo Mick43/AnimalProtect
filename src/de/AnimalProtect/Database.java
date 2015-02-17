@@ -509,9 +509,14 @@ public class Database {
 	 */
 	public int countAnimals(final UUID player) {
 		int count = 0;
-		for(final Animal animal : this.keys.get(player)) {
-			if (animal.isAlive()) {
-				count++;
+		if (this.keys != null) {
+			final ArrayList<Animal> animals = this.keys.get(player);
+			if (animals != null) {
+				for(final Animal animal : animals) {
+					if (animal != null && animal.isAlive()) {
+						count++;
+					}
+				}
 			}
 		}
 		return count;
